@@ -3,18 +3,16 @@ image: Visual Studio 2017
 configuration:
 - Debug
 - Release
-before_build:
-- ps: Copy-Item C:\projects\3D_Engine\$env:CONFIGURATION\3dEngine.exe C:\projects\3D_Engine\Game\.
 build:
   verbosity: minimal
+before_package:
+- ps: Copy-Item C:\projects\3dEngine\3D_Engine\$env:CONFIGURATION\3dEngine.exe C:\projects\3dEngine\3D_Engine\Game\.
 artifacts:
-- path: 3dEngine\3D_Engine\Game
+- path: 3D_Engine\Game
   name: 3dEngine
-before_deploy:
-- ps: Copy-Item C:\projects\$env:CONFIGURATION\3dEngine.exe C:\projects\3dEngine\3D_Engine\Game\.
 deploy:
 - provider: GitHub
-  release: 3dEngine
+  description: 3dEngine
   auth_token:
     secure: piE1WY+KQYZkBVZ0eaCkCJJru7Wzo0OObLas5xrwYWRROcQivrqnrCrK++IW59H9
   draft: true
