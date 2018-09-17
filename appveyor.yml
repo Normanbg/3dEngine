@@ -12,7 +12,7 @@ artifacts:
   name: 3dEngine
 deploy:
 - provider: GitHub
-  release: 3dEngine
+  description: 3dEngine
   auth_token:
     secure: Lh1VhoJumvjo1vVrwJYN+6A2X2QH0Ax1V3GjE9IyNLAdcZgfG6kEEhy9p/ntKjn5
   draft: true
