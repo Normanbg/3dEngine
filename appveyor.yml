@@ -14,5 +14,5 @@ deploy:
 - provider: GitHub
   description: 3dEngine
   auth_token:
-    secure: Lh1VhoJumvjo1vVrwJYN+6A2X2QH0Ax1V3GjE9IyNLAdcZgfG6kEEhy9p/ntKjn5
+    secure: piE1WY+KQYZkBVZ0eaCkCJJru7Wzo0OObLas5xrwYWRROcQivrqnrCrK++IW59H9
   draft: true
