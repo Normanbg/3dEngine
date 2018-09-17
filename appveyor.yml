@@ -10,8 +10,6 @@ build:
 artifacts:
 - path: 3dEngine\3D_Engine\Game
   name: 3dEngine
-before_deploy:
-- ps: Copy-Item C:\projects\$env:CONFIGURATION\3dEngine.exe C:\projects\3dEngine\3D_Engine\Game\.
 deploy:
 - provider: GitHub
   release: 3dEngine
