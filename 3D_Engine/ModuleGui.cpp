@@ -37,66 +37,58 @@ update_status ModuleGui::PreUpdate(float dt)
 
 update_status ModuleGui::Update(float dt)
 {
-	if (ImGui::CollapsingHeader("MENU"))
-	{
-
-		if (ImGui::BeginMenu("Create")) {
+		if (ImGui::CollapsingHeader("Create")) {
 			if (ImGui::MenuItem("Sphere")) {
 				//CREATE
-				ImGui::EndMenu();
 			}
 			if (ImGui::MenuItem("Cyllinder")) {
-				//CREATE
-				ImGui::EndMenu();
+				//CREATe
 			}
 			if (ImGui::MenuItem("Capsule")) {
 				//CREATE
-				ImGui::EndMenu();
 			}
 			if (ImGui::MenuItem("AABB")) {
 				//CREATE
-				ImGui::EndMenu();
 			}
 			if (ImGui::MenuItem("OBB")) {
 				//CREATE
-				ImGui::EndMenu();
 			}
 			if (ImGui::MenuItem("Frustum")) {
 				//CREATE
-				ImGui::EndMenu();
 			}
 			if (ImGui::MenuItem("Planes")) {
 				//CREATE
-				ImGui::EndMenu();
 			}
 			if (ImGui::MenuItem("Segments")) {
 				//CREATE
-				ImGui::EndMenu();
 			}
 			if (ImGui::MenuItem("Rays")) {
 				//CREATE
-				ImGui::EndMenu();
 			}
 			if (ImGui::MenuItem("Convex Hull")) {
 				//CREATE
-				ImGui::EndMenu();
 			}
 			if (ImGui::MenuItem("Mesh")) {
 				//CREATE
-				ImGui::EndMenu();
 			}
 			if (ImGui::MenuItem("Triangles")) {
 				//CREATE
-				ImGui::EndMenu();
 			}
-			ImGui::EndMenu();
-		}		
+		}	
+		if (ImGui::CollapsingHeader("Random Generator")) {
+			static bool a = false;
+			if (ImGui::Button("Create Random Number")) {
+				a ^= 1;
+			}
+			if (a)
+			{
+				ImGui::Text("RANDOM NUMBER NEEDED TO CREATE");
+			}
+		}
 		if (ImGui::MenuItem("CLOSE")) {
 			return UPDATE_STOP;
 			ImGui::EndMenu();
 		}
-		//ImGui::EndMenu();
-	}
 	ImGui::ShowTestWindow();
 	return UPDATE_CONTINUE;
 }
