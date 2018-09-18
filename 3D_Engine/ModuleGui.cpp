@@ -10,6 +10,9 @@
 #include "ModulePhysics3D.h"
 
 
+
+
+
 ModuleGui::ModuleGui(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 }
@@ -80,8 +83,7 @@ update_status ModuleGui::Update(float dt)
 			if (ImGui::Button("Create Random Number")) {
 				a ^= 1;
 			}
-			if (a)
-			{
+			if (a)	{
 				ImGui::Text("RANDOM NUMBER NEEDED TO CREATE");
 			}
 		}
