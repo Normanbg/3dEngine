@@ -43,7 +43,7 @@ update_status ModuleSceneIntro::Update(float dt)
 	p.axis = true;
 	p.Render();
 	
-	dark_floor.Render();
+	//dark_floor.Render();
 	/*for (p2List_item<Cube>* item = roads.getFirst(); item; item = item->next)
 	{
 		item->data.Render();
@@ -86,7 +86,7 @@ void ModuleSceneIntro::OnCollision(PhysBody3D* body1, PhysBody3D* body2)
 		App->player->Hit();
 	}*/
 }
-
+/*
 void ModuleSceneIntro::CreateNormalFloor(float width, float height, float large, float x, float y, float z, Color color)
 {
 	Cube ret(width, height, large);
@@ -336,7 +336,7 @@ void ModuleSceneIntro::CreateBlades(float x, float y, float z, Color color) {
 	Blades bl(c, c2, c_body, c2_body);
 	blades.add(bl);
 }
-
+*/
 void ModuleSceneIntro::StartTerrain()
 {
 	//CreateRamp(20, ROAD_HEIGHT, 149.6f, 0, 13.20f, 0.4f, 2.5f, {1,0,0}, ROAD_COLOR);//1

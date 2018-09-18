@@ -1,6 +1,6 @@
 #pragma once
 #include "Module.h"
-#include "p2DynArray.h"
+
 #include "Globals.h"
 #include "Primitive.h"
 
@@ -42,14 +42,14 @@ public:
 
 	void StartTerrain();
 	void OnCollision(PhysBody3D* body1, PhysBody3D* body2);
-	void CreateNormalFloor(float width, float height, float large, float x, float y, float z, Color color = ROAD_COLOR);
+	/*void CreateNormalFloor(float width, float height, float large, float x, float y, float z, Color color = ROAD_COLOR);
 	void CreateFloorAndWalls(float width, float height, float large, float x, float y, float z, bool wallLeft = false, bool wallRight = false, bool wallTop = false, bool wallBack = false, Color color = ROAD_COLOR);
 	void CreateEndFloor(float width, float height, float large, float x, float y, float z, bool wallLeft = false, bool wallRight = false);
 	void CreateTurboPart(float width, float height, float large, float x, float y, float z, Color color = TURBO_COLOR);
 	void CreateRamp(float width, float height, float large, float x, float y, float z,float degree,  vec3 axis, Color color = RAMP_COLOR);
 	void CreateLowerLimit(float width, float height, float large, float x, float y, float z, Color color = LIMIT_COLOR);
 	void CreateLapSensor(float x, float y, float z, bool isgoal = false);
-	void CreateBlades(float x, float y, float z, Color color = BLADE_COLOR);
+	void CreateBlades(float x, float y, float z, Color color = BLADE_COLOR);*/
 
 public:
 	PhysBody3D* pb_chassis;
@@ -63,11 +63,11 @@ public:
 
 	PhysMotor3D* left_wheel;
 	PhysMotor3D* right_wheel;
-
+	/*
 	Cube dark_floor;
-	p2List<Cube> roads;
-	p2List<Blades> blades;
-
+	std::list<Cube> roads;
+	std::list<Blades> blades;
+	*/
 	uint turbo_fx = 0;
 	
 };

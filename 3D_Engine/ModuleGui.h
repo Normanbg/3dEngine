@@ -1,7 +1,7 @@
 #pragma once
 #ifndef __ModuleGui_H__
 #define __ModuleGui_H__
-#include "p2DynArray.h"
+
 #include "Globals.h"
 #include "Primitive.h"
 #include "Module.h"
