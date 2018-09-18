@@ -3,11 +3,6 @@
 #include "Application.h"
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_impl_sdl.h"
-#include "MathGeoLib\Geometry\GeometryAll.h"
-#include "MathGeoLib\Math\MathAll.h"
-#include "Primitive.h"
-#include "PhysBody3D.h"
-#include "ModulePhysics3D.h"
 
 
 ModuleGui::ModuleGui(Application* app, bool start_enabled) : Module(app, start_enabled)
