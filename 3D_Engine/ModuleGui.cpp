@@ -10,6 +10,9 @@
 #include "ModulePhysics3D.h"
 
 
+
+
+
 ModuleGui::ModuleGui(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 }
@@ -42,59 +45,66 @@ update_status ModuleGui::Update(float dt)
 
 		if (ImGui::BeginMenu("Create")) {
 			if (ImGui::MenuItem("Sphere")) {
-				//CREATE
-				ImGui::EndMenu();
+				//CREATE				
 			}
 			if (ImGui::MenuItem("Cyllinder")) {
 				//CREATE
-				ImGui::EndMenu();
+
 			}
 			if (ImGui::MenuItem("Capsule")) {
 				//CREATE
-				ImGui::EndMenu();
+
 			}
 			if (ImGui::MenuItem("AABB")) {
 				//CREATE
-				ImGui::EndMenu();
+
 			}
 			if (ImGui::MenuItem("OBB")) {
 				//CREATE
-				ImGui::EndMenu();
+
 			}
 			if (ImGui::MenuItem("Frustum")) {
 				//CREATE
-				ImGui::EndMenu();
+
 			}
 			if (ImGui::MenuItem("Planes")) {
 				//CREATE
-				ImGui::EndMenu();
+
 			}
 			if (ImGui::MenuItem("Segments")) {
 				//CREATE
-				ImGui::EndMenu();
+
 			}
 			if (ImGui::MenuItem("Rays")) {
 				//CREATE
-				ImGui::EndMenu();
+
 			}
 			if (ImGui::MenuItem("Convex Hull")) {
 				//CREATE
-				ImGui::EndMenu();
+
 			}
 			if (ImGui::MenuItem("Mesh")) {
 				//CREATE
-				ImGui::EndMenu();
 			}
 			if (ImGui::MenuItem("Triangles")) {
 				//CREATE
-				ImGui::EndMenu();
+
 			}
 			ImGui::EndMenu();
-		}		
+		}
 		if (ImGui::MenuItem("CLOSE")) {
 			return UPDATE_STOP;
 			ImGui::EndMenu();
 		}
+		if (ImGui::BeginMenu("Random Number")) {
+			if (ImGui::Button("Generate")) {
+			
+
+			}
+
+			ImGui::EndMenu();
+		}
+
 		//ImGui::EndMenu();
 	}
 	ImGui::ShowTestWindow();
