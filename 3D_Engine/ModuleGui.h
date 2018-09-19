@@ -6,6 +6,7 @@
 #include "Primitive.h"
 #include "Module.h"
 
+#include "RandomGenerator/pcg_variants.h"
 
 class ModuleGui : public Module
 {
@@ -20,9 +21,8 @@ public:
 	update_status PostUpdate(float dt);
 	bool CleanUp();
 
-
-	bool my_tool_active = true;
-	float my_color = 0.000;
+public:
+	
 };
 
 #endif 
