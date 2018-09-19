@@ -60,11 +60,11 @@ public:
 };
 
 // ============================================
-class Cylinder : public Primitive
+class _Cylinder : public Primitive
 {
 public:
-	Cylinder();
-	Cylinder(float radius, float height);
+	_Cylinder();
+	_Cylinder(float radius, float height);
 	void InnerRender() const;
 public:
 	float radius;

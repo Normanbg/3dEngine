@@ -42,16 +42,19 @@ update_status ModuleGui::Update(float dt)
 {
 		if (ImGui::CollapsingHeader("Create")) {
 			if (ImGui::MenuItem("Sphere")) {
-				//CREATE
+				math::Sphere s(vec(0, 0, 0), 2);
+				App->physics->AddBody(s);
 			}
 			if (ImGui::MenuItem("Cyllinder")) {
-				//CREATe
+				
 			}
 			if (ImGui::MenuItem("Capsule")) {
-				//CREATE
+				math::Capsule ca(vec(0,0,0),vec(0,1,0), 5);
+				App->physics->AddBody(ca);
 			}
 			if (ImGui::MenuItem("AABB")) {
-				//CREATE
+				math::AABB ab(vec(0,0,0), vec(1,1,1));
+				App->physics->AddBody(ab);
 			}
 			if (ImGui::MenuItem("OBB")) {
 				//CREATE
@@ -60,7 +63,8 @@ update_status ModuleGui::Update(float dt)
 				//CREATE
 			}
 			if (ImGui::MenuItem("Planes")) {
-				//CREATE
+				math::Plane p(vec(0,0,0),1);
+				App->physics->AddBody(p);
 			}
 			if (ImGui::MenuItem("Segments")) {
 				//CREATE
@@ -102,6 +106,7 @@ update_status ModuleGui::Update(float dt)
 
 update_status ModuleGui::PostUpdate(float dt)
 {
+	App->physics->isIntersecting();
 	ImGui::Render();
 	return UPDATE_CONTINUE;
 }

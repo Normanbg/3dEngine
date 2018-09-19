@@ -133,31 +133,31 @@ bool ModulePhysics3D::CleanUp()
 	OWN_LOG("Destroying 3D Physics simulation");
 
 	// Remove from the world all collision bodies
-	for(int i = world->getNumCollisionObjects() - 1; i >= 0; i--)
+	for (int i = world->getNumCollisionObjects() - 1; i >= 0; i--)
 	{
 		btCollisionObject* obj = world->getCollisionObjectArray()[i];
 		world->removeCollisionObject(obj);
 	}
 
-	for(std::list<btTypedConstraint*>::iterator item = constraints.begin(); item!= constraints.end(); item++)
+	for (std::list<btTypedConstraint*>::iterator item = constraints.begin(); item != constraints.end(); item++)
 	{
 		world->removeConstraint(*item);
 		delete (*item);
 	}
-	
+
 	constraints.clear();
 
-	for(std::list<btDefaultMotionState*>::iterator  item = motions.begin(); item != motions.end(); item++)
+	for (std::list<btDefaultMotionState*>::iterator item = motions.begin(); item != motions.end(); item++)
 		delete (*item);
 
 	motions.clear();
 
-	for(std::list<btCollisionShape*>::iterator  item = shapes.begin(); item != shapes.end(); item++)
+	for (std::list<btCollisionShape*>::iterator item = shapes.begin(); item != shapes.end(); item++)
 		delete (*item);
 
 	shapes.clear();
 
-	for(std::list<PhysBody3D*>::iterator  item = bodies.begin(); item != bodies.end(); item++)
+	for (std::list<PhysBody3D*>::iterator item = bodies.begin(); item != bodies.end(); item++)
 		delete (*item);
 
 	bodies.clear();
@@ -168,6 +168,74 @@ bool ModulePhysics3D::CleanUp()
 	delete world;
 
 	return true;
+
+}
+
+void ModulePhysics3D::AddBody(const math::Sphere& sphere)
+{
+	spheres.push_back(sphere);
+}
+
+void ModulePhysics3D::AddBody(const math::Plane& pl)
+{
+	planes.push_back(pl);
+}
+
+void ModulePhysics3D::AddBody(const math::Capsule& caps)
+{
+	capsules.push_back(caps);
+}
+void ModulePhysics3D::AddBody(const math::AABB& aabb)
+{
+	aabbs.push_back(aabb);
+}
+
+bool ModulePhysics3D::isIntersecting() {
+	bool ret = false;
+	for (std::list<math::Sphere>::iterator item = spheres.begin(); item != spheres.end(); item++) {
+		for (std::list<math::Capsule>::iterator item2 = capsules.begin(); item2 != capsules.end(); item2++) {
+			if ((*item).Intersects(*item2)) {
+				OWN_LOG("Sphere intersecting a capsule!");	
+				ret = true;
+			}
+		}
+		for (std::list<math::Plane>::iterator item3 = planes.begin(); item3 != planes.end(); item3++) {
+			if ((*item).Intersects(*item3)) {
+ 				OWN_LOG("Sphere intersecting a plane!");
+				ret = true;
+			}
+		}
+		for (std::list<math::AABB>::iterator item3 = aabbs.begin(); item3 != aabbs.end(); item3++) {
+			if ((*item).Intersects(*item3)) {
+				OWN_LOG("Sphere intersecting a AABB!");
+				ret = true;
+			}
+		}
+	}
+	for (std::list<math::Capsule>::iterator item = capsules.begin(); item != capsules.end(); item++) {
+		for (std::list<math::Plane>::iterator item2 = planes.begin(); item2 != planes.end(); item2++) {
+			if ((*item).Intersects(*item2)) {
+				OWN_LOG("Capsule intersecting a plane!");
+				ret = true;
+			}
+		}
+		for (std::list<math::AABB>::iterator item3 = aabbs.begin(); item3 != aabbs.end(); item3++) {
+			if ((*item).Intersects(*item3)) {
+				OWN_LOG("Capsule intersecting a AABB!");
+				ret = true;
+			}
+		}
+	}
+	for (std::list<math::Plane>::iterator item = planes.begin(); item != planes.end(); item++) {
+		for (std::list<math::AABB>::iterator item3 = aabbs.begin(); item3 != aabbs.end(); item3++) {
+			if ((*item).Intersects(*item3)) {
+				OWN_LOG("Plane intersecting a AABB!");
+				ret = true;
+			}
+		}
+	}
+
+	return ret;
 }
 /*
 // ---------------------------------------------------------
@@ -252,65 +320,6 @@ PhysBody3D* ModulePhysics3D::AddBody(const Cylinder& cylinder, float mass)
 	bodies.push_back(pbody);
 
 	return pbody;
-}
-
-// ---------------------------------------------------------
-PhysVehicle3D* ModulePhysics3D::AddVehicle(const VehicleInfo& info)
-{
-	btCompoundShape* comShape = new btCompoundShape();
-	shapes.push_back(comShape);
-
-	btCollisionShape* colShape = new btBoxShape(btVector3(info.chassis_size.x*0.5f, info.chassis_size.y*0.5f, info.chassis_size.z*0.5f));
-	shapes.push_back(colShape);
-
-	btTransform trans;
-	trans.setIdentity();
-	trans.setOrigin(btVector3(info.chassis_offset.x, info.chassis_offset.y, info.chassis_offset.z));
-
-	comShape->addChildShape(trans, colShape);
-
-	btTransform startTransform;
-	startTransform.setIdentity();
-
-	btVector3 localInertia(0, 0, 0);
-	comShape->calculateLocalInertia(info.mass, localInertia);
-
-	btDefaultMotionState* myMotionState = new btDefaultMotionState(startTransform);
-	btRigidBody::btRigidBodyConstructionInfo rbInfo(info.mass, myMotionState, comShape, localInertia);
-
-	btRigidBody* body = new btRigidBody(rbInfo);
-	body->setContactProcessingThreshold(BT_LARGE_FLOAT);
-	body->setActivationState(DISABLE_DEACTIVATION);
-
-	world->addRigidBody(body);
-
-	btRaycastVehicle::btVehicleTuning tuning;
-	tuning.m_frictionSlip = info.frictionSlip;
-	tuning.m_maxSuspensionForce = info.maxSuspensionForce;
-	tuning.m_maxSuspensionTravelCm = info.maxSuspensionTravelCm;
-	tuning.m_suspensionCompression = info.suspensionCompression;
-	tuning.m_suspensionDamping = info.suspensionDamping;
-	tuning.m_suspensionStiffness = info.suspensionStiffness;
-
-	btRaycastVehicle* vehicle = new btRaycastVehicle(tuning, body, vehicle_raycaster);
-
-	vehicle->setCoordinateSystem(0, 1, 2);
-
-	for(int i = 0; i < info.num_wheels; ++i)
-	{
-		btVector3 conn(info.wheels[i].connection.x, info.wheels[i].connection.y, info.wheels[i].connection.z);
-		btVector3 dir(info.wheels[i].direction.x, info.wheels[i].direction.y, info.wheels[i].direction.z);
-		btVector3 axis(info.wheels[i].axis.x, info.wheels[i].axis.y, info.wheels[i].axis.z);
-
-		vehicle->addWheel(conn, dir, axis, info.wheels[i].suspensionRestLength, info.wheels[i].radius, tuning, info.wheels[i].front);
-	}
-	// ---------------------
-
-	PhysVehicle3D* pvehicle = new PhysVehicle3D(body, vehicle, info);
-	world->addVehicle(vehicle);
-	vehicles.push_back(pvehicle);
-
-	return pvehicle;
 }
 
 // ---------------------------------------------------------
