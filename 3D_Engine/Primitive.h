@@ -39,7 +39,7 @@ protected:
 // ============================================
 class Cube : public Primitive
 {
-public :
+public :	
 	Cube();
 	Cube(float sizeX, float sizeY, float sizeZ);
 	void InnerRender() const;
@@ -53,6 +53,7 @@ class Sphere : public Primitive
 public:
 	Sphere();
 	Sphere(float radius);
+	
 	void InnerRender() const;
 public:
 	float radius;
@@ -71,11 +72,11 @@ public:
 };
 
 // ============================================
-class Line : public Primitive
+class _Line : public Primitive
 {
 public:
-	Line();
-	Line(float x, float y, float z);
+	_Line();
+	_Line(float x, float y, float z);
 	void InnerRender() const;
 public:
 	vec3 origin;

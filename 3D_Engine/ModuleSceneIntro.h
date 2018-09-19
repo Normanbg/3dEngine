@@ -1,7 +1,10 @@
 #pragma once
 #include "Module.h"
+#include "MathGeoLib/Math/float3.h"
+#include "MathGeoLib/Geometry/GeometryAll.h"
 
 #include "Globals.h"
+
 #include "Primitive.h"
 
 struct PhysBody3D;

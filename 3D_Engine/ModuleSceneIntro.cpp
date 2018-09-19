@@ -1,8 +1,10 @@
-#include "Globals.h"
+
 #include "Application.h"
 #include "ModuleSceneIntro.h"
-#include "Primitive.h"
 #include "PhysBody3D.h"
+
+
+
 
 
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
@@ -15,8 +17,10 @@ ModuleSceneIntro::~ModuleSceneIntro()
 // Load assets
 bool ModuleSceneIntro::Start()
 {
-	LOG("Loading Intro assets");
+	OWN_LOG("Loading Intro assets");
 	bool ret = true;
+
+	
 
 	//App->camera->Move(vec3(1.0f, 1.0f, 0.0f));
 	//App->camera->LookAt(vec3(0, 0, 0));
@@ -30,7 +34,7 @@ bool ModuleSceneIntro::Start()
 // Load assets
 bool ModuleSceneIntro::CleanUp()
 {
-	LOG("Unloading Intro scene");
+	OWN_LOG("Unloading Intro scene");
 	
 	return true;
 }
@@ -38,6 +42,12 @@ bool ModuleSceneIntro::CleanUp()
 // Update
 update_status ModuleSceneIntro::Update(float dt)
 {
+	math::Plane(vec(0, 1, 0), 1);
+	/*math::Line(vec(0, 0, 0), vec(1, 2, 3));*/
+	math::float3 vectorTest(0.0f, 0.0f, 0.0f);
+	//vectorTest = { 0, 0, 0 };
+	math::Sphere sp(vectorTest, 20);
+
 	return UPDATE_CONTINUE;
 }
 
