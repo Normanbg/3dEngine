@@ -80,14 +80,15 @@ update_status ModuleGui::Update(float dt)
 		}	
 		if (ImGui::CollapsingHeader("Random Generator")) {
 			static bool a = false;
-			if (ImGui::Button("Create Random Number")) {
+			if (ImGui::Button("Create Random Number Between 0.0 & 1.0")) {
 				a ^= 1;
 			}
 			if (a)	{
 				for (int i = 1; i < 101; i++) {
 					pcg32_random_t randNumbGen;
 					double d = ldexp(pcg32_random_r(&randNumbGen), -32);
-					ImGui::Text("Random Number %d: %d",i, d);
+					ImGui::Text("Random Number %d: %f",i, d);
+
 				}
 			}
 		}
