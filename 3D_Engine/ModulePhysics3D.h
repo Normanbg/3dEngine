@@ -34,11 +34,16 @@ public:
 	PhysBody3D* AddBody(const Cylinder& cylinder, float mass = 1.0f);
 	PhysVehicle3D* AddVehicle(const VehicleInfo& info);*/
 
+	void AddBody(const math::Sphere& sph);
+	void AddBody(const math::Capsule& caps);
+	void AddBody(const math::Plane& plane);
+	void AddBody(const math::AABB& aabb);
+
 	void AddConstraintP2P(PhysBody3D& bodyA, PhysBody3D& bodyB, const vec3& anchorA, const vec3& anchorB);
 	void AddConstraintHinge(PhysBody3D& bodyA, PhysBody3D& bodyB, const vec3& anchorA, const vec3& anchorB, const vec3& axisS, const vec3& axisB, bool disable_collision = false);
 
 
-
+	bool isIntersecting();
 private:
 
 	bool debug;
@@ -55,6 +60,12 @@ private:
 	std::list<PhysBody3D*> bodies;
 	std::list<btDefaultMotionState*> motions;
 	std::list<btTypedConstraint*> constraints;
+	
+	std::list<math::Sphere> spheres;
+	std::list<math::Capsule> capsules;
+	std::list<math::Plane> planes;
+	std::list<math::AABB> aabbs;
+	
 	
 };
 

@@ -45,8 +45,13 @@ update_status ModuleSceneIntro::Update(float dt)
 	math::Plane(vec(0, 1, 0), 1);
 	/*math::Line(vec(0, 0, 0), vec(1, 2, 3));*/
 	math::float3 vectorTest(0.0f, 0.0f, 0.0f);
+	math::float3 vectorTest2(0.0f, 7.0f, 0.0f);
 	//vectorTest = { 0, 0, 0 };
-	math::Sphere sp(vectorTest, 20);
+	math::Sphere sp(vectorTest, 4);
+	math::Sphere sp2(vectorTest2, 2);
+	if (sp.Intersects(sp2)) {
+		OWN_LOG("Intersects!");
+	}
 
 	return UPDATE_CONTINUE;
 }
