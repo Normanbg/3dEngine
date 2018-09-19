@@ -11,7 +11,6 @@
 #include "ModuleRenderer3D.h"
 #include "ModuleCamera3D.h"
 #include "ModulePhysics3D.h"
-#include "ModulePlayer.h"
 #include "ModuleGui.h"
 
 class Application

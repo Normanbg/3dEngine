@@ -88,7 +88,11 @@ update_status ModuleGui::Update(float dt)
 				a ^= 1;
 			}
 			if (a)	{
-				ImGui::Text("RANDOM NUMBER NEEDED TO CREATE");
+				for (int i = 1; i < 101; i++) {
+					pcg32_random_t randNumbGen;
+					double d = ldexp(pcg32_random_r(&randNumbGen), -32);
+					ImGui::Text("Random Number %d: %d",i, d);
+				}
 			}
 		}
 		if (ImGui::MenuItem("CLOSE")) {

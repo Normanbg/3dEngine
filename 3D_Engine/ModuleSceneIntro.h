@@ -1,11 +1,13 @@
 #pragma once
 #include "Module.h"
+#include "Globals.h"
+#include "Primitive.h"
+
 #include "MathGeoLib/Math/float3.h"
 #include "MathGeoLib/Geometry/GeometryAll.h"
 
-#include "Globals.h"
+#include "RandomGenerator/pcg_variants.h"
 
-#include "Primitive.h"
 
 struct PhysBody3D;
 struct PhysMotor3D;
@@ -22,4 +24,6 @@ public:
 
 	void OnCollision(PhysBody3D* body1, PhysBody3D* body2);
 public:
+
+	pcg32_random_t randNumbGen;
 };

@@ -2,7 +2,6 @@
 #include "Application.h"
 #include "PhysBody3D.h"
 #include "ModuleCamera3D.h"
-#include "ModulePlayer.h"
 
 #define CAMERA_SPEED 10
 

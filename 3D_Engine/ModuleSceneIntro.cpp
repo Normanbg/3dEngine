@@ -3,12 +3,14 @@
 #include "ModuleSceneIntro.h"
 #include "PhysBody3D.h"
 
+#include <time.h>
+#include "RandomGenerator/extras/entropy.h"
 
 
 
 
-ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
-{
+
+ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled){
 }
 
 ModuleSceneIntro::~ModuleSceneIntro()
@@ -19,15 +21,7 @@ bool ModuleSceneIntro::Start()
 {
 	OWN_LOG("Loading Intro assets");
 	bool ret = true;
-
-	
-
-	//App->camera->Move(vec3(1.0f, 1.0f, 0.0f));
-	//App->camera->LookAt(vec3(0, 0, 0));
-	//App->audio->PlayMusic("audio/music.ogg");
-	//turbo_fx = App->audio->LoadFx("audio/turbo.wav");
-	//StartTerrain();
-	
+	pcg32_srandom_r(&randNumbGen, time(NULL), (intptr_t)&randNumbGen);
 	return ret;
 }
 
@@ -42,16 +36,11 @@ bool ModuleSceneIntro::CleanUp()
 // Update
 update_status ModuleSceneIntro::Update(float dt)
 {
-	math::Plane(vec(0, 1, 0), 1);
-	/*math::Line(vec(0, 0, 0), vec(1, 2, 3));*/
-	math::float3 vectorTest(0.0f, 0.0f, 0.0f);
-	math::float3 vectorTest2(0.0f, 7.0f, 0.0f);
-	//vectorTest = { 0, 0, 0 };
-	math::Sphere sp(vectorTest, 4);
-	math::Sphere sp2(vectorTest2, 2);
-	if (sp.Intersects(sp2)) {
-		OWN_LOG("Intersects!");
-	}
+
+
+
+	//OWN_LOG("Random Number: %d", pcg32_random_r(&randNumbGen));
+
 
 	return UPDATE_CONTINUE;
 }
