@@ -23,6 +23,7 @@ public:
 
 public:
 	bool demoShowcase = false;
+	bool activeAbout = false;
 };
 
 #endif 
