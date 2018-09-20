@@ -44,19 +44,24 @@ update_status ModuleGui::Update(float dt)
 		if (ImGui::BeginMenu("Help")) {
 			if (ImGui::MenuItem("Gui Demo"))
 				demoShowcase = !demoShowcase;
-
-			if (ImGui::MenuItem("Documentation")){}
-				//requestBrowser
-			if (ImGui::MenuItem("Download latest")){}
-				//requestBrowser
-			if (ImGui::MenuItem("Report a bug")){}
-				//requestBrowser
-			if (ImGui::MenuItem("About")){}
-					//requestBrowser
+			if (ImGui::MenuItem("Documentation")) {}
+			//requestBrowser
+			if (ImGui::MenuItem("Download latest")) {}
+			//requestBrowser
+			if (ImGui::MenuItem("Report a bug")) {}
+			//requestBrowser
+			if (ImGui::MenuItem("About")) {}
+			//requestBrowser
 			ImGui::EndMenu();
 		}
 		ImGui::EndMainMenuBar();
 	}
+			/*MAX & MIN
+			ImGui::InputInt("Max Number", &var);
+			ImGui::InputInt("Min Number", &var2);
+			if (ImGui::SmallButton("Generate Random Int")) {
+				randomNum = ("%i", (int)pcg16si_boundedrand_r(&rng, var) + var2);
+			}*/		
 	if (ImGui::CollapsingHeader("Create")) {
 		if (ImGui::MenuItem("Sphere")) {
 			math::Sphere s(vec(0, 0, 0), 2);
