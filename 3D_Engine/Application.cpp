@@ -2,6 +2,8 @@
 
 Application::Application()
 {
+	frames = 0;
+
 	window = new ModuleWindow(this);
 	input = new ModuleInput(this);
 	audio = new ModuleAudio(this, true);
@@ -69,13 +71,55 @@ bool Application::Init()
 // ---------------------------------------------
 void Application::PrepareUpdate()
 {
-	dt = (float)ms_timer.Read() / 1000.0f;
+	frame_count++;
+	last_sec_frame_count++;
+
+	delta_time = ms_timer.Read();
+	dt = (delta_time / 1000.0f) * time_scale;
+	if (time_scaleFrames > 0) {
+		time_scaleFrames--;
+	}
+	else if (time_scaleFrames == 0) {
+		time_scale = prevTime_scale = 1.f;
+		time_scaleFrames = -1;
+	}
 	ms_timer.Start();
+
+	
 }
 
 // ---------------------------------------------
 void Application::FinishUpdate()
 {
+	if (last_sec_frame_time.Read() > 1000) {
+		last_sec_frame_time.Start();
+		prev_last_sec_frame_count = last_sec_frame_count;
+		last_sec_frame_count = 0;
+	}
+
+	avg_fps = float(frame_count) / ten_sec_timer.ReadSec();
+	ten_sec_timer.ReadSec() >= 10 ? ten_sec_timer.Start(), frame_count = 0 : ' '; //This is questionable
+	seconds_since_startup = startup_time.ReadSec();
+	last_frame_ms = ms_timer.Read();
+	frames_on_last_update = prev_last_sec_frame_count;
+
+
+	/*static char title[256];
+	sprintf_s(title, 256, "Av.FPS: %.2f Last Frame Ms: %02u Last sec frames: %i  Time since startup: %.3f Frame Count: %lu ",
+		avg_fps, last_frame_ms, frames_on_last_update, seconds_since_startup, frame_count);
+	window->SetTitle(title);*/
+
+	delay_time.Start();
+	int delay_ms = (1000 / framerate_cap) - last_frame_ms;
+	if (delay_ms > 0)
+		SDL_Delay(delay_ms);
+	if (frames_to_framerate_reset-- == 0)
+		framerate_cap = prev_framerate_cap;
+	uint wait_ms = delay_time.Read();
+
+
+	StoreFpsLog();
+	StoreMsLog();
 }
 
 // Call PreUpdate, Update and PostUpdate on all modules
@@ -119,4 +163,60 @@ void Application::RequestBrowser(std::string link)
 void Application::AddModule(Module* mod)
 {
 	list_modules.push_back(mod);
+}
+
+void Application::StoreFpsLog() {
+	
+	if (fps_log.size() < MAX_FPS_LOG) {
+		fps_log.push_back(avg_fps);	
+	}
+	else {
+		fps_log.erase(fps_log.begin());
+		fps_log.push_back(avg_fps);	
+	}
+}
+void Application::StoreMsLog() {
+
+	if (ms_log.size() < MAX_MS_LOG) {
+		ms_log.push_back(last_frame_ms);
+	}
+	else {
+		ms_log.erase(ms_log.begin());
+		ms_log.push_back(last_frame_ms);
+	}
+}
+
+std::vector<float> Application::GetFpsLog() {
+	return fps_log;
+}
+std::vector<float> Application::GetMsLog() {
+	return ms_log;
+}
+
+Uint32 Application::GetFramerateCap() const
+{
+	return framerate_cap;
+}
+
+void Application::SetFramerateCap(Uint32 cap, int frames)
+{
+	prev_framerate_cap = framerate_cap;
+	framerate_cap = cap;
+	frames_to_framerate_reset = frames;
+}
+
+float Application::GetTimeScale() const
+{
+	return time_scale;
+}
+
+void Application::SetTimeScale(float ts, int frameNumber)
+{
+	prevTime_scale = time_scale;
+	time_scale = ts;
+	time_scaleFrames = frameNumber;
+}
+
+void Application::PauseGame(bool pause) {
+	SetTimeScale(pause ? 0.f : 1.f);	
 }

@@ -121,6 +121,16 @@ update_status ModuleGui::Update(float dt)
 			}
 		}
 	}
+	if (ImGui::CollapsingHeader("Application")) {
+		char title[20];
+		std::vector<float> VecLog = App->GetFpsLog();
+		sprintf_s(title, 20, "Framerate %.1f", VecLog[VecLog.size() - 1]);
+		ImGui::PlotHistogram("##framerate", &VecLog[0], VecLog.size(), 0, title, 0.0f, 100.0f, ImVec2(310, 100));
+
+		VecLog = App->GetMsLog();
+		sprintf_s(title, 20, "Milliseconds %.1f", VecLog[VecLog.size() - 1]);
+		ImGui::PlotHistogram("##framerate", &VecLog[0], VecLog.size(), 0, title, 0.0f,40.0f, ImVec2(310, 100));
+	}
 	if (ImGui::MenuItem("CLOSE")) {
 		return UPDATE_STOP;
 		ImGui::EndMenu();
