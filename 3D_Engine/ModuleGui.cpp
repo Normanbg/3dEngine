@@ -52,8 +52,8 @@ update_status ModuleGui::Update(float dt)
 			App->RequestBrowser("https://github.com/Normanbg/3dEngine/releases");
 			if (ImGui::MenuItem("Report a bug"))
 			App->RequestBrowser("https://github.com/Normanbg/3dEngine/issues");
-			if (ImGui::MenuItem("About")) {}
-			//requestBrowser
+			if (ImGui::MenuItem("About"))
+				activeAbout = !activeAbout;
 			ImGui::EndMenu();
 		//HELP MENU--------------
 		}
@@ -129,6 +129,34 @@ update_status ModuleGui::Update(float dt)
 
 	if (demoShowcase)
 		ImGui::ShowTestWindow();
+
+	if (activeAbout) {
+		if (ImGui::Begin("About")) {
+			ImGui::Text("Video Game Engine. \n\nThis Engine is done for the 3D Engines subject on the Design & Development Degree by UPC \n\nDeveloped by:\n");
+			if (ImGui::SmallButton("Norman Benet"))
+				App->RequestBrowser("https://github.com/normanbg");
+			if (ImGui::SmallButton("Carles Margeli"))
+				App->RequestBrowser("https://github.com/Margeli");
+			ImGui::Spacing();
+			ImGui::Text("Libraries Used:");
+			if (ImGui::SmallButton("SDL"))
+				App->RequestBrowser("https://www.libsdl.org/download-2.0.php");
+			if (ImGui::SmallButton("OpenGL")) 
+				App->RequestBrowser("https://github.com/ocornut/imgui");
+			if (ImGui::SmallButton("ImGui"))
+				App->RequestBrowser("https://www.opengl.org/");
+			if (ImGui::SmallButton("MathGeoLIB"))
+				App->RequestBrowser("https://github.com/juj/MathGeoLib");
+			ImGui::Spacing();
+			ImGui::Spacing();
+			ImGui::Spacing();
+			ImGui::Text("License:");
+			if (ImGui::SmallButton("MIT"))
+				App->RequestBrowser("https://github.com/Normanbg/3dEngine/blob/master/LICENSE");
+			ImGui::End();
+		}
+
+	}
 
 
 	return UPDATE_CONTINUE;
