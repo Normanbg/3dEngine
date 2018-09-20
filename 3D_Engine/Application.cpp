@@ -111,6 +111,11 @@ bool Application::CleanUp()
 	return ret;
 }
 
+void Application::RequestBrowser(std::string link)
+{
+	ShellExecute(NULL, "open", link.c_str(), NULL, NULL, SW_SHOWNORMAL);
+}
+
 void Application::AddModule(Module* mod)
 {
 	list_modules.push_back(mod);

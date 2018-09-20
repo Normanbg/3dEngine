@@ -40,19 +40,22 @@ update_status ModuleGui::PreUpdate(float dt)
 
 update_status ModuleGui::Update(float dt)
 {
+	
 	if (ImGui::BeginMainMenuBar()) {
+		//--------------HELP MENU
 		if (ImGui::BeginMenu("Help")) {
 			if (ImGui::MenuItem("Gui Demo"))
 				demoShowcase = !demoShowcase;
-			if (ImGui::MenuItem("Documentation")) {}
-			//requestBrowser
-			if (ImGui::MenuItem("Download latest")) {}
-			//requestBrowser
-			if (ImGui::MenuItem("Report a bug")) {}
-			//requestBrowser
+			if (ImGui::MenuItem("Documentation"))
+				App->RequestBrowser("https://github.com/Normanbg/3dEngine/wiki");
+			if (ImGui::MenuItem("Download latest"))
+			App->RequestBrowser("https://github.com/Normanbg/3dEngine/releases");
+			if (ImGui::MenuItem("Report a bug"))
+			App->RequestBrowser("https://github.com/Normanbg/3dEngine/issues");
 			if (ImGui::MenuItem("About")) {}
 			//requestBrowser
 			ImGui::EndMenu();
+		//HELP MENU--------------
 		}
 		ImGui::EndMainMenuBar();
 	}
