@@ -121,11 +121,24 @@ update_status ModuleGui::Update(float dt)
 			}
 		}
 	}
+	if (ImGui::CollapsingHeader("Hardware")) {
+		ImVec4 yellow(255, 255, 0, 255);
+		ImGui::Text("CPUs:");
+		ImGui::SameLine();
+		ImGui::TextColored(yellow,"%d (Cache: %dKb)", SDL_GetCPUCount(), SDL_GetCPUCacheLineSize());
+
+		ImGui::Text("System RAM:");
+		ImGui::SameLine();
+		ImGui::TextColored(yellow, "%0.1fGb", ((float)SDL_GetSystemRAM() / 1024));
+
+
+
+		
+	}
 	if (ImGui::MenuItem("CLOSE")) {
 		return UPDATE_STOP;
 		ImGui::EndMenu();
 	}
-
 
 	if (demoShowcase)
 		ImGui::ShowTestWindow();
