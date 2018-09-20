@@ -22,7 +22,7 @@ public:
 	bool CleanUp();
 
 public:
-	
+	bool demoShowcase = false;
 };
 
 #endif 

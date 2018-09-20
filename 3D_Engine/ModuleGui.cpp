@@ -24,7 +24,7 @@ ModuleGui::~ModuleGui()
 
 bool ModuleGui::Start()
 {
-
+	demoShowcase = false;
 	ImGui_ImplSdl_Init(App->window->window);
 	return true;
 }
@@ -40,67 +40,89 @@ update_status ModuleGui::PreUpdate(float dt)
 
 update_status ModuleGui::Update(float dt)
 {
-		if (ImGui::CollapsingHeader("Create")) {
-			if (ImGui::MenuItem("Sphere")) {
-				math::Sphere s(vec(0, 0, 0), 2);
-				App->physics->AddBody(s);
-			}
-			if (ImGui::MenuItem("Cyllinder")) {
-				
-			}
-			if (ImGui::MenuItem("Capsule")) {
-				math::Capsule ca(vec(0,0,0),vec(0,1,0), 5);
-				App->physics->AddBody(ca);
-			}
-			if (ImGui::MenuItem("AABB")) {
-				math::AABB ab(vec(0,0,0), vec(1,1,1));
-				App->physics->AddBody(ab);
-			}
-			if (ImGui::MenuItem("OBB")) {
-				//CREATE
-			}
-			if (ImGui::MenuItem("Frustum")) {
-				//CREATE
-			}
-			if (ImGui::MenuItem("Planes")) {
-				math::Plane p(vec(0,0,0),1);
-				App->physics->AddBody(p);
-			}
-			if (ImGui::MenuItem("Segments")) {
-				//CREATE
-			}
-			if (ImGui::MenuItem("Rays")) {
-				//CREATE
-			}
-			if (ImGui::MenuItem("Convex Hull")) {
-				//CREATE
-			}
-			if (ImGui::MenuItem("Mesh")) {
-				//CREATE
-			}
-			if (ImGui::MenuItem("Triangles")) {
-				//CREATE
-			}
-		}	
-		if (ImGui::CollapsingHeader("Random Generator")) {
-			static bool a = false;
-			if (ImGui::Button("Create Random Number Between 0.0 & 1.0")) {
-				a ^= 1;
-			}
-			if (a)	{
-				for (int i = 1; i < 101; i++) {
-					pcg32_random_t randNumbGen;
-					double d = ldexp(pcg32_random_r(&randNumbGen), -32);
-					ImGui::Text("Random Number %d: %f",i, d);
+	if (ImGui::BeginMainMenuBar()) {
+		if (ImGui::BeginMenu("Help")) {
+			if (ImGui::MenuItem("Gui Demo"))
+				demoShowcase = !demoShowcase;
 
-				}
-			}
-		}
-		if (ImGui::MenuItem("CLOSE")) {
-			return UPDATE_STOP;
+			if (ImGui::MenuItem("Documentation")){}
+				//requestBrowser
+			if (ImGui::MenuItem("Download latest")){}
+				//requestBrowser
+			if (ImGui::MenuItem("Report a bug")){}
+				//requestBrowser
+			if (ImGui::MenuItem("About")){}
+					//requestBrowser
 			ImGui::EndMenu();
 		}
-	ImGui::ShowTestWindow();
+		ImGui::EndMainMenuBar();
+	}
+	if (ImGui::CollapsingHeader("Create")) {
+		if (ImGui::MenuItem("Sphere")) {
+			math::Sphere s(vec(0, 0, 0), 2);
+			App->physics->AddBody(s);
+		}
+		if (ImGui::MenuItem("Cyllinder")) {
+
+		}
+		if (ImGui::MenuItem("Capsule")) {
+			math::Capsule ca(vec(0, 0, 0), vec(0, 1, 0), 5);
+			App->physics->AddBody(ca);
+		}
+		if (ImGui::MenuItem("AABB")) {
+			math::AABB ab(vec(0, 0, 0), vec(1, 1, 1));
+			App->physics->AddBody(ab);
+		}
+		if (ImGui::MenuItem("OBB")) {
+			//CREATE
+		}
+		if (ImGui::MenuItem("Frustum")) {
+			//CREATE
+		}
+		if (ImGui::MenuItem("Planes")) {
+			math::Plane p(vec(0, 0, 0), 1);
+			App->physics->AddBody(p);
+		}
+		if (ImGui::MenuItem("Segments")) {
+			//CREATE
+		}
+		if (ImGui::MenuItem("Rays")) {
+			//CREATE
+		}
+		if (ImGui::MenuItem("Convex Hull")) {
+			//CREATE
+		}
+		if (ImGui::MenuItem("Mesh")) {
+			//CREATE
+		}
+		if (ImGui::MenuItem("Triangles")) {
+			//CREATE
+		}
+	}
+	if (ImGui::CollapsingHeader("Random Generator")) {
+		static bool a = false;
+		if (ImGui::Button("Create Random Number Between 0.0 & 1.0")) {
+			a ^= 1;
+		}
+		if (a) {
+			for (int i = 1; i < 101; i++) {
+				pcg32_random_t randNumbGen;
+				double d = ldexp(pcg32_random_r(&randNumbGen), -32);
+				ImGui::Text("Random Number %d: %f", i, d);
+
+			}
+		}
+	}
+	if (ImGui::MenuItem("CLOSE")) {
+		return UPDATE_STOP;
+		ImGui::EndMenu();
+	}
+
+
+	if (demoShowcase)
+		ImGui::ShowTestWindow();
+
+
 	return UPDATE_CONTINUE;
 }
 
