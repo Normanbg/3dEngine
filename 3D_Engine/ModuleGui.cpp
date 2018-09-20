@@ -94,7 +94,12 @@ update_status ModuleGui::Update(float dt)
 					ImGui::Text("Random Number %d: %f",i, d);
 
 				}
-			}
+			}/* MAX & MIN
+			ImGui::InputInt("Max Number", &var);
+			ImGui::InputInt("Min Number", &var2);
+			if (ImGui::SmallButton("Generate Random Int")) {
+				randomNum = ("%i", (int)pcg16si_boundedrand_r(&rng, var) + var2);
+			}*/
 		}
 		if (ImGui::MenuItem("CLOSE")) {
 			return UPDATE_STOP;
