@@ -83,105 +83,102 @@ update_status ModuleGui::Update(float dt)
 
 	if (configActive) {
 		if (ImGui::Begin("Configuration", &configActive)) {
-			if (ImGui::BeginMenu("Configuration")) {
-				if (ImGui::CollapsingHeader("Create")) {
-					if (ImGui::MenuItem("Sphere")) {
-						math::Sphere s(vec(0, 0, 0), 2);
-						App->physics->AddBody(s);
-					}
-					if (ImGui::MenuItem("Cyllinder")) {
+			if (ImGui::CollapsingHeader("Create")) {
+				if (ImGui::MenuItem("Sphere")) {
+					math::Sphere s(vec(0, 0, 0), 2);
+					App->physics->AddBody(s);
+				}
+				if (ImGui::MenuItem("Cyllinder")) {
 
-					}
-					if (ImGui::MenuItem("Capsule")) {
-						math::Capsule ca(vec(0, 0, 0), vec(0, 1, 0), 5);
-						App->physics->AddBody(ca);
-					}
-					if (ImGui::MenuItem("AABB")) {
-						math::AABB ab(vec(0, 0, 0), vec(1, 1, 1));
-						App->physics->AddBody(ab);
-					}
-					if (ImGui::MenuItem("OBB")) {
-						//CREATE
-					}
-					if (ImGui::MenuItem("Frustum")) {
-						//CREATE
-					}
-					if (ImGui::MenuItem("Planes")) {
-						math::Plane p(vec(0, 0, 0), 1);
-						App->physics->AddBody(p);
-					}
-					if (ImGui::MenuItem("Segments")) {
-						//CREATE
-					}
-					if (ImGui::MenuItem("Rays")) {
-						//CREATE
-					}
-					if (ImGui::MenuItem("Convex Hull")) {
-						//CREATE
-					}
-					if (ImGui::MenuItem("Mesh")) {
-						//CREATE
-					}
-					if (ImGui::MenuItem("Triangles")) {
-						//CREATE
+				}
+				if (ImGui::MenuItem("Capsule")) {
+					math::Capsule ca(vec(0, 0, 0), vec(0, 1, 0), 5);
+					App->physics->AddBody(ca);
+				}
+				if (ImGui::MenuItem("AABB")) {
+					math::AABB ab(vec(0, 0, 0), vec(1, 1, 1));
+					App->physics->AddBody(ab);
+				}
+				if (ImGui::MenuItem("OBB")) {
+					//CREATE
+				}
+				if (ImGui::MenuItem("Frustum")) {
+					//CREATE
+				}
+				if (ImGui::MenuItem("Planes")) {
+					math::Plane p(vec(0, 0, 0), 1);
+					App->physics->AddBody(p);
+				}
+				if (ImGui::MenuItem("Segments")) {
+					//CREATE
+				}
+				if (ImGui::MenuItem("Rays")) {
+					//CREATE
+				}
+				if (ImGui::MenuItem("Convex Hull")) {
+					//CREATE
+				}
+				if (ImGui::MenuItem("Mesh")) {
+					//CREATE
+				}
+				if (ImGui::MenuItem("Triangles")) {
+					//CREATE
+				}
+			}
+
+			if (ImGui::CollapsingHeader("Random Generator")) {
+				static bool a = false;
+				if (ImGui::Button("Create Random Number Between 0.0 & 1.0")) {
+					a ^= 1;
+				}
+				if (a) {
+					for (int i = 1; i < 101; i++) {
+						pcg32_random_t randNumbGen;
+						double d = ldexp(pcg32_random_r(&randNumbGen), -32);
+						ImGui::Text("Random Number %d: %f", i, d);
+
 					}
 				}
-
-				if (ImGui::CollapsingHeader("Random Generator")) {
-					static bool a = false;
-					if (ImGui::Button("Create Random Number Between 0.0 & 1.0")) {
-						a ^= 1;
-					}
-					if (a) {
-						for (int i = 1; i < 101; i++) {
-							pcg32_random_t randNumbGen;
-							double d = ldexp(pcg32_random_r(&randNumbGen), -32);
-							ImGui::Text("Random Number %d: %f", i, d);
-
-						}
-					}
-				}
+			}
 
 
-				if (ImGui::CollapsingHeader("Application")) {
+			if (ImGui::CollapsingHeader("Application")) {
 
-					const int maxSize = 64;
-					char str[maxSize] = TITLE;
-					ImGui::InputText("App Name", str, maxSize);
+				const int maxSize = 64;
+				char str[maxSize] = TITLE;
+				ImGui::InputText("App Name", str, maxSize);
 
-					char str2[maxSize] = ORGANIZATION;
-					ImGui::InputText("Organization", str2, maxSize);
+				char str2[maxSize] = ORGANIZATION;
+				ImGui::InputText("Organization", str2, maxSize);
 
-					int DefaultFpsCap = (App->GetFramerateCap());
+				int DefaultFpsCap = (App->GetFramerateCap());
 
-					ImGui::SliderInt("Max FPS", &(DefaultFpsCap), 1, 120);
-					App->SetFramerateCap(DefaultFpsCap);
-					ImGui::Text("Limit Framerate: %i", DefaultFpsCap);
+				ImGui::SliderInt("Max FPS", &(DefaultFpsCap), 1, 120);
+				App->SetFramerateCap(DefaultFpsCap);
+				ImGui::Text("Limit Framerate: %i", DefaultFpsCap);
 
-					char title[20];
-					std::vector<float> VecLog = App->GetFpsLog();
-					sprintf_s(title, 20, "Framerate %.1f", VecLog[VecLog.size() - 1]);
-					ImGui::PlotHistogram("##framerate", &VecLog[0], VecLog.size(), 0, title, 0.0f, 100.0f, ImVec2(310, 100));
+				char title[20];
+				std::vector<float> VecLog = App->GetFpsLog();
+				sprintf_s(title, 20, "Framerate %.1f", VecLog[VecLog.size() - 1]);
+				ImGui::PlotHistogram("##framerate", &VecLog[0], VecLog.size(), 0, title, 0.0f, 100.0f, ImVec2(310, 100));
 
-					VecLog = App->GetMsLog();
-					sprintf_s(title, 20, "Milliseconds %.1f", VecLog[VecLog.size() - 1]);
-					ImGui::PlotHistogram("##framerate", &VecLog[0], VecLog.size(), 0, title, 0.0f, 40.0f, ImVec2(310, 100));
-				}
-				if (ImGui::CollapsingHeader("Hardware")) {
-					ImVec4 yellow(255, 255, 0, 255);
-					ImGui::Text("CPUs:");
-					ImGui::SameLine();
-					ImGui::TextColored(yellow, "%d (Cache: %dKb)", SDL_GetCPUCount(), SDL_GetCPUCacheLineSize());
+				VecLog = App->GetMsLog();
+				sprintf_s(title, 20, "Milliseconds %.1f", VecLog[VecLog.size() - 1]);
+				ImGui::PlotHistogram("##framerate", &VecLog[0], VecLog.size(), 0, title, 0.0f, 40.0f, ImVec2(310, 100));
+			}
+			if (ImGui::CollapsingHeader("Hardware")) {
+				ImVec4 yellow(255, 255, 0, 255);
+				ImGui::Text("CPUs:");
+				ImGui::SameLine();
+				ImGui::TextColored(yellow, "%d (Cache: %dKb)", SDL_GetCPUCount(), SDL_GetCPUCacheLineSize());
 
-					ImGui::Text("System RAM:");
-					ImGui::SameLine();
-					ImGui::TextColored(yellow, "%0.1fGb", ((float)SDL_GetSystemRAM() / 1024));
-				}
+				ImGui::Text("System RAM:");
+				ImGui::SameLine();
+				ImGui::TextColored(yellow, "%0.1fGb", ((float)SDL_GetSystemRAM() / 1024));
+			}
 
-				if (ImGui::MenuItem("CLOSE")) {
-					return UPDATE_STOP;
-					ImGui::EndMenu();
-				}
+			if (ImGui::MenuItem("CLOSE")) {
+				return UPDATE_STOP;
 				ImGui::EndMenu();
 			}
 			ImGui::End();
