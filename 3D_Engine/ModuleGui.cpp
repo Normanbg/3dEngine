@@ -72,17 +72,7 @@ update_status ModuleGui::Update(float dt)
 
 			ImGui::EndMenu();
 		}
-		ImGui::EndMainMenuBar();
-	}
-	/*MAX & MIN
-	ImGui::InputInt("Max Number", &var);
-	ImGui::InputInt("Min Number", &var2);
-	if (ImGui::SmallButton("Generate Random Int")) {
-		randomNum = ("%i", (int)pcg16si_boundedrand_r(&rng, var) + var2);
-	}*/
-
-	if (configActive) {
-		if (ImGui::Begin("Configuration", &configActive)) {
+		if (ImGui::BeginMenu("Hw")) {
 			if (ImGui::CollapsingHeader("Create")) {
 				if (ImGui::MenuItem("Sphere")) {
 					math::Sphere s(vec(0, 0, 0), 2);
@@ -140,7 +130,27 @@ update_status ModuleGui::Update(float dt)
 					}
 				}
 			}
+			
+			if (ImGui::MenuItem("CLOSE")) {
+				return UPDATE_STOP;
+				ImGui::EndMenu();
+			}
 
+			ImGui::EndMenu();
+		}
+		ImGui::EndMainMenuBar();
+
+	}
+	/*MAX & MIN
+	ImGui::InputInt("Max Number", &var);
+	ImGui::InputInt("Min Number", &var2);
+	if (ImGui::SmallButton("Generate Random Int")) {
+		randomNum = ("%i", (int)pcg16si_boundedrand_r(&rng, var) + var2);
+	}*/
+
+	if (configActive) {
+		ImGui::SetNextWindowSize(ImVec2(650, 350), ImGuiSetCond_Once);
+		if (ImGui::Begin("Configuration", &configActive)) {
 
 			if (ImGui::CollapsingHeader("Application")) {
 
@@ -175,11 +185,6 @@ update_status ModuleGui::Update(float dt)
 				ImGui::Text("System RAM:");
 				ImGui::SameLine();
 				ImGui::TextColored(yellow, "%0.1fGb", ((float)SDL_GetSystemRAM() / 1024));
-			}
-
-			if (ImGui::MenuItem("CLOSE")) {
-				return UPDATE_STOP;
-				ImGui::EndMenu();
 			}
 			ImGui::End();
 		}

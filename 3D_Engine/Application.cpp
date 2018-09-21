@@ -1,4 +1,6 @@
 #include "Application.h"
+#include "SDL/include/SDL_cpuinfo.h"
+#include "DeviceId\DeviceId.h"
 
 Application::Application()
 {
@@ -120,6 +122,18 @@ void Application::FinishUpdate()
 
 	StoreFpsLog();
 	StoreMsLog();
+}
+
+void Application::GetHardWareData()
+{
+	uint64_t totVideoMem, currVideoMem, availbVideoMem, reserVideoMem;
+
+	if (getGraphicsDeviceInfo(nullptr, nullptr, nullptr, &totVideoMem, &currVideoMem, &availbVideoMem, &reserVideoMem))	{
+		totalVideoMemF		=	(float)totVideoMem / (1024.0f * 1024.0f);
+		currentVideoMemF	=	(float)currVideoMem / (1024.0f * 1024.0f);
+		availableVideoMemF	=	(float)availbVideoMem / (1024.0f * 1024.0f);
+		reservedVideoMemF	=	(float)reserVideoMem / (1024.0f * 1024.0f);
+	}
 }
 
 // Call PreUpdate, Update and PostUpdate on all modules

@@ -25,6 +25,9 @@
     <Filter Include="Sources\Tools\ImGui">
       <UniqueIdentifier>{0637cb45-8417-4ce0-b300-60c80cb9a057}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Tools\DeviceId">
+      <UniqueIdentifier>{103ab7f6-4bf7-4a22-bc2f-9945aedf1129}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -300,6 +303,12 @@
     <ClInclude Include="ImGui\imstb_truetype.h">
       <Filter>Sources\Tools\ImGui</Filter>
     </ClInclude>
+    <ClInclude Include="DeviceId\DeviceId.h">
+      <Filter>Sources\Tools\DeviceId</Filter>
+    </ClInclude>
+    <ClInclude Include="DeviceId\dxgi1_4.h">
+      <Filter>Sources\Tools\DeviceId</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -484,6 +493,9 @@
     </ClCompile>
     <ClCompile Include="ImGui\imgui_widgets.cpp">
       <Filter>Sources\Tools\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="DeviceId\DeviceId.cpp">
+      <Filter>Sources\Tools\DeviceId</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
