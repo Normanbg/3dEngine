@@ -136,6 +136,70 @@ void Application::GetHardWareData()
 	}
 }
 
+void Application::HardwareData(){
+if (ImGui::CollapsingHeader("Hardware"))
+{
+	GetHardWareData();
+
+	SDL_version version;
+	SDL_GetVersion(&version);
+
+	ImVec4 yellow(1, 1, 0, 1);
+
+	ImGui::Text("SDL Version"); ImGui::SameLine();
+	ImGui::TextColored(yellow, "%d.%d.%d", version.major, version.minor, version.patch);
+	ImGui::Separator();
+	ImGui::Text("CPU's:"); ImGui::SameLine();
+	ImGui::TextColored(yellow, "%d", SDL_GetCPUCount()); ImGui::SameLine();
+	ImGui::TextColored(yellow, "(Cache: %dkb)", SDL_GetCPUCacheLineSize());
+
+	ImGui::Text("System RAM:"); ImGui::SameLine(); 
+	ImGui::TextColored(yellow, "%0.1fGb", ((float)SDL_GetSystemRAM() / 1024));
+
+	ImGui::Text("Caps: "); ImGui::SameLine();
+
+	if (SDL_Has3DNow()) ImGui::TextColored(yellow, "3DNow,"); ImGui::SameLine();
+	if (SDL_HasAVX()) ImGui::TextColored(yellow, "AVX,"); ImGui::SameLine();
+	if (SDL_HasAltiVec()) ImGui::TextColored(yellow, "AltiVec,"); ImGui::SameLine();
+	if (SDL_HasMMX()) ImGui::TextColored(yellow, "MMX,"); ImGui::SameLine();
+	if (SDL_HasRDTSC()) ImGui::TextColored(yellow, "RDTSC,"); ImGui::SameLine();
+	if (SDL_HasSSE()) ImGui::TextColored(yellow, "SSE,"); ImGui::SameLine();
+	if (SDL_HasSSE2()) ImGui::TextColored(yellow, "SSE2,"); ImGui::SameLine();
+	if (SDL_HasSSE3()) ImGui::TextColored(yellow, "SSE3,"); ImGui::SameLine();
+	if (SDL_HasSSE41()) ImGui::TextColored(yellow, "SSE41,"); ImGui::SameLine();
+	if (SDL_HasSSE42()) ImGui::TextColored(yellow, "SSE42,");
+
+	ImGui::Separator();
+
+	ImGui::Text("GPU: "); ImGui::SameLine();
+	ImGui::TextColored(yellow, " vendor %s", renderer3D->GetGraphicsVendor());
+
+	ImGui::Text("Brand: "); ImGui::SameLine();
+	ImGui::TextColored(yellow, "%s", renderer3D->GetGraphicsModel());
+
+	ImGui::Text("VRAM Budget: "); ImGui::SameLine();
+	ImGui::TextColored(yellow, "%.2f Mb", totalVideoMemF);
+
+	ImGui::Text("VRAM Usage: "); ImGui::SameLine();
+	ImGui::TextColored(yellow, "%.2f Mb", currentVideoMemF);
+
+	ImGui::Text("VRAM Avaliable: "); ImGui::SameLine();
+	ImGui::TextColored(yellow, "%.2f Mb", availableVideoMemF);
+
+	ImGui::Text("VRAM Reserved: "); ImGui::SameLine();
+	ImGui::TextColored(yellow, "%.2f Mb", reservedVideoMemF);
+
+	/*{ FOR MAKING A GRAPHIC, DON'T ERASE!!!!!!!!!!!
+		char buf[32];
+		sprintf(buf, "%.2f/%.2f", currentVideoMemF, availableVideoMemF);
+		float percentage = (currentVideoMemF * 100) / availableVideoMemF;
+
+		ImGui::ProgressBar(percentage / 100, ImVec2(0.f, 0.f), buf);
+		ImGui::SameLine();
+		ImGui::Text("VRAM usage");
+	}*/
+}
+}
 // Call PreUpdate, Update and PostUpdate on all modules
 update_status Application::Update()
 {

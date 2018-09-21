@@ -176,8 +176,8 @@ update_status ModuleGui::Update(float dt)
 				sprintf_s(title, 20, "Milliseconds %.1f", VecLog[VecLog.size() - 1]);
 				ImGui::PlotHistogram("##framerate", &VecLog[0], VecLog.size(), 0, title, 0.0f, 40.0f, ImVec2(310, 100));
 			}
-			if (ImGui::CollapsingHeader("Hardware")) {
-				ImVec4 yellow(255, 255, 0, 255);
+			/*if (ImGui::CollapsingHeader("Hardware")) {*/
+				/*ImVec4 yellow(255, 255, 0, 255);
 				ImGui::Text("CPUs:");
 				ImGui::SameLine();
 				ImGui::TextColored(yellow, "%d (Cache: %dKb)", SDL_GetCPUCount(), SDL_GetCPUCacheLineSize());
@@ -185,7 +185,8 @@ update_status ModuleGui::Update(float dt)
 				ImGui::Text("System RAM:");
 				ImGui::SameLine();
 				ImGui::TextColored(yellow, "%0.1fGb", ((float)SDL_GetSystemRAM() / 1024));
-			}
+				}*/
+				App->HardwareData();
 			ImGui::End();
 		}
 	}

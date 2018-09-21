@@ -97,6 +97,7 @@ public:
 	void PauseGame(bool pause);
 
 	void GetHardWareData();
+	void HardwareData();
 
 
 private:
