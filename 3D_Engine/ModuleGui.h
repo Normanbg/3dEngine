@@ -24,6 +24,8 @@ public:
 public:
 	bool demoShowcase = false;
 	bool activeAbout = false;
+	bool configActive = true;
+
 };
 
 #endif 
