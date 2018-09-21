@@ -123,6 +123,20 @@ update_status ModuleGui::Update(float dt)
 	}
 
 	if (ImGui::CollapsingHeader("Application")) {
+
+		const int maxSize = 64;
+		char str[maxSize] = TITLE;
+		ImGui::InputText("App Name", str, maxSize);
+
+		char str2[maxSize] = ORGANIZATION;
+		ImGui::InputText("Organization", str2, maxSize);
+
+		int DefaultFpsCap = (App->GetFramerateCap());
+
+		ImGui::SliderInt("Max FPS", &(DefaultFpsCap), 1, 120);
+		App->SetFramerateCap(DefaultFpsCap);
+		ImGui::Text("Limit Framerate: %i", DefaultFpsCap);
+
 		char title[20];
 		std::vector<float> VecLog = App->GetFpsLog();
 		sprintf_s(title, 20, "Framerate %.1f", VecLog[VecLog.size() - 1]);
