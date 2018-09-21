@@ -6,6 +6,11 @@ ModuleWindow::ModuleWindow(Application* app, bool start_enabled) : Module(app, s
 {
 	window = NULL;
 	screen_surface = NULL;
+
+	fullscreen = WIN_FULLSCREEN;
+	borderless = WIN_BORDERLESS;
+	resizable = WIN_RESIZABLE;
+	fullDesktop = WIN_FULLSCREEN_DESKTOP;
 }
 
 // Destructor
@@ -91,4 +96,26 @@ bool ModuleWindow::CleanUp()
 void ModuleWindow::SetTitle(const char* title)
 {
 	SDL_SetWindowTitle(window, title);
+}
+
+void ModuleWindow::SetFullscreen(bool fullscr) {
+
+	Uint32 fullsFlag = fullscr ? SDL_WINDOW_FULLSCREEN : SDL_WINDOWEVENT_MINIMIZED;
+	fullscreen = fullscr;
+	SDL_SetWindowFullscreen(window, fullsFlag);
+}
+void ModuleWindow::SetResizable(bool resiz) {
+	resizable = resiz;
+	SDL_bool res = SDL_bool(resiz);
+	SDL_SetWindowResizable(window, res);
+}
+void ModuleWindow::SetBorderless(bool borderl) {
+	borderless = borderl;
+	SDL_bool bord = SDL_bool(borderl);
+	SDL_SetWindowBordered(window, bord);
+}
+void ModuleWindow::SetFullscreenDesktop(bool fulld) {
+	fullDesktop = fulld;
+	SDL_bool bord = SDL_bool(fulld);
+	
 }

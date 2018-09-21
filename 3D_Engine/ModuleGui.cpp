@@ -177,6 +177,18 @@ update_status ModuleGui::Update(float dt)
 				ImGui::TextColored(yellow, "%0.1fGb", ((float)SDL_GetSystemRAM() / 1024));
 			}
 
+			if (ImGui::CollapsingHeader("Window")) {
+
+				
+				bool resi = App->window->IsBorderless();
+
+				if (ImGui::Checkbox("Resizable", &resi)) {
+						App->window->SetBorderless(!resi);
+				
+				}
+
+			}
+
 			if (ImGui::MenuItem("CLOSE")) {
 				return UPDATE_STOP;
 				ImGui::EndMenu();

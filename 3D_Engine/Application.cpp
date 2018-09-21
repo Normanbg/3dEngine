@@ -168,11 +168,11 @@ void Application::AddModule(Module* mod)
 void Application::StoreFpsLog() {
 	
 	if (fps_log.size() < MAX_FPS_LOG) {
-		fps_log.push_back(avg_fps);	
+		fps_log.push_back(frames_on_last_update);
 	}
 	else {
 		fps_log.erase(fps_log.begin());
-		fps_log.push_back(avg_fps);	
+		fps_log.push_back(frames_on_last_update);
 	}
 }
 void Application::StoreMsLog() {
