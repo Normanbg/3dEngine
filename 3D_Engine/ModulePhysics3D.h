@@ -1,7 +1,7 @@
 #pragma once
 #include "Module.h"
 #include "Globals.h"
-#include "p2List.h"
+
 #include "Primitive.h"
 #include "PhysBody3D.h"
 
@@ -29,16 +29,16 @@ public:
 	update_status PostUpdate(float dt);
 	bool CleanUp();
 
-	PhysBody3D* AddBody(const Sphere& sphere, float mass = 1.0f);
-	PhysBody3D* AddBody(const Cube& cube, float mass = 1.0f, SceneObjectType type = None);
-	PhysBody3D* AddBody(const Cylinder& cylinder, float mass = 1.0f);
-	PhysVehicle3D* AddVehicle(const VehicleInfo& info);
+	void AddBody(const math::Sphere& sph);
+	void AddBody(const math::Capsule& caps);
+	void AddBody(const math::Plane& plane);
+	void AddBody(const math::AABB& aabb);
 
 	void AddConstraintP2P(PhysBody3D& bodyA, PhysBody3D& bodyB, const vec3& anchorA, const vec3& anchorB);
 	void AddConstraintHinge(PhysBody3D& bodyA, PhysBody3D& bodyB, const vec3& anchorA, const vec3& anchorB, const vec3& axisS, const vec3& axisB, bool disable_collision = false);
 
 
-
+	bool isIntersecting();
 private:
 
 	bool debug;
@@ -51,11 +51,17 @@ private:
 	btDefaultVehicleRaycaster*			vehicle_raycaster;
 	DebugDrawer*						debug_draw;
 
-	p2List<btCollisionShape*> shapes;
-	p2List<PhysBody3D*> bodies;
-	p2List<btDefaultMotionState*> motions;
-	p2List<btTypedConstraint*> constraints;
-	p2List<PhysVehicle3D*> vehicles;
+	std::list<btCollisionShape*> shapes;
+	std::list<PhysBody3D*> bodies;
+	std::list<btDefaultMotionState*> motions;
+	std::list<btTypedConstraint*> constraints;
+	
+	std::list<math::Sphere> spheres;
+	std::list<math::Capsule> capsules;
+	std::list<math::Plane> planes;
+	std::list<math::AABB> aabbs;
+	
+	
 };
 
 class DebugDrawer : public btIDebugDraw
@@ -72,6 +78,6 @@ public:
 	int	 getDebugMode() const;
 
 	DebugDrawModes mode;
-	Line line;
+	_Line line;
 	Primitive point;
 };

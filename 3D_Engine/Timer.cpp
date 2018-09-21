@@ -3,6 +3,7 @@
 // Body for CPU Tick Timer class
 // ----------------------------------------------------
 
+#include "./SDL/include/SDL_timer.h"
 #include "Timer.h"
 
 // ---------------------------------------------

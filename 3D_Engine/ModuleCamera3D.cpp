@@ -1,9 +1,7 @@
 #include "Globals.h"
 #include "Application.h"
 #include "PhysBody3D.h"
-#include "PhysVehicle3D.h"
 #include "ModuleCamera3D.h"
-#include "ModulePlayer.h"
 
 #define CAMERA_SPEED 10
 
@@ -30,7 +28,7 @@ ModuleCamera3D::~ModuleCamera3D()
 // -----------------------------------------------------------------
 bool ModuleCamera3D::Start()
 {
-	LOG("Setting up the camera");
+	OWN_LOG("Setting up the camera");
 	bool ret = true;
 
 	return ret;
@@ -39,7 +37,7 @@ bool ModuleCamera3D::Start()
 // -----------------------------------------------------------------
 bool ModuleCamera3D::CleanUp()
 {
-	LOG("Cleaning camera");
+	OWN_LOG("Cleaning camera");
 
 	return true;
 }

@@ -20,13 +20,13 @@ ModuleInput::~ModuleInput()
 // Called before render is available
 bool ModuleInput::Init()
 {
-	LOG("Init SDL input event system");
+	OWN_LOG("Init SDL input event system");
 	bool ret = true;
 	SDL_Init(0);
 
 	if(SDL_InitSubSystem(SDL_INIT_EVENTS) < 0)
 	{
-		LOG("SDL_EVENTS could not initialize! SDL_Error: %s\n", SDL_GetError());
+		OWN_LOG("SDL_EVENTS could not initialize! SDL_Error: %s\n", SDL_GetError());
 		ret = false;
 	}
 
@@ -120,10 +120,27 @@ update_status ModuleInput::PreUpdate(float dt)
 	return UPDATE_CONTINUE;
 }
 
+void ModuleInput::InputData()
+{
+
+	if (ImGui::CollapsingHeader("Input"))
+	{
+		ImGui::Text("Mouse Position:");
+		ImGui::SameLine();
+		ImGui::TextColored(ImVec4(1, 1, 0, 1), "%d, %d", App->input->mouse_x, App->input->mouse_y);
+		ImGui::Text("Mouse Motion:");
+		ImGui::SameLine();
+		ImGui::TextColored(ImVec4(1, 1, 0, 1), "%d, %d", App->input->mouse_x_motion, App->input->mouse_y_motion);
+
+		ImGui::Text("Mouse Wheel:");
+		ImGui::SameLine();
+		ImGui::TextColored(ImVec4(1, 1, 0, 1), "%d", App->input->mouse_z);
+	}
+}
 // Called before quitting
 bool ModuleInput::CleanUp()
 {
-	LOG("Quitting SDL input event subsystem");
+	OWN_LOG("Quitting SDL input event subsystem");
 	SDL_QuitSubSystem(SDL_INIT_EVENTS);
 	return true;
 }

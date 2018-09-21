@@ -23,6 +23,8 @@ public:
 	update_status PreUpdate(float dt);
 	bool CleanUp();
 
+	void InputData();
+
 	KEY_STATE GetKey(int id) const
 	{
 		return keyboard[id];
