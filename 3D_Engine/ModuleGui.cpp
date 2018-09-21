@@ -3,6 +3,7 @@
 #include "Application.h"
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_impl_sdl.h"
+#include "ImGui\imgui_impl_opengl2.h"
 #include "MathGeoLib\Geometry\GeometryAll.h"
 #include "MathGeoLib\Math\MathAll.h"
 #include "Primitive.h"
@@ -25,16 +26,22 @@ ModuleGui::~ModuleGui()
 bool ModuleGui::Start()
 {
 	demoShowcase = false;
-	ImGui_ImplSdl_Init(App->window->window);
+	
+	ImGui::CreateContext();
+
+	ImGui_ImplSDL2_InitForOpenGL(App->window->window, App->renderer3D->context);
+	ImGui_ImplOpenGL2_Init();
 	return true;
 }
 
 update_status ModuleGui::PreUpdate(float dt)
 {
-	ImGuiIO& io = ImGui::GetIO();
-	io.DisplaySize.x = 1920.0f;
-	io.DisplaySize.y = 1280.0f;
-	ImGui_ImplSdl_NewFrame(App->window->window);
+	/*ImGuiIO& io = ImGui::GetIO();
+	io.DisplaySize.x = 1920.0f;*/
+	/*io.DisplaySize.y = 1280.0f;*/
+	ImGui_ImplOpenGL2_NewFrame();
+	ImGui_ImplSDL2_NewFrame(App->window->window);
+	ImGui::NewFrame();
 	return UPDATE_CONTINUE;
 }
 
@@ -205,11 +212,13 @@ update_status ModuleGui::PostUpdate(float dt)
 {
 	App->physics->isIntersecting();
 	ImGui::Render();
+	ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
 	return UPDATE_CONTINUE;
 }
 
 bool ModuleGui::CleanUp()
 {
-	ImGui_ImplSdl_Shutdown();
+	ImGui_ImplSDL2_Shutdown();
+	ImGui_ImplOpenGL2_Shutdown();
 	return true;
 }
