@@ -182,8 +182,9 @@ update_status ModuleGui::Update(float dt)
 				
 				bool resi = App->window->IsBorderless();
 
-				if (ImGui::Checkbox("Resizable", &resi)) {
-						App->window->SetBorderless(!resi);
+				if (ImGui::Checkbox("Borderless", &resi)) {
+					resi != resi;
+						App->window->SetBorderless(resi);
 				
 				}
 
