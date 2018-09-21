@@ -193,7 +193,7 @@ update_status ModuleGui::Update(float dt)
 				}
 				
 				bool reszB = App->window->IsResizable();
-				if (ImGui::Checkbox("Resizable", &reszB)) {
+				if (ImGui::Checkbox("Resizable ", &reszB)) {
 					reszB != reszB;
 					App->window->SetResizable(reszB);
 				}
@@ -202,10 +202,21 @@ update_status ModuleGui::Update(float dt)
 				bool fullB = App->window->IsFullscreenDesktop();
 				if (ImGui::Checkbox("Full Desktop", &fullB)) {
 					fullB != fullB;
-					App->window->SetFullscreenDesktop(fullB);
-					
+					App->window->SetFullscreenDesktop(fullB);					
 				}
+				float bright = App->window->GetBrightness();
+				ImGui::SliderFloat("Bright", &bright, 0, 1.0f);
+				App->window->SetBrightness(bright);
 
+				int w, h;
+				App->window->GetSize(w, h);
+				int minWidthVal = 640;
+				int maxWidthVal =1920;
+				ImGui::SliderInt("Width", &w, minWidthVal, maxWidthVal);
+				int minHeightVal = 480;
+				int maxHeightVal = 1080;
+				ImGui::SliderInt("Height", &h, minHeightVal, maxHeightVal);
+				App->window->SetSize(w, h);
 			}
 
 			if (ImGui::MenuItem("CLOSE")) {

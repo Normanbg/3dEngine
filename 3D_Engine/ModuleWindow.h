@@ -24,11 +24,16 @@ public:
 	void SetResizable(bool resizable);
 	void SetFullscreen(bool fullscreen);
 	void SetFullscreenDesktop(bool fullsdesktop);
+	void SetSize(uint w, uint h);
 
-	bool IsFullscreen() { return _fullscreen; }
-	bool IsBorderless() { return _borderless; }
-	bool IsResizable() { return _resizable; }
-	bool IsFullscreenDesktop() { return _fullDesktop; }
+	bool IsFullscreen() const { return _fullscreen; }
+	bool IsBorderless() const { return _borderless; }
+	bool IsResizable() const { return _resizable; }
+	bool IsFullscreenDesktop() const{ return _fullDesktop; }
+	float GetBrightness() const { return _brightness; }
+	void GetSize(int &h, int &w)const;
+
+	void SetBrightness(float bright);
 
 public:
 	//The window we'll be rendering to
@@ -42,6 +47,10 @@ private:
 	bool _resizable;
 	bool _borderless;
 	bool _fullDesktop;
+	int _brightness = DEFAULT_BRIGHTNESS;
+
+	uint _w;
+	uint _h;
 };
 
 #endif // __ModuleWindow_H__

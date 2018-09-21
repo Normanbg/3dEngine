@@ -11,6 +11,9 @@ ModuleWindow::ModuleWindow(Application* app, bool start_enabled) : Module(app, s
 	_borderless = WIN_BORDERLESS;
 	_resizable = WIN_RESIZABLE;
 	_fullDesktop = WIN_FULLSCREEN_DESKTOP;
+
+	_w = SCREEN_WIDTH;
+	_h = SCREEN_HEIGHT;
 }
 
 // Destructor
@@ -32,30 +35,30 @@ bool ModuleWindow::Init()
 	else
 	{
 		//Create window
-		int width = SCREEN_WIDTH * SCREEN_SIZE;
-		int height = SCREEN_HEIGHT * SCREEN_SIZE;
+		int width = _w * SCREEN_SIZE;
+		int height = _h * SCREEN_SIZE;
 		Uint32 flags = SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN;
 
 		//Use OpenGL 2.1
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
 
-		if(WIN_FULLSCREEN == true)
+		if(_fullscreen == true)
 		{
 			flags |= SDL_WINDOW_FULLSCREEN;
 		}
 
-		if(WIN_RESIZABLE == true)
+		if(_resizable == true)
 		{
 			flags |= SDL_WINDOW_RESIZABLE;
 		}
 
-		if(WIN_BORDERLESS == true)
+		if(_borderless == true)
 		{
 			flags |= SDL_WINDOW_BORDERLESS;
 		}
 
-		if(WIN_FULLSCREEN_DESKTOP == true)
+		if(_fullDesktop == true)
 		{
 			flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
 		}
@@ -126,4 +129,24 @@ void ModuleWindow::SetFullscreenDesktop(bool fulldesktop) {
 		SDL_SetWindowSize(window, dMode.w/2, dMode.h/2);
 		SDL_SetWindowPosition(window, dMode.w / 4, dMode.h / 4);
 	}
+}
+
+void ModuleWindow::SetBrightness(float bright) {
+
+	_brightness = bright;
+	SDL_SetWindowBrightness(window, bright);
+}
+
+void ModuleWindow::SetSize(uint w, uint h) {
+	_h = h;
+	_w = w;
+	SDL_SetWindowSize(window, w, h);
+
+
+}
+
+void ModuleWindow::GetSize(int &w, int &h)const {
+
+	w = _w;
+	h = _h;
 }
