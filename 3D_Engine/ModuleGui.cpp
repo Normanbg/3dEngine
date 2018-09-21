@@ -178,14 +178,32 @@ update_status ModuleGui::Update(float dt)
 			}
 
 			if (ImGui::CollapsingHeader("Window")) {
-
 				
-				bool resi = App->window->IsBorderless();
+				bool fScrB = App->window->IsFullscreen();
+				if (ImGui::Checkbox("Fullscreen", &fScrB)) {
+					fScrB != fScrB;
+					App->window->SetFullscreen(fScrB);
+				}
 
-				if (ImGui::Checkbox("Borderless", &resi)) {
-					resi != resi;
-						App->window->SetBorderless(resi);
+				ImGui::SameLine(); 
+				bool borderB = App->window->IsBorderless();
+				if (ImGui::Checkbox("Borderless", &borderB)) {
+					borderB != borderB;
+					App->window->SetBorderless(borderB);
+				}
 				
+				bool reszB = App->window->IsResizable();
+				if (ImGui::Checkbox("Resizable", &reszB)) {
+					reszB != reszB;
+					App->window->SetResizable(reszB);
+				}
+
+				ImGui::SameLine();
+				bool fullB = App->window->IsFullscreenDesktop();
+				if (ImGui::Checkbox("Full Desktop", &fullB)) {
+					fullB != fullB;
+					App->window->SetFullscreenDesktop(fullB);
+					
 				}
 
 			}

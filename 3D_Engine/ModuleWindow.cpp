@@ -7,10 +7,10 @@ ModuleWindow::ModuleWindow(Application* app, bool start_enabled) : Module(app, s
 	window = NULL;
 	screen_surface = NULL;
 
-	fullscreen = WIN_FULLSCREEN;
-	borderless = WIN_BORDERLESS;
-	resizable = WIN_RESIZABLE;
-	fullDesktop = WIN_FULLSCREEN_DESKTOP;
+	_fullscreen = WIN_FULLSCREEN;
+	_borderless = WIN_BORDERLESS;
+	_resizable = WIN_RESIZABLE;
+	_fullDesktop = WIN_FULLSCREEN_DESKTOP;
 }
 
 // Destructor
@@ -100,22 +100,30 @@ void ModuleWindow::SetTitle(const char* title)
 
 void ModuleWindow::SetFullscreen(bool fullscr) {
 
-	Uint32 fullsFlag = fullscr ? SDL_WINDOW_FULLSCREEN : SDL_WINDOWEVENT_MINIMIZED;
-	fullscreen = fullscr;
+	Uint32 fullsFlag = fullscr ? SDL_WINDOW_FULLSCREEN : SDL_WINDOW_MINIMIZED;
+	_fullscreen = fullscr;
 	SDL_SetWindowFullscreen(window, fullsFlag);
 }
-void ModuleWindow::SetResizable(bool resiz) {
-	resizable = resiz;
-	SDL_bool res = SDL_bool(resiz);
+void ModuleWindow::SetResizable(bool resizable) {
+	_resizable = resizable;
+	SDL_bool res = SDL_bool(resizable);
 	SDL_SetWindowResizable(window, res);
 }
-void ModuleWindow::SetBorderless(bool borderl) {
-	borderless = borderl;
-	SDL_bool bord = SDL_bool(borderl);
+void ModuleWindow::SetBorderless(bool borderless) {
+	_borderless = borderless;
+	SDL_bool bord = SDL_bool(borderless);
 	SDL_SetWindowBordered(window, bord);
 }
-void ModuleWindow::SetFullscreenDesktop(bool fulld) {
-	fullDesktop = fulld;
-	SDL_bool bord = SDL_bool(fulld);
-	
+void ModuleWindow::SetFullscreenDesktop(bool fulldesktop) {
+	_fullDesktop = fulldesktop;
+	SDL_DisplayMode dMode;
+	SDL_GetDesktopDisplayMode(0, &dMode);
+	if (fulldesktop) {
+		SDL_SetWindowSize(window, dMode.w, dMode.h);
+		SDL_SetWindowPosition(window, 0, 0);
+	}
+	else {
+		SDL_SetWindowSize(window, dMode.w/2, dMode.h/2);
+		SDL_SetWindowPosition(window, dMode.w / 4, dMode.h / 4);
+	}
 }
