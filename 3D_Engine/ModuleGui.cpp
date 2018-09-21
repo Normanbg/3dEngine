@@ -72,17 +72,7 @@ update_status ModuleGui::Update(float dt)
 
 			ImGui::EndMenu();
 		}
-		ImGui::EndMainMenuBar();
-	}
-	/*MAX & MIN
-	ImGui::InputInt("Max Number", &var);
-	ImGui::InputInt("Min Number", &var2);
-	if (ImGui::SmallButton("Generate Random Int")) {
-		randomNum = ("%i", (int)pcg16si_boundedrand_r(&rng, var) + var2);
-	}*/
-
-	if (configActive) {
-		if (ImGui::Begin("Configuration", &configActive)) {
+		if (ImGui::BeginMenu("Hw")) {
 			if (ImGui::CollapsingHeader("Create")) {
 				if (ImGui::MenuItem("Sphere")) {
 					math::Sphere s(vec(0, 0, 0), 2);
@@ -141,6 +131,26 @@ update_status ModuleGui::Update(float dt)
 				}
 			}
 
+			if (ImGui::MenuItem("CLOSE")) {
+				return UPDATE_STOP;
+				ImGui::EndMenu();
+			}
+
+			ImGui::EndMenu();
+		}
+		ImGui::EndMainMenuBar();
+
+	}
+	/*MAX & MIN
+	ImGui::InputInt("Max Number", &var);
+	ImGui::InputInt("Min Number", &var2);
+	if (ImGui::SmallButton("Generate Random Int")) {
+		randomNum = ("%i", (int)pcg16si_boundedrand_r(&rng, var) + var2);
+	}*/
+
+	if (configActive) {
+		ImGui::SetNextWindowSize(ImVec2(650, 350), ImGuiSetCond_Once);
+		if (ImGui::Begin("Configuration", &configActive)) {
 
 			if (ImGui::CollapsingHeader("Application")) {
 
@@ -166,8 +176,8 @@ update_status ModuleGui::Update(float dt)
 				sprintf_s(title, 20, "Milliseconds %.1f", VecLog[VecLog.size() - 1]);
 				ImGui::PlotHistogram("##framerate", &VecLog[0], VecLog.size(), 0, title, 0.0f, 40.0f, ImVec2(310, 100));
 			}
-			if (ImGui::CollapsingHeader("Hardware")) {
-				ImVec4 yellow(255, 255, 0, 255);
+			/*if (ImGui::CollapsingHeader("Hardware")) {*/
+				/*ImVec4 yellow(255, 255, 0, 255);
 				ImGui::Text("CPUs:");
 				ImGui::SameLine();
 				ImGui::TextColored(yellow, "%d (Cache: %dKb)", SDL_GetCPUCount(), SDL_GetCPUCacheLineSize());
@@ -175,23 +185,26 @@ update_status ModuleGui::Update(float dt)
 				ImGui::Text("System RAM:");
 				ImGui::SameLine();
 				ImGui::TextColored(yellow, "%0.1fGb", ((float)SDL_GetSystemRAM() / 1024));
-			}
+				}*/
+
+
+
 
 			if (ImGui::CollapsingHeader("Window")) {
-				
+
 				bool fScrB = App->window->IsFullscreen();
 				if (ImGui::Checkbox("Fullscreen", &fScrB)) {
 					fScrB != fScrB;
 					App->window->SetFullscreen(fScrB);
 				}
 
-				ImGui::SameLine(); 
+				ImGui::SameLine();
 				bool borderB = App->window->IsBorderless();
 				if (ImGui::Checkbox("Borderless", &borderB)) {
 					borderB != borderB;
 					App->window->SetBorderless(borderB);
 				}
-				
+
 				bool reszB = App->window->IsResizable();
 				if (ImGui::Checkbox("Resizable ", &reszB)) {
 					reszB != reszB;
@@ -202,7 +215,7 @@ update_status ModuleGui::Update(float dt)
 				bool fullB = App->window->IsFullscreenDesktop();
 				if (ImGui::Checkbox("Full Desktop", &fullB)) {
 					fullB != fullB;
-					App->window->SetFullscreenDesktop(fullB);					
+					App->window->SetFullscreenDesktop(fullB);
 				}
 				float bright = App->window->GetBrightness();
 				ImGui::SliderFloat("Bright", &bright, 0, 1.0f);
@@ -211,18 +224,23 @@ update_status ModuleGui::Update(float dt)
 				int w, h;
 				App->window->GetSize(w, h);
 				int minWidthVal = 640;
-				int maxWidthVal =1920;
+				int maxWidthVal = 1920;
 				ImGui::SliderInt("Width", &w, minWidthVal, maxWidthVal);
 				int minHeightVal = 480;
 				int maxHeightVal = 1080;
 				ImGui::SliderInt("Height", &h, minHeightVal, maxHeightVal);
 				App->window->SetSize(w, h);
 			}
+			
+			App->HardwareData();
 
 			if (ImGui::MenuItem("CLOSE")) {
 				return UPDATE_STOP;
 				ImGui::EndMenu();
 			}
+
+			
+
 			ImGui::End();
 		}
 	}
@@ -241,7 +259,7 @@ update_status ModuleGui::Update(float dt)
 			ImGui::Text("Libraries Used:");
 			if (ImGui::SmallButton("SDL"))
 				App->RequestBrowser("https://www.libsdl.org/download-2.0.php");
-			if (ImGui::SmallButton("OpenGL")) 
+			if (ImGui::SmallButton("OpenGL"))
 				App->RequestBrowser("https://github.com/ocornut/imgui");
 			if (ImGui::SmallButton("ImGui"))
 				App->RequestBrowser("https://www.opengl.org/");

@@ -61,6 +61,12 @@ private:
 
 	std::list<Module*> list_modules;
 
+
+	float totalVideoMemF = -1.0f;
+	float currentVideoMemF = -1.0f;
+	float availableVideoMemF = -1.0f;
+	float reservedVideoMemF = -1.0f;
+
 public:
 
 	Application();
@@ -90,6 +96,9 @@ public:
 	void SetTimeScale(float ts, int frameNumber = -1);
 	void PauseGame(bool pause);
 
+	void GetHardWareData();
+	void HardwareData();
+
 
 private:
 
@@ -97,4 +106,6 @@ private:
 	void AddModule(Module* mod);
 	void PrepareUpdate();
 	void FinishUpdate();
+
+
 };

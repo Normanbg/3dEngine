@@ -29,11 +29,6 @@ public:
 	update_status PostUpdate(float dt);
 	bool CleanUp();
 
-	/*PhysBody3D* AddBody(const Sphere& sphere, float mass = 1.0f);
-	PhysBody3D* AddBody(const Cube& cube, float mass = 1.0f, SceneObjectType type = None);
-	PhysBody3D* AddBody(const Cylinder& cylinder, float mass = 1.0f);
-	PhysVehicle3D* AddVehicle(const VehicleInfo& info);*/
-
 	void AddBody(const math::Sphere& sph);
 	void AddBody(const math::Capsule& caps);
 	void AddBody(const math::Plane& plane);

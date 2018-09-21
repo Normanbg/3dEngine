@@ -18,6 +18,8 @@ public:
 	bool CleanUp();
 
 	void OnResize(int width, int height);
+	char* GetGraphicsModel();
+	char* GetGraphicsVendor();
 
 public:
 

@@ -1458,7 +1458,7 @@ void    ImFontAtlas::ClearFonts()
 
 void    ImFontAtlas::Clear()
 {
-    ClearInputData();
+    Clear();
     ClearTexData();
     ClearFonts();
 }
