@@ -50,6 +50,11 @@ update_status ModuleGui::Update(float dt)
 
 	if (ImGui::BeginMainMenuBar()) {
 		//--------------HELP MENU
+		if (ImGui::BeginMenu("File")) {
+			if (ImGui::MenuItem("Quit", "ESC"))
+				return UPDATE_STOP;
+			ImGui::EndMenu();
+		}
 		if (ImGui::BeginMenu("Help")) {
 			if (ImGui::MenuItem("Gui Demo"))
 				demoShowcase = !demoShowcase;
@@ -186,7 +191,9 @@ update_status ModuleGui::Update(float dt)
 				ImGui::SameLine();
 				ImGui::TextColored(yellow, "%0.1fGb", ((float)SDL_GetSystemRAM() / 1024));
 				}*/
-				App->HardwareData();
+			App->input->InputData();
+			App->HardwareData();
+
 			ImGui::End();
 		}
 	}
