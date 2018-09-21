@@ -50,6 +50,11 @@ update_status ModuleGui::Update(float dt)
 
 	if (ImGui::BeginMainMenuBar()) {
 		//--------------HELP MENU
+		if (ImGui::BeginMenu("File")) {
+			if (ImGui::MenuItem("Quit", "ESC"))
+				return UPDATE_STOP;
+			ImGui::EndMenu();
+		}
 		if (ImGui::BeginMenu("Help")) {
 			if (ImGui::MenuItem("Gui Demo"))
 				demoShowcase = !demoShowcase;
@@ -190,6 +195,7 @@ update_status ModuleGui::Update(float dt)
 
 
 
+
 			if (ImGui::CollapsingHeader("Window")) {
 
 				bool fScrB = App->window->IsFullscreen();
@@ -232,6 +238,7 @@ update_status ModuleGui::Update(float dt)
 				App->window->SetSize(w, h);
 			}
 			
+			App->input->InputData();
 			App->HardwareData();
 
 			if (ImGui::MenuItem("CLOSE")) {
@@ -240,6 +247,11 @@ update_status ModuleGui::Update(float dt)
 			}
 
 			
+
+
+			
+			
+
 
 			ImGui::End();
 		}
