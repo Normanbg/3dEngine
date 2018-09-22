@@ -5,6 +5,7 @@
 #include "Globals.h"
 #include "Primitive.h"
 #include "Module.h"
+#include <string>
 
 #include "RandomGenerator/pcg_variants.h"
 
@@ -21,7 +22,7 @@ public:
 	update_status PostUpdate(float dt);
 	bool CleanUp();
 
-	//void ConsoleLogs(std::string log);
+	void ConsoleLogs(std::string log);
 
 public:
 	bool demoShowcase = false;

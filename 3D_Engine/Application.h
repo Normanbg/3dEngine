@@ -109,3 +109,4 @@ private:
 
 
 };
+extern Application* App;
