@@ -70,8 +70,8 @@ update_status ModuleGui::Update(float dt)
 			//HELP MENU--------------
 		}
 		if (ImGui::BeginMenu("View")) {
-			if (ImGui::MenuItem("Console")) {}
-			//open console
+			if (ImGui::MenuItem("Console"))
+				consoleActive = !consoleActive;
 			if (ImGui::MenuItem("Configuration"))
 				configActive = !configActive;
 
@@ -257,6 +257,15 @@ update_status ModuleGui::Update(float dt)
 		}
 	}
 
+	if (consoleActive) {
+		ImGui::SetNextWindowSize(ImVec2(650, 350), ImGuiSetCond_Once);
+		if (ImGui::Begin("Console", &consoleActive)) {
+
+
+			ImGui::End();
+		}
+	}
+
 	if (demoShowcase)
 		ImGui::ShowTestWindow();
 
@@ -306,3 +315,7 @@ bool ModuleGui::CleanUp()
 	ImGui_ImplOpenGL2_Shutdown();
 	return true;
 }
+
+//void ModuleGui::ConsoleLogs(std::string* log){
+//
+//}
