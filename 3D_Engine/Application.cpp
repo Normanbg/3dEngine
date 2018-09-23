@@ -2,6 +2,8 @@
 #include "SDL/include/SDL_cpuinfo.h"
 #include "DeviceId\DeviceId.h"
 
+#include "./JSON/parson.h"
+
 Application::Application()
 {
 	frames = 0;
@@ -66,6 +68,18 @@ bool Application::Init()
 		item++;
 	}
 	
+	JSON_Value* value;
+	JSON_Object* obj;
+
+	if (value = json_parse_file("package.JSON")) {
+	
+		
+		obj = json_value_get_object(value);
+		const char* str = json_object_get_string(obj, "name");
+		int i = 10;
+	}
+
+
 	ms_timer.Start();
 	return ret;
 }
