@@ -114,7 +114,7 @@ void ModuleWindow::SetResizable(bool resizable) {
 }
 void ModuleWindow::SetBorderless(bool borderless) {
 	_borderless = borderless;
-	SDL_bool bord = SDL_bool(borderless);
+	SDL_bool bord = SDL_bool(!borderless);
 	SDL_SetWindowBordered(window, bord);
 }
 void ModuleWindow::SetFullscreenDesktop(bool fulldesktop) {
