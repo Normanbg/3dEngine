@@ -184,3 +184,13 @@ bool ModuleWindow::Load(JSON_Object* data) {
 
 	return true;
 }
+bool ModuleWindow::Save(JSON_Object* data)const {
+	json_object_dotset_number(data, "Window.Brightness", _brightness );
+	json_object_dotset_number(data, "Window.Width", _w);
+	json_object_dotset_number(data, "Window.Height", _h);
+	json_object_dotset_boolean(data, "Window.Fullscreen", _fullscreen);
+	json_object_dotset_boolean(data, "Window.Borderless", _borderless);
+	json_object_dotset_boolean(data, "Window.Resizable", _resizable);
+	json_object_dotset_boolean(data, "Window.Fullscreen Desktop", _fullDesktop);
+	return true;
+}
