@@ -99,9 +99,12 @@ public:
 	void GetHardWareData();
 	void HardwareData();
 
+	void SetOrganization(char* newName);
+	std::string GetOrganization() const;
 
 private:
 
+	std::string _organization;
 
 	void AddModule(Module* mod);
 	void PrepareUpdate();

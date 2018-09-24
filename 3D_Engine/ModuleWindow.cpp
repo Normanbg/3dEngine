@@ -22,7 +22,7 @@ ModuleWindow::~ModuleWindow()
 }
 
 // Called before render is available
-bool ModuleWindow::Init()
+bool ModuleWindow::Init(JSON_Object* obj)
 {
 	OWN_LOG("Init SDL window & surface");
 	bool ret = true;
@@ -63,7 +63,7 @@ bool ModuleWindow::Init()
 			flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
 		}
 
-		window = SDL_CreateWindow(TITLE, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, flags);
+		window = SDL_CreateWindow(_title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, flags);
 
 		if(window == NULL)
 		{
@@ -96,8 +96,9 @@ bool ModuleWindow::CleanUp()
 	return true;
 }
 
-void ModuleWindow::SetTitle(const char* title)
+void ModuleWindow::SetTitle(char* title)
 {
+	_title = title;
 	SDL_SetWindowTitle(window, title);
 }
 

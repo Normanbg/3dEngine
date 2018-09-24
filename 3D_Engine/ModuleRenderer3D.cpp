@@ -17,7 +17,7 @@ ModuleRenderer3D::~ModuleRenderer3D()
 {}
 
 // Called before render is available
-bool ModuleRenderer3D::Init()
+bool ModuleRenderer3D::Init(JSON_Object* obj)
 {
 	OWN_LOG("Creating 3D Renderer context");
 	bool ret = true;

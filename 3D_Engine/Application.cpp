@@ -17,7 +17,7 @@ Application::Application()
 	physics = new ModulePhysics3D(this);
 	gui = new ModuleGui(this);
 	
-
+	_organization = ORGANIZATION;
 	// The order of calls is very important!
 	// Modules will Init() Start() and Update in this order
 	// They will CleanUp() in reverse order
@@ -48,13 +48,33 @@ Application::~Application()
 bool Application::Init()
 {
 	bool ret = true;
+	JSON_Value* config;
+	JSON_Object* obj;
+	JSON_Object* appObj;
+	if (config = json_parse_file("config.JSON")) {
+		OWN_LOG("Config.JSON File detected");
+		obj = json_value_get_object(config);
+		appObj = json_object_get_object(obj, "App");
+
+		const char* title = json_object_get_string(appObj, "Name");
+		window->SetTitle((char*)title);
+
+		const char* title2 = json_object_get_string(appObj, "Organization");
+		SetOrganization((char*)title2);
+
+		if (json_object_has_value(obj, "App")){
+			int i = 30;
+
+		}
+	}
 
 	// Call Init() in all modules
 	std::list<Module*>::iterator item = list_modules.begin();
 
+
 	while(item != list_modules.end() && ret == true)
 	{
-		ret = (*item)->Init();
+		ret = (*item)->Init(nullptr);
 		item++;
 	}
 
@@ -68,7 +88,7 @@ bool Application::Init()
 		item++;
 	}
 	
-	JSON_Value* value;
+	/*JSON_Value* value;
 	JSON_Object* obj;
 
 	if (value = json_parse_file("package.JSON")) {
@@ -76,9 +96,18 @@ bool Application::Init()
 		
 		obj = json_value_get_object(value);
 		const char* str = json_object_get_string(obj, "name");
-		int i = 10;
-	}
+		const char* str2 = json_object_get_string(obj, "description");
+		json_object_set_string(obj, "name", "newName");
+		const char* str3 = json_object_get_string(obj, "name");
+		
+		json_serialize_to_file(value, "NewJSON.JSON");
 
+		int i = 10;
+
+		json_value_free(value);
+		
+	}*/
+	json_value_free(config);
 
 	ms_timer.Start();
 	return ret;
@@ -311,4 +340,16 @@ void Application::SetTimeScale(float ts, int frameNumber)
 
 void Application::PauseGame(bool pause) {
 	SetTimeScale(pause ? 0.f : 1.f);	
+}
+
+void Application::SetOrganization(char* newName)
+{
+	_organization = newName;
+}
+
+
+
+ std::string Application::GetOrganization() const
+{
+	return _organization;
 }

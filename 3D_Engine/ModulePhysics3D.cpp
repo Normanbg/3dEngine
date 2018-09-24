@@ -36,7 +36,7 @@ ModulePhysics3D::~ModulePhysics3D()
 }
 
 // Render not available yet----------------------------------
-bool ModulePhysics3D::Init()
+bool ModulePhysics3D::Init(JSON_Object* obj)
 {
 	OWN_LOG("Creating 3D Physics simulation");
 	bool ret = true;

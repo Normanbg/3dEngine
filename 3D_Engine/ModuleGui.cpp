@@ -1,6 +1,6 @@
 #include "ModuleGui.h"
+
 #include "ModuleWindow.h"
-#include "Application.h"
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_impl_sdl.h"
 #include "ImGui\imgui_impl_opengl2.h"
@@ -8,8 +8,9 @@
 #include "MathGeoLib\Math\MathAll.h"
 #include "Primitive.h"
 #include "PhysBody3D.h"
-#include "ModulePhysics3D.h"
 
+#include "ModulePhysics3D.h"
+#include "Application.h"
 
 
 
@@ -108,6 +109,7 @@ update_status ModuleGui::Update(float dt)
 				}
 				if (ImGui::MenuItem("Segments")) {
 					//CREATE
+					
 				}
 				if (ImGui::MenuItem("Rays")) {
 					//CREATE
@@ -162,11 +164,12 @@ update_status ModuleGui::Update(float dt)
 			if (ImGui::CollapsingHeader("Application")) {
 
 				const int maxSize = 64;
-				char str[maxSize] = TITLE;
-				ImGui::InputText("App Name", str, maxSize);
-
-				char str2[maxSize] = ORGANIZATION;
-				ImGui::InputText("Organization", str2, maxSize);
+				
+				std::string aux = App->window->GetWindowTitle();
+				ImGui::InputText("App Name", (char*)aux.c_str() , maxSize);
+				std::string aux2 = App->GetOrganization();
+				//char str2[maxSize] = aux;
+				ImGui::InputText("Organization",(char*)aux2.c_str(), maxSize);
 
 				int DefaultFpsCap = (App->GetFramerateCap());
 
