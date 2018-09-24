@@ -19,6 +19,8 @@
 
 ModuleGui::ModuleGui(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
+
+	name = "Gui";
 }
 
 
@@ -159,9 +161,23 @@ update_status ModuleGui::Update(float dt)
 
 	if (configActive) {
 		ImGui::SetNextWindowSize(ImVec2(650, 350), ImGuiSetCond_Once);
-		if (ImGui::Begin("Configuration", &configActive)) {
+		if (ImGui::BeginMainMenuBar())
+		{
+			if (ImGui::BeginMenu("Options"))
+			{				
+				if (ImGui::MenuItem("Save")) { App->SaveGame(); }
+				if (ImGui::MenuItem("Load")) { App->LoadGame(); }
+				ImGui::EndMenu();
+			}
+			ImGui::EndMainMenuBar();
+		}
 
+		if (ImGui::Begin("Configuration", &configActive)) {
+			
+			
 			if (ImGui::CollapsingHeader("Application")) {
+
+
 
 				const int maxSize = 64;
 				

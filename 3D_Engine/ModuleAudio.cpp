@@ -5,7 +5,10 @@
 #pragma comment( lib, "SDL_mixer/libx86/SDL2_mixer.lib" )
 
 ModuleAudio::ModuleAudio(Application* app, bool start_enabled) : Module(app, start_enabled), music(NULL)
-{}
+{
+
+	name = "Audio";
+}
 
 // Destructor
 ModuleAudio::~ModuleAudio()
@@ -17,6 +20,7 @@ bool ModuleAudio::Init(JSON_Object* obj)
 	OWN_LOG("Loading Audio Mixer");
 	bool ret = true;
 	SDL_Init(0);
+
 
 	if(SDL_InitSubSystem(SDL_INIT_AUDIO) < 0)
 	{
@@ -41,6 +45,7 @@ bool ModuleAudio::Init(JSON_Object* obj)
 		ret = false;
 	}
 
+	json_object_clear(obj);//clear obj to free memory
 	return ret;
 }
 

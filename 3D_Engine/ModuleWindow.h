@@ -17,6 +17,8 @@ public:
 
 	bool Init(JSON_Object* obj);
 	bool CleanUp();
+	bool Load(JSON_Object* data)override ;
+	bool Save(JSON_Object* data) const;
 
 	void SetTitle(char* title);
 

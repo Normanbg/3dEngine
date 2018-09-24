@@ -7,6 +7,7 @@
 Application::Application()
 {
 	frames = 0;
+	want_to_save = want_to_load = false;
 
 	window = new ModuleWindow(this);
 	input = new ModuleInput(this);
@@ -49,23 +50,28 @@ bool Application::Init()
 {
 	bool ret = true;
 	JSON_Value* config;
-	JSON_Object* obj;
-	JSON_Object* appObj;
-	if (config = json_parse_file("config.JSON")) {
+	JSON_Object* objModules = nullptr;
+	
+	if (config = json_parse_file(CONFIG_FILE)) {
 		OWN_LOG("Config.JSON File detected");
+		JSON_Object* obj;
+		JSON_Object* appObj;
+		
+
 		obj = json_value_get_object(config);
 		appObj = json_object_get_object(obj, "App");
-
+		
 		const char* title = json_object_get_string(appObj, "Name");
 		window->SetTitle((char*)title);
 
 		const char* title2 = json_object_get_string(appObj, "Organization");
 		SetOrganization((char*)title2);
 
-		if (json_object_has_value(obj, "App")){
-			int i = 30;
-
-		}
+		objModules = obj;
+		json_object_clear(appObj);
+		obj = nullptr;
+		json_object_clear(obj);
+		
 	}
 
 	// Call Init() in all modules
@@ -74,7 +80,7 @@ bool Application::Init()
 
 	while(item != list_modules.end() && ret == true)
 	{
-		ret = (*item)->Init(nullptr);
+		ret = (*item)->Init(json_object_get_object(objModules, (*item)->name.c_str()));
 		item++;
 	}
 
@@ -107,6 +113,7 @@ bool Application::Init()
 		json_value_free(value);
 		
 	}*/
+	json_object_clear(objModules);
 	json_value_free(config);
 
 	ms_timer.Start();
@@ -136,6 +143,10 @@ void Application::PrepareUpdate()
 // ---------------------------------------------
 void Application::FinishUpdate()
 {
+	if (want_to_save == true) SavegameNow();
+
+	if (want_to_load == true) LoadGameNow();
+
 	if (last_sec_frame_time.Read() > 1000) {
 		last_sec_frame_time.Start();
 		prev_last_sec_frame_count = last_sec_frame_count;
@@ -353,3 +364,62 @@ void Application::SetOrganization(char* newName)
 {
 	return _organization;
 }
+
+ void Application::LoadGame()
+ {
+	 want_to_load = true;
+ }
+
+ void Application::SaveGame() const
+ {
+	 want_to_save = true;
+ }
+
+ bool Application::LoadGameNow()
+ {
+	 
+	 bool ret = false;
+
+	 JSON_Value* config;	 
+
+	 if (config = json_parse_file(CONFIG_FILE)) {
+		 OWN_LOG("Config.JSON File detected");
+		 JSON_Object* obj;
+		 JSON_Object* appObj;
+
+
+		 obj = json_value_get_object(config);
+		 appObj = json_object_get_object(obj, "App");
+
+		 const char* title = json_object_get_string(appObj, "Name");
+		 window->SetTitle((char*)title);
+
+		 const char* title2 = json_object_get_string(appObj, "Organization");
+		 SetOrganization((char*)title2);
+
+		 
+		 json_object_clear(appObj);
+		
+		std::list<Module*>::iterator item = list_modules.begin();
+
+		 while (item != list_modules.end())
+		 {
+			 ret &= (*item)->Load(json_object_get_object(obj, (*item)->name.c_str()));
+			 item++;
+		 }
+		
+		 json_object_clear(obj);
+	 }
+	 	 
+	 json_value_free(config);
+	 
+	 want_to_load = false;
+	 return ret;
+ }
+
+ bool Application::SavegameNow() const
+ {
+	 bool ret = false;
+	 want_to_save = false;
+	 return ret;
+ }
