@@ -39,3 +39,4 @@ enum update_status
 #define VSYNC true
 #define TITLE "3D_Engine"
 #define ORGANIZATION "UPC CITM"
+#define CONFIG_FILE "config.JSON"

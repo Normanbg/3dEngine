@@ -10,6 +10,7 @@
 
 ModuleRenderer3D::ModuleRenderer3D(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
+	name = "Render";
 }
 
 // Destructor
@@ -17,7 +18,7 @@ ModuleRenderer3D::~ModuleRenderer3D()
 {}
 
 // Called before render is available
-bool ModuleRenderer3D::Init()
+bool ModuleRenderer3D::Init(JSON_Object* obj)
 {
 	OWN_LOG("Creating 3D Renderer context");
 	bool ret = true;
@@ -99,6 +100,8 @@ bool ModuleRenderer3D::Init()
 	// Projection matrix for
 	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
+
+	json_object_clear(obj);//clear obj to free memory
 	return ret;
 }
 

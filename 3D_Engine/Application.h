@@ -58,6 +58,13 @@ private:
 	void StoreFpsLog();
 	void StoreMsLog();
 
+	bool LoadGameNow();
+	bool SavegameNow() const;
+
+	mutable bool		want_to_save;
+	bool				want_to_load;
+	std::string			load_game;
+	mutable std::string	save_game;
 
 	std::list<Module*> list_modules;
 
@@ -77,6 +84,9 @@ public:
 	bool CleanUp();
 
 	void RequestBrowser(std::string link);
+
+	void LoadGame();
+	void SaveGame() const;
 
 	
 	std::vector<float> GetFpsLog();
@@ -99,9 +109,12 @@ public:
 	void GetHardWareData();
 	void HardwareData();
 
+	void SetOrganization(char* newName);
+	std::string GetOrganization() const;
 
 private:
 
+	std::string _organization;
 
 	void AddModule(Module* mod);
 	void PrepareUpdate();

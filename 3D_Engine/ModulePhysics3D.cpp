@@ -17,6 +17,7 @@
 ModulePhysics3D::ModulePhysics3D(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 	debug = false;
+	name = "Physics";
 
 	collision_conf = new btDefaultCollisionConfiguration();
 	dispatcher = new btCollisionDispatcher(collision_conf);
@@ -36,11 +37,12 @@ ModulePhysics3D::~ModulePhysics3D()
 }
 
 // Render not available yet----------------------------------
-bool ModulePhysics3D::Init()
+bool ModulePhysics3D::Init(JSON_Object* obj)
 {
 	OWN_LOG("Creating 3D Physics simulation");
 	bool ret = true;
 
+	json_object_clear(obj);//clear obj to free memory
 	return ret;
 }
 

@@ -1,6 +1,6 @@
 #include "ModuleGui.h"
+
 #include "ModuleWindow.h"
-#include "Application.h"
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_impl_sdl.h"
 #include "ImGui\imgui_impl_opengl2.h"
@@ -8,8 +8,9 @@
 #include "MathGeoLib\Math\MathAll.h"
 #include "Primitive.h"
 #include "PhysBody3D.h"
-#include "ModulePhysics3D.h"
 
+#include "ModulePhysics3D.h"
+#include "Application.h"
 
 
 
@@ -18,6 +19,8 @@
 
 ModuleGui::ModuleGui(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
+
+	name = "Gui";
 }
 
 
@@ -108,6 +111,7 @@ update_status ModuleGui::Update(float dt)
 				}
 				if (ImGui::MenuItem("Segments")) {
 					//CREATE
+					
 				}
 				if (ImGui::MenuItem("Rays")) {
 					//CREATE
@@ -157,16 +161,31 @@ update_status ModuleGui::Update(float dt)
 
 	if (configActive) {
 		ImGui::SetNextWindowSize(ImVec2(650, 350), ImGuiSetCond_Once);
-		if (ImGui::Begin("Configuration", &configActive)) {
+		if (ImGui::BeginMainMenuBar())
+		{
+			if (ImGui::BeginMenu("Options"))
+			{				
+				if (ImGui::MenuItem("Save")) { App->SaveGame(); }
+				if (ImGui::MenuItem("Load")) { App->LoadGame(); }
+				ImGui::EndMenu();
+			}
+			ImGui::EndMainMenuBar();
+		}
 
+		if (ImGui::Begin("Configuration", &configActive)) {
+			
+			
 			if (ImGui::CollapsingHeader("Application")) {
 
-				const int maxSize = 64;
-				char str[maxSize] = TITLE;
-				ImGui::InputText("App Name", str, maxSize);
 
-				char str2[maxSize] = ORGANIZATION;
-				ImGui::InputText("Organization", str2, maxSize);
+
+				const int maxSize = 64;
+				
+				std::string aux = App->window->GetWindowTitle();
+				ImGui::InputText("App Name", (char*)aux.c_str() , maxSize);
+				std::string aux2 = App->GetOrganization();
+				//char str2[maxSize] = aux;
+				ImGui::InputText("Organization",(char*)aux2.c_str(), maxSize);
 
 				int DefaultFpsCap = (App->GetFramerateCap());
 
