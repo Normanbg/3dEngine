@@ -1,24 +1,28 @@
-#pragma once
+#ifndef __APPLICATION_H__
+#define __APPLICATION_H__
 
 #include <list>
 #include <vector>
 #include"./ImGui/imgui.h"
+#include "SDL\include\SDL.h"
 #include "Globals.h"
 #include "PerfTimer.h"
 #include "Timer.h"
-#include "Module.h"
-#include "ModuleWindow.h"
-#include "ModuleInput.h"
-#include "ModuleAudio.h"
-#include "ModuleSceneIntro.h"
-#include "ModuleRenderer3D.h"
-#include "ModuleCamera3D.h"
-#include "ModulePhysics3D.h"
-#include "ModuleGui.h"
+
 
 #define MAX_FPS_LOG 50
 #define MAX_MS_LOG 50
 #define FRAMERATE_CAP 60
+
+class Module;
+class ModuleWindow;
+class ModuleInput;
+class ModuleAudio;
+class ModuleSceneIntro;
+class ModuleRenderer3D;
+class ModuleCamera3D;
+class ModulePhysics3D;
+class ModuleGui;
 
 class Application
 {
@@ -122,3 +126,7 @@ private:
 
 
 };
+
+extern Application* App;
+
+#endif

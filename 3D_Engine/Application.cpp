@@ -1,17 +1,26 @@
 #include "Application.h"
 #include "SDL/include/SDL_cpuinfo.h"
 #include "DeviceId\DeviceId.h"
+#include "ModuleWindow.h"
+#include "ModuleInput.h"
+#include "ModuleAudio.h"
+#include "ModuleSceneIntro.h"
+#include "ModuleRenderer3D.h"
+#include "ModuleCamera3D.h"
+#include "ModulePhysics3D.h"
+#include "ModuleGui.h"
 
 #include "./JSON/parson.h"
+
 
 Application::Application()
 {
 	frames = 0;
 	want_to_save = want_to_load = false;
 
-	window = new ModuleWindow(this);
+	window = new ModuleWindow();
 	input = new ModuleInput(this);
-	audio = new ModuleAudio(this, true);
+	audio = new ModuleAudio(this);
 	scene_intro = new ModuleSceneIntro(this);
 	renderer3D = new ModuleRenderer3D(this);
 	camera = new ModuleCamera3D(this);

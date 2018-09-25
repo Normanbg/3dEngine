@@ -2,9 +2,17 @@
 #include "Application.h"
 #include "ModuleInput.h"
 
+#include "ModuleWindow.h"
+#include "ModuleAudio.h"
+#include "ModuleSceneIntro.h"
+#include "ModuleRenderer3D.h"
+#include "ModuleCamera3D.h"
+#include "ModulePhysics3D.h"
+#include "ModuleGui.h"
+
 #define MAX_KEYS 300
 
-ModuleInput::ModuleInput(Application* app, bool start_enabled) : Module(app, start_enabled)
+ModuleInput::ModuleInput(bool start_enabled) : Module(start_enabled)
 {
 	name = "Input";
 	keyboard = new KEY_STATE[MAX_KEYS];
