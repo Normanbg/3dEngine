@@ -8,6 +8,7 @@
 #include "Globals.h"
 #include "PerfTimer.h"
 #include "Timer.h"
+#include "./JSON/parson.h"
 
 
 #define MAX_FPS_LOG 50
