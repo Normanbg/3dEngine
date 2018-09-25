@@ -146,11 +146,10 @@ void ModuleWindow::SetBrightness(float bright) {
 }
 
 void ModuleWindow::SetSize(uint w, uint h) {
-	_h = h;
-	_w = w;
+	_h = h* SCREEN_SIZE;
+	_w = w* SCREEN_SIZE;
 	SDL_SetWindowSize(window, w, h);
-
-
+	
 }
 
 void ModuleWindow::GetSize(int &w, int &h)const {
@@ -164,11 +163,12 @@ bool ModuleWindow::Load(JSON_Object* data) {
 	GetDataFromJson(data);
 	
 	SetBrightness(_brightness);
-	SetSize(_w, _h);
+	
 	SetFullscreen(_fullscreen);
 	SetResizable(_resizable);
 	SetBorderless(_borderless);
 	SetFullscreenDesktop(_fullDesktop);
+	SetSize(_w, _h);
 
 	return true;
 }

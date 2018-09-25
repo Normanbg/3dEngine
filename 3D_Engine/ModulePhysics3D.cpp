@@ -135,7 +135,7 @@ update_status ModulePhysics3D::PostUpdate(float dt)
 bool ModulePhysics3D::CleanUp()
 {
 	OWN_LOG("Destroying 3D Physics simulation");
-
+	/*
 	// Remove from the world all collision bodies
 	for (int i = world->getNumCollisionObjects() - 1; i >= 0; i--)
 	{
@@ -167,9 +167,9 @@ bool ModulePhysics3D::CleanUp()
 	bodies.clear();
 
 
-
 	delete vehicle_raycaster;
 	delete world;
+*/
 
 	return true;
 

@@ -261,11 +261,15 @@ update_status ModuleGui::Update(float dt)
 				App->window->GetSize(w, h);
 				int minWidthVal = 640;
 				int maxWidthVal = 1920;
-				ImGui::SliderInt("Width", &w, minWidthVal, maxWidthVal);
+				if (ImGui::SliderInt("Width", &w, minWidthVal, maxWidthVal)) {
+					App->window->SetSize(w, h);				
+				}
 				int minHeightVal = 480;
 				int maxHeightVal = 1080;
-				ImGui::SliderInt("Height", &h, minHeightVal, maxHeightVal);
-				App->window->SetSize(w, h);
+				if(ImGui::SliderInt("Height", &h, minHeightVal, maxHeightVal)) {
+					App->window->SetSize(w, h);
+				}
+				
 			}
 			
 			App->input->InputData();
