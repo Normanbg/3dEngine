@@ -10,7 +10,7 @@
 
 
 
-ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled){
+ModuleSceneIntro::ModuleSceneIntro(bool start_enabled) : Module(start_enabled){
 }
 
 ModuleSceneIntro::~ModuleSceneIntro()
@@ -39,5 +39,5 @@ update_status ModuleSceneIntro::Update(float dt)
 	return UPDATE_CONTINUE;
 }
 
-void ModuleSceneIntro::OnCollision(PhysBody3D* body1, PhysBody3D* body2){
-}
+//void ModuleSceneIntro::OnCollision(PhysBody3D* body1, PhysBody3D* body2){
+//}

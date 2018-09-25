@@ -1,6 +1,5 @@
+#include "Application.h"
 #include "ModuleGui.h"
-
-#include "ModuleWindow.h"
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_impl_sdl.h"
 #include "ImGui\imgui_impl_opengl2.h"
@@ -10,7 +9,14 @@
 #include "PhysBody3D.h"
 
 #include "ModulePhysics3D.h"
-#include "Application.h"
+
+#include "ModuleWindow.h"
+#include "ModuleInput.h"
+#include "ModuleAudio.h"
+#include "ModuleSceneIntro.h"
+#include "ModuleRenderer3D.h"
+#include "ModuleCamera3D.h"
+#include "ModulePhysics3D.h"
 
 #include <list>
 
@@ -19,7 +25,7 @@
 
 
 
-ModuleGui::ModuleGui(Application* app, bool start_enabled) : Module(app, start_enabled)
+ModuleGui::ModuleGui(bool start_enabled) : Module(start_enabled)
 {
 
 	name = "Gui";
@@ -88,18 +94,18 @@ update_status ModuleGui::Update(float dt)
 			if (ImGui::CollapsingHeader("Create")) {
 				if (ImGui::MenuItem("Sphere")) {
 					math::Sphere s(vec(0, 0, 0), 2);
-					App->physics->AddBody(s);
+					//App->physics->AddBody(s);
 				}
 				if (ImGui::MenuItem("Cyllinder")) {
 
 				}
 				if (ImGui::MenuItem("Capsule")) {
 					math::Capsule ca(vec(0, 0, 0), vec(0, 1, 0), 5);
-					App->physics->AddBody(ca);
+					//App->physics->AddBody(ca);
 				}
 				if (ImGui::MenuItem("AABB")) {
 					math::AABB ab(vec(0, 0, 0), vec(1, 1, 1));
-					App->physics->AddBody(ab);
+					//App->physics->AddBody(ab);
 				}
 				if (ImGui::MenuItem("OBB")) {
 					//CREATE
@@ -109,7 +115,7 @@ update_status ModuleGui::Update(float dt)
 				}
 				if (ImGui::MenuItem("Planes")) {
 					math::Plane p(vec(0, 0, 0), 1);
-					App->physics->AddBody(p);
+					//App->physics->AddBody(p);
 				}
 				if (ImGui::MenuItem("Segments")) {
 					//CREATE

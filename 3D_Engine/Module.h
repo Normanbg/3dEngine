@@ -14,10 +14,10 @@ private :
 	bool enabled;
 
 public:
-	Application * App;
+
 	std::string name;
 
-	Module(Application* parent, bool start_enabled = true) : App(parent)
+	Module(bool start_enabled = true)
 	{}
 
 	virtual ~Module()
@@ -53,8 +53,8 @@ public:
 		return true; 
 	}
 
-	virtual void OnCollision(PhysBody3D* body1, PhysBody3D* body2)
-	{}
+	/*virtual void OnCollision(PhysBody3D* body1, PhysBody3D* body2)
+	{}*/
 
 	virtual bool Load(JSON_Object* data)
 	{
@@ -66,4 +66,3 @@ public:
 		return true;
 	}
 };
-extern Application* App;
