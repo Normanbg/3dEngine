@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include "./JSON/parson.h"
 #include <string>
 
@@ -15,7 +14,7 @@ private :
 	bool enabled;
 
 public:
-	Application* App;
+	Application * App;
 	std::string name;
 
 	Module(Application* parent, bool start_enabled = true) : App(parent)
@@ -67,3 +66,4 @@ public:
 		return true;
 	}
 };
+extern Application* App;

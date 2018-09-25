@@ -12,6 +12,8 @@
 #include "ModulePhysics3D.h"
 #include "Application.h"
 
+#include <list>
+
 
 
 
@@ -266,14 +268,7 @@ update_status ModuleGui::Update(float dt)
 				return UPDATE_STOP;
 				ImGui::EndMenu();
 			}
-
 			
-
-
-			
-			
-
-
 			ImGui::End();
 		}
 	}
@@ -281,7 +276,9 @@ update_status ModuleGui::Update(float dt)
 	if (consoleActive) {
 		ImGui::SetNextWindowSize(ImVec2(650, 350), ImGuiSetCond_Once);
 		if (ImGui::Begin("Console", &consoleActive)) {
-
+			for (std::list<const char*>::iterator it = logsBuffer.begin(); it != logsBuffer.end(); it++) {
+				ImGui::Text(*it);
+			}
 
 			ImGui::End();
 		}
@@ -337,6 +334,6 @@ bool ModuleGui::CleanUp()
 	return true;
 }
 
-void ModuleGui::ConsoleLogs(std::string log){
-
+void ModuleGui::AddConsoleLogs(const char* log){
+	logsBuffer.push_back(log);
 }
