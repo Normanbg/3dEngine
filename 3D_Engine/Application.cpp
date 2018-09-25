@@ -1,21 +1,33 @@
 #include "Application.h"
 #include "SDL/include/SDL_cpuinfo.h"
 #include "DeviceId\DeviceId.h"
+#include "ModuleWindow.h"
+#include "ModuleInput.h"
+#include "ModuleAudio.h"
+#include "ModuleSceneIntro.h"
+#include "ModuleRenderer3D.h"
+#include "ModuleCamera3D.h"
+#include "ModulePhysics3D.h"
+#include "ModuleGui.h"
+
+#include "./JSON/parson.h"
+
 
 Application::Application()
 {
 	frames = 0;
+	want_to_save = want_to_load = false;
 
-	window = new ModuleWindow(this);
+	window = new ModuleWindow();
 	input = new ModuleInput(this);
-	audio = new ModuleAudio(this, true);
+	audio = new ModuleAudio(this);
 	scene_intro = new ModuleSceneIntro(this);
 	renderer3D = new ModuleRenderer3D(this);
 	camera = new ModuleCamera3D(this);
 	physics = new ModulePhysics3D(this);
 	gui = new ModuleGui(this);
 	
-
+	_organization = ORGANIZATION;
 	// The order of calls is very important!
 	// Modules will Init() Start() and Update in this order
 	// They will CleanUp() in reverse order
@@ -46,13 +58,34 @@ Application::~Application()
 bool Application::Init()
 {
 	bool ret = true;
+	JSON_Value* config;
+	JSON_Object* objModules = nullptr;
+	
+	if (config = json_parse_file(CONFIG_FILE)) {
+		OWN_LOG("Config.JSON File detected");
+		JSON_Object* obj;
+		JSON_Object* appObj;
+		
+
+		obj = json_value_get_object(config);
+		appObj = json_object_get_object(obj, "App");
+		
+		GetDataFromJson(appObj);
+
+		objModules = obj;
+		json_object_clear(appObj);
+		obj = nullptr;
+		json_object_clear(obj);
+		
+	}
 
 	// Call Init() in all modules
 	std::list<Module*>::iterator item = list_modules.begin();
 
+
 	while(item != list_modules.end() && ret == true)
 	{
-		ret = (*item)->Init();
+		ret = (*item)->Init(json_object_get_object(objModules, (*item)->name.c_str()));
 		item++;
 	}
 
@@ -65,7 +98,10 @@ bool Application::Init()
 		ret = (*item)->Start();
 		item++;
 	}
-	
+
+	json_object_clear(objModules);
+	json_value_free(config);
+
 	ms_timer.Start();
 	return ret;
 }
@@ -93,6 +129,10 @@ void Application::PrepareUpdate()
 // ---------------------------------------------
 void Application::FinishUpdate()
 {
+	if (want_to_save == true) SavegameNow();
+
+	if (want_to_load == true) LoadGameNow();
+
 	if (last_sec_frame_time.Read() > 1000) {
 		last_sec_frame_time.Start();
 		prev_last_sec_frame_count = last_sec_frame_count;
@@ -298,3 +338,100 @@ void Application::SetTimeScale(float ts, int frameNumber)
 void Application::PauseGame(bool pause) {
 	SetTimeScale(pause ? 0.f : 1.f);	
 }
+
+void Application::SetOrganization(char* newName)
+{
+	_organization = newName;
+}
+
+
+
+ std::string Application::GetOrganization() const
+{
+	return _organization;
+}
+
+ void Application::LoadGame()
+ {
+	 want_to_load = true;
+ }
+
+ void Application::SaveGame() const
+ {
+	 want_to_save = true;
+ }
+
+ bool Application::LoadGameNow()
+ {
+	 
+	 bool ret = false;
+
+	 JSON_Value* config;	 
+
+	 if (config = json_parse_file(CONFIG_FILE)) {
+		 OWN_LOG("Config.JSON File detected");
+		 JSON_Object* obj;
+		 JSON_Object* appObj;
+
+
+		 obj = json_value_get_object(config);
+		 appObj = json_object_get_object(obj, "App");
+
+		 GetDataFromJson(appObj);
+
+		 
+		 json_object_clear(appObj);
+		
+		std::list<Module*>::iterator item = list_modules.begin();
+
+		 while (item != list_modules.end())
+		 {
+			 ret &= (*item)->Load(json_object_get_object(obj, (*item)->name.c_str()));
+			 item++;
+		 }
+		
+		 json_object_clear(obj);
+	 }
+	 	 
+	 json_value_free(config);
+	 
+	 want_to_load = false;
+	 return ret;
+ }
+
+ bool Application::SavegameNow() const
+ {
+	 bool ret = false;
+
+	 JSON_Value* value= json_value_init_object();
+	 JSON_Object* obj = json_value_get_object(value);
+	 
+	 json_object_dotset_string(obj, "App.Name", window->GetWindowTitle().c_str());
+	 json_object_dotset_string(obj, "App.Organization", GetOrganization().c_str());
+	 
+
+	 std::list<Module*>::const_iterator item = list_modules.begin();
+
+	 while (item != list_modules.end())
+	 {
+		 ret &= (*item)->Save(obj);
+		 item++;
+	 }
+
+	 json_serialize_to_file(value, CONFIG_FILE);
+	 json_object_clear(obj);
+	 json_value_free(value);
+
+	 want_to_save = false;
+	 return ret;
+ }
+
+ void Application::GetDataFromJson(JSON_Object* data) {
+ 
+	 const char* title = json_object_get_string(data, "Name");
+	 window->SetTitle((char*)title);
+
+	 const char* title2 = json_object_get_string(data, "Organization");
+	 SetOrganization((char*)title2);
+ 
+ }

@@ -9,13 +9,16 @@
 class ModuleRenderer3D : public Module
 {
 public:
-	ModuleRenderer3D(Application* app, bool start_enabled = true);
+	ModuleRenderer3D(bool start_enabled = true);
 	~ModuleRenderer3D();
 
-	bool Init();
+	bool Init(JSON_Object* obj);
 	update_status PreUpdate(float dt);
 	update_status PostUpdate(float dt);
 	bool CleanUp();
+
+	bool Load(JSON_Object* data)override;
+	bool Save(JSON_Object* data) const;
 
 	void OnResize(int width, int height);
 	char* GetGraphicsModel();
@@ -27,4 +30,9 @@ public:
 	SDL_GLContext context;
 	mat3x3 NormalMatrix;
 	mat4x4 ModelMatrix, ViewMatrix, ProjectionMatrix;
+
+private:
+
+	void GetDataFromJson(JSON_Object* data);
+	bool _vSync;
 };

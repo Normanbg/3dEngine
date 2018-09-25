@@ -16,10 +16,10 @@ class ModuleInput : public Module
 {
 public:
 	
-	ModuleInput(Application* app, bool start_enabled = true);
+	ModuleInput(bool start_enabled = true);
 	~ModuleInput();
 
-	bool Init();
+	bool Init(JSON_Object* obj);
 	update_status PreUpdate(float dt);
 	bool CleanUp();
 

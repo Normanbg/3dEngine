@@ -4,6 +4,8 @@
 #include "PhysBody3D.h"
 #include "Primitive.h"
 
+#include <list>
+
 #ifdef _DEBUG
 	#pragma comment (lib, "Bullet/libx86/BulletDynamics_debug.lib")
 	#pragma comment (lib, "Bullet/libx86/BulletCollision_debug.lib")
@@ -14,9 +16,10 @@
 	#pragma comment (lib, "Bullet/libx86/LinearMath.lib")
 #endif
 
-ModulePhysics3D::ModulePhysics3D(Application* app, bool start_enabled) : Module(app, start_enabled)
+ModulePhysics3D::ModulePhysics3D(bool start_enabled) : Module(start_enabled)
 {
 	debug = false;
+	name = "Physics";
 
 	collision_conf = new btDefaultCollisionConfiguration();
 	dispatcher = new btCollisionDispatcher(collision_conf);
@@ -36,11 +39,12 @@ ModulePhysics3D::~ModulePhysics3D()
 }
 
 // Render not available yet----------------------------------
-bool ModulePhysics3D::Init()
+bool ModulePhysics3D::Init(JSON_Object* obj)
 {
 	OWN_LOG("Creating 3D Physics simulation");
 	bool ret = true;
 
+	json_object_clear(obj);//clear obj to free memory
 	return ret;
 }
 
@@ -49,21 +53,21 @@ bool ModulePhysics3D::Start()
 {
 	OWN_LOG("Creating Physics environment");
 
-	world = new btDiscreteDynamicsWorld(dispatcher, broad_phase, solver, collision_conf);
-	world->setDebugDrawer(debug_draw);
-	world->setGravity(GRAVITY);
-	vehicle_raycaster = new btDefaultVehicleRaycaster(world);
+	//world = new btDiscreteDynamicsWorld(dispatcher, broad_phase, solver, collision_conf);
+	//world->setDebugDrawer(debug_draw);
+	//world->setGravity(GRAVITY);
+	//vehicle_raycaster = new btDefaultVehicleRaycaster(world);
 
-	// Big plane as ground
-	{
-		btCollisionShape* colShape = new btStaticPlaneShape(btVector3(0, 1, 0), 0);
+	//// Big plane as ground
+	//{
+	//	btCollisionShape* colShape = new btStaticPlaneShape(btVector3(0, 1, 0), 0);
 
-		btDefaultMotionState* myMotionState = new btDefaultMotionState();
-		btRigidBody::btRigidBodyConstructionInfo rbInfo(0.0f, myMotionState, colShape);
+	//	btDefaultMotionState* myMotionState = new btDefaultMotionState();
+	//	btRigidBody::btRigidBodyConstructionInfo rbInfo(0.0f, myMotionState, colShape);
 
-		btRigidBody* body = new btRigidBody(rbInfo);
-		world->addRigidBody(body);
-	}
+	//	btRigidBody* body = new btRigidBody(rbInfo);
+	//	world->addRigidBody(body);
+	//}
 
 	return true;
 }
@@ -71,7 +75,7 @@ bool ModulePhysics3D::Start()
 // ---------------------------------------------------------
 update_status ModulePhysics3D::PreUpdate(float dt)
 {
-	world->stepSimulation(dt, 15);
+	/*world->stepSimulation(dt, 15);
 
 	int numManifolds = world->getDispatcher()->getNumManifolds();
 	for(int i = 0; i<numManifolds; i++)
@@ -104,15 +108,15 @@ update_status ModulePhysics3D::PreUpdate(float dt)
 			}
 		}
 	}
-
+*/
 	return UPDATE_CONTINUE;
 }
 
 // ---------------------------------------------------------
 update_status ModulePhysics3D::Update(float dt)
 {
-	if(App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
-		debug = !debug;
+	/*if(App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
+		debug = !debug;*/
 
 	if(debug == true)	{
 		world->debugDrawWorld();
@@ -171,29 +175,30 @@ bool ModulePhysics3D::CleanUp()
 
 }
 
-void ModulePhysics3D::AddBody(const math::Sphere& sphere)
-{
-	spheres.push_back(sphere);
-}
-
-void ModulePhysics3D::AddBody(const math::Plane& pl)
-{
-	planes.push_back(pl);
-}
-
-void ModulePhysics3D::AddBody(const math::Capsule& caps)
-{
-	capsules.push_back(caps);
-}
-void ModulePhysics3D::AddBody(const math::AABB& aabb)
-{
-	aabbs.push_back(aabb);
-}
+//void ModulePhysics3D::AddBody(const math::Sphere& sphere)
+//{
+//	spheres.push_back(sphere);
+//}
+//
+//void ModulePhysics3D::AddBody(const math::Plane& pl)
+//{
+//	planes.push_back(pl);
+//}
+//
+//void ModulePhysics3D::AddBody(const math::Capsule& caps)
+//{
+//	capsules.push_back(caps);
+//}
+//void ModulePhysics3D::AddBody(const math::AABB& aabb)
+//{
+//	aabbs.push_back(aabb);
+//}
 
 bool ModulePhysics3D::isIntersecting() {
-	bool ret = false;
-	for (std::list<math::Sphere>::iterator item = spheres.begin(); item != spheres.end(); item++) {
+	bool ret = true;
+	/*for (std::list<math::Sphere>::iterator item = spheres.begin(); item != spheres.end(); item++) {
 		for (std::list<math::Capsule>::iterator item2 = capsules.begin(); item2 != capsules.end(); item2++) {
+
 			if ((*item).Intersects(*item2)) {
 				OWN_LOG("Sphere intersecting a capsule!");	
 				ret = true;
@@ -234,7 +239,7 @@ bool ModulePhysics3D::isIntersecting() {
 			}
 		}
 	}
-
+*/
 	return ret;
 }
 /*

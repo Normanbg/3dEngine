@@ -10,10 +10,12 @@ class ModuleAudio : public Module
 {
 public:
 
-	ModuleAudio(Application* app, bool start_enabled = true);
+	ModuleAudio(bool start_enabled = true);
 	~ModuleAudio();
+	//bool Load(JSON_Object* data)override;
+	//bool Save(JSON_Object* data) const;
 
-	bool Init();
+	bool Init(JSON_Object* obj);
 	bool CleanUp();
 
 	// Play a music file

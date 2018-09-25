@@ -10,15 +10,17 @@ class ModuleWindow : public Module
 {
 public:
 
-	ModuleWindow(Application* app, bool start_enabled = true);
+	ModuleWindow(bool start_enabled = true);
 
 	// Destructor
 	virtual ~ModuleWindow();
 
-	bool Init();
+	bool Init(JSON_Object* obj);
 	bool CleanUp();
+	bool Load(JSON_Object* data)override ;
+	bool Save(JSON_Object* data) const;
 
-	void SetTitle(const char* title);
+	void SetTitle(char* title);
 
 	void SetBorderless(bool borderless);
 	void SetResizable(bool resizable);
@@ -31,6 +33,7 @@ public:
 	bool IsResizable() const { return _resizable; }
 	bool IsFullscreenDesktop() const{ return _fullDesktop; }
 	float GetBrightness() const { return _brightness; }
+	std::string GetWindowTitle() const { return _title; }
 	void GetSize(int &h, int &w)const;
 
 	void SetBrightness(float bright);
@@ -43,11 +46,14 @@ public:
 	SDL_Surface* screen_surface;
 
 private:
+	void GetDataFromJson(JSON_Object* data);
+
 	bool _fullscreen;
 	bool _resizable;
 	bool _borderless;
 	bool _fullDesktop;
 	int _brightness = DEFAULT_BRIGHTNESS;
+	std::string _title  = TITLE;
 
 	uint _w;
 	uint _h;

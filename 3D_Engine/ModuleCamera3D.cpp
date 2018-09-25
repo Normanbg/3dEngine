@@ -1,11 +1,17 @@
 #include "Globals.h"
 #include "Application.h"
 #include "PhysBody3D.h"
+#include "ModuleWindow.h"
+#include "ModuleInput.h"
+#include "ModuleAudio.h"
+#include "ModuleSceneIntro.h"
+#include "ModuleRenderer3D.h"
 #include "ModuleCamera3D.h"
+#include "ModulePhysics3D.h"
 
 #define CAMERA_SPEED 10
 
-ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(app, start_enabled)
+ModuleCamera3D::ModuleCamera3D(bool start_enabled) : Module(start_enabled)
 {
 	CalculateViewMatrix();
 
@@ -13,7 +19,7 @@ ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(ap
 	Y = vec3(0.0f, 1.0f, 0.0f);
 	Z = vec3(0.0f, 0.0f, 1.0f);
 
-	
+	name = "Camera";
 	
 
 	Position = vec3(0.0f, 50.0f, 0.0f);

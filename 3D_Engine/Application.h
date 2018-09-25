@@ -1,24 +1,28 @@
-#pragma once
+#ifndef __APPLICATION_H__
+#define __APPLICATION_H__
 
 #include <list>
 #include <vector>
 #include"./ImGui/imgui.h"
+#include "SDL\include\SDL.h"
 #include "Globals.h"
 #include "PerfTimer.h"
 #include "Timer.h"
-#include "Module.h"
-#include "ModuleWindow.h"
-#include "ModuleInput.h"
-#include "ModuleAudio.h"
-#include "ModuleSceneIntro.h"
-#include "ModuleRenderer3D.h"
-#include "ModuleCamera3D.h"
-#include "ModulePhysics3D.h"
-#include "ModuleGui.h"
+
 
 #define MAX_FPS_LOG 50
 #define MAX_MS_LOG 50
 #define FRAMERATE_CAP 60
+
+class Module;
+class ModuleWindow;
+class ModuleInput;
+class ModuleAudio;
+class ModuleSceneIntro;
+class ModuleRenderer3D;
+class ModuleCamera3D;
+class ModulePhysics3D;
+class ModuleGui;
 
 class Application
 {
@@ -58,6 +62,13 @@ private:
 	void StoreFpsLog();
 	void StoreMsLog();
 
+	bool LoadGameNow();
+	bool SavegameNow() const;
+
+	mutable bool		want_to_save;
+	bool				want_to_load;
+	std::string			load_game;
+	mutable std::string	save_game;
 
 	std::list<Module*> list_modules;
 
@@ -77,6 +88,9 @@ public:
 	bool CleanUp();
 
 	void RequestBrowser(std::string link);
+
+	void LoadGame();
+	void SaveGame() const;
 
 	
 	std::vector<float> GetFpsLog();
@@ -99,13 +113,22 @@ public:
 	void GetHardWareData();
 	void HardwareData();
 
+	void SetOrganization(char* newName);
+	std::string GetOrganization() const;
 
 private:
 
+	std::string _organization;
 
 	void AddModule(Module* mod);
 	void PrepareUpdate();
 	void FinishUpdate();
 
+	void GetDataFromJson(JSON_Object* data);
+
 
 };
+
+extern Application* App;
+
+#endif

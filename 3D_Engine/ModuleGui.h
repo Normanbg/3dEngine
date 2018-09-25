@@ -5,6 +5,7 @@
 #include "Globals.h"
 #include "Primitive.h"
 #include "Module.h"
+#include <list>
 
 #include "RandomGenerator/pcg_variants.h"
 
@@ -12,7 +13,7 @@ class ModuleGui : public Module
 {
 public:
 	
-	ModuleGui(Application* app, bool start_enabled = true);
+	ModuleGui(bool start_enabled = true);
 	~ModuleGui();
 
 	bool  Start();
@@ -21,10 +22,15 @@ public:
 	update_status PostUpdate(float dt);
 	bool CleanUp();
 
+	void AddConsoleLogs(const char* log);
+
 public:
 	bool demoShowcase = false;
 	bool activeAbout = false;
 	bool configActive = true;
+	bool consoleActive = true;
+
+	std::list<const char*>logsBuffer;
 
 };
 

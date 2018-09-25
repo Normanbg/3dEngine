@@ -1,6 +1,5 @@
-#include "ModuleGui.h"
-#include "ModuleWindow.h"
 #include "Application.h"
+#include "ModuleGui.h"
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_impl_sdl.h"
 #include "ImGui\imgui_impl_opengl2.h"
@@ -8,14 +7,28 @@
 #include "MathGeoLib\Math\MathAll.h"
 #include "Primitive.h"
 #include "PhysBody3D.h"
+
 #include "ModulePhysics3D.h"
 
+#include "ModuleWindow.h"
+#include "ModuleInput.h"
+#include "ModuleAudio.h"
+#include "ModuleSceneIntro.h"
+#include "ModuleRenderer3D.h"
+#include "ModuleCamera3D.h"
+#include "ModulePhysics3D.h"
+
+#include <list>
 
 
 
 
-ModuleGui::ModuleGui(Application* app, bool start_enabled) : Module(app, start_enabled)
+
+
+ModuleGui::ModuleGui(bool start_enabled) : Module(start_enabled)
 {
+
+	name = "Gui";
 }
 
 
@@ -70,8 +83,8 @@ update_status ModuleGui::Update(float dt)
 			//HELP MENU--------------
 		}
 		if (ImGui::BeginMenu("View")) {
-			if (ImGui::MenuItem("Console")) {}
-			//open console
+			if (ImGui::MenuItem("Console"))
+				consoleActive = !consoleActive;
 			if (ImGui::MenuItem("Configuration"))
 				configActive = !configActive;
 
@@ -81,18 +94,18 @@ update_status ModuleGui::Update(float dt)
 			if (ImGui::CollapsingHeader("Create")) {
 				if (ImGui::MenuItem("Sphere")) {
 					math::Sphere s(vec(0, 0, 0), 2);
-					App->physics->AddBody(s);
+					//App->physics->AddBody(s);
 				}
 				if (ImGui::MenuItem("Cyllinder")) {
 
 				}
 				if (ImGui::MenuItem("Capsule")) {
 					math::Capsule ca(vec(0, 0, 0), vec(0, 1, 0), 5);
-					App->physics->AddBody(ca);
+					//App->physics->AddBody(ca);
 				}
 				if (ImGui::MenuItem("AABB")) {
 					math::AABB ab(vec(0, 0, 0), vec(1, 1, 1));
-					App->physics->AddBody(ab);
+					//App->physics->AddBody(ab);
 				}
 				if (ImGui::MenuItem("OBB")) {
 					//CREATE
@@ -102,10 +115,11 @@ update_status ModuleGui::Update(float dt)
 				}
 				if (ImGui::MenuItem("Planes")) {
 					math::Plane p(vec(0, 0, 0), 1);
-					App->physics->AddBody(p);
+					//App->physics->AddBody(p);
 				}
 				if (ImGui::MenuItem("Segments")) {
 					//CREATE
+					
 				}
 				if (ImGui::MenuItem("Rays")) {
 					//CREATE
@@ -155,16 +169,32 @@ update_status ModuleGui::Update(float dt)
 
 	if (configActive) {
 		ImGui::SetNextWindowSize(ImVec2(650, 350), ImGuiSetCond_Once);
-		if (ImGui::Begin("Configuration", &configActive)) {
+		
+		if (ImGui::Begin("Configuration", &configActive, ImGuiWindowFlags_MenuBar)) {
+			
+			if (ImGui::BeginMenuBar())
+			{
+				if (ImGui::BeginMenu("Options"))
+				{
+					if (ImGui::MenuItem("Save")) { App->SaveGame(); }
+					if (ImGui::MenuItem("Load")) { App->LoadGame(); }
+					ImGui::EndMenu();
+				}
+				ImGui::EndMenuBar();
+			}
+
 
 			if (ImGui::CollapsingHeader("Application")) {
 
-				const int maxSize = 64;
-				char str[maxSize] = TITLE;
-				ImGui::InputText("App Name", str, maxSize);
 
-				char str2[maxSize] = ORGANIZATION;
-				ImGui::InputText("Organization", str2, maxSize);
+
+				const int maxSize = 64;
+				
+				std::string aux = App->window->GetWindowTitle();
+				ImGui::InputText("App Name", (char*)aux.c_str() , maxSize);
+				std::string aux2 = App->GetOrganization();
+				//char str2[maxSize] = aux;
+				ImGui::InputText("Organization",(char*)aux2.c_str(), maxSize);
 
 				int DefaultFpsCap = (App->GetFramerateCap());
 
@@ -245,13 +275,17 @@ update_status ModuleGui::Update(float dt)
 				return UPDATE_STOP;
 				ImGui::EndMenu();
 			}
-
 			
+			ImGui::End();
+		}
+	}
 
-
-			
-			
-
+	if (consoleActive) {
+		ImGui::SetNextWindowSize(ImVec2(650, 350), ImGuiSetCond_Once);
+		if (ImGui::Begin("Console", &consoleActive)) {
+			for (std::list<const char*>::iterator it = logsBuffer.begin(); it != logsBuffer.end(); it++) {
+				ImGui::Text(*it);
+			}
 
 			ImGui::End();
 		}
@@ -305,4 +339,8 @@ bool ModuleGui::CleanUp()
 	ImGui_ImplSDL2_Shutdown();
 	ImGui_ImplOpenGL2_Shutdown();
 	return true;
+}
+
+void ModuleGui::AddConsoleLogs(const char* log){
+	logsBuffer.push_back(log);
 }

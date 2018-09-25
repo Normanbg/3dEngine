@@ -1,7 +1,12 @@
 #pragma once
 
+#include "./JSON/parson.h"
+#include <string>
+
+
 class Application;
 struct PhysBody3D;
+
 
 class Module
 {
@@ -9,15 +14,16 @@ private :
 	bool enabled;
 
 public:
-	Application* App;
 
-	Module(Application* parent, bool start_enabled = true) : App(parent)
+	std::string name;
+
+	Module(bool start_enabled = true)
 	{}
 
 	virtual ~Module()
 	{}
 
-	virtual bool Init() 
+	virtual bool Init(JSON_Object* obj)
 	{
 		return true; 
 	}
@@ -47,6 +53,16 @@ public:
 		return true; 
 	}
 
-	virtual void OnCollision(PhysBody3D* body1, PhysBody3D* body2)
-	{}
+	/*virtual void OnCollision(PhysBody3D* body1, PhysBody3D* body2)
+	{}*/
+
+	virtual bool Load(JSON_Object* data)
+	{
+		return true;
+	}
+
+	virtual bool Save(JSON_Object* data) const
+	{
+		return true;
+	}
 };

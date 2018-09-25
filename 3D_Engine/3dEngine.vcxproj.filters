@@ -28,6 +28,9 @@
     <Filter Include="Sources\Tools\DeviceId">
       <UniqueIdentifier>{103ab7f6-4bf7-4a22-bc2f-9945aedf1129}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Tools\Json">
+      <UniqueIdentifier>{387dfcf1-f0bd-4200-9185-3cb8727ccc31}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -309,6 +312,9 @@
     <ClInclude Include="DeviceId\dxgi1_4.h">
       <Filter>Sources\Tools\DeviceId</Filter>
     </ClInclude>
+    <ClInclude Include="JSON\parson.h">
+      <Filter>Sources\Tools\Json</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -496,6 +502,9 @@
     </ClCompile>
     <ClCompile Include="DeviceId\DeviceId.cpp">
       <Filter>Sources\Tools\DeviceId</Filter>
+    </ClCompile>
+    <ClCompile Include="JSON\parson.c">
+      <Filter>Sources\Tools\Json</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
