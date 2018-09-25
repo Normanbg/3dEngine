@@ -19,6 +19,8 @@
 ModuleRenderer3D::ModuleRenderer3D(bool start_enabled) : Module(start_enabled)
 {
 	name = "Render";
+
+	_vSync = VSYNC;
 }
 
 // Destructor
@@ -31,6 +33,10 @@ bool ModuleRenderer3D::Init(JSON_Object* obj)
 	OWN_LOG("Creating 3D Renderer context");
 	bool ret = true;
 	
+	if (obj != nullptr) {
+		GetDataFromJson(obj);
+	}
+
 	//Create context
 	context = SDL_GL_CreateContext(App->window->window);
 	if(context == NULL)
@@ -42,7 +48,7 @@ bool ModuleRenderer3D::Init(JSON_Object* obj)
 	if(ret == true)
 	{
 		//Use Vsync
-		if(VSYNC && SDL_GL_SetSwapInterval(1) < 0)
+		if(_vSync && SDL_GL_SetSwapInterval(1) < 0)
 			OWN_LOG("Warning: Unable to set VSync! SDL Error: %s\n", SDL_GetError());
 
 		//Initialize Projection Matrix
@@ -170,4 +176,24 @@ char* ModuleRenderer3D::GetGraphicsModel()
 char * ModuleRenderer3D::GetGraphicsVendor()
 {
 	return (char*)glGetString(GL_VENDOR);;
+}
+
+void ModuleRenderer3D::GetDataFromJson(JSON_Object* data) {
+
+	_vSync = json_object_dotget_boolean(data, "VSync");
+
+}
+
+bool ModuleRenderer3D::Load(JSON_Object* data) {
+
+	GetDataFromJson(data);
+
+	//Set Vsync to change it in game
+
+	return true;
+}
+bool ModuleRenderer3D::Save(JSON_Object* data)const {
+	json_object_dotset_boolean(data, "Render.VSync", _vSync);
+	
+	return true;
 }

@@ -46,6 +46,8 @@ public:
 	SDL_Surface* screen_surface;
 
 private:
+	void GetDataFromJson(JSON_Object* data);
+
 	bool _fullscreen;
 	bool _resizable;
 	bool _borderless;
