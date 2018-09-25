@@ -163,20 +163,21 @@ update_status ModuleGui::Update(float dt)
 
 	if (configActive) {
 		ImGui::SetNextWindowSize(ImVec2(650, 350), ImGuiSetCond_Once);
-		if (ImGui::BeginMainMenuBar())
-		{
-			if (ImGui::BeginMenu("Options"))
-			{				
-				if (ImGui::MenuItem("Save")) { App->SaveGame(); }
-				if (ImGui::MenuItem("Load")) { App->LoadGame(); }
-				ImGui::EndMenu();
+		
+		if (ImGui::Begin("Configuration", &configActive, ImGuiWindowFlags_MenuBar)) {
+			
+			if (ImGui::BeginMenuBar())
+			{
+				if (ImGui::BeginMenu("Options"))
+				{
+					if (ImGui::MenuItem("Save")) { App->SaveGame(); }
+					if (ImGui::MenuItem("Load")) { App->LoadGame(); }
+					ImGui::EndMenu();
+				}
+				ImGui::EndMenuBar();
 			}
-			ImGui::EndMainMenuBar();
-		}
 
-		if (ImGui::Begin("Configuration", &configActive)) {
-			
-			
+
 			if (ImGui::CollapsingHeader("Application")) {
 
 

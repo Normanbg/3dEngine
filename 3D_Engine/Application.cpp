@@ -89,26 +89,7 @@ bool Application::Init()
 		ret = (*item)->Start();
 		item++;
 	}
-	
-	/*JSON_Value* value;
-	JSON_Object* obj;
 
-	if (value = json_parse_file("package.JSON")) {
-	
-		
-		obj = json_value_get_object(value);
-		const char* str = json_object_get_string(obj, "name");
-		const char* str2 = json_object_get_string(obj, "description");
-		json_object_set_string(obj, "name", "newName");
-		const char* str3 = json_object_get_string(obj, "name");
-		
-		json_serialize_to_file(value, "NewJSON.JSON");
-
-		int i = 10;
-
-		json_value_free(value);
-		
-	}*/
 	json_object_clear(objModules);
 	json_value_free(config);
 
