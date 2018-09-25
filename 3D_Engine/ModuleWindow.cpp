@@ -30,13 +30,7 @@ bool ModuleWindow::Init(JSON_Object* obj)
 	bool ret = true;
 
 	if (obj != nullptr) {		
-		_brightness = json_object_dotget_number(obj, "Brightness");
-		_w = json_object_dotget_number(obj, "Width");
-		_h = json_object_dotget_number(obj, "Height");
-		_fullscreen = json_object_dotget_boolean(obj, "Fullscreen");
-		_borderless = json_object_dotget_boolean(obj, "Borderless");
-		_resizable = json_object_dotget_boolean(obj, "Resizable");
-		_fullDesktop = json_object_dotget_boolean(obj, "Fullscreen Desktop");
+		GetDataFromJson(obj);
 	}
 
 	if(SDL_Init(SDL_INIT_VIDEO) < 0)
@@ -167,13 +161,7 @@ void ModuleWindow::GetSize(int &w, int &h)const {
 
 bool ModuleWindow::Load(JSON_Object* data) {
 
-	_brightness = json_object_dotget_number(data, "Brightness");
-	_w = json_object_dotget_number(data, "Width");
-	_h = json_object_dotget_number(data, "Height");
-	_fullscreen = json_object_dotget_boolean(data, "Fullscreen");
-	_borderless = json_object_dotget_boolean(data, "Borderless");
-	_resizable = json_object_dotget_boolean(data, "Resizable");
-	_fullDesktop = json_object_dotget_boolean(data, "Fullscreen Desktop");
+	GetDataFromJson(data);
 	
 	SetBrightness(_brightness);
 	SetSize(_w, _h);
@@ -193,4 +181,16 @@ bool ModuleWindow::Save(JSON_Object* data)const {
 	json_object_dotset_boolean(data, "Window.Resizable", _resizable);
 	json_object_dotset_boolean(data, "Window.Fullscreen Desktop", _fullDesktop);
 	return true;
+}
+
+void ModuleWindow::GetDataFromJson(JSON_Object* data) {
+
+	_brightness = json_object_dotget_number(data, "Brightness");
+	_w = json_object_dotget_number(data, "Width");
+	_h = json_object_dotget_number(data, "Height");
+	_fullscreen = json_object_dotget_boolean(data, "Fullscreen");
+	_borderless = json_object_dotget_boolean(data, "Borderless");
+	_resizable = json_object_dotget_boolean(data, "Resizable");
+	_fullDesktop = json_object_dotget_boolean(data, "Fullscreen Desktop");
+
 }

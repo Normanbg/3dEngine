@@ -61,11 +61,7 @@ bool Application::Init()
 		obj = json_value_get_object(config);
 		appObj = json_object_get_object(obj, "App");
 		
-		const char* title = json_object_get_string(appObj, "Name");
-		window->SetTitle((char*)title);
-
-		const char* title2 = json_object_get_string(appObj, "Organization");
-		SetOrganization((char*)title2);
+		GetDataFromJson(appObj);
 
 		objModules = obj;
 		json_object_clear(appObj);
@@ -391,11 +387,7 @@ void Application::SetOrganization(char* newName)
 		 obj = json_value_get_object(config);
 		 appObj = json_object_get_object(obj, "App");
 
-		 const char* title = json_object_get_string(appObj, "Name");
-		 window->SetTitle((char*)title);
-
-		 const char* title2 = json_object_get_string(appObj, "Organization");
-		 SetOrganization((char*)title2);
+		 GetDataFromJson(appObj);
 
 		 
 		 json_object_clear(appObj);
@@ -440,30 +432,16 @@ void Application::SetOrganization(char* newName)
 	 json_object_clear(obj);
 	 json_value_free(value);
 
-	 
-	 /*JSON_Value* value;
-	 JSON_Object* obj;
-
-	 if (value = json_parse_file("package.JSON")) {
-
-
-	 obj = json_value_get_object(value);
-	 const char* str = json_object_get_string(obj, "name");
-	 const char* str2 = json_object_get_string(obj, "description");
-	 json_object_set_string(obj, "name", "newName");
-	 const char* str3 = json_object_get_string(obj, "name");
-
-	 json_serialize_to_file(value, "NewJSON.JSON");
-
-	 int i = 10;
-
-	 json_value_free(value);
-
-	 }*/
-
-		 
-
-
 	 want_to_save = false;
 	 return ret;
+ }
+
+ void Application::GetDataFromJson(JSON_Object* data) {
+ 
+	 const char* title = json_object_get_string(data, "Name");
+	 window->SetTitle((char*)title);
+
+	 const char* title2 = json_object_get_string(data, "Organization");
+	 SetOrganization((char*)title2);
+ 
  }

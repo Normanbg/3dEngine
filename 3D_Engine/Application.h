@@ -120,5 +120,7 @@ private:
 	void PrepareUpdate();
 	void FinishUpdate();
 
+	void GetDataFromJson(JSON_Object* data);
+
 
 };
