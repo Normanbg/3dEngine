@@ -6,7 +6,11 @@
 #include "Module.h"
 #include <list>
 
+
 #include "RandomGenerator/pcg_variants.h"
+
+class UIPanel;
+class UIPanelAbout;
 
 class ModuleGui : public Module
 {
@@ -28,6 +32,10 @@ public:
 	bool activeAbout = false;
 	bool configActive = true;
 	bool consoleActive = true;
+
+	std::list<UIPanel*> uiPanels;
+	UIPanelAbout* panelAbout = nullptr;
+
 
 	std::list<const char*>logsBuffer;
 

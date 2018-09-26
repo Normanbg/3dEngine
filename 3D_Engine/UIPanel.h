@@ -11,7 +11,7 @@ class UIPanel
 {
 public:
 	UIPanel(const char* name, float positionX, float positionY, float width, float height, bool active = true): name(name), positionX(positionX), width(width), height(height), active(active){}
-	virtual ~UIPanel();
+	virtual ~UIPanel() {}
 
 	virtual void Draw(){}
 

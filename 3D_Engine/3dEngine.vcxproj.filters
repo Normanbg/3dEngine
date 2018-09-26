@@ -315,7 +315,12 @@
     <ClInclude Include="Globals.h">
       <Filter>Sources\Main</Filter>
     </ClInclude>
-    <ClInclude Include="UIPanel.h" />
+    <ClInclude Include="UIPanel.h">
+      <Filter>Sources\Modules\GuiPanels</Filter>
+    </ClInclude>
+    <ClInclude Include="UIPanelAbout.h">
+      <Filter>Sources\Modules\GuiPanels</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -501,7 +506,9 @@
     <ClCompile Include="Main.cpp">
       <Filter>Sources\Main</Filter>
     </ClCompile>
-    <ClCompile Include="UIPanel.cpp" />
+    <ClCompile Include="UIPanelAbout.cpp">
+      <Filter>Sources\Modules\GuiPanels</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="MathGeoLib\Geometry\KDTree.inl">

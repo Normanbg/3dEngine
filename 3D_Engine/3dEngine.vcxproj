@@ -167,6 +167,7 @@
     <ClInclude Include="PerfTimer.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="UIPanel.h" />
+    <ClInclude Include="UIPanelAbout.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
@@ -230,7 +231,7 @@
     <ClCompile Include="ModuleWindow.cpp" />
     <ClCompile Include="PerfTimer.cpp" />
     <ClCompile Include="Timer.cpp" />
-    <ClCompile Include="UIPanel.cpp" />
+    <ClCompile Include="UIPanelAbout.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="MathGeoLib\Geometry\KDTree.inl" />

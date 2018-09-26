@@ -5,6 +5,8 @@
 #include "ImGui\imgui_impl_opengl2.h"
 #include "MathGeoLib\Geometry\GeometryAll.h"
 #include "MathGeoLib\Math\MathAll.h"
+#include "UIPanel.h"
+#include "UIPanelAbout.h"
 
 #include "ModulePhysics3D.h"
 
@@ -158,12 +160,6 @@ update_status ModuleGui::Update(float dt)
 		ImGui::EndMainMenuBar();
 
 	}
-	/*MAX & MIN
-	ImGui::InputInt("Max Number", &var);
-	ImGui::InputInt("Min Number", &var2);
-	if (ImGui::SmallButton("Generate Random Int")) {
-		randomNum = ("%i", (int)pcg16si_boundedrand_r(&rng, var) + var2);
-	}*/
 
 	if (configActive) {
 		ImGui::SetNextWindowSize(ImVec2(650, 350), ImGuiSetCond_Once);
@@ -294,7 +290,11 @@ update_status ModuleGui::Update(float dt)
 		ImGui::ShowTestWindow();
 
 	if (activeAbout) {
-		if (ImGui::Begin("About"));
+		/*uiPanels.push_back(panelAbout = new UIPanelAbout("about", 150, 150, 350, 350, activeAbout));
+		ImGui::SetNextWindowPos({ panelAbout->positionX, panelAbout->positionY });
+		ImGui::SetNextWindowSize({ panelAbout->width, panelAbout->height });
+		panelAbout->Draw();*/
+		/*if (ImGui::Begin("About"));
 		ImGui::Text("Video Game Engine. \n\nThis Engine is done for the 3D Engines subject on the Design & Development Degree by UPC \n\nDeveloped by:\n");
 		if (ImGui::SmallButton("Norman Benet"))
 			App->RequestBrowser("https://github.com/normanbg");
@@ -322,7 +322,7 @@ update_status ModuleGui::Update(float dt)
 		if (ImGui::SmallButton("MIT"))
 			App->RequestBrowser("https://github.com/Normanbg/3dEngine/blob/master/LICENSE");
 		ImGui::End();
-
+*/
 	}
 
 
