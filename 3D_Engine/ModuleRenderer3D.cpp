@@ -1,9 +1,12 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleRenderer3D.h"
+#include "./Glew/include/glew.h"
 #include "SDL\include\SDL_opengl.h"
-#include <gl/GL.h>
-#include <gl/GLU.h>
+
+//#include <gl/GL.h>
+//#include <gl/GLU.h>
+
 
 #include "ModuleWindow.h"
 #include "ModuleInput.h"
@@ -14,6 +17,7 @@
 #include "ModuleGui.h"
 
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
+#pragma comment (lib, "Glew/libx86/glew32.lib")   
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
 
 ModuleRenderer3D::ModuleRenderer3D(bool start_enabled) : Module(start_enabled)
@@ -36,15 +40,14 @@ bool ModuleRenderer3D::Init(JSON_Object* obj)
 	if (obj != nullptr) {
 		GetDataFromJson(obj);
 	}
-
+	
 	//Create context
 	context = SDL_GL_CreateContext(App->window->window);
 	if(context == NULL)
 	{
 		OWN_LOG("OpenGL context could not be created! SDL_Error: %s\n", SDL_GetError());
 		ret = false;
-	}
-	
+	}	
 	if(ret == true)
 	{
 		//Use Vsync
