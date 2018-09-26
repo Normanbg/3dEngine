@@ -321,6 +321,12 @@
     <ClInclude Include="UIPanelAbout.h">
       <Filter>Sources\Modules\GuiPanels</Filter>
     </ClInclude>
+    <ClInclude Include="UIPanelConfig.h">
+      <Filter>Sources\Modules\GuiPanels</Filter>
+    </ClInclude>
+    <ClInclude Include="UIPanelConsole.h">
+      <Filter>Sources\Modules\GuiPanels</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -507,6 +513,12 @@
       <Filter>Sources\Main</Filter>
     </ClCompile>
     <ClCompile Include="UIPanelAbout.cpp">
+      <Filter>Sources\Modules\GuiPanels</Filter>
+    </ClCompile>
+    <ClCompile Include="UIPanelConfig.cpp">
+      <Filter>Sources\Modules\GuiPanels</Filter>
+    </ClCompile>
+    <ClCompile Include="UIPanelConsole.cpp">
       <Filter>Sources\Modules\GuiPanels</Filter>
     </ClCompile>
   </ItemGroup>

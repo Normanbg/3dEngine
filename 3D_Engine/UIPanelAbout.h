@@ -6,7 +6,7 @@
 class UIPanelAbout :  public UIPanel
 {
 public:
-	UIPanelAbout(const char* name, float positionX, float positionY, float width, float height, bool active = true);
+	UIPanelAbout(const char* name, float positionX, float positionY, float width, float height, bool active = false);
 	~UIPanelAbout();
 
 	void Draw();

@@ -10,12 +10,13 @@
 class UIPanel
 {
 public:
-	UIPanel(const char* name, float positionX, float positionY, float width, float height, bool active = true): name(name), positionX(positionX), width(width), height(height), active(active){}
+	UIPanel(const char* name, float positionX, float positionY, float width, float height, bool active = false): name(name), positionX(positionX),positionY(positionY), width(width), height(height), active(active){}
 	virtual ~UIPanel() {}
 
 	virtual void Draw(){}
 
-	bool isActive() const { return active; }
+	void ChangeActive() { active = !active; }
+	bool isEnabled() const { return active; }
 
 public:
 	float positionX, positionY, width, height;

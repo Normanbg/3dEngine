@@ -11,6 +11,8 @@
 
 class UIPanel;
 class UIPanelAbout;
+class UIPanelConfig;
+class UIPanelConsole;
 
 class ModuleGui : public Module
 {
@@ -29,13 +31,11 @@ public:
 
 public:
 	bool demoShowcase = false;
-	bool activeAbout = false;
-	bool configActive = true;
-	bool consoleActive = true;
 
 	std::list<UIPanel*> uiPanels;
 	UIPanelAbout* panelAbout = nullptr;
-
+	UIPanelConfig* panelConfig = nullptr;
+	UIPanelConsole* panelConsole = nullptr;
 
 	std::list<const char*>logsBuffer;
 

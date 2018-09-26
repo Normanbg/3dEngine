@@ -1,4 +1,6 @@
 #include "UIPanelAbout.h"
+#include "Application.h"
+#include "ImGui/imgui.h"
 
 UIPanelAbout::UIPanelAbout(const char * name, float positionX, float positionY, float width, float height, bool active) : UIPanel(name,positionX,positionY, width, height, active)
 {
@@ -9,7 +11,8 @@ UIPanelAbout::~UIPanelAbout()
 }
 
 void UIPanelAbout::Draw(){
-	if (ImGui::Begin("About"));
+	ImGui::Begin(name.c_str(), &active);
+
 	ImGui::Text("Video Game Engine. \n\nThis Engine is done for the 3D Engines subject on the Design & Development Degree by UPC \n\nDeveloped by:\n");
 	if (ImGui::SmallButton("Norman Benet"))
 		App->RequestBrowser("https://github.com/normanbg");

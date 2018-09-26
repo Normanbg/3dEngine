@@ -7,6 +7,8 @@
 #include "MathGeoLib\Math\MathAll.h"
 #include "UIPanel.h"
 #include "UIPanelAbout.h"
+#include "UIPanelConfig.h"
+#include "UIPanelConsole.h"
 
 #include "ModulePhysics3D.h"
 
@@ -39,6 +41,10 @@ ModuleGui::~ModuleGui()
 bool ModuleGui::Start()
 {
 	demoShowcase = false;
+
+	uiPanels.push_back(panelAbout = new UIPanelAbout("About", 150, 150, 350, 350));
+	uiPanels.push_back(panelConfig = new UIPanelConfig("Configuration", 900, 50, 350, 550, true));
+	uiPanels.push_back(panelConsole = new UIPanelConsole("Console", 50, 650, 800, 350, true));
 	
 	ImGui::CreateContext();
 
@@ -50,7 +56,7 @@ bool ModuleGui::Start()
 update_status ModuleGui::PreUpdate(float dt)
 {
 	/*ImGuiIO& io = ImGui::GetIO();
-	io.DisplaySize.x = 1920.0f;*/
+	io.DisplaySize.x = 1920.0f;*
 	/*io.DisplaySize.y = 1280.0f;*/
 	ImGui_ImplOpenGL2_NewFrame();
 	ImGui_ImplSDL2_NewFrame(App->window->window);
@@ -77,16 +83,17 @@ update_status ModuleGui::Update(float dt)
 				App->RequestBrowser("https://github.com/Normanbg/3dEngine/releases");
 			if (ImGui::MenuItem("Report a bug"))
 				App->RequestBrowser("https://github.com/Normanbg/3dEngine/issues");
-			if (ImGui::MenuItem("About"))
-				activeAbout = !activeAbout;
+			if (ImGui::MenuItem("About")) {
+				panelAbout->ChangeActive();
+			}
 			ImGui::EndMenu();
 			//HELP MENU--------------
 		}
 		if (ImGui::BeginMenu("View")) {
 			if (ImGui::MenuItem("Console"))
-				consoleActive = !consoleActive;
+				panelConsole->ChangeActive();
 			if (ImGui::MenuItem("Configuration"))
-				configActive = !configActive;
+				panelConfig->ChangeActive();
 
 			ImGui::EndMenu();
 		}
@@ -149,183 +156,23 @@ update_status ModuleGui::Update(float dt)
 					}
 				}
 			}
-
-			if (ImGui::MenuItem("CLOSE")) {
-				return UPDATE_STOP;
-				ImGui::EndMenu();
-			}
-
 			ImGui::EndMenu();
 		}
 		ImGui::EndMainMenuBar();
 
 	}
 
-	if (configActive) {
-		ImGui::SetNextWindowSize(ImVec2(650, 350), ImGuiSetCond_Once);
-
-		if (ImGui::Begin("Configuration", &configActive, ImGuiWindowFlags_MenuBar));
-
-		if (ImGui::BeginMenuBar())
-		{
-			if (ImGui::BeginMenu("Options"))
-			{
-				if (ImGui::MenuItem("Save")) { App->SaveGame(); }
-				if (ImGui::MenuItem("Load")) { App->LoadGame(); }
-				ImGui::EndMenu();
-			}
-			ImGui::EndMenuBar();
-		}
-
-
-		if (ImGui::CollapsingHeader("Application")) {
-
-
-
-			const int maxSize = 64;
-
-			std::string aux = App->window->GetWindowTitle();
-			ImGui::InputText("App Name", (char*)aux.c_str(), maxSize);
-			std::string aux2 = App->GetOrganization();
-			//char str2[maxSize] = aux;
-			ImGui::InputText("Organization", (char*)aux2.c_str(), maxSize);
-
-			int DefaultFpsCap = (App->GetFramerateCap());
-
-			ImGui::SliderInt("Max FPS", &(DefaultFpsCap), 1, 120);
-			App->SetFramerateCap(DefaultFpsCap);
-			ImGui::Text("Limit Framerate: %i", DefaultFpsCap);
-
-			char title[20];
-			std::vector<float> VecLog = App->GetFpsLog();
-			sprintf_s(title, 20, "Framerate %.1f", VecLog[VecLog.size() - 1]);
-			ImGui::PlotHistogram("##framerate", &VecLog[0], VecLog.size(), 0, title, 0.0f, 100.0f, ImVec2(310, 100));
-
-			VecLog = App->GetMsLog();
-			sprintf_s(title, 20, "Milliseconds %.1f", VecLog[VecLog.size() - 1]);
-			ImGui::PlotHistogram("##framerate", &VecLog[0], VecLog.size(), 0, title, 0.0f, 40.0f, ImVec2(310, 100));
-		}
-		/*if (ImGui::CollapsingHeader("Hardware")) {*/
-			/*ImVec4 yellow(255, 255, 0, 255);
-			ImGui::Text("CPUs:");
-			ImGui::SameLine();
-			ImGui::TextColored(yellow, "%d (Cache: %dKb)", SDL_GetCPUCount(), SDL_GetCPUCacheLineSize());
-
-			ImGui::Text("System RAM:");
-			ImGui::SameLine();
-			ImGui::TextColored(yellow, "%0.1fGb", ((float)SDL_GetSystemRAM() / 1024));
-			}*/
-
-
-
-
-
-		if (ImGui::CollapsingHeader("Window")) {
-
-			bool fScrB = App->window->IsFullscreen();
-			if (ImGui::Checkbox("Fullscreen", &fScrB)) {
-				fScrB != fScrB;
-				App->window->SetFullscreen(fScrB);
-			}
-
-			ImGui::SameLine();
-			bool borderB = App->window->IsBorderless();
-			if (ImGui::Checkbox("Borderless", &borderB)) {
-				borderB != borderB;
-				App->window->SetBorderless(borderB);
-			}
-
-			bool reszB = App->window->IsResizable();
-			if (ImGui::Checkbox("Resizable ", &reszB)) {
-				reszB != reszB;
-				App->window->SetResizable(reszB);
-			}
-
-			ImGui::SameLine();
-			bool fullB = App->window->IsFullscreenDesktop();
-			if (ImGui::Checkbox("Full Desktop", &fullB)) {
-				fullB != fullB;
-				App->window->SetFullscreenDesktop(fullB);
-			}
-			float bright = App->window->GetBrightness();
-			ImGui::SliderFloat("Bright", &bright, 0, 1.0f);
-			App->window->SetBrightness(bright);
-
-			int w, h;
-			App->window->GetSize(w, h);
-			int minWidthVal = 640;
-			int maxWidthVal = 1920;
-			if (ImGui::SliderInt("Width", &w, minWidthVal, maxWidthVal)) {
-				App->window->SetSize(w, h);
-			}
-			int minHeightVal = 480;
-			int maxHeightVal = 1080;
-			if (ImGui::SliderInt("Height", &h, minHeightVal, maxHeightVal)) {
-				App->window->SetSize(w, h);
-			}
-		}
-
-		App->input->InputData();
-		App->HardwareData();
-
-		if (ImGui::MenuItem("CLOSE")) {
-			return UPDATE_STOP;
-			ImGui::EndMenu();
-		}
-
-		ImGui::End();
-	}
-
-	if (consoleActive) {
-		ImGui::SetNextWindowSize(ImVec2(650, 350), ImGuiSetCond_Once);
-		if (ImGui::Begin("Console", &consoleActive));
-		for (std::list<const char*>::iterator it = logsBuffer.begin(); it != logsBuffer.end(); it++) {
-			ImGui::Text(*it);
-		}
-
-		ImGui::End();
-	}
-
 	if (demoShowcase)
 		ImGui::ShowTestWindow();
 
-	if (activeAbout) {
-		/*uiPanels.push_back(panelAbout = new UIPanelAbout("about", 150, 150, 350, 350, activeAbout));
-		ImGui::SetNextWindowPos({ panelAbout->positionX, panelAbout->positionY });
-		ImGui::SetNextWindowSize({ panelAbout->width, panelAbout->height });
-		panelAbout->Draw();*/
-		/*if (ImGui::Begin("About"));
-		ImGui::Text("Video Game Engine. \n\nThis Engine is done for the 3D Engines subject on the Design & Development Degree by UPC \n\nDeveloped by:\n");
-		if (ImGui::SmallButton("Norman Benet"))
-			App->RequestBrowser("https://github.com/normanbg");
-		if (ImGui::SmallButton("Carles Margeli"))
-			App->RequestBrowser("https://github.com/Margeli");
-		ImGui::Spacing();
-		ImGui::Text("Libraries Used:");
-		SDL_version version;
-		SDL_GetVersion(&version);
-
-		char sdlVersion[30];
-		sprintf_s(sdlVersion, 30, "SDL (Version: %d.%d.%d)", version.major, version.minor, version.patch);
-		if (ImGui::SmallButton(sdlVersion))
-			App->RequestBrowser("https://www.libsdl.org/download-2.0.php");
-		if (ImGui::SmallButton("OpenGL"))
-			App->RequestBrowser("https://github.com/ocornut/imgui");
-		if (ImGui::SmallButton("ImGui"))
-			App->RequestBrowser("https://www.opengl.org/");
-		if (ImGui::SmallButton("MathGeoLIB"))
-			App->RequestBrowser("https://github.com/juj/MathGeoLib");
-		ImGui::Spacing();
-		ImGui::Spacing();
-		ImGui::Spacing();
-		ImGui::Text("License:");
-		if (ImGui::SmallButton("MIT"))
-			App->RequestBrowser("https://github.com/Normanbg/3dEngine/blob/master/LICENSE");
-		ImGui::End();
-*/
+	for (std::list<UIPanel*>::iterator iterator = uiPanels.begin(); iterator != uiPanels.end(); iterator++) {
+		if ((*iterator)->isEnabled()) {
+			ImGui::SetNextWindowPos({ (*iterator)->positionX, (*iterator)->positionY });
+			ImGui::SetNextWindowSize({ (*iterator)->width, (*iterator)->height }, ImGuiSetCond_Once);
+			(*iterator)->Draw();
+		}
 	}
-
-
+	
 	return UPDATE_CONTINUE;
 }
 
@@ -339,6 +186,15 @@ update_status ModuleGui::PostUpdate(float dt)
 
 bool ModuleGui::CleanUp()
 {
+	for (std::list<UIPanel*>::iterator iterator = uiPanels.begin(); iterator != uiPanels.end(); iterator++)
+	{
+		if (*iterator != nullptr)
+			delete *iterator;
+		*iterator = nullptr;
+	}
+
+	uiPanels.clear();
+
 	ImGui_ImplSDL2_Shutdown();
 	ImGui_ImplOpenGL2_Shutdown();
 	return true;
