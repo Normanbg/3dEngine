@@ -34,6 +34,9 @@
     <Filter Include="Sources\Main">
       <UniqueIdentifier>{4f992dff-061d-4aff-a10f-d76141f5dd98}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Modules\GuiPanels">
+      <UniqueIdentifier>{a81cd828-2af3-4703-adcb-be5cce458217}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -312,6 +315,7 @@
     <ClInclude Include="Globals.h">
       <Filter>Sources\Main</Filter>
     </ClInclude>
+    <ClInclude Include="UIPanel.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -497,6 +501,7 @@
     <ClCompile Include="Main.cpp">
       <Filter>Sources\Main</Filter>
     </ClCompile>
+    <ClCompile Include="UIPanel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="MathGeoLib\Geometry\KDTree.inl">
