@@ -3,11 +3,16 @@
 #define __ModuleGui_H__
 
 #include "Globals.h"
-#include "Primitive.h"
 #include "Module.h"
 #include <list>
 
+
 #include "RandomGenerator/pcg_variants.h"
+
+class UIPanel;
+class UIPanelAbout;
+class UIPanelConfig;
+class UIPanelConsole;
 
 class ModuleGui : public Module
 {
@@ -26,9 +31,11 @@ public:
 
 public:
 	bool demoShowcase = false;
-	bool activeAbout = false;
-	bool configActive = true;
-	bool consoleActive = true;
+
+	std::list<UIPanel*> uiPanels;
+	UIPanelAbout* panelAbout = nullptr;
+	UIPanelConfig* panelConfig = nullptr;
+	UIPanelConsole* panelConsole = nullptr;
 
 	std::list<const char*>logsBuffer;
 

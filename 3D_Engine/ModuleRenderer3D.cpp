@@ -1,10 +1,8 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleRenderer3D.h"
-#include "SDL\include\SDL_opengl.h"
-#include <gl/GL.h>
-#include <gl/GLU.h>
-
+//#include <gl/GL.h>
+//#include <gl/GLU.h>
 #include "ModuleWindow.h"
 #include "ModuleInput.h"
 #include "ModuleAudio.h"
@@ -13,8 +11,10 @@
 #include "ModulePhysics3D.h"
 #include "ModuleGui.h"
 
-#pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
+
+#pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */ 
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
+#pragma comment (lib, "Glew/libx86/glew32.lib")  
 
 ModuleRenderer3D::ModuleRenderer3D(bool start_enabled) : Module(start_enabled)
 {
@@ -36,22 +36,37 @@ bool ModuleRenderer3D::Init(JSON_Object* obj)
 	if (obj != nullptr) {
 		GetDataFromJson(obj);
 	}
-
-	//Create context
-	context = SDL_GL_CreateContext(App->window->window);
+	
+	//Create OGL context 
+	context = SDL_GL_CreateContext(App->window->window); 
 	if(context == NULL)
 	{
 		OWN_LOG("OpenGL context could not be created! SDL_Error: %s\n", SDL_GetError());
 		ret = false;
 	}
 	
+	GLenum err = glewInit();
+	if (err != GL_NO_ERROR) {
+		OWN_LOG("Glew could not be initiated! GlewError %s \n", glewGetString(err) );
+		ret = false;		
+	}
+	else {
+		OWN_LOG("Using Glew %s \n", glewGetString(GLEW_VERSION));
+
+		OWN_LOG("Vendor: %s", glGetString(GL_VENDOR));
+		OWN_LOG("Renderer: %s", glGetString(GL_RENDERER));
+		OWN_LOG("OpenGL version supported %s", glGetString(GL_VERSION));
+		OWN_LOG("GLSL: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
+	}
+
+	/////////////////
 	if(ret == true)
 	{
 		//Use Vsync
 		if(_vSync && SDL_GL_SetSwapInterval(1) < 0)
 			OWN_LOG("Warning: Unable to set VSync! SDL Error: %s\n", SDL_GetError());
 
-		//Initialize Projection Matrix
+		//Initialize Projection Matrix as identity
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
 
@@ -79,8 +94,10 @@ bool ModuleRenderer3D::Init(JSON_Object* obj)
 		glClearDepth(1.0f);
 		
 		//Initialize clear color
-		glClearColor(0.f, 0.f, 0.f, 1.f);
+		glClearColor(0.f, 0.f,0.f, 1.f);
 
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); 
+		
 		//Check for error
 		error = glGetError();
 		if(error != GL_NO_ERROR)
@@ -109,6 +126,7 @@ bool ModuleRenderer3D::Init(JSON_Object* obj)
 		lights[0].Active(true);
 		glEnable(GL_LIGHTING);
 		glEnable(GL_COLOR_MATERIAL);
+		glEnable(GL_TEXTURE_2D);
 	}
 
 	// Projection matrix for
@@ -140,7 +158,8 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 // PostUpdate present buffer to screen
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
-	SDL_GL_SwapWindow(App->window->window);
+	//Debug Draw
+	SDL_GL_SwapWindow(App->window->window); //
 	return UPDATE_CONTINUE;
 }
 
@@ -149,7 +168,7 @@ bool ModuleRenderer3D::CleanUp()
 {
 	OWN_LOG("Destroying 3D Renderer");
 
-	SDL_GL_DeleteContext(context);
+	SDL_GL_DeleteContext(context); //
 
 	return true;
 }
