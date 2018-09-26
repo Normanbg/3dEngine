@@ -165,8 +165,6 @@
     <ClInclude Include="ModuleSceneIntro.h" />
     <ClInclude Include="ModuleWindow.h" />
     <ClInclude Include="PerfTimer.h" />
-    <ClInclude Include="PhysBody3D.h" />
-    <ClInclude Include="Primitive.h" />
     <ClInclude Include="Timer.h" />
   </ItemGroup>
   <ItemGroup>
@@ -230,8 +228,6 @@
     <ClCompile Include="ModuleSceneIntro.cpp" />
     <ClCompile Include="ModuleWindow.cpp" />
     <ClCompile Include="PerfTimer.cpp" />
-    <ClCompile Include="PhysBody3D.cpp" />
-    <ClCompile Include="Primitive.cpp" />
     <ClCompile Include="Timer.cpp" />
   </ItemGroup>
   <ItemGroup>

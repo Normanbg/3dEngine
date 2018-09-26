@@ -3,7 +3,6 @@
 #define __ModuleGui_H__
 
 #include "Globals.h"
-#include "Primitive.h"
 #include "Module.h"
 #include <list>
 

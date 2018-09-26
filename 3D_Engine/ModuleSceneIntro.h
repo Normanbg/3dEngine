@@ -1,16 +1,11 @@
 #pragma once
 #include "Module.h"
 #include "Globals.h"
-#include "Primitive.h"
 
 #include "MathGeoLib/Math/float3.h"
 #include "MathGeoLib/Geometry/GeometryAll.h"
 
 #include "RandomGenerator/pcg_variants.h"
-
-
-struct PhysBody3D;
-struct PhysMotor3D;
 
 class ModuleSceneIntro : public Module
 {

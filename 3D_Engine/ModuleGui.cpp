@@ -5,8 +5,6 @@
 #include "ImGui\imgui_impl_opengl2.h"
 #include "MathGeoLib\Geometry\GeometryAll.h"
 #include "MathGeoLib\Math\MathAll.h"
-#include "Primitive.h"
-#include "PhysBody3D.h"
 
 #include "ModulePhysics3D.h"
 
@@ -304,7 +302,12 @@ update_status ModuleGui::Update(float dt)
 			App->RequestBrowser("https://github.com/Margeli");
 		ImGui::Spacing();
 		ImGui::Text("Libraries Used:");
-		if (ImGui::SmallButton("SDL"))
+		SDL_version version;
+		SDL_GetVersion(&version);
+
+		char sdlVersion[30];
+		sprintf_s(sdlVersion, 30, "SDL (Version: %d.%d.%d)", version.major, version.minor, version.patch);
+		if (ImGui::SmallButton(sdlVersion))
 			App->RequestBrowser("https://www.libsdl.org/download-2.0.php");
 		if (ImGui::SmallButton("OpenGL"))
 			App->RequestBrowser("https://github.com/ocornut/imgui");
