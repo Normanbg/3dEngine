@@ -31,6 +31,9 @@
     <Filter Include="Sources\Tools\Json">
       <UniqueIdentifier>{387dfcf1-f0bd-4200-9185-3cb8727ccc31}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Main">
+      <UniqueIdentifier>{4f992dff-061d-4aff-a10f-d76141f5dd98}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -53,12 +56,6 @@
     </ClInclude>
     <ClInclude Include="glmath.h">
       <Filter>Sources\Containers</Filter>
-    </ClInclude>
-    <ClInclude Include="Application.h">
-      <Filter>Sources</Filter>
-    </ClInclude>
-    <ClInclude Include="Globals.h">
-      <Filter>Sources</Filter>
     </ClInclude>
     <ClInclude Include="Primitive.h">
       <Filter>Sources\Helpers</Filter>
@@ -315,6 +312,12 @@
     <ClInclude Include="JSON\parson.h">
       <Filter>Sources\Tools\Json</Filter>
     </ClInclude>
+    <ClInclude Include="Application.h">
+      <Filter>Sources\Main</Filter>
+    </ClInclude>
+    <ClInclude Include="Globals.h">
+      <Filter>Sources\Main</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -337,12 +340,6 @@
     </ClCompile>
     <ClCompile Include="Timer.cpp">
       <Filter>Sources\Tools</Filter>
-    </ClCompile>
-    <ClCompile Include="Application.cpp">
-      <Filter>Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Main.cpp">
-      <Filter>Sources</Filter>
     </ClCompile>
     <ClCompile Include="glmath.cpp">
       <Filter>Sources\Containers</Filter>
@@ -505,6 +502,12 @@
     </ClCompile>
     <ClCompile Include="JSON\parson.c">
       <Filter>Sources\Tools\Json</Filter>
+    </ClCompile>
+    <ClCompile Include="Application.cpp">
+      <Filter>Sources\Main</Filter>
+    </ClCompile>
+    <ClCompile Include="Main.cpp">
+      <Filter>Sources\Main</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
