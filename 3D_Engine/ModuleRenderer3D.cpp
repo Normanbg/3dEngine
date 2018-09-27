@@ -59,7 +59,6 @@ bool ModuleRenderer3D::Init(JSON_Object* obj)
 		OWN_LOG("GLSL: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
 	}
 
-	/////////////////
 	if(ret == true)
 	{
 		//Use Vsync
@@ -159,7 +158,7 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
 	//Debug Draw
-	SDL_GL_SwapWindow(App->window->window); //
+	SDL_GL_SwapWindow(App->window->window); 
 	return UPDATE_CONTINUE;
 }
 
@@ -168,8 +167,7 @@ bool ModuleRenderer3D::CleanUp()
 {
 	OWN_LOG("Destroying 3D Renderer");
 
-	SDL_GL_DeleteContext(context); //
-
+	SDL_GL_DeleteContext(context); 
 	return true;
 }
 
@@ -215,4 +213,20 @@ bool ModuleRenderer3D::Save(JSON_Object* data)const {
 	json_object_dotset_boolean(data, "Render.VSync", _vSync);
 	
 	return true;
+}
+
+void ModuleRenderer3D::SetDepthTest(bool active) {
+	active ? glEnable(GL_DEPTH_TEST) : glDisable(GL_DEPTH_TEST);
+}
+void ModuleRenderer3D::SetCullFace(bool active) {
+	active ? glEnable(GL_CULL_FACE) : glDisable(GL_CULL_FACE);
+}
+void ModuleRenderer3D::SetLighting(bool active) {
+	active ? glEnable(GL_LIGHTING) : glDisable(GL_LIGHTING);
+}
+void ModuleRenderer3D::SetColorMaterial(bool active) {
+	active ? glEnable(GL_COLOR_MATERIAL) : glDisable(GL_COLOR_MATERIAL);
+}
+void ModuleRenderer3D::SetTexture2D(bool active) {
+	active ? glEnable(GL_TEXTURE_2D) : glDisable(GL_TEXTURE_2D);
 }

@@ -31,6 +31,12 @@ public:
 	mat3x3 NormalMatrix;
 	mat4x4 ModelMatrix, ViewMatrix, ProjectionMatrix;
 
+	void SetDepthTest(bool active);
+	void SetCullFace(bool active);
+	void SetLighting(bool active);
+	void SetColorMaterial(bool active);
+	void SetTexture2D(bool active);
+
 private:
 
 	void GetDataFromJson(JSON_Object* data);
