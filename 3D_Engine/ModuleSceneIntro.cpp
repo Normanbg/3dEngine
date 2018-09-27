@@ -19,7 +19,7 @@ ModuleSceneIntro::~ModuleSceneIntro()
 bool ModuleSceneIntro::Start()
 {
 	OWN_LOG("Loading Intro assets");
-
+	uint num_vertices = 8;
 	vec vertices[] = { { .0f,.0f,.0f },{ 1.0f,.0f,.0f },{ .0f,1.0f,.0f },{ 1.0f,1.0f,.0f },{ .0f,.0f,1.0f },{ 1.0f,.0f,1.0f }, { .0f,1.0f,1.0f },{ 1.0f,1.0f,1.0f } };
 	uint my_id = 0;
 	glGenBuffers(1, (GLuint*) &(my_id)); // generates 1 buffer. then it assign a GLuint to its mem adress.
