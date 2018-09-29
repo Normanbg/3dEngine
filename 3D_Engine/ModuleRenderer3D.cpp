@@ -140,13 +140,13 @@ bool ModuleRenderer3D::Start() {
 
 	bool ret = true;
 	
-	box1 = { .0f,.0f,.0f  ,1.0f,.0f,.0f ,.0f,1.0f,.0f , 1.0f,1.0f,.0f , .0f,.0f,1.0f , 1.0f,.0f,1.0f , .0f,1.0f,1.0f  ,  1.0f,1.0f,1.0f };
+	box1 = { vec{.0f,.0f,.0f},  {1.0f,.0f,.0f} ,{.0f,1.0f,.0f} , {1.0f,1.0f,.0f} , {.0f,.0f,1.0f} , {1.0f,.0f,1.0f} , {.0f,1.0f,1.0f}  ,  {1.0f,1.0f,1.0f} };
 	//cubeVertices = vertices;
 	glGenBuffers(1, (GLuint*) &(buffBoxID)); // generates 1 buffer. then it assign a GLuint to its mem adress.
 	glBindBuffer(GL_ARRAY_BUFFER, buffBoxID); // set the type of buffer
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float)*box1.size() , &box1[0], GL_STATIC_DRAW); // send the buffer data to VRAM
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float)*box1.size()*3 , &box1[0], GL_STATIC_DRAW); // send the buffer data to VRAM
 
-	boxIndices = { 0,1,2 , 1,3,2 , 3,1,5 , 5,7,3 , 7,5,4 , 6,7,4 , 6,4,0  , 0,2,6  , 6,2,3 , 6,3,7 , 0,4,5 , 0,5,1 };
+	boxIndices = {0,1,2 , 1,3,2 , 3,1,5 , 5,7,3 , 7,5,4 , 6,7,4 , 6,4,0, 0,2,6  , 6,2,3 , 6,3,7 , 0,4,5 , 0,5,1 };
 
 	glGenBuffers(1, (GLuint*)&(buffIndicesID));
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffIndicesID);
@@ -208,8 +208,6 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	glDrawArrays(GL_TRIANGLES, 0, boxIndices.size());
 	
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffIndicesID);
-	
-	
 	glDrawElements(GL_TRIANGLES, boxIndices.size(), GL_UNSIGNED_INT,NULL);
 	
 

@@ -52,6 +52,6 @@ private:
 
 	uint buffBoxID = 0;
 	uint buffIndicesID = 0;
-	array<float, 24> box1;
+	array<vec, 8> box1;
 	array<uint, 36> boxIndices;
 };
