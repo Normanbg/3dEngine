@@ -188,7 +188,7 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 // PostUpdate present buffer to screen
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
-
+	///-------------------BOX DRAWING
 	glLineWidth(1.0f); 
 	glEnableClientState(GL_VERTEX_ARRAY);//enables vertex array
 
@@ -198,7 +198,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	glBindBuffer(GL_ARRAY_BUFFER, buffBoxID);// sets the type of buffer
 	glVertexPointer(3, GL_FLOAT, 0, NULL);  // points the first vertex
 	glDrawArrays(GL_TRIANGLES, 0, 36); //Draw tris in the 36 nº of vertex that a box has (6faces * 2tris * 3vertex)
-	//glBindBuffer(GL_ARRAY_BUFFER, 0); //resets the buffer
+	glBindBuffer(GL_ARRAY_BUFFER, 0); //resets the buffer
 
 
 	//---TO DRAW BOX 2 with glDrawElements()
@@ -208,14 +208,14 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	glVertexPointer(3, GL_FLOAT, 0, &box2[0]);
 	glDrawElements(GL_TRIANGLES, boxIndices.size(), GL_UNSIGNED_INT,NULL);
 
-	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);//resets the buffer
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);//resets the buffer
 
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);// color white
 
 	glDisableClientState(GL_VERTEX_ARRAY);
 
 	
-	//---
+	///---------------------------
 
 	//Debug Draw
 	SDL_GL_SwapWindow(App->window->window); 
