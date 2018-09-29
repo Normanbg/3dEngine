@@ -44,6 +44,7 @@ public:
 	void SetLighting(bool active);
 	void SetColorMaterial(bool active);
 	void SetTexture2D(bool active);
+	void SetWireframe(bool active);
 
 	void SetAxis(bool active) { _axis = active; }
 	void SetGrid(bool active) { _grid = active; }
@@ -53,6 +54,7 @@ public:
 	inline bool GetLighting()const { return _lighting; }
 	inline bool GetColorMaterial()const { return _colorMaterial; }
 	inline bool GetTexture2D()const { return _texture2D; }
+	inline bool GetWireframe()const { return _wireframe; }
 
 	inline bool GetAxis() const { return _axis; }
 	inline bool GetGrid() const { return _grid; }
@@ -77,7 +79,7 @@ private:
 	bool _cullFace = true;
 	bool _colorMaterial = true;
 	bool _texture2D = true;
-
+	bool _wireframe = false;
 	bool _axis = true;
 	bool _grid = true;
 	

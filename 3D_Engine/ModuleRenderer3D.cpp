@@ -299,6 +299,10 @@ void ModuleRenderer3D::SetTexture2D(bool active) {
 	active ? glEnable(GL_TEXTURE_2D) : glDisable(GL_TEXTURE_2D);
 	_texture2D = active;
 }
+void ModuleRenderer3D::SetWireframe(bool active) {
+	active ? glPolygonMode(GL_FRONT_AND_BACK, GL_LINE) : glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	_wireframe = active;
+}
 
 void ModuleRenderer3D::ShowAxis() {
 

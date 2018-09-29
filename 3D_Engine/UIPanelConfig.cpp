@@ -210,6 +210,10 @@ void UIPanelConfig::Draw() {
 		if (ImGui::Checkbox("Axis", &axis)) {
 			App->renderer3D->SetAxis(axis);
 		}
+		bool wiref = App->renderer3D->GetWireframe();
+		if (ImGui::Checkbox("Wireframe", &wiref)) {
+			App->renderer3D->SetWireframe(wiref);
+		}
 	}
 	ImGui::End();
 
