@@ -45,13 +45,20 @@ public:
 	void SetColorMaterial(bool active);
 	void SetTexture2D(bool active);
 
+	
+
 private:
 
 	void GetDataFromJson(JSON_Object* data);
 	bool _vSync;
 
-	uint buffBoxID = 0;
-	uint buffIndicesID = 0;
-	array<vec, 8> box1;
+	array<vec, 36> box;
+	array<vec, 8> box2;
 	array<uint, 36> boxIndices;
+
+	uint buffBoxID = 0;
+	uint buffBox2ID = 0;
+	uint buffIndicesID = 0;
+
+	
 };
