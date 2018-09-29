@@ -131,8 +131,27 @@ bool ModuleRenderer3D::Init(JSON_Object* obj)
 	// Projection matrix for
 	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
-
+	
 	json_object_clear(obj);//clear obj to free memory
+	return ret;
+}
+
+bool ModuleRenderer3D::Start() {
+
+	bool ret = true;
+	
+	box1 = { .0f,.0f,.0f  ,1.0f,.0f,.0f ,.0f,1.0f,.0f , 1.0f,1.0f,.0f , .0f,.0f,1.0f , 1.0f,.0f,1.0f , .0f,1.0f,1.0f  ,  1.0f,1.0f,1.0f };
+	//cubeVertices = vertices;
+	glGenBuffers(1, (GLuint*) &(buffBoxID)); // generates 1 buffer. then it assign a GLuint to its mem adress.
+	glBindBuffer(GL_ARRAY_BUFFER, buffBoxID); // set the type of buffer
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float)*box1.size() , &box1[0], GL_STATIC_DRAW); // send the buffer data to VRAM
+
+	boxIndices = { 0,1,2 , 1,3,2 , 3,1,5 , 5,7,3 , 7,5,4 , 6,7,4 , 6,4,0  , 0,2,6  , 6,2,3 , 6,3,7 , 0,4,5 , 0,5,1 };
+
+	glGenBuffers(1, (GLuint*)&(buffIndicesID));
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffIndicesID);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * boxIndices.size(),&boxIndices[0], GL_STATIC_DRAW);
+
 	return ret;
 }
 
@@ -157,6 +176,45 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 // PostUpdate present buffer to screen
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
+
+	/*glBegin(GL_TRIANGLES);
+
+	glVertex3f(0.0f, 10.0f, 0.0f); glVertex3f(10.0f, 0.0f, 0.0f); glVertex3f(0.0f, 0.0f, 0.0f);
+	glVertex3f(0.0f, 10.0f, 0.0f); glVertex3f(10.0f, 10.0f, 0.0f); glVertex3f(10.0f, 0.0f, 0.0f);
+
+	glVertex3f(10.0f, 10.0f, 0.0f); glVertex3f(10.0f, 0.0f, 10.0f); glVertex3f(10.0f, 0.0f, 0.0f);
+	glVertex3f(10.0f, 10.0f, 0.0f); glVertex3f(10.0f, 10.0f, 10.0f); glVertex3f(10.0f, 0.0f, 10.0f);
+
+	glVertex3f(0.0f, 10.0f, 10.0f); glVertex3f(10.0f, 0.0f, 10.0f); glVertex3f(10.0f, 10.0f, 10.0f);
+	glVertex3f(0.0f, 10.0f, 10.0f); glVertex3f(0.0f, 0.0f, 10.0f); glVertex3f(10.0f, 0.0f, 10.0f);
+
+	glVertex3f(0.0f, 0.0f, 0.0f); glVertex3f(0.0f, 0.0f, 10.0f); glVertex3f(0.0f, 10.0f, 10.0f);
+	glVertex3f(0.0f, 10.0f, 0.0f); glVertex3f(0.0f, 0.0f, 0.0f); glVertex3f(0.0f, 10.0f, 10.0f);
+
+	glVertex3f(10.0f, 10.0f, 0.0f); glVertex3f(0.0f, 10.0f, 0.0f); glVertex3f(0.0f, 10.0f, 10.0f);
+	glVertex3f(0.0f, 10.0f, 10.0f); glVertex3f(10.0f, 10.0f, 10.0f); glVertex3f(10.0f, 10.0f, 0.0f);
+
+	glVertex3f(10.0f, 0.0f, 10.0f); glVertex3f(0.0f, 0.0f, 10.0f); glVertex3f(10.0f, 0.0f, 0.0f);
+	glVertex3f(0.0f, 0.0f, 10.0f); glVertex3f(0.0f, 0.0f, 0.0f); glVertex3f(10.0f, 0.0f, 0.0f);
+
+	glEnd();*/
+
+
+	glLineWidth(1.0f); 
+	glEnableClientState(GL_VERTEX_ARRAY);//enables vertex array
+
+	glBindBuffer(GL_ARRAY_BUFFER, buffBoxID);// selects the type of buffer
+	glVertexPointer(3, GL_FLOAT, 0,NULL); // points the first vertex
+	glDrawArrays(GL_TRIANGLES, 0, boxIndices.size());
+	
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffIndicesID);
+	
+	
+	glDrawElements(GL_TRIANGLES, boxIndices.size(), GL_UNSIGNED_INT,NULL);
+	
+
+	glDisableClientState(GL_VERTEX_ARRAY);
+
 	//Debug Draw
 	SDL_GL_SwapWindow(App->window->window); 
 	return UPDATE_CONTINUE;

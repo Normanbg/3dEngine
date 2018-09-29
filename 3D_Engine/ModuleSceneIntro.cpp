@@ -19,13 +19,8 @@ ModuleSceneIntro::~ModuleSceneIntro()
 bool ModuleSceneIntro::Start()
 {
 	OWN_LOG("Loading Intro assets");
-	uint num_vertices = 8;
-	vec vertices[] = { { .0f,.0f,.0f },{ 1.0f,.0f,.0f },{ .0f,1.0f,.0f },{ 1.0f,1.0f,.0f },{ .0f,.0f,1.0f },{ 1.0f,.0f,1.0f }, { .0f,1.0f,1.0f },{ 1.0f,1.0f,1.0f } };
-	uint my_id = 0;
-	glGenBuffers(1, (GLuint*) &(my_id)); // generates 1 buffer. then it assign a GLuint to its mem adress.
-	glBindBuffer(GL_ARRAY_BUFFER, my_id); // set the type of buffer
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float)*num_vertices * 3, vertices, GL_STATIC_DRAW);
 	
+
 	bool ret = true;
 	return ret;
 }
@@ -47,13 +42,15 @@ update_status ModuleSceneIntro::Update(float dt)
 	glVertex3f(0.f, 0.f, 0.f);
 	glVertex3f(0.f, 20.f, 0.f);
 	glEnd();
-	glLineWidth(1.0f);*/
+	glLineWidth(1.0f);
+
+
 	glColor4f(1.0f, 1.0f, 0.0f, 1.0f);
 	glBegin(GL_TRIANGLES);
 	glVertex3f(.0f, .0f, .0f);
 	glVertex3f(1.0f, .0f, .0f);
 	glVertex3f(.0f, 1.0f, .0f);
-	glEnd();
+	glEnd();*/
 
 
 
