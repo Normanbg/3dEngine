@@ -121,7 +121,7 @@ bool ModuleRenderer3D::Init(JSON_Object* obj)
 		glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, MaterialDiffuse);
 		
 		glEnable(GL_DEPTH_TEST);
-		glEnable(GL_CULL_FACE);
+		//glEnable(GL_CULL_FACE); commented to test the box1 to fully see it (otherwise box has gaps due to the wrong orientation of the tris)
 		lights[0].Active(true);
 		glEnable(GL_LIGHTING);
 		glEnable(GL_COLOR_MATERIAL);
@@ -131,8 +131,39 @@ bool ModuleRenderer3D::Init(JSON_Object* obj)
 	// Projection matrix for
 	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
-
+	
 	json_object_clear(obj);//clear obj to free memory
+	return ret;
+}
+
+bool ModuleRenderer3D::Start() {
+
+	bool ret = true;
+	
+	box = { vec{-3.0f,3.0f,-3.0f },{-3.0f,3.0f, -1.0f},{	-3.0f, 1.0f, -1.0f},{-1.0f, 1.0f,-3.0f },{-3.0f,3.0f,-3.0f},{-3.0f, 1.0f,-3.0f},
+	{-1.0f,3.0f, -1.0f },{	-3.0f,3.0f,-3.0f},{-1.0f,3.0f,-3.0f},{-1.0f, 1.0f,-3.0f},{-1.0f,3.0f,-3.0f},{-3.0f,3.0f,-3.0f},{-3.0f,3.0f,-3.0f},
+	{-3.0f, 1.0f, -1.0f},{	-3.0f, 1.0f,-3.0f},{-1.0f,3.0f, -1.0f},{-3.0f,3.0f, -1.0f},{-3.0f,3.0f,-3.0f},{	-3.0f, 1.0f, -1.0f},{-3.0f,3.0f, -1.0f},
+	{-1.0f,3.0f, -1.0f},{-1.0f, 1.0f, -1.0f},{-1.0f,3.0f,-3.0f},{-1.0f, 1.0f,-3.0f},{-1.0f,3.0f,-3.0f},{-1.0f, 1.0f, -1.0f},{	-1.0f,3.0f, -1.0f},
+	{-1.0f, 1.0f, -1.0f},{	-1.0f, 1.0f,-3.0f},{-3.0f, 1.0f,-3.0f},{	-1.0f,1.0f, -1.0f},{-3.0f, 1.0f,-3.0f},{-3.0f, 1.0f, -3.0f},{-1.0f, 1.0f, -1.0f},
+	{-3.0f, 1.0f, -1.0f},{	-1.0f,3.0f, -1.0f} }; // Box divided into triangles, 102 coords of its triangles (6faces* 2triangles* 3vertex* 3coords)
+
+	glGenBuffers(1, (GLuint*) &(buffBoxID));  // generates 1 buffer. then it assign a GLuint to its mem adress.
+	glBindBuffer(GL_ARRAY_BUFFER, buffBoxID); // set the type of buffer
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float)*box.size() * 3, &box[0], GL_STATIC_DRAW); // send the buffer data to VRAM
+	
+	box2 = { vec{.0f,.0f,.0f},  {1.0f,.0f,.0f} ,{.0f,1.0f,.0f} , {1.0f,1.0f,.0f} , {.0f,.0f,1.0f} , {1.0f,.0f,1.0f} , {.0f,1.0f,1.0f}  ,  {1.0f,1.0f,1.0f} };
+	//Box2 divided into the 8 vertex that it has
+
+	glGenBuffers(1, (GLuint*) &(buffBox2ID));
+	glBindBuffer(GL_ARRAY_BUFFER, buffBox2ID); 
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float)*box2.size()*3 , &box2[0], GL_STATIC_DRAW); 
+
+	boxIndices = {0,1,2 , 1,3,2 , 3,1,5 , 5,7,3 , 7,5,4 , 6,7,4 , 6,4,0, 0,2,6  , 6,2,3 , 6,3,7 , 0,4,5 , 0,5,1 };
+
+	glGenBuffers(1, (GLuint*)&(buffIndicesID));
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffIndicesID);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * boxIndices.size(),&boxIndices[0], GL_STATIC_DRAW);
+
 	return ret;
 }
 
@@ -157,6 +188,35 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 // PostUpdate present buffer to screen
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
+	///-------------------BOX DRAWING
+	glLineWidth(1.0f); 
+	glEnableClientState(GL_VERTEX_ARRAY);//enables vertex array
+
+	//---TO DRAW BOX with glDrawArrays()
+	glColor4f(.0f, 1.0f, 1.0f, 1.0f); // color cyan
+
+	glBindBuffer(GL_ARRAY_BUFFER, buffBoxID);// sets the type of buffer
+	glVertexPointer(3, GL_FLOAT, 0, NULL);  // points the first vertex
+	glDrawArrays(GL_TRIANGLES, 0, 36); //Draw tris in the 36 nº of vertex that a box has (6faces * 2tris * 3vertex)
+	glBindBuffer(GL_ARRAY_BUFFER, 0); //resets the buffer
+
+
+	//---TO DRAW BOX 2 with glDrawElements()
+	glColor4f(1.0f, .0f, 1.0f, 1.0f);// color magenta
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffIndicesID);
+	glVertexPointer(3, GL_FLOAT, 0, &box2[0]);
+	glDrawElements(GL_TRIANGLES, boxIndices.size(), GL_UNSIGNED_INT,NULL);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);//resets the buffer
+
+	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);// color white
+
+	glDisableClientState(GL_VERTEX_ARRAY);
+
+	
+	///---------------------------
+
 	//Debug Draw
 	SDL_GL_SwapWindow(App->window->window); 
 	return UPDATE_CONTINUE;

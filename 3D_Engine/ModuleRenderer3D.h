@@ -3,8 +3,13 @@
 #include "Globals.h"
 #include "glmath.h"
 #include "Light.h"
+#include "MathGeoLib\Math\MathAll.h"
+
+#include <array>
+using namespace std;
 
 #define MAX_LIGHTS 8
+
 
 class ModuleRenderer3D : public Module
 {
@@ -13,6 +18,9 @@ public:
 	~ModuleRenderer3D();
 
 	bool Init(JSON_Object* obj);
+	
+	
+	bool Start();
 	update_status PreUpdate(float dt);
 	update_status PostUpdate(float dt);
 	bool CleanUp();
@@ -37,8 +45,20 @@ public:
 	void SetColorMaterial(bool active);
 	void SetTexture2D(bool active);
 
+	
+
 private:
 
 	void GetDataFromJson(JSON_Object* data);
 	bool _vSync;
+
+	array<vec, 36> box;
+	array<vec, 8> box2;
+	array<uint, 36> boxIndices;
+
+	uint buffBoxID = 0;
+	uint buffBox2ID = 0;
+	uint buffIndicesID = 0;
+
+	
 };
