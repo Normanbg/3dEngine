@@ -45,10 +45,22 @@ public:
 	void SetColorMaterial(bool active);
 	void SetTexture2D(bool active);
 
-	
+	void SetAxis(bool active) { _axis = active; }
+	void SetGrid(bool active) { _grid = active; }
+
+	inline bool GetDepthTest() const { return _depthTest; }
+	inline bool GetCullFace() const { return _cullFace; }
+	inline bool GetLighting()const { return _lighting; }
+	inline bool GetColorMaterial()const { return _colorMaterial; }
+	inline bool GetTexture2D()const { return _texture2D; }
+
+	inline bool GetAxis() const { return _axis; }
+	inline bool GetGrid() const { return _grid; }
 
 private:
 
+	void ShowAxis();
+	void ShowGrid();
 	void GetDataFromJson(JSON_Object* data);
 	bool _vSync;
 
@@ -60,5 +72,13 @@ private:
 	uint buffBox2ID = 0;
 	uint buffIndicesID = 0;
 
+	bool _depthTest = true;
+	bool _lighting = true;
+	bool _cullFace = true;
+	bool _colorMaterial = true;
+	bool _texture2D = true;
+
+	bool _axis = true;
+	bool _grid = true;
 	
 };

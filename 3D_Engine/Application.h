@@ -83,6 +83,7 @@ private:
 	float currentVideoMemF = -1.0f;
 	float availableVideoMemF = -1.0f;
 	float reservedVideoMemF = -1.0f;
+	void GetHardWareData();
 
 public:
 
@@ -116,8 +117,11 @@ public:
 	void SetTimeScale(float ts, int frameNumber = -1);
 	void PauseGame(bool pause);
 
-	void GetHardWareData();
-	void HardwareData();
+	
+	inline float GetTotalVideoMem() const {return totalVideoMemF; }
+	inline float GetCurrentVideoMem() const { return currentVideoMemF; }
+	inline float GetAvaliableVideoMem() const { return availableVideoMemF; }
+	inline float GetReservedVideoMem() const { return reservedVideoMemF; }
 
 	void SetOrganization(char* newName);
 	std::string GetOrganization() const;

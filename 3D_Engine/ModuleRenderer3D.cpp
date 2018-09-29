@@ -120,12 +120,12 @@ bool ModuleRenderer3D::Init(JSON_Object* obj)
 		GLfloat MaterialDiffuse[] = {1.0f, 1.0f, 1.0f, 1.0f};
 		glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, MaterialDiffuse);
 		
-		glEnable(GL_DEPTH_TEST);
-		//glEnable(GL_CULL_FACE); commented to test the box1 to fully see it (otherwise box has gaps due to the wrong orientation of the tris)
+		SetDepthTest(true);
+		SetCullFace(true); //commented to test the box1 to fully see it (otherwise box has gaps due to the wrong orientation of the tris)
 		lights[0].Active(true);
-		glEnable(GL_LIGHTING);
-		glEnable(GL_COLOR_MATERIAL);
-		glEnable(GL_TEXTURE_2D);
+		SetLighting(true);
+		SetColorMaterial(true);
+		SetTexture2D(true);
 	}
 
 	// Projection matrix for
@@ -182,12 +182,16 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 	for(uint i = 0; i < MAX_LIGHTS; ++i)
 		lights[i].Render();
 
+	if (_axis) { ShowAxis(); }
+	if (_grid) { ShowGrid(); }
+
 	return UPDATE_CONTINUE;
 }
 
 // PostUpdate present buffer to screen
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
+	
 	///-------------------BOX DRAWING
 	glLineWidth(1.0f); 
 	glEnableClientState(GL_VERTEX_ARRAY);//enables vertex array
@@ -277,16 +281,70 @@ bool ModuleRenderer3D::Save(JSON_Object* data)const {
 
 void ModuleRenderer3D::SetDepthTest(bool active) {
 	active ? glEnable(GL_DEPTH_TEST) : glDisable(GL_DEPTH_TEST);
+	_depthTest = active;
 }
 void ModuleRenderer3D::SetCullFace(bool active) {
 	active ? glEnable(GL_CULL_FACE) : glDisable(GL_CULL_FACE);
+	_cullFace = active;
 }
 void ModuleRenderer3D::SetLighting(bool active) {
 	active ? glEnable(GL_LIGHTING) : glDisable(GL_LIGHTING);
+	_lighting = active;
 }
 void ModuleRenderer3D::SetColorMaterial(bool active) {
 	active ? glEnable(GL_COLOR_MATERIAL) : glDisable(GL_COLOR_MATERIAL);
+	_colorMaterial = active;
 }
 void ModuleRenderer3D::SetTexture2D(bool active) {
 	active ? glEnable(GL_TEXTURE_2D) : glDisable(GL_TEXTURE_2D);
+	_texture2D = active;
+}
+
+void ModuleRenderer3D::ShowAxis() {
+
+	
+	glLineWidth(2.0f);
+	glBegin(GL_LINES);
+	glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
+
+	glVertex3f(0.0f, 0.0f, 0.0f); glVertex3f(1.0f, 0.0f, 0.0f);
+	glVertex3f(1.0f, 0.1f, 0.0f); glVertex3f(1.1f, -0.1f, 0.0f);
+	glVertex3f(1.1f, 0.1f, 0.0f); glVertex3f(1.0f, -0.1f, 0.0f);
+
+	glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
+
+	glVertex3f(0.0f, 0.0f, 0.0f); glVertex3f(0.0f, 1.0f, 0.0f);
+	glVertex3f(-0.05f, 1.25f, 0.0f); glVertex3f(0.0f, 1.15f, 0.0f);
+	glVertex3f(0.05f, 1.25f, 0.0f); glVertex3f(0.0f, 1.15f, 0.0f);
+	glVertex3f(0.0f, 1.15f, 0.0f); glVertex3f(0.0f, 1.05f, 0.0f);
+
+	glColor4f(0.0f, 0.0f, 1.0f, 1.0f);
+
+	glVertex3f(0.0f, 0.0f, 0.0f); glVertex3f(0.0f, 0.0f, 1.0f);
+	glVertex3f(-0.05f, 0.1f, 1.05f); glVertex3f(0.05f, 0.1f, 1.05f);
+	glVertex3f(0.05f, 0.1f, 1.05f); glVertex3f(-0.05f, -0.1f, 1.05f);
+	glVertex3f(-0.05f, -0.1f, 1.05f); glVertex3f(0.05f, -0.1f, 1.05f);
+
+	glEnd();
+}
+
+void ModuleRenderer3D::ShowGrid() {
+
+	glLineWidth(1.0f);
+
+	glBegin(GL_LINES);
+
+	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+	float d = 200.0f;
+
+	for (float i = -d; i <= d; i += 1.0f)
+	{
+		glVertex3f(i, 0.0f, -d);
+		glVertex3f(i, 0.0f, d);
+		glVertex3f(-d, 0.0f, i);
+		glVertex3f(d, 0.0f, i);
+	}
+
+	glEnd();
+
 }
