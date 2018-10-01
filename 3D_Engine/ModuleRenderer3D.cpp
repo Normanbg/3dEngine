@@ -176,6 +176,44 @@ bool ModuleRenderer3D::Start() {
 	glBindBuffer(GL_ARRAY_BUFFER, buffRayID); // set the type of buffer
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float)*ray.size() * 3, &ray[0], GL_STATIC_DRAW);
 
+	//---sphere
+	float radius= 1.f;
+	uint rings=200;
+	uint sectors=200;
+	sphere.resize(rings*sectors);// it would be rings*sectors*3 if sphere was a vector of float instead of a vec(x,y,z)
+
+	float const R = 1. / (float)(rings - 1);
+	float const S = 1. / (float)(sectors - 1);
+	vec position = { 2,2,2 };
+
+	std::vector<vec>::iterator vec = sphere.begin();
+	for (int r = 0; r < rings; r++) {
+		for (int s = 0; s < sectors; s++) {
+			float const y = sin(-M_PI_2 + M_PI * r * R)+ position.x;
+			float const x = cos(2 * M_PI * s * S) * sin(M_PI * r * R) + position.y;
+			float const z = sin(2 * M_PI * s * S) * sin(M_PI * r * R) + position.z;
+
+			*vec = { x*radius, y*radius,z*radius };
+			vec++;
+		}	
+	}
+	glGenBuffers(1, (GLuint*) &(buffsphereID));
+	glBindBuffer(GL_ARRAY_BUFFER, buffsphereID);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float)*sphere.size() * 3, &sphere[0], GL_STATIC_DRAW);
+
+	sphereIndices.resize(rings * sectors * 4);
+	std::vector<uint>::iterator i = sphereIndices.begin();
+	for (int r = 0; r < rings; r++) for (int s = 0; s < sectors; s++) {
+		*i++ = r * sectors + s;
+		*i++ = r * sectors + (s + 1);
+		*i++ = (r + 1) * sectors + (s + 1);
+		*i++ = (r + 1) * sectors + s;
+	}
+
+	glGenBuffers(1, (GLuint*)&(buffIndicesSphereID));
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffIndicesSphereID);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * sphereIndices.size(), &sphereIndices[0], GL_STATIC_DRAW);
+
 	return ret;
 }
 
@@ -227,9 +265,16 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);// color white
 
+	//-----TO DRAW SPHERE with glDrawElements()
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffIndicesSphereID);
+	glVertexPointer(3, GL_FLOAT, 0, &sphere[0]);	
+	glDrawElements(GL_QUADS, sphereIndices.size(), GL_UNSIGNED_SHORT,NULL);
+	
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);//resets the buffer
+
 	glDisableClientState(GL_VERTEX_ARRAY);
 
-	
 	///---------------------------
 
 	//---plane
@@ -257,7 +302,6 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	glBindBuffer(GL_ARRAY_BUFFER, 0); //resets the buffer
 
 	glDisableClientState(GL_VERTEX_ARRAY);
-
 
 	//Debug Draw
 	SDL_GL_SwapWindow(App->window->window); 
