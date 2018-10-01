@@ -6,6 +6,8 @@
 #include "MathGeoLib\Math\MathAll.h"
 
 #include <array>
+
+#include <vector>
 using namespace std;
 
 #define MAX_LIGHTS 8
@@ -66,13 +68,20 @@ private:
 	void GetDataFromJson(JSON_Object* data);
 	bool _vSync;
 
+
 	array<vec, 36> box;
 	array<vec, 8> box2;
 	array<uint, 36> boxIndices;
 
+	std::vector<vec> sphere;
+	std::vector<uint> sphereIndices;
+
+
 	uint buffBoxID = 0;
 	uint buffBox2ID = 0;
+	uint buffsphereID = 0;
 	uint buffIndicesID = 0;
+	uint buffIndicesSphereID = 0;
 
 	bool _depthTest = true;
 	bool _lighting = true;
