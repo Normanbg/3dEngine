@@ -69,10 +69,14 @@ private:
 	array<vec, 36> box;
 	array<vec, 8> box2;
 	array<uint, 36> boxIndices;
+	array<vec, 6> plane;
+	array<vec, 6> ray;
 
 	uint buffBoxID = 0;
 	uint buffBox2ID = 0;
 	uint buffIndicesID = 0;
+	uint buffPlaneID = 0;
+	uint buffRayID = 0;
 
 	bool _depthTest = true;
 	bool _lighting = true;

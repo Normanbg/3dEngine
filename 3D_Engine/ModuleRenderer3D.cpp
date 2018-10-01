@@ -164,6 +164,18 @@ bool ModuleRenderer3D::Start() {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffIndicesID);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * boxIndices.size(),&boxIndices[0], GL_STATIC_DRAW);
 
+	//Plane
+	plane = { vec{0.0f, 0.0f, 0.0f},{ 15.0f,0.0f, 0.0f},{ 0.0f, 0.0f, 15.0f }, {	0.0f, 0.0f, 15.0f },{ 15.0f,0.0f,0.0f },{ 15.0f,0.0f, 15.0f } };
+	glGenBuffers(1, (GLuint*) &(buffPlaneID));  // generates 1 buffer. then it assign a GLuint to its mem adress.
+	glBindBuffer(GL_ARRAY_BUFFER, buffPlaneID); // set the type of buffer
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float)*plane.size() * 3, &plane[0], GL_STATIC_DRAW);
+
+	//Ray
+	ray = { vec{ 0.0f, 0.0f, 0.0f },{ 0.03f,0.0f, 0.0f },{ 0.0f, 0.0f, 105.0f },{ 0.0f, 0.0f, 105.0f },{ 0.03f,0.0f,0.0f },{ 0.03f,0.0f, 105.0f } };
+	glGenBuffers(1, (GLuint*) &(buffRayID));  // generates 1 buffer. then it assign a GLuint to its mem adress.
+	glBindBuffer(GL_ARRAY_BUFFER, buffRayID); // set the type of buffer
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float)*ray.size() * 3, &ray[0], GL_STATIC_DRAW);
+
 	return ret;
 }
 
@@ -204,7 +216,6 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	glDrawArrays(GL_TRIANGLES, 0, 36); //Draw tris in the 36 nº of vertex that a box has (6faces * 2tris * 3vertex)
 	glBindBuffer(GL_ARRAY_BUFFER, 0); //resets the buffer
 
-
 	//---TO DRAW BOX 2 with glDrawElements()
 	glColor4f(1.0f, .0f, 1.0f, 1.0f);// color magenta
 
@@ -220,6 +231,33 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 
 	
 	///---------------------------
+
+	//---plane
+	glLineWidth(1.0f);
+	glEnableClientState(GL_VERTEX_ARRAY);
+
+	glColor4f(.0f, 0.5f, 1.0f, 1.0f); 
+
+	glBindBuffer(GL_ARRAY_BUFFER, buffPlaneID);// sets the type of buffer
+	glVertexPointer(3, GL_FLOAT, 0, NULL);  // points the first vertex
+	glDrawArrays(GL_TRIANGLES, 0, 6); 
+	glBindBuffer(GL_ARRAY_BUFFER, 0); //resets the buffer
+
+	glDisableClientState(GL_VERTEX_ARRAY);
+
+	//---Ray
+	glLineWidth(1.0f);
+	glEnableClientState(GL_VERTEX_ARRAY);
+
+	glColor4f(.0f, 1.0f, .0f, 1.0f);
+
+	glBindBuffer(GL_ARRAY_BUFFER, buffRayID);// sets the type of buffer
+	glVertexPointer(3, GL_FLOAT, 0, NULL);  // points the first vertex
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+	glBindBuffer(GL_ARRAY_BUFFER, 0); //resets the buffer
+
+	glDisableClientState(GL_VERTEX_ARRAY);
+
 
 	//Debug Draw
 	SDL_GL_SwapWindow(App->window->window); 
