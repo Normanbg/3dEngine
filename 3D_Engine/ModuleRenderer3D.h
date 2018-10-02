@@ -74,6 +74,7 @@ private:
 	array<uint, 36> boxIndices;
 	array<vec, 6> plane;
 	array<vec, 6> ray;
+	array<vec, 8> frustum;
 
 	std::vector<vec> sphere;
 	std::vector<uint> sphereIndices;
@@ -85,8 +86,8 @@ private:
 	uint buffPlaneID = 0;
 	uint buffRayID = 0;
 	uint buffIndicesID = 0;
-	uint buffIndicesSphereID = 0;
-
+	uint buffIndicesSphereID = 0; 
+	
 	bool _depthTest = true;
 	bool _lighting = true;
 	bool _cullFace = true;

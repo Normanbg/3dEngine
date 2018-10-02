@@ -28,11 +28,17 @@ void UIPanelAbout::Draw(){
 	if (ImGui::SmallButton(sdlVersion))
 		App->RequestBrowser("https://www.libsdl.org/download-2.0.php");
 	if (ImGui::SmallButton("OpenGL"))
-		App->RequestBrowser("https://github.com/ocornut/imgui");
-	if (ImGui::SmallButton("ImGui"))
 		App->RequestBrowser("https://www.opengl.org/");
-	if (ImGui::SmallButton("MathGeoLIB"))
+	if (ImGui::SmallButton("ImGui v1.65"))
+		App->RequestBrowser("https://github.com/ocornut/imgui");
+	if (ImGui::SmallButton("PCG - version (C Implementation) 0.94"))
+		App->RequestBrowser("http://www.pcg-random.org/");
+	if (ImGui::SmallButton("MathGeoLIB v1.5"))
 		App->RequestBrowser("https://github.com/juj/MathGeoLib");
+	/*if (ImGui::Selectable((const char*)("Glew - version %s", glewGetString(GLEW_VERSION))))
+		App->RequestBrowser("https://github.com/nigels-com/glew");
+	*/
+
 	ImGui::Spacing();
 	ImGui::Spacing();
 	ImGui::Spacing();

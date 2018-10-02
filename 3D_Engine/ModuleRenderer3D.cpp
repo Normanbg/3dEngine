@@ -176,6 +176,13 @@ bool ModuleRenderer3D::Start() {
 	glBindBuffer(GL_ARRAY_BUFFER, buffRayID); // set the type of buffer
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float)*ray.size() * 3, &ray[0], GL_STATIC_DRAW);
 
+	//Frustum
+	frustum = { vec{ 5.0f,5.0f,5.0f },{ 6.0f,5.0f,5.0f },{ 5.0f,6.0f,5.0f },{ 6.0f,6.0f,5.0f },		{4.75f,4.75f,6.0f },{ 6.25f,4.75f,6.0f },{ 4.75f,6.25f,6.0f },{ 6.25f,6.25f,6.0f } };
+
+	glGenBuffers(1, (GLuint*) &(buffIndicesFrustumID));
+	glBindBuffer(GL_ARRAY_BUFFER, buffIndicesFrustumID);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float)*frustum.size() * 3, &frustum[0], GL_STATIC_DRAW);
+
 	//---sphere
 	float radius= 1.f;
 	uint rings=200;
@@ -273,13 +280,9 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);//resets the buffer
 
-	glDisableClientState(GL_VERTEX_ARRAY);
-
 	///---------------------------
 
 	//---plane
-	glLineWidth(1.0f);
-	glEnableClientState(GL_VERTEX_ARRAY);
 
 	glColor4f(.0f, 0.5f, 1.0f, 1.0f); 
 
@@ -288,11 +291,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	glDrawArrays(GL_TRIANGLES, 0, 6); 
 	glBindBuffer(GL_ARRAY_BUFFER, 0); //resets the buffer
 
-	glDisableClientState(GL_VERTEX_ARRAY);
-
 	//---Ray
-	glLineWidth(1.0f);
-	glEnableClientState(GL_VERTEX_ARRAY);
 
 	glColor4f(.0f, 1.0f, .0f, 1.0f);
 
@@ -300,6 +299,15 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	glVertexPointer(3, GL_FLOAT, 0, NULL);  // points the first vertex
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 	glBindBuffer(GL_ARRAY_BUFFER, 0); //resets the buffer
+
+	//Frustum
+	glColor4f(0.5f, 1.0f, 0.5f, 1.0f);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffIndicesID);
+	glVertexPointer(3, GL_FLOAT, 0, &frustum[0]);
+	glDrawElements(GL_TRIANGLES, boxIndices.size(), GL_UNSIGNED_INT, NULL);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);//resets the buffer
 
 	glDisableClientState(GL_VERTEX_ARRAY);
 
