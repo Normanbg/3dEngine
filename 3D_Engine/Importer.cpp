@@ -1,6 +1,6 @@
 #include "Importer.h"
 #include "Globals.h"
-
+#include "ModuleRenderer3D.h"
 
 
 Importer::Importer()

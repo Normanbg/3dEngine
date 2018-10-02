@@ -8,8 +8,6 @@
 #include <array>
 
 #include <vector>
-using namespace std;
-
 #define MAX_LIGHTS 8
 
 struct Mesh {
@@ -79,15 +77,20 @@ private:
 	void ShowAxis();
 	void ShowGrid();
 	void GetDataFromJson(JSON_Object* data);
+	void GenBuffFromMeshes();
+	void DrawMeshes();
+
+private:
+
 	bool _vSync;
 
 
-	array<vec, 36> box;
-	array<vec, 8> box2;
-	array<uint, 36> boxIndices;
-	array<vec, 6> plane;
-	array<vec, 6> ray;
-	array<vec, 8> frustum;
+	std::array<vec, 36> box;
+	std::array<vec, 8> box2;
+	std::array<uint, 36> boxIndices;
+	std::array<vec, 6> plane;
+	std::array<vec, 6> ray;
+	std::array<vec, 8> frustum;
 
 	std::vector<vec> sphere;
 	std::vector<uint> sphereIndices;
@@ -112,6 +115,6 @@ private:
 	bool _grid = true;
 
 	Importer importer;
-	std::vector<Mesh> meshes;
+	std::vector<Mesh*> meshes;
 	
 };

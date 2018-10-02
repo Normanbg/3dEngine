@@ -1,7 +1,6 @@
-#ifndef __IMPORTER_H
-#define __IMPORTER_H
+#ifndef __IMPORTER_H__
+#define __IMPORTER_H__
 
-#include "Modulerenderer3D.h"
 #include "Application.h"
 
 #include "Assimp/include/cimport.h"
@@ -23,6 +22,7 @@ private:
 	void LoadFromMesh(aiMesh* mesh);
 };
 
+#endif //__IMPORTER_H__
 
 
-#endif // !__IMPORTER_H
+
