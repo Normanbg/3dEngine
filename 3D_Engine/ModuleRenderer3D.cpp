@@ -272,7 +272,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);// color white
 
-	//-----TO DRAW SPHERE with glDrawElements()
+	//-----TO DRAW SPHERE with glDrawElements() 
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffIndicesSphereID);
 	glVertexPointer(3, GL_FLOAT, 0, &sphere[0]);	
