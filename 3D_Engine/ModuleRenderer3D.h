@@ -87,6 +87,7 @@ private:
 	uint buffRayID = 0;
 	uint buffIndicesID = 0;
 	uint buffIndicesSphereID = 0; 
+	uint buffIndicesFrustumID = 0;
 	
 	bool _depthTest = true;
 	bool _lighting = true;
