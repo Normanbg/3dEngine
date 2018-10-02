@@ -12,6 +12,7 @@
 #include "ModuleGui.h"
 
 
+
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */ 
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
 #pragma comment (lib, "Glew/libx86/glew32.lib")  
@@ -130,6 +131,7 @@ bool ModuleRenderer3D::Init(JSON_Object* obj)
 
 	// Projection matrix for
 	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
+	importer.InitDebugLog();
 
 	
 	json_object_clear(obj);//clear obj to free memory
@@ -320,7 +322,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 bool ModuleRenderer3D::CleanUp()
 {
 	OWN_LOG("Destroying 3D Renderer");
-
+	importer.EndDebugLog();
 	SDL_GL_DeleteContext(context); 
 	return true;
 }
@@ -392,6 +394,11 @@ void ModuleRenderer3D::SetTexture2D(bool active) {
 void ModuleRenderer3D::SetWireframe(bool active) {
 	active ? glPolygonMode(GL_FRONT_AND_BACK, GL_LINE) : glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	_wireframe = active;
+}
+
+void ModuleRenderer3D::AddMesh(Mesh*  mesh)
+{
+	meshes.push_back(*mesh);
 }
 
 void ModuleRenderer3D::ShowAxis() {

@@ -4,13 +4,24 @@
 #include "glmath.h"
 #include "Light.h"
 #include "MathGeoLib\Math\MathAll.h"
-
+#include "Importer.h"
 #include <array>
 
 #include <vector>
 using namespace std;
 
 #define MAX_LIGHTS 8
+
+struct Mesh {
+
+	uint id_index = 0;
+	uint num_index = 0;
+	uint* index = nullptr;
+
+	uint id_vertex = 0;
+	uint num_vertex = 0;
+	float3* vertex = nullptr;
+};
 
 
 class ModuleRenderer3D : public Module
@@ -61,6 +72,8 @@ public:
 	inline bool GetAxis() const { return _axis; }
 	inline bool GetGrid() const { return _grid; }
 
+	void AddMesh(Mesh* mesh);
+
 private:
 
 	void ShowAxis();
@@ -97,5 +110,8 @@ private:
 	bool _wireframe = false;
 	bool _axis = true;
 	bool _grid = true;
+
+	Importer importer;
+	std::vector<Mesh> meshes;
 	
 };
