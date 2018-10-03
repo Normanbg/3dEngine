@@ -30,7 +30,7 @@ bool ModuleWindow::Init(JSON_Object* obj)
 	bool ret = true;
 
 	if (obj != nullptr) {		
-		GetDataFromJson(obj);
+		SetDataFromJson(obj);
 	}
 
 	if(SDL_Init(SDL_INIT_VIDEO) < 0)
@@ -166,7 +166,7 @@ void ModuleWindow::GetSize(int &w, int &h)const {
 
 bool ModuleWindow::Load(JSON_Object* data) {
 
-	GetDataFromJson(data);
+	SetDataFromJson(data);
 	
 	SetBrightness(_brightness);
 	
@@ -189,7 +189,7 @@ bool ModuleWindow::Save(JSON_Object* data)const {
 	return true;
 }
 
-void ModuleWindow::GetDataFromJson(JSON_Object* data) {
+void ModuleWindow::SetDataFromJson(JSON_Object* data) {
 
 	_brightness = json_object_dotget_number(data, "Brightness");
 	_w = json_object_dotget_number(data, "Width");

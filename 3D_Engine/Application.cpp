@@ -70,7 +70,7 @@ bool Application::Init()
 		obj = json_value_get_object(config);
 		appObj = json_object_get_object(obj, "App");
 		
-		GetDataFromJson(appObj);
+		SetDataFromJson(appObj);
 
 		objModules = obj;
 		json_object_clear(appObj);
@@ -318,7 +318,7 @@ void Application::SetOrganization(char* newName)
 		 obj = json_value_get_object(config);
 		 appObj = json_object_get_object(obj, "App");
 
-		 GetDataFromJson(appObj);
+		 SetDataFromJson(appObj);
 
 		 
 		 json_object_clear(appObj);
@@ -367,7 +367,7 @@ void Application::SetOrganization(char* newName)
 	 return ret;
  }
 
- void Application::GetDataFromJson(JSON_Object* data) {
+ void Application::SetDataFromJson(JSON_Object* data) {
  
 	 const char* title = json_object_get_string(data, "Name");
 	 window->SetTitle((char*)title);

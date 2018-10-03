@@ -21,7 +21,6 @@ void Importer::InitDebugLog(){
 
 void Importer::EndDebugLog()
 {
-
 	aiDetachAllLogStreams();
 }
 
@@ -54,7 +53,6 @@ void Importer::LoadFromMesh(aiMesh * new_mesh)
 	memcpy(mesh.vertex, new_mesh->mVertices, sizeof(float3) * mesh.num_vertex);
 	OWN_LOG("New mesh with %d vertices", mesh.num_vertex);
 
-	// copy faces
 	if (new_mesh->HasFaces()){
 		mesh.num_index = new_mesh->mNumFaces * 3;
 		mesh.index = new uint[mesh.num_index]; // assume each face is a triangle
@@ -72,7 +70,7 @@ void Importer::LoadFromMesh(aiMesh * new_mesh)
 		mesh.normals = new float3[mesh.num_normals]; 
 		memcpy(mesh.normals, new_mesh->mNormals, sizeof(float3) * mesh.num_normals);
 	}
-	if (new_mesh->GetNumColorChannels() > 0) {
+	if (new_mesh->GetNumColorChannels() > 0) {///NOOOOOOT TESTEEEED AT ALL!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		mesh.num_colors = new_mesh->GetNumColorChannels();
 		mesh.colors = new float3[mesh.num_colors];
 		memcpy(mesh.colors, new_mesh->mColors, sizeof(float3) * mesh.num_colors);

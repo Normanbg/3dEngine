@@ -20,6 +20,7 @@ struct Mesh {
 	uint num_vertex = 0;
 	float3* vertex = nullptr;
 
+	uint id_normals = 0;
 	uint num_normals = 0;
 	float3* normals = nullptr;
 
@@ -50,8 +51,8 @@ public:
 	bool Save(JSON_Object* data) const;
 
 	void OnResize(int width, int height);
-	char* GetGraphicsModel();
-	char* GetGraphicsVendor();
+	char* GetGraphicsModel() const;
+	char* GetGraphicsVendor() const;
 
 public:
 
@@ -86,9 +87,10 @@ private:
 
 	void ShowAxis();
 	void ShowGrid();
-	void GetDataFromJson(JSON_Object* data);
+	void SetDataFromJson(JSON_Object* data);
 	void GenBuffFromMeshes();
 	void DrawMeshes();
+	void DrawNormals();
 
 private:
 

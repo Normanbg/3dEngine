@@ -35,7 +35,7 @@ bool ModuleRenderer3D::Init(JSON_Object* obj)
 	bool ret = true;
 	
 	if (obj != nullptr) {
-		GetDataFromJson(obj);
+		SetDataFromJson(obj);
 	}
 	
 	//Create OGL context 
@@ -315,6 +315,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);//resets the buffer
 	DrawMeshes();
+	DrawNormals();
 
 	glDisableClientState(GL_VERTEX_ARRAY);
 	
@@ -348,17 +349,17 @@ void ModuleRenderer3D::OnResize(int width, int height)
 	glLoadIdentity();
 }
 
-char* ModuleRenderer3D::GetGraphicsModel()
+char* ModuleRenderer3D::GetGraphicsModel() const
 {
 	return (char*)glGetString(GL_RENDERER);
 }
 
-char * ModuleRenderer3D::GetGraphicsVendor()
+char * ModuleRenderer3D::GetGraphicsVendor() const
 {
 	return (char*)glGetString(GL_VENDOR);;
 }
 
-void ModuleRenderer3D::GetDataFromJson(JSON_Object* data) {
+void ModuleRenderer3D::SetDataFromJson(JSON_Object* data) {
 
 	_vSync = json_object_dotget_boolean(data, "VSync");
 
@@ -371,8 +372,11 @@ void ModuleRenderer3D::GenBuffFromMeshes(){
 		glGenBuffers(1, (GLuint*) &(meshIterator->id_vertex));  // generates 1 buffer. then it assign a GLuint to its mem adress.
 		glBindBuffer(GL_ARRAY_BUFFER, meshIterator->id_vertex); // set the type of buffer
 		glBufferData(GL_ARRAY_BUFFER, sizeof(float3)*meshIterator->num_vertex, &meshIterator->vertex[0], GL_STATIC_DRAW);
+		glGenBuffers(1, (GLuint*) &(meshIterator->id_normals));  
+		glBindBuffer(GL_ARRAY_BUFFER, meshIterator->id_normals);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float3)*meshIterator->num_normals, &meshIterator->normals[0], GL_STATIC_DRAW);
 		if (meshIterator->num_index > 0) {
-			glGenBuffers(1, (GLuint*)&(meshIterator->id_index));
+			glGenBuffers(1, (GLuint*) &(meshIterator->id_index));
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, meshIterator->id_index);
 			glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * meshIterator->num_index, &meshIterator->index[0], GL_STATIC_DRAW);
 		}
@@ -380,7 +384,7 @@ void ModuleRenderer3D::GenBuffFromMeshes(){
 }
 
 void ModuleRenderer3D::DrawMeshes(){
-	Mesh* meshIterator;
+	Mesh* meshIterator = nullptr;
 	for (int i = 0; i < meshes.size(); i++) {
 		meshIterator = &meshes[i];
 		if (meshIterator->num_index == 0) {
@@ -399,9 +403,24 @@ void ModuleRenderer3D::DrawMeshes(){
 	}
 }
 
+void ModuleRenderer3D::DrawNormals(){
+	Mesh* meshIterator = nullptr;
+	for (int i = 0; i < meshes.size(); i++) {
+		meshIterator = &meshes[i];
+		for (int j = 0; j < meshIterator->num_normals; j++) {
+			glBegin(GL_LINES);
+			glVertex3f(meshIterator->vertex[j].x, meshIterator->vertex[j].y, meshIterator->vertex[j].z);
+			glVertex3f(meshIterator->vertex[j].x - meshIterator->normals[j].x, meshIterator->vertex[j].y - meshIterator->normals[j].y, meshIterator->vertex[j].z - meshIterator->normals[j].z);
+			glLineWidth(1.0f);
+			glEnd();
+		}
+	}
+
+}
+
 bool ModuleRenderer3D::Load(JSON_Object* data) {
 
-	GetDataFromJson(data);
+	SetDataFromJson(data);
 
 	//Set Vsync to change it in game
 

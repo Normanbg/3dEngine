@@ -134,7 +134,7 @@ private:
 	void PrepareUpdate();
 	void FinishUpdate();
 
-	void GetDataFromJson(JSON_Object* data);
+	void SetDataFromJson(JSON_Object* data);
 
 
 };
