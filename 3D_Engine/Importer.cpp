@@ -54,6 +54,7 @@ void Importer::LoadFBXfromDrop(char * path){
 			LoadFromMesh(meshIterator);
 		}
 		aiReleaseImport(scene);
+		OWN_LOG("FBX dropped loaded correctly");
 	}
 	else
 		OWN_LOG("Error loading scene %s", aiGetErrorString());
