@@ -19,6 +19,11 @@ struct Mesh {
 	uint id_vertex = 0;
 	uint num_vertex = 0;
 	float3* vertex = nullptr;
+
+	uint num_normals = 0;
+	float3* normals = nullptr;
+
+
 };
 
 

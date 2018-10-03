@@ -67,9 +67,14 @@ void Importer::LoadFromMesh(aiMesh * new_mesh)
 			else {
 				memcpy(&mesh.index[i * 3], new_mesh->mFaces[i].mIndices, 3 * sizeof(uint));
 			}
-		}
-		App->renderer3D->AddMesh(&mesh);
+		}		
 	}
-
+	if (new_mesh->HasNormals())
+	{
+		mesh.num_normals = new_mesh->mNumVertices;
+		mesh.normals = new float3[mesh.num_normals]; 
+		memcpy(mesh.normals, new_mesh->mNormals, sizeof(float3) * mesh.num_normals);
+	}
+	App->renderer3D->AddMesh(&mesh);
 }
 
