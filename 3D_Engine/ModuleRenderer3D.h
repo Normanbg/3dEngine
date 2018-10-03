@@ -115,6 +115,6 @@ private:
 	bool _grid = true;
 
 	Importer importer;
-	std::vector<Mesh*> meshes;
+	std::vector<Mesh> meshes;
 	
 };

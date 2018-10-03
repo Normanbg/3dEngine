@@ -171,7 +171,7 @@ void Application::GetHardWareData()
 	uint64_t totVideoMem, currVideoMem, availbVideoMem, reserVideoMem;
 
 	if (getGraphicsDeviceInfo(nullptr, nullptr, nullptr, &totVideoMem, &currVideoMem, &availbVideoMem, &reserVideoMem))	{
-		OWN_LOG("Succesfully get graphics device data")
+		//OWN_LOG("Succesfully get graphics device data")
 		
 		totalVideoMemF =	(float)totVideoMem / (1024.0f * 1024.0f);
 		currentVideoMemF =	(float)currVideoMem / (1024.0f * 1024.0f);

@@ -223,6 +223,10 @@ bool ModuleRenderer3D::Start() {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffIndicesSphereID);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * sphereIndices.size(), &sphereIndices[0], GL_STATIC_DRAW);
 
+	
+	importer.LoadFBX("BakerHouse.fbx");
+	GenBuffFromMeshes();
+
 	return ret;
 }
 
@@ -310,9 +314,11 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	glDrawElements(GL_TRIANGLES, boxIndices.size(), GL_UNSIGNED_INT, NULL);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);//resets the buffer
+	DrawMeshes();
 
 	glDisableClientState(GL_VERTEX_ARRAY);
-
+	
+	
 	//Debug Draw
 	//UI Draw
 	SDL_GL_SwapWindow(App->window->window); 
@@ -361,7 +367,7 @@ void ModuleRenderer3D::GetDataFromJson(JSON_Object* data) {
 void ModuleRenderer3D::GenBuffFromMeshes(){
 	Mesh* meshIterator;
 	for (int i = 0; i < meshes.size(); i++) {
-		meshIterator = meshes[i];
+		meshIterator = &meshes[i];
 		glGenBuffers(1, (GLuint*) &(meshIterator->id_vertex));  // generates 1 buffer. then it assign a GLuint to its mem adress.
 		glBindBuffer(GL_ARRAY_BUFFER, meshIterator->id_vertex); // set the type of buffer
 		glBufferData(GL_ARRAY_BUFFER, sizeof(float3)*meshIterator->num_vertex, &meshIterator->vertex[0], GL_STATIC_DRAW);
@@ -376,6 +382,7 @@ void ModuleRenderer3D::GenBuffFromMeshes(){
 void ModuleRenderer3D::DrawMeshes(){
 	Mesh* meshIterator;
 	for (int i = 0; i < meshes.size(); i++) {
+		meshIterator = &meshes[i];
 		if (meshIterator->num_index == 0) {
 			glBindBuffer(GL_ARRAY_BUFFER, meshIterator->id_vertex);
 			glVertexPointer(3, GL_FLOAT, 0, NULL); 
@@ -433,7 +440,7 @@ void ModuleRenderer3D::SetWireframe(bool active) {
 
 void ModuleRenderer3D::AddMesh(Mesh*  mesh)
 {
-	meshes.push_back(mesh);
+	meshes.push_back(*mesh);
 }
 
 void ModuleRenderer3D::ShowAxis() {

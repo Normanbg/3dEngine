@@ -27,7 +27,9 @@ void Importer::EndDebugLog()
 
 void Importer::LoadFBX(char * path)
 {
-	const aiScene* scene = aiImportFile(path, aiProcessPreset_TargetRealtime_MaxQuality);
+	std::string rootPath = ROOT_PATH;
+	rootPath += path;
+	const aiScene* scene = aiImportFile(rootPath.c_str(), aiProcessPreset_TargetRealtime_MaxQuality);
 	if (scene != nullptr && scene->HasMeshes())
 	{
 		// Use scene->mNumMeshes to iterate on scene->mMeshes array
@@ -39,7 +41,7 @@ void Importer::LoadFBX(char * path)
 		aiReleaseImport(scene);
 	}
 	else
-		OWN_LOG("Error loading scene %s", path);
+		OWN_LOG("Error loading scene %s", aiGetErrorString());
 }
 
 void Importer::LoadFromMesh(aiMesh * new_mesh)
@@ -64,9 +66,9 @@ void Importer::LoadFromMesh(aiMesh * new_mesh)
 			}
 			else {
 				memcpy(&mesh.index[i * 3], new_mesh->mFaces[i].mIndices, 3 * sizeof(uint));
-				App->renderer3D->AddMesh(&mesh);
 			}
 		}
+		App->renderer3D->AddMesh(&mesh);
 	}
 
 }

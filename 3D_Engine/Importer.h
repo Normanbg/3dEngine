@@ -8,6 +8,8 @@
 #include "Assimp/include/postprocess.h"
 #include "Assimp/include/cfileio.h"
 #pragma comment (lib, "Assimp/libx86/assimp.lib")
+
+#define ROOT_PATH "Assets/"
 class Importer
 {
 public:
