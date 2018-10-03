@@ -55,12 +55,10 @@ void Importer::LoadFromMesh(aiMesh * new_mesh)
 	OWN_LOG("New mesh with %d vertices", mesh.num_vertex);
 
 	// copy faces
-	if (new_mesh->HasFaces())
-	{
+	if (new_mesh->HasFaces()){
 		mesh.num_index = new_mesh->mNumFaces * 3;
 		mesh.index = new uint[mesh.num_index]; // assume each face is a triangle
-		for (uint i = 0; i < new_mesh->mNumFaces; ++i)
-		{
+		for (uint i = 0; i < new_mesh->mNumFaces; ++i)	{
 			if (new_mesh->mFaces[i].mNumIndices != 3) {
 				OWN_LOG("WARNING, geometry face with != 3 indices!");
 			}
@@ -69,22 +67,21 @@ void Importer::LoadFromMesh(aiMesh * new_mesh)
 			}
 		}		
 	}
-	if (new_mesh->HasNormals())
-	{
+	if (new_mesh->HasNormals())	{
 		mesh.num_normals = new_mesh->mNumVertices;
 		mesh.normals = new float3[mesh.num_normals]; 
 		memcpy(mesh.normals, new_mesh->mNormals, sizeof(float3) * mesh.num_normals);
 	}
-	
-	mesh.num_colors = new_mesh->GetNumColorChannels();
-	mesh.colors = new float3[mesh.num_colors];
-	memcpy(mesh.colors, new_mesh->mColors, sizeof(float3) * mesh.num_colors);
-	
-	mesh.num_textureCoords = new_mesh->GetNumUVChannels();
-
-	mesh.texturesCoords = new float2[mesh.num_textureCoords];	
-
-	memcpy(mesh.texturesCoords, new_mesh->mTextureCoords[0], sizeof(float2) * mesh.num_textureCoords);
+	if (new_mesh->GetNumColorChannels() > 0) {
+		mesh.num_colors = new_mesh->GetNumColorChannels();
+		mesh.colors = new float3[mesh.num_colors];
+		memcpy(mesh.colors, new_mesh->mColors, sizeof(float3) * mesh.num_colors);
+	}
+	if (new_mesh->GetNumUVChannels() > 0) {
+		mesh.num_textureCoords = new_mesh->GetNumUVChannels();
+		mesh.texturesCoords = new float2[mesh.num_textureCoords];
+		memcpy(mesh.texturesCoords, new_mesh->mTextureCoords[0], sizeof(float2) * mesh.num_textureCoords);
+	}
 	
 
 	App->renderer3D->AddMesh(&mesh);
