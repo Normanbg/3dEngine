@@ -141,8 +141,7 @@ bool ModuleRenderer3D::Init(JSON_Object* obj)
 bool ModuleRenderer3D::Start() {
 
 	bool ret = true;
-	
-	box = { vec{-3.0f,3.0f,-3.0f },{-3.0f,3.0f, -1.0f},{	-3.0f, 1.0f, -1.0f},{-1.0f, 1.0f,-3.0f },{-3.0f,3.0f,-3.0f},{-3.0f, 1.0f,-3.0f},
+		box = { vec{-3.0f,3.0f,-3.0f },{-3.0f,3.0f, -1.0f},{	-3.0f, 1.0f, -1.0f},{-1.0f, 1.0f,-3.0f },{-3.0f,3.0f,-3.0f},{-3.0f, 1.0f,-3.0f},
 	{-1.0f,3.0f, -1.0f },{	-3.0f,3.0f,-3.0f},{-1.0f,3.0f,-3.0f},{-1.0f, 1.0f,-3.0f},{-1.0f,3.0f,-3.0f},{-3.0f,3.0f,-3.0f},{-3.0f,3.0f,-3.0f},
 	{-3.0f, 1.0f, -1.0f},{	-3.0f, 1.0f,-3.0f},{-1.0f,3.0f, -1.0f},{-3.0f,3.0f, -1.0f},{-3.0f,3.0f,-3.0f},{	-3.0f, 1.0f, -1.0f},{-3.0f,3.0f, -1.0f},
 	{-1.0f,3.0f, -1.0f},{-1.0f, 1.0f, -1.0f},{-1.0f,3.0f,-3.0f},{-1.0f, 1.0f,-3.0f},{-1.0f,3.0f,-3.0f},{-1.0f, 1.0f, -1.0f},{	-1.0f,3.0f, -1.0f},
@@ -184,39 +183,68 @@ bool ModuleRenderer3D::Start() {
 	glGenBuffers(1, (GLuint*) &(buffIndicesFrustumID));
 	glBindBuffer(GL_ARRAY_BUFFER, buffIndicesFrustumID);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float)*frustum.size() * 3, &frustum[0], GL_STATIC_DRAW);
-
+	
 	//---sphere
-	float radius= 1.f;
-	uint rings=200;
-	uint sectors=200;
-	sphere.resize(rings*sectors);// it would be rings*sectors*3 if sphere was a vector of float instead of a vec(x,y,z)
+	float radius = 1;
+	float sectors =10;
+	float stacks = 10;
+	vec position( 5,5, 5);
 
-	float const R = 1. / (float)(rings - 1);
-	float const S = 1. / (float)(sectors - 1);
-	vec position = { 2,2,2 };
+	float x, y, z, xy;                              // vertex position
+	
+	float sectorStep = 2 * pi / sectors;
+	float stackStep = pi / stacks;
+	float sectorAngle, stackAngle;
 
-	std::vector<vec>::iterator vec = sphere.begin();
-	for (int r = 0; r < rings; r++) {
-		for (int s = 0; s < sectors; s++) {
-			float const y = sin(-M_PI_2 + M_PI * r * R)+ position.x;
-			float const x = cos(2 * M_PI * s * S) * sin(M_PI * r * R) + position.y;
-			float const z = sin(2 * M_PI * s * S) * sin(M_PI * r * R) + position.z;
+	for (int i = 0; i <= stacks; ++i)
+	{
+		stackAngle = pi / 2 - i * stackStep;        // starting from pi/2 to -pi/2
+		xy = radius * cosf(stackAngle);             // r * cos(u)
+		y = position.y+ radius * sinf(stackAngle);              // r * sin(u)
 
-			*vec = { x*radius, y*radius,z*radius };
-			vec++;
-		}	
+													// add (sectorCount+1) vertices per stack
+													// the first and last vertices have same position and normal, but different tex coods
+		for (int j = 0; j <= sectors; ++j)
+		{
+			sectorAngle = j * sectorStep;
+
+			// vertex position (x, y, z)
+			z = position.z+ xy  * cosf(sectorAngle);             // r * cos(u) * cos(v)
+			x = position.x + xy * sinf(sectorAngle);             // r * cos(u) * sin(v)
+			sphere.push_back(vec(x, y, z));
+						
+		}
 	}
+
 	glGenBuffers(1, (GLuint*) &(buffsphereID));
 	glBindBuffer(GL_ARRAY_BUFFER, buffsphereID);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float)*sphere.size() * 3, &sphere[0], GL_STATIC_DRAW);
 
-	sphereIndices.resize(rings * sectors * 4);
-	std::vector<uint>::iterator i = sphereIndices.begin();
-	for (int r = 0; r < rings; r++) for (int s = 0; s < sectors; s++) {
-		*i++ = r * sectors + s;
-		*i++ = r * sectors + (s + 1);
-		*i++ = (r + 1) * sectors + (s + 1);
-		*i++ = (r + 1) * sectors + s;
+
+
+	int k1, k2;
+	for (int i = 0; i < stacks; ++i)
+	{
+		k1 = i * (sectors + 1);     // beginning of current stack
+		k2 = k1 + sectors + 1;      // beginning of next stack
+
+		for (int j = 0; j < sectors; ++j, ++k1, ++k2)
+		{
+			// 2 triangles per sector excluding 1st and last stacks
+			if (i != 0)
+			{
+				sphereIndices.push_back(k1);
+				sphereIndices.push_back(k2);
+				sphereIndices.push_back(k1 + 1);
+			}
+
+			if (i != (stacks - 1))
+			{
+				sphereIndices.push_back(k1 + 1);
+				sphereIndices.push_back(k2);
+				sphereIndices.push_back(k2 + 1);
+			}
+		}
 	}
 
 	glGenBuffers(1, (GLuint*)&(buffIndicesSphereID));
@@ -277,17 +305,17 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);//resets the buffer
 
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);// color white
-
+	
 	//-----TO DRAW SPHERE with glDrawElements() 
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffIndicesSphereID);
 	glVertexPointer(3, GL_FLOAT, 0, &sphere[0]);	
-	glDrawElements(GL_QUADS, sphereIndices.size(), GL_UNSIGNED_SHORT,NULL);
+	glDrawElements(GL_TRIANGLES, sphereIndices.size(), GL_UNSIGNED_INT,NULL);
 	
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);//resets the buffer
 
 	///---------------------------
-
+	
 	//---plane
 
 	glColor4f(.0f, 0.5f, 1.0f, 1.0f); 
