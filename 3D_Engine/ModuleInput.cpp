@@ -39,6 +39,7 @@ bool ModuleInput::Init(JSON_Object* obj)
 		ret = false;
 	}
 	json_object_clear(obj);//clear obj to free memory
+	SDL_EventState(SDL_DROPFILE, SDL_ENABLE);
 	return ret;
 }
 
@@ -116,10 +117,15 @@ update_status ModuleInput::PreUpdate(float dt)
 			break;
 
 			case SDL_WINDOWEVENT:
-			{
-				if(e.window.event == SDL_WINDOWEVENT_RESIZED)
-					App->renderer3D->OnResize(e.window.data1, e.window.data2);
-			}
+			if(e.window.event == SDL_WINDOWEVENT_RESIZED)
+			App->renderer3D->OnResize(e.window.data1, e.window.data2);
+			break;
+			case SDL_DROPFILE:
+			dropped_filedir = e.drop.file;
+			App->renderer3D->LoadDroppedFBX(dropped_filedir);
+			break;
+	
+
 		}
 	}
 
@@ -134,6 +140,7 @@ update_status ModuleInput::PreUpdate(float dt)
 bool ModuleInput::CleanUp()
 {
 	OWN_LOG("Quitting SDL input event subsystem");
+	SDL_free(dropped_filedir);
 	SDL_QuitSubSystem(SDL_INIT_EVENTS);
 	return true;
 }

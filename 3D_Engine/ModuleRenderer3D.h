@@ -30,6 +30,7 @@ struct Mesh {
 	uint num_textureCoords = 0;
 	float2* texturesCoords = nullptr;
 
+	bool generated = false;
 };
 
 
@@ -55,19 +56,13 @@ public:
 	char* GetGraphicsVendor() const;
 
 public:
-
-	Light lights[MAX_LIGHTS];
-	SDL_GLContext context;
-	mat3x3 NormalMatrix;
-	mat4x4 ModelMatrix, ViewMatrix, ProjectionMatrix;
-
 	void SetDepthTest(bool active);
 	void SetCullFace(bool active);
 	void SetLighting(bool active);
 	void SetColorMaterial(bool active);
 	void SetTexture2D(bool active);
 	void SetWireframe(bool active);
-
+	void SetNormals(bool active) { _normals = active; }
 	void SetAxis(bool active) { _axis = active; }
 	void SetGrid(bool active) { _grid = active; }
 
@@ -77,12 +72,21 @@ public:
 	inline bool GetColorMaterial()const { return _colorMaterial; }
 	inline bool GetTexture2D()const { return _texture2D; }
 	inline bool GetWireframe()const { return _wireframe; }
+	inline bool GetNormals()const { return _normals; }
 
 	inline bool GetAxis() const { return _axis; }
 	inline bool GetGrid() const { return _grid; }
 
 	void AddMesh(Mesh* mesh);
+	void LoadDroppedFBX(char* droppedFileDir);
 
+public:
+
+	Light lights[MAX_LIGHTS];
+	SDL_GLContext context;
+	mat3x3 NormalMatrix;
+	mat4x4 ModelMatrix, ViewMatrix, ProjectionMatrix;
+	
 private:
 
 	void ShowAxis();
@@ -125,6 +129,7 @@ private:
 	bool _wireframe = false;
 	bool _axis = true;
 	bool _grid = true;
+	bool _normals = false;
 
 	Importer importer;
 	std::vector<Mesh> meshes;

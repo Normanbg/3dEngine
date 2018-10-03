@@ -214,6 +214,10 @@ void UIPanelConfig::Draw() {
 		if (ImGui::Checkbox("Wireframe", &wiref)) {
 			App->renderer3D->SetWireframe(wiref);
 		}
+		bool normals = App->renderer3D->GetNormals();
+		if (ImGui::Checkbox("FBX Normals", &normals)) {
+			App->renderer3D->SetNormals(normals);
+		}
 	}
 	ImGui::End();
 

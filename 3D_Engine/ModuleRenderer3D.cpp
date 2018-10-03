@@ -251,8 +251,6 @@ bool ModuleRenderer3D::Start() {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffIndicesSphereID);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * sphereIndices.size(), &sphereIndices[0], GL_STATIC_DRAW);
 
-	
-	importer.LoadFBX("BakerHouse.fbx");
 	GenBuffFromMeshes();
 
 	return ret;
@@ -343,7 +341,6 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);//resets the buffer
 	DrawMeshes();
-	DrawNormals();
 
 	glDisableClientState(GL_VERTEX_ARRAY);
 	
@@ -397,16 +394,19 @@ void ModuleRenderer3D::GenBuffFromMeshes(){
 	Mesh* meshIterator;
 	for (int i = 0; i < meshes.size(); i++) {
 		meshIterator = &meshes[i];
-		glGenBuffers(1, (GLuint*) &(meshIterator->id_vertex));  // generates 1 buffer. then it assign a GLuint to its mem adress.
-		glBindBuffer(GL_ARRAY_BUFFER, meshIterator->id_vertex); // set the type of buffer
-		glBufferData(GL_ARRAY_BUFFER, sizeof(float3)*meshIterator->num_vertex, &meshIterator->vertex[0], GL_STATIC_DRAW);
-		glGenBuffers(1, (GLuint*) &(meshIterator->id_normals));  
-		glBindBuffer(GL_ARRAY_BUFFER, meshIterator->id_normals);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(float3)*meshIterator->num_normals, &meshIterator->normals[0], GL_STATIC_DRAW);
-		if (meshIterator->num_index > 0) {
-			glGenBuffers(1, (GLuint*) &(meshIterator->id_index));
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, meshIterator->id_index);
-			glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * meshIterator->num_index, &meshIterator->index[0], GL_STATIC_DRAW);
+		if (!meshIterator->generated) {
+			glGenBuffers(1, (GLuint*) &(meshIterator->id_vertex));  // generates 1 buffer. then it assign a GLuint to its mem adress.
+			glBindBuffer(GL_ARRAY_BUFFER, meshIterator->id_vertex); // set the type of buffer
+			glBufferData(GL_ARRAY_BUFFER, sizeof(float3)*meshIterator->num_vertex, &meshIterator->vertex[0], GL_STATIC_DRAW);
+			glGenBuffers(1, (GLuint*) &(meshIterator->id_normals));
+			glBindBuffer(GL_ARRAY_BUFFER, meshIterator->id_normals);
+			glBufferData(GL_ARRAY_BUFFER, sizeof(float3)*meshIterator->num_normals, &meshIterator->normals[0], GL_STATIC_DRAW);
+			if (meshIterator->num_index > 0) {
+				glGenBuffers(1, (GLuint*) &(meshIterator->id_index));
+				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, meshIterator->id_index);
+				glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * meshIterator->num_index, &meshIterator->index[0], GL_STATIC_DRAW);
+			}
+			meshIterator->generated = true;
 		}
 	}
 }
@@ -429,6 +429,8 @@ void ModuleRenderer3D::DrawMeshes(){
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 		}
 	}
+	if (_normals)
+		DrawNormals();
 }
 
 void ModuleRenderer3D::DrawNormals(){
@@ -488,6 +490,11 @@ void ModuleRenderer3D::SetWireframe(bool active) {
 void ModuleRenderer3D::AddMesh(Mesh*  mesh)
 {
 	meshes.push_back(*mesh);
+}
+
+void ModuleRenderer3D::LoadDroppedFBX(char * droppedFileDir){
+	importer.LoadFBXfromDrop(droppedFileDir);
+	GenBuffFromMeshes();	
 }
 
 void ModuleRenderer3D::ShowAxis() {

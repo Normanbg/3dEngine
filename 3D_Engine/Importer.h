@@ -20,8 +20,12 @@ public:
 	void EndDebugLog();
 	
 	void LoadFBX(char* path );
+	void LoadFBXfromDrop(char* path);
 private:
 	void LoadFromMesh(aiMesh* mesh);
+
+private:
+	char* droppedFile = nullptr;
 };
 
 #endif //__IMPORTER_H__
