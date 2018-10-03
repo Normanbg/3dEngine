@@ -188,7 +188,7 @@ bool ModuleRenderer3D::Start() {
 	float radius = 1;
 	float sectors =10;
 	float stacks = 10;
-	vec position( 5,5, 5);
+	vec position( 0,0, 0);
 
 	float x, y, z, xy;                              // vertex position
 	
@@ -273,6 +273,7 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 
 	if (_axis) { ShowAxis(); }
 	if (_grid) { ShowGrid(); }
+	
 
 	return UPDATE_CONTINUE;
 }
@@ -346,7 +347,9 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	
 	
 	//Debug Draw
-	//UI Draw
+	App->gui->Draw();
+
+
 	SDL_GL_SwapWindow(App->window->window); 
 	return UPDATE_CONTINUE;
 }

@@ -58,6 +58,9 @@ update_status ModuleGui::PreUpdate(float dt)
 	/*ImGuiIO& io = ImGui::GetIO();
 	io.DisplaySize.x = 1920.0f;*
 	/*io.DisplaySize.y = 1280.0f;*/
+	/*ImGui_ImplOpenGL2_NewFrame();
+	ImGui_ImplSDL2_NewFrame(App->window->window);
+	ImGui::NewFrame();*/
 	ImGui_ImplOpenGL2_NewFrame();
 	ImGui_ImplSDL2_NewFrame(App->window->window);
 	ImGui::NewFrame();
@@ -66,7 +69,6 @@ update_status ModuleGui::PreUpdate(float dt)
 
 update_status ModuleGui::Update(float dt)
 {
-
 	if (ImGui::BeginMainMenuBar()) {
 		//--------------HELP MENU
 		if (ImGui::BeginMenu("File")) {
@@ -126,7 +128,7 @@ update_status ModuleGui::Update(float dt)
 				}
 				if (ImGui::MenuItem("Segments")) {
 					//CREATE
-					
+
 				}
 				if (ImGui::MenuItem("Rays")) {
 					//CREATE
@@ -161,7 +163,13 @@ update_status ModuleGui::Update(float dt)
 		ImGui::EndMainMenuBar();
 
 	}
+	
+	return UPDATE_CONTINUE;
+}
 
+void ModuleGui::Draw() {
+
+	
 	if (demoShowcase)
 		ImGui::ShowTestWindow();
 
@@ -172,15 +180,15 @@ update_status ModuleGui::Update(float dt)
 			(*iterator)->Draw();
 		}
 	}
-	
-	return UPDATE_CONTINUE;
+	ImGui::Render();
+	ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
+
 }
+
 
 update_status ModuleGui::PostUpdate(float dt)
 {
-	App->physics->isIntersecting();
-	ImGui::Render();
-	ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
+	
 	return UPDATE_CONTINUE;
 }
 

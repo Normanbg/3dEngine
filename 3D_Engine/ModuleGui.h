@@ -27,6 +27,9 @@ public:
 	update_status PostUpdate(float dt);
 	bool CleanUp();
 
+	void Draw();
+
+
 	void AddConsoleLogs(const char* log);
 
 public:
