@@ -75,6 +75,22 @@ void Importer::LoadFromMesh(aiMesh * new_mesh)
 		mesh.normals = new float3[mesh.num_normals]; 
 		memcpy(mesh.normals, new_mesh->mNormals, sizeof(float3) * mesh.num_normals);
 	}
+	
+	mesh.num_colors = new_mesh->GetNumColorChannels();
+	mesh.colors = new float3[mesh.num_colors];
+	memcpy(mesh.colors, new_mesh->mColors, sizeof(float3) * mesh.num_colors);
+	
+	mesh.num_textureCoords = new_mesh->GetNumUVChannels();
+	mesh.texturesCoords = new float2[mesh.num_textureCoords];
+	
+	for (int i = 0; i < mesh.num_textureCoords; i++) {
+		
+		//memcpy(mesh.texturesCoords, new_mesh->mTextureCoords[i], sizeof(float2) * mesh.num_textureCoords);
+	}
+	
+	
+
+
 	App->renderer3D->AddMesh(&mesh);
 }
 

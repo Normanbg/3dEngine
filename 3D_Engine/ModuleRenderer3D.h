@@ -23,6 +23,11 @@ struct Mesh {
 	uint num_normals = 0;
 	float3* normals = nullptr;
 
+	uint num_colors = 0;
+	float3* colors = nullptr;
+
+	uint num_textureCoords = 0;
+	float2* texturesCoords = nullptr;
 
 };
 
