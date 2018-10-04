@@ -281,7 +281,27 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 // PostUpdate present buffer to screen
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
-	
+	//direct mode box 
+
+	glColor4f(1.0f, 1.0f, .0f, 1.0f); // color cyan
+
+	glBegin(GL_TRIANGLES);
+	glVertex3f(0.0f, 10.0f, 0.0f); glVertex3f(10.0f, 0.0f, 0.0f); glVertex3f(0.0f, 0.0f, 0.0f);
+	glVertex3f(0.0f, 10.0f, 0.0f); glVertex3f(10.0f, 10.0f, 0.0f); glVertex3f(10.0f, 0.0f, 0.0f);
+	glVertex3f(10.0f, 10.0f, 0.0f); glVertex3f(10.0f, 0.0f, 10.0f); glVertex3f(10.0f, 0.0f, 0.0f);
+	glVertex3f(10.0f, 10.0f, 0.0f); glVertex3f(10.0f, 10.0f, 10.0f); glVertex3f(10.0f, 0.0f, 10.0f);
+	glVertex3f(0.0f, 10.0f, 10.0f); glVertex3f(10.0f, 0.0f, 10.0f); glVertex3f(10.0f, 10.0f, 10.0f);
+	glVertex3f(0.0f, 10.0f, 10.0f); glVertex3f(0.0f, 0.0f, 10.0f); glVertex3f(10.0f, 0.0f, 10.0f);
+	glVertex3f(0.0f, 0.0f, 0.0f); glVertex3f(0.0f, 0.0f, 10.0f); glVertex3f(0.0f, 10.0f, 10.0f);
+	glVertex3f(0.0f, 10.0f, 0.0f); glVertex3f(0.0f, 0.0f, 0.0f); glVertex3f(0.0f, 10.0f, 10.0f);
+	glVertex3f(10.0f, 10.0f, 0.0f); glVertex3f(0.0f, 10.0f, 0.0f); glVertex3f(0.0f, 10.0f, 10.0f);
+	glVertex3f(0.0f, 10.0f, 10.0f); glVertex3f(10.0f, 10.0f, 10.0f); glVertex3f(10.0f, 10.0f, 0.0f);
+	glVertex3f(10.0f, 0.0f, 10.0f); glVertex3f(0.0f, 0.0f, 10.0f); glVertex3f(10.0f, 0.0f, 0.0f);
+	glVertex3f(0.0f, 0.0f, 10.0f); glVertex3f(0.0f, 0.0f, 0.0f); glVertex3f(10.0f, 0.0f, 0.0f);
+	glEnd();
+
+
+
 	///-------------------BOX DRAWING
 	glLineWidth(1.0f); 
 	glEnableClientState(GL_VERTEX_ARRAY);//enables vertex array
