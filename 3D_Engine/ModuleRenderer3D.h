@@ -33,7 +33,10 @@ struct Mesh {
 	bool generated = false;
 };
 
+struct Texture {
 
+
+};
 class ModuleRenderer3D : public Module
 {
 public:

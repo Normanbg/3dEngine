@@ -42,7 +42,7 @@ void MeshImporter::LoadFBX(char * path){
 		OWN_LOG("Error loading scene %s", aiGetErrorString());
 }
 
-void MeshImporter::LoadFBXfromDrop(char * path){
+void MeshImporter::LoadFBXfromDrop(const char * path){
 	const aiScene* scene = aiImportFile(path, aiProcessPreset_TargetRealtime_MaxQuality);
 	if (scene != nullptr && scene->HasMeshes())
 	{
