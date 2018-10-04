@@ -1,6 +1,7 @@
 #include "UIPanelAbout.h"
 #include "Application.h"
 #include "ImGui/imgui.h"
+#include "ModuleGui.h"
 
 UIPanelAbout::UIPanelAbout(const char * name, float positionX, float positionY, float width, float height, bool active) : UIPanel(name,positionX,positionY, width, height, active)
 {
@@ -38,6 +39,10 @@ void UIPanelAbout::Draw(){
 	/*if (ImGui::Selectable((const char*)("Glew - version %s", glewGetString(GLEW_VERSION))))
 		App->RequestBrowser("https://github.com/nigels-com/glew");
 	*/
+	char devillVersion[30];
+	sprintf_s(devillVersion, 30, "DevIL lib version %d", App->gui->ilVersion);
+	if (ImGui::SmallButton(devillVersion))
+		App->RequestBrowser("http://openil.sourceforge.net/download.php");
 
 	ImGui::Spacing();
 	ImGui::Spacing();

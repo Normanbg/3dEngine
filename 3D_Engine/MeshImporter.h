@@ -1,5 +1,5 @@
-#ifndef __IMPORTER_H__
-#define __IMPORTER_H__
+#ifndef __MESHIMPORTER_H__
+#define __MESHIMPORTER_H__
 
 #include "Application.h"
 
@@ -10,11 +10,11 @@
 #pragma comment (lib, "Assimp/libx86/assimp.lib")
 
 #define ROOT_PATH "Assets/"
-class Importer
+class MeshImporter
 {
 public:
-	Importer();
-	~Importer();
+	MeshImporter();
+	~MeshImporter();
 
 	void InitDebugLog();
 	void EndDebugLog();
@@ -28,7 +28,7 @@ private:
 	char* droppedFile = nullptr;
 };
 
-#endif //__IMPORTER_H__
+#endif //__MESHIMPORTER_H__
 
 
 

@@ -327,7 +327,10 @@
     <ClInclude Include="UIPanelConsole.h">
       <Filter>Sources\Modules\GuiPanels</Filter>
     </ClInclude>
-    <ClInclude Include="Importer.h">
+    <ClInclude Include="MeshImporter.h">
+      <Filter>Sources\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureImporter.h">
       <Filter>Sources\Tools</Filter>
     </ClInclude>
   </ItemGroup>
@@ -524,7 +527,10 @@
     <ClCompile Include="UIPanelConsole.cpp">
       <Filter>Sources\Modules\GuiPanels</Filter>
     </ClCompile>
-    <ClCompile Include="Importer.cpp">
+    <ClCompile Include="MeshImporter.cpp">
+      <Filter>Sources\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureImporter.cpp">
       <Filter>Sources\Tools</Filter>
     </ClCompile>
   </ItemGroup>

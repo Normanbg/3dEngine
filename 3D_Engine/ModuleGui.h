@@ -42,6 +42,8 @@ public:
 
 	std::list<const char*>logsBuffer;
 
+	uint ilVersion = 0;
+
 };
 
 #endif 

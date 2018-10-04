@@ -4,7 +4,7 @@
 #include "glmath.h"
 #include "Light.h"
 #include "MathGeoLib\Math\MathAll.h"
-#include "Importer.h"
+#include "MeshImporter.h"
 #include <array>
 
 #include <vector>
@@ -131,7 +131,7 @@ private:
 	bool _grid = true;
 	bool _normals = false;
 
-	Importer importer;
+	MeshImporter importer;
 	std::vector<Mesh> meshes;
 	
 };

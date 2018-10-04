@@ -1,31 +1,30 @@
-#include "Importer.h"
+#include "MeshImporter.h"
 #include "Globals.h"
 #include "ModuleRenderer3D.h"
 
 
-Importer::Importer()
+MeshImporter::MeshImporter()
 {
 }
 
 
-Importer::~Importer()
+MeshImporter::~MeshImporter()
 {
 }
 
-void Importer::InitDebugLog(){
+void MeshImporter::InitDebugLog(){
 	struct aiLogStream stream;
 	stream = aiGetPredefinedLogStream(aiDefaultLogStream_DEBUGGER, nullptr);
 	aiAttachLogStream(&stream);
 	
 }
 
-void Importer::EndDebugLog()
+void MeshImporter::EndDebugLog()
 {
 	aiDetachAllLogStreams();
 }
 
-void Importer::LoadFBX(char * path)
-{
+void MeshImporter::LoadFBX(char * path){
 	std::string rootPath = ROOT_PATH;
 	rootPath += path;
 	const aiScene* scene = aiImportFile(rootPath.c_str(), aiProcessPreset_TargetRealtime_MaxQuality);
@@ -43,7 +42,7 @@ void Importer::LoadFBX(char * path)
 		OWN_LOG("Error loading scene %s", aiGetErrorString());
 }
 
-void Importer::LoadFBXfromDrop(char * path){
+void MeshImporter::LoadFBXfromDrop(char * path){
 	const aiScene* scene = aiImportFile(path, aiProcessPreset_TargetRealtime_MaxQuality);
 	if (scene != nullptr && scene->HasMeshes())
 	{
@@ -60,8 +59,7 @@ void Importer::LoadFBXfromDrop(char * path){
 		OWN_LOG("Error loading scene %s", aiGetErrorString());
 }
 
-void Importer::LoadFromMesh(aiMesh * new_mesh)
-{
+void MeshImporter::LoadFromMesh(aiMesh * new_mesh){
 	Mesh mesh;
 
 
