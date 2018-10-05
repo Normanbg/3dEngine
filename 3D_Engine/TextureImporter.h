@@ -14,9 +14,14 @@ public:
 	void CleanUp();
 
 	void LoadTexture(char* path);
+	void DrawTexture();
+
+	void LoadCheckeredPlane();
+	void DrawCheckeredPlane();
 
 public: 
 	
+	uint imageID = 0;
 };
 
 #endif //__TEXTUREIMPORTER_H__

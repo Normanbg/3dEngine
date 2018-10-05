@@ -5,6 +5,7 @@
 #include "Light.h"
 #include "MathGeoLib\Math\MathAll.h"
 #include "MeshImporter.h"
+#include "TextureImporter.h"
 #include <array>
 
 #include <vector>
@@ -135,6 +136,7 @@ private:
 	bool _normals = false;
 
 	MeshImporter importer;
+	TextureImporter texImporter;
 	std::vector<Mesh> meshes;
 	
 };
