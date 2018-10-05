@@ -22,7 +22,7 @@ public:
 	void LoadFBX(char* path );
 	void LoadFBXfromDrop(const char* path);
 private:
-	void LoadFromMesh(aiMesh* mesh);
+	void LoadFromMesh(const aiScene* currSc, aiMesh* mesh);
 
 private:
 	char* droppedFile = nullptr;

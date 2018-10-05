@@ -34,7 +34,7 @@ void MeshImporter::LoadFBX(char * path){
 		aiMesh * meshIterator = nullptr;
 		for (int i = 0; i < scene->mNumMeshes; i++) {
 			meshIterator = scene->mMeshes[i];
-			LoadFromMesh(meshIterator);
+			LoadFromMesh(scene, meshIterator);
 		}
 		aiReleaseImport(scene);
 	}
@@ -50,7 +50,7 @@ void MeshImporter::LoadFBXfromDrop(const char * path){
 		aiMesh * meshIterator = nullptr;
 		for (int i = 0; i < scene->mNumMeshes; i++) {
 			meshIterator = scene->mMeshes[i];
-			LoadFromMesh(meshIterator);
+			LoadFromMesh(scene, meshIterator);
 		}
 		aiReleaseImport(scene);
 		OWN_LOG("FBX dropped loaded correctly");
@@ -59,7 +59,7 @@ void MeshImporter::LoadFBXfromDrop(const char * path){
 		OWN_LOG("Error loading scene %s", aiGetErrorString());
 }
 
-void MeshImporter::LoadFromMesh(aiMesh * new_mesh){
+void MeshImporter::LoadFromMesh(const aiScene* currSc, aiMesh * new_mesh){
 	Mesh mesh;
 
 
@@ -95,8 +95,16 @@ void MeshImporter::LoadFromMesh(aiMesh * new_mesh){
 		mesh.texturesCoords = new float2[mesh.num_textureCoords];
 		memcpy(mesh.texturesCoords, new_mesh->mTextureCoords[0], sizeof(float2) * mesh.num_textureCoords);
 	}
-	
-
+	if (currSc->HasMaterials()) {
+		aiString path;
+		aiReturn ret = currSc->mMaterials[new_mesh->mMaterialIndex]->GetTexture(aiTextureType_DIFFUSE, 0, &path);
+		if (ret == aiReturn_SUCCESS) {
+			// NEED TO load texture & save it to the mesh
+		}
+		else {
+			OWN_LOG("Error loading texture from fbx.");
+		}
+	}
 	App->renderer3D->AddMesh(&mesh);
 }
 
