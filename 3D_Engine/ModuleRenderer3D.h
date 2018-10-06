@@ -11,6 +11,8 @@
 #include <vector>
 #define MAX_LIGHTS 8
 
+
+
 struct Mesh {
 
 	uint id_index = 0;
@@ -25,13 +27,17 @@ struct Mesh {
 	uint num_normals = 0;
 	float3* normals = nullptr;
 
-	uint num_colors = 0;
-	float3* colors = nullptr;
+	
+	vec3 colors = { 0,0,0 };
 
 	uint num_textureCoords = 0;
 	float2* texturesCoords = nullptr;
 
+	GLuint texture = 0;
+
 	bool generated = false;
+
+	void Draw();
 };
 
 struct Texture {
@@ -135,8 +141,11 @@ private:
 	bool _grid = true;
 	bool _normals = false;
 
-	MeshImporter importer;
-	TextureImporter texImporter;
 	std::vector<Mesh> meshes;
+
+public:
+	
+	MeshImporter* importer;
+	TextureImporter* texImporter;
 	
 };
