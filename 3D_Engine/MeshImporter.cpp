@@ -34,7 +34,7 @@ void MeshImporter::LoadFBX(char * path){
 		aiMesh * meshIterator = nullptr;
 		for (int i = 0; i < scene->mNumMeshes; i++) {
 			meshIterator = scene->mMeshes[i];
-			LoadFromMesh(meshIterator);
+			LoadFromMesh(scene, meshIterator);
 		}
 		aiReleaseImport(scene);
 	}
@@ -50,7 +50,7 @@ void MeshImporter::LoadFBXfromDrop(const char * path){
 		aiMesh * meshIterator = nullptr;
 		for (int i = 0; i < scene->mNumMeshes; i++) {
 			meshIterator = scene->mMeshes[i];
-			LoadFromMesh(meshIterator);
+			LoadFromMesh(scene, meshIterator);
 		}
 		aiReleaseImport(scene);
 		OWN_LOG("FBX dropped loaded correctly");
@@ -59,7 +59,7 @@ void MeshImporter::LoadFBXfromDrop(const char * path){
 		OWN_LOG("Error loading scene %s", aiGetErrorString());
 }
 
-void MeshImporter::LoadFromMesh(aiMesh * new_mesh){
+void MeshImporter::LoadFromMesh(const aiScene* currSc, aiMesh * new_mesh){
 	Mesh mesh;
 
 
@@ -80,23 +80,44 @@ void MeshImporter::LoadFromMesh(aiMesh * new_mesh){
 			}
 		}		
 	}
-	if (new_mesh->HasNormals())	{
+	if (new_mesh->HasNormals()) {
 		mesh.num_normals = new_mesh->mNumVertices;
-		mesh.normals = new float3[mesh.num_normals]; 
+		mesh.normals = new float3[mesh.num_normals];
 		memcpy(mesh.normals, new_mesh->mNormals, sizeof(float3) * mesh.num_normals);
-	}
-	if (new_mesh->GetNumColorChannels() > 0) {///NOOOOOOT TESTEEEED AT ALL!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		mesh.num_colors = new_mesh->GetNumColorChannels();
-		mesh.colors = new float3[mesh.num_colors];
-		memcpy(mesh.colors, new_mesh->mColors, sizeof(float3) * mesh.num_colors);
-	}
+		OWN_LOG("New mesh with %d normals", mesh.num_normals);
+	}	
 	if (new_mesh->GetNumUVChannels() > 0) {
-		mesh.num_textureCoords = new_mesh->GetNumUVChannels();
+		mesh.num_textureCoords = mesh.num_vertex;
 		mesh.texturesCoords = new float2[mesh.num_textureCoords];
-		memcpy(mesh.texturesCoords, new_mesh->mTextureCoords[0], sizeof(float2) * mesh.num_textureCoords);
+		
+		for (int i = 0; i < (mesh.num_textureCoords); i++) {
+			mesh.texturesCoords[i].x = new_mesh->mTextureCoords[0][i].x;
+			mesh.texturesCoords[i].y = new_mesh->mTextureCoords[0][i].y;
+		}
+		OWN_LOG("New mesh with %d UVs", mesh.num_textureCoords);
 	}
+	if (currSc->HasMaterials()) {
 	
+		aiColor3D color(0.f, 0.f, 0.f);
+		currSc->mMaterials[new_mesh->mMaterialIndex]->Get(AI_MATKEY_COLOR_DIFFUSE, color);
+		mesh.colors.x = color.r;
+		mesh.colors.y = color.g;
+		mesh.colors.z = color.b;
 
+		aiString path;
+		aiReturn ret = currSc->mMaterials[new_mesh->mMaterialIndex]->GetTexture(aiTextureType_DIFFUSE, 0, &path);
+		if (ret == aiReturn_SUCCESS) {
+
+			std::string nwPath = ROOT_PATH ;
+			nwPath += path.C_Str();
+
+			
+			mesh.texture = App->renderer3D->texImporter->LoadTexture(nwPath.c_str());
+		}
+		else {
+			OWN_LOG("Error loading texture from fbx.");
+		}
+	}
 	App->renderer3D->AddMesh(&mesh);
 }
 

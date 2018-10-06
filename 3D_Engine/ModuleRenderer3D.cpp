@@ -131,8 +131,12 @@ bool ModuleRenderer3D::Init(JSON_Object* obj)
 
 	// Projection matrix for
 	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
-	importer.InitDebugLog();
 
+	importer = new MeshImporter();
+	texImporter = new TextureImporter();	
+
+	importer->InitDebugLog();
+	texImporter->Init();
 	
 	json_object_clear(obj);//clear obj to free memory
 	return ret;
@@ -252,7 +256,9 @@ bool ModuleRenderer3D::Start() {
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * sphereIndices.size(), &sphereIndices[0], GL_STATIC_DRAW);
 
 	GenBuffFromMeshes();
-	texImporter.LoadCheckeredPlane();
+
+	importer->LoadFBX("BakerHouse.fbx");
+	//texImporter->LoadCheckeredPlane();
 
 	return ret;
 }
@@ -362,11 +368,13 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	glDrawElements(GL_TRIANGLES, boxIndices.size(), GL_UNSIGNED_INT, NULL);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);//resets the buffer
-	DrawMeshes();
 
 	glDisableClientState(GL_VERTEX_ARRAY);
+	DrawMeshes();
+
 	
-	texImporter.DrawCheckeredPlane();
+	
+	//texImporter->DrawCheckeredPlane();
 	
 	//Need to call Debug Draw
 
@@ -382,7 +390,23 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 bool ModuleRenderer3D::CleanUp()
 {
 	OWN_LOG("Destroying 3D Renderer");
-	importer.EndDebugLog();
+
+	importer->EndDebugLog();
+	//need to delete importer and tex importer
+	glDeleteBuffers(1, &buffBoxID);
+	glDeleteBuffers(1, &buffBox2ID);
+	glDeleteBuffers(1, &buffsphereID);
+	glDeleteBuffers(1, &buffPlaneID);
+	glDeleteBuffers(1, &buffRayID);
+	glDeleteBuffers(1, &buffIndicesID);
+	glDeleteBuffers(1, &buffIndicesSphereID);
+	glDeleteBuffers(1, &buffIndicesFrustumID);
+
+	delete importer;
+	importer = nullptr;
+	delete texImporter;
+	texImporter = nullptr;
+	
 	SDL_GL_DeleteContext(context); 
 	return true;
 }
@@ -439,40 +463,9 @@ void ModuleRenderer3D::GenBuffFromMeshes(){
 }
 
 void ModuleRenderer3D::DrawMeshes(){
-	Mesh* meshIterator = nullptr;
 	for (int i = 0; i < meshes.size(); i++) {
-		meshIterator = &meshes[i];
-		if (meshIterator->num_index == 0) {
-			glBindBuffer(GL_ARRAY_BUFFER, meshIterator->id_vertex);
-			glVertexPointer(3, GL_FLOAT, 0, NULL); 
-			glDrawArrays(GL_TRIANGLES, 0, meshIterator->num_vertex); 
-			glBindBuffer(GL_ARRAY_BUFFER, 0); //resets the buffer
-		}
-		else {
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, meshIterator->id_index);
-			glVertexPointer(3, GL_FLOAT, 0, &(meshIterator->vertex[0]));
-			glDrawElements(GL_TRIANGLES, meshIterator->num_index, GL_UNSIGNED_INT, NULL);
-
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-		}
-	}
-	if (_normals)
-		DrawNormals();
-}
-
-void ModuleRenderer3D::DrawNormals(){
-	Mesh* meshIterator = nullptr;
-	for (int i = 0; i < meshes.size(); i++) {
-		meshIterator = &meshes[i];
-		for (int j = 0; j < meshIterator->num_normals; j++) {
-			glBegin(GL_LINES);
-			glVertex3f(meshIterator->vertex[j].x, meshIterator->vertex[j].y, meshIterator->vertex[j].z);
-			glVertex3f(meshIterator->vertex[j].x - meshIterator->normals[j].x, meshIterator->vertex[j].y - meshIterator->normals[j].y, meshIterator->vertex[j].z - meshIterator->normals[j].z);
-			glLineWidth(1.0f);
-			glEnd();
-		}
-	}
-
+		meshes[i].Draw();
+	}		
 }
 
 bool ModuleRenderer3D::Load(JSON_Object* data) {
@@ -520,7 +513,7 @@ void ModuleRenderer3D::AddMesh(Mesh*  mesh)
 }
 
 void ModuleRenderer3D::LoadDroppedFBX(char * droppedFileDir){
-	importer.LoadFBXfromDrop(droppedFileDir);
+	importer->LoadFBXfromDrop(droppedFileDir);
 	GenBuffFromMeshes();	
 }
 
@@ -572,3 +565,46 @@ void ModuleRenderer3D::ShowGrid() {
 	glEnd();
 
 }
+
+void Mesh::Draw()
+{
+
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+
+	glColor3f(colors.x, colors.y, colors.z);
+
+	if (num_index == 0) {// if the mesh has no index
+		glBindBuffer(GL_ARRAY_BUFFER, id_vertex);
+		glVertexPointer(3, GL_FLOAT, 0, NULL);
+		glDrawArrays(GL_TRIANGLES, 0, num_vertex);
+		glBindBuffer(GL_ARRAY_BUFFER, 0); //resets the buffer
+	}
+	else {
+		glBindTexture(GL_TEXTURE_2D, 0);
+		glBindTexture(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+		glBindTexture(GL_TEXTURE_2D, texture);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_index);
+		glVertexPointer(3, GL_FLOAT, 0, &(vertex[0]));		
+		glTexCoordPointer(2, GL_FLOAT, 0, &(texturesCoords[0]));
+		glDrawElements(GL_TRIANGLES, num_index, GL_UNSIGNED_INT, NULL);
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+		glBindTexture(GL_TEXTURE_2D, 0);
+	}
+	glDisableClientState(GL_VERTEX_ARRAY);
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+
+	if (App->renderer3D->GetNormals()) {
+		for (int j = 0; j < num_normals; j++) {
+			glBegin(GL_LINES);
+			glVertex3f(vertex[j].x, vertex[j].y, vertex[j].z);
+			glVertex3f(vertex[j].x - normals[j].x, vertex[j].y - normals[j].y, vertex[j].z - normals[j].z);
+			glLineWidth(1.0f);
+			glEnd();
+		}
+	}
+}
+
+

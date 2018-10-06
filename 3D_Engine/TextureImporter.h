@@ -4,6 +4,9 @@
 #include "Application.h"
 #include "Globals.h"
 
+
+class Mesh;
+
 class TextureImporter
 {
 public:
@@ -13,10 +16,9 @@ public:
 	void Init();
 	void CleanUp();
 
-	void LoadTexture(char* path);
-	void DrawTexture();
-
-	void LoadCheckeredPlane();
+	GLuint LoadTexture(const char* path);
+	
+	void LoadCheckeredPlane(); // for debug test
 	void DrawCheckeredPlane();
 
 public: 
