@@ -82,21 +82,6 @@ GLuint TextureImporter::LoadTexture( const char * path) {
 	}
 }
 
-void TextureImporter::DrawTexture(Mesh* mesh){
-
-	
-	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-
-
-	glBindTexture(GL_TEXTURE_2D, 0);
-	glBindTexture(GL_TEXTURE_2D, mesh->texture);
-
-	glTexCoordPointer(2, GL_FLOAT, 0, &mesh->texturesCoords[0]);
-
-	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-
-
-}
 
 void TextureImporter::LoadCheckeredPlane(){
 	//----checkerer
@@ -129,7 +114,7 @@ void TextureImporter::DrawCheckeredPlane(){
 
 	glColor4f(1.f, 1.0f, 1.0f, 1.0f);
 
-	glEnable(GL_TEXTURE_2D);
+	//glEnable(GL_TEXTURE_2D);
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glBindTexture(GL_TEXTURE_2D, imageID);
@@ -146,6 +131,9 @@ void TextureImporter::DrawCheckeredPlane(){
 
 	glEnd();
 
-	glDisable(GL_TEXTURE_2D);
+	//glDisable(GL_TEXTURE_2D);
 }
+void TextureImporter::CleanUp(){
 
+
+}

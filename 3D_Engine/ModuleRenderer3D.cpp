@@ -257,7 +257,8 @@ bool ModuleRenderer3D::Start() {
 
 	GenBuffFromMeshes();
 
-	texImporter->LoadCheckeredPlane();
+	importer->LoadFBX("BakerHouse.fbx");
+	//texImporter->LoadCheckeredPlane();
 
 	return ret;
 }
@@ -373,7 +374,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 
 	
 	
-	texImporter->DrawCheckeredPlane();
+	//texImporter->DrawCheckeredPlane();
 	
 	//Need to call Debug Draw
 
@@ -462,54 +463,9 @@ void ModuleRenderer3D::GenBuffFromMeshes(){
 }
 
 void ModuleRenderer3D::DrawMeshes(){
-	Mesh* meshIterator = nullptr;
 	for (int i = 0; i < meshes.size(); i++) {
 		meshes[i].Draw();
-	}
-		/*meshIterator = &meshes[i];
-		glEnableClientState(GL_VERTEX_ARRAY);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, meshIterator->id_index);		
-		if (meshIterator->num_index == 0) {
-			glBindBuffer(GL_ARRAY_BUFFER, meshIterator->id_vertex);
-			glVertexPointer(3, GL_FLOAT, 0, NULL); 
-			glDrawArrays(GL_TRIANGLES, 0, meshIterator->num_vertex); 
-			glBindBuffer(GL_ARRAY_BUFFER, 0); //resets the buffer
-		}
-		else {
-			glBindTexture(GL_TEXTURE_2D, 0);
-			glBindTexture(GL_TEXTURE_2D, meshIterator->texture);
-			
-			glVertexPointer(3, GL_FLOAT, 0, &(meshIterator->vertex[0]));
-			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-			glTexCoordPointer(2, GL_FLOAT, 0, &(meshIterator->texturesCoords[0]));
-			
-			
-			glDrawElements(GL_TRIANGLES, meshIterator->num_index, GL_UNSIGNED_INT, NULL);			
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-			glBindTexture(GL_TEXTURE_2D, 0);
-		}
-		glDisableClientState(GL_VERTEX_ARRAY);
-		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-		
-	}
-	if (_normals)
-		DrawNormals();*/
-}
-
-void ModuleRenderer3D::DrawNormals(){
-	Mesh* meshIterator = nullptr;
-	for (int i = 0; i < meshes.size(); i++) {
-		meshIterator = &meshes[i];
-		for (int j = 0; j < meshIterator->num_normals; j++) {
-			glBegin(GL_LINES);
-			glColor3f(1, 0, 0);
-			glVertex3f(meshIterator->vertex[j].x, meshIterator->vertex[j].y, meshIterator->vertex[j].z);
-			glVertex3f(meshIterator->vertex[j].x - meshIterator->normals[j].x, meshIterator->vertex[j].y - meshIterator->normals[j].y, meshIterator->vertex[j].z - meshIterator->normals[j].z);
-			glLineWidth(1.0f);
-			glEnd();
-		}
-	}
-
+	}		
 }
 
 bool ModuleRenderer3D::Load(JSON_Object* data) {
@@ -618,7 +574,7 @@ void Mesh::Draw()
 
 	glColor3f(colors.x, colors.y, colors.z);
 
-	if (num_index == 0) {
+	if (num_index == 0) {// if the mesh has no index
 		glBindBuffer(GL_ARRAY_BUFFER, id_vertex);
 		glVertexPointer(3, GL_FLOAT, 0, NULL);
 		glDrawArrays(GL_TRIANGLES, 0, num_vertex);
@@ -626,18 +582,19 @@ void Mesh::Draw()
 	}
 	else {
 		glBindTexture(GL_TEXTURE_2D, 0);
+		glBindTexture(GL_ELEMENT_ARRAY_BUFFER, 0);
+
 		glBindTexture(GL_TEXTURE_2D, texture);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_index);
-		glVertexPointer(3, GL_FLOAT, 0, &(vertex[0]));
-		
+		glVertexPointer(3, GL_FLOAT, 0, &(vertex[0]));		
 		glTexCoordPointer(2, GL_FLOAT, 0, &(texturesCoords[0]));
 		glDrawElements(GL_TRIANGLES, num_index, GL_UNSIGNED_INT, NULL);
+
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-
 
 	if (App->renderer3D->GetNormals()) {
 		for (int j = 0; j < num_normals; j++) {

@@ -104,7 +104,6 @@ private:
 	void SetDataFromJson(JSON_Object* data);
 	void GenBuffFromMeshes();
 	void DrawMeshes();
-	void DrawNormals();
 
 private:
 

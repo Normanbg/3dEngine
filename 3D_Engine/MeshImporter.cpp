@@ -80,17 +80,12 @@ void MeshImporter::LoadFromMesh(const aiScene* currSc, aiMesh * new_mesh){
 			}
 		}		
 	}
-	if (new_mesh->HasNormals())	{
+	if (new_mesh->HasNormals()) {
 		mesh.num_normals = new_mesh->mNumVertices;
-		mesh.normals = new float3[mesh.num_normals]; 
+		mesh.normals = new float3[mesh.num_normals];
 		memcpy(mesh.normals, new_mesh->mNormals, sizeof(float3) * mesh.num_normals);
 		OWN_LOG("New mesh with %d normals", mesh.num_normals);
-	}
-	/*if (new_mesh->GetNumColorChannels() > 0) {///NOOOOOOT TESTEEEED AT ALL!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		mesh.num_colors = new_mesh->GetNumColorChannels();
-		mesh.colors = new float3[mesh.num_colors];
-		memcpy(mesh.colors, new_mesh->mColors, sizeof(float3) * mesh.num_colors);
-	}*/
+	}	
 	if (new_mesh->GetNumUVChannels() > 0) {
 		mesh.num_textureCoords = mesh.num_vertex;
 		mesh.texturesCoords = new float2[mesh.num_textureCoords];
