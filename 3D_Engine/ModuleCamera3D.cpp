@@ -7,6 +7,7 @@
 #include "ModuleRenderer3D.h"
 #include "ModuleCamera3D.h"
 #include "ModulePhysics3D.h"
+#include "ModuleGui.h"
 
 #define CAMERA_SPEED 10
 
@@ -74,7 +75,7 @@ update_status ModuleCamera3D::Update(float dt)
 		int dx = -App->input->GetMouseXMotion();
 		int dy = -App->input->GetMouseYMotion();
 
-		float Sensitivity = 0.25f;
+		Sensitivity = 0.25f;
 
 		Position -= Reference;
 
@@ -104,6 +105,20 @@ update_status ModuleCamera3D::Update(float dt)
 		Position = Reference + Z * length(Position);
 	}
 
+	if (App->input->GetMouseZ() != 0) {
+		newPos = (0, 0, 0);
+		float wheelSensitivity = Sensitivity;
+		vec3 distance = Reference - Position;
+
+		if (length(distance) < zoomDistance)
+			wheelSensitivity = length(distance) / zoomDistance;
+		if (App->input->GetMouseZ() > 0)
+			newPos -= Z * wheelSensitivity;
+		else
+			newPos += Z * wheelSensitivity;
+
+		Position += newPos;
+	}
 
 	if (!free_camera) {		
 		

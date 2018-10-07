@@ -34,8 +34,9 @@ public:
 
 private:
 	vec3 offset_to_player;
-	
 	mat4x4 ViewMatrix, ViewMatrixInverse;
+	float Sensitivity = 0.25f;
+	float zoomDistance = 20.0f;
 };
 
 #endif 
