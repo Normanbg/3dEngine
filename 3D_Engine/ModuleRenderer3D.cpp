@@ -254,10 +254,12 @@ bool ModuleRenderer3D::Start() {
 	glGenBuffers(1, (GLuint*)&(buffIndicesSphereID));
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffIndicesSphereID);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * sphereIndices.size(), &sphereIndices[0], GL_STATIC_DRAW);
-
+	
+	
+	importer->LoadFBX("BakerHouse.fbx");
 	GenBuffFromMeshes();
 
-	importer->LoadFBX("BakerHouse.fbx");
+	
 	//texImporter->LoadCheckeredPlane();
 
 	return ret;
