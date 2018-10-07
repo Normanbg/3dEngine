@@ -36,16 +36,13 @@ void TextureImporter::Init(){
 
 GLuint TextureImporter::LoadTexture( const char * path) {
 
-	ILuint imageID;
-	
-	
+	ILuint imageID;	
 	
 	ilGenImages(1, &imageID); // generates an image
 	ilBindImage(imageID);
 	
 	bool ret = ilLoadImage(path);
 	if(ret)	{
-		
 
 		ILinfo infoImage;
 		iluGetImageInfo(&infoImage);

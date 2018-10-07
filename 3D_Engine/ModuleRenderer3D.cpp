@@ -122,7 +122,7 @@ bool ModuleRenderer3D::Init(JSON_Object* obj)
 		glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, MaterialDiffuse);
 		
 		SetDepthTest(true);
-		SetCullFace(true); //commented to test the box1 to fully see it (otherwise box has gaps due to the wrong orientation of the tris)
+		SetCullFace(true);
 		lights[0].Active(true);
 		SetLighting(true);
 		SetColorMaterial(true);
@@ -378,7 +378,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	
 	//texImporter->DrawCheckeredPlane();
 	
-	//Need to call Debug Draw
+	//-------------------------------------------------Need to call Debug Draw
 
 
 	App->gui->Draw();
@@ -394,7 +394,6 @@ bool ModuleRenderer3D::CleanUp()
 	OWN_LOG("Destroying 3D Renderer");
 
 	importer->EndDebugLog();
-	//need to delete importer and tex importer
 	glDeleteBuffers(1, &buffBoxID);
 	glDeleteBuffers(1, &buffBox2ID);
 	glDeleteBuffers(1, &buffsphereID);
