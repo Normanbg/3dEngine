@@ -40,3 +40,4 @@ enum update_status
 #define TITLE "3D_Engine"
 #define ORGANIZATION "UPC CITM"
 #define CONFIG_FILE "config.JSON"
+#define CAMERA_SPEED 10.0f

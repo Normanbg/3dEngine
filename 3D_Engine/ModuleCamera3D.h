@@ -30,13 +30,15 @@ public:
 	bool free_camera = false;
 
 	vec3 X, Y, Z, Position, Reference;
+	float mouseSensitivity = 0.25f;
+	float scroolWheelSensitivity = 10.0f;
+	float zoomDistance = 20.0f;
 	
 
 private:
 	vec3 offset_to_player;
 	mat4x4 ViewMatrix, ViewMatrixInverse;
-	float Sensitivity = 0.25f;
-	float zoomDistance = 20.0f;
+	
 };
 
 #endif 
