@@ -38,6 +38,10 @@ ModuleGui::ModuleGui(bool start_enabled) : Module(start_enabled)
 
 ModuleGui::~ModuleGui()
 {
+	for (std::list < UIPanel* > ::reverse_iterator item = uiPanels.rbegin(); item != uiPanels.rend(); item++) {
+		delete (*item);
+	}
+	uiPanels.clear();
 }
 
 bool ModuleGui::Start()

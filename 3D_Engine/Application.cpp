@@ -191,9 +191,18 @@ update_status Application::Update()
 	update_status ret = UPDATE_CONTINUE;
 	PrepareUpdate();
 
-	doPreUpdate();
-	doUpdate();
-	doPostUpdate();
+	ret = doPreUpdate();
+	if (ret != UPDATE_CONTINUE) {
+		return ret;
+	}
+	ret = doUpdate();
+	if (ret != UPDATE_CONTINUE) {
+		return ret;
+	}
+	ret = doPostUpdate();
+	if (ret != UPDATE_CONTINUE) {
+		return ret;
+	}
 
 	FinishUpdate();
 	return ret;
@@ -375,7 +384,7 @@ void Application::SetOrganization(char* newName)
 		 ret = (*item)->PreUpdate(dt);
 	 }
 
-	 return update_status();
+	 return ret;
  }
 
  update_status Application::doUpdate() {
@@ -384,7 +393,7 @@ void Application::SetOrganization(char* newName)
 	 for (std::list<Module*>::iterator item = list_modules.begin(); item != list_modules.end() && ret == UPDATE_CONTINUE; item++) {
 		  ret = (*item)->Update(dt);
 	 }
-	 return update_status();
+	 return ret;
  }
 
  update_status Application::doPostUpdate(){
@@ -393,7 +402,7 @@ void Application::SetOrganization(char* newName)
 	 for (std::list<Module*>::iterator item = list_modules.begin(); item != list_modules.end() && ret == UPDATE_CONTINUE; item++) {
 		 ret = (*item)->PostUpdate(dt);
 	 }
-	 return update_status();
+	 return ret;
  }
 
  void Application::SetDataFromJson(JSON_Object* data) {

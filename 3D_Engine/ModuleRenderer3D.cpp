@@ -27,7 +27,10 @@ ModuleRenderer3D::ModuleRenderer3D(bool start_enabled) : Module(start_enabled)
 
 // Destructor
 ModuleRenderer3D::~ModuleRenderer3D()
-{}
+{
+	delete texImporter;
+	delete importer;
+}
 
 // Called before render is available
 bool ModuleRenderer3D::Init(JSON_Object* obj)
@@ -400,6 +403,7 @@ bool ModuleRenderer3D::CleanUp()
 	OWN_LOG("Destroying 3D Renderer");
 
 	importer->EndDebugLog();
+	texImporter->CleanUp();
 	glDeleteBuffers(1, &buffBoxID);
 	glDeleteBuffers(1, &buffBox2ID);
 	glDeleteBuffers(1, &buffsphereID);
@@ -409,11 +413,11 @@ bool ModuleRenderer3D::CleanUp()
 	glDeleteBuffers(1, &buffIndicesSphereID);
 	glDeleteBuffers(1, &buffIndicesFrustumID);
 
-	delete importer;
-	importer = nullptr;
-	delete texImporter;
-	texImporter = nullptr;
+	for (int i = meshes.size() - 1; i >= 0; i--) {
+		meshes[i].CleanUp();
 	
+	}
+		
 	SDL_GL_DeleteContext(context); 
 	return true;
 }
@@ -614,4 +618,11 @@ void Mesh::Draw()
 	}
 }
 
+void Mesh::CleanUp(){
 
+	delete[] index;
+	delete[] vertex;
+	delete[] normals;
+	delete[] texturesCoords;
+
+}

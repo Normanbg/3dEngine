@@ -41,6 +41,7 @@ struct Mesh {
 	bool generated = false;
 
 	void Draw();
+	void CleanUp();
 };
 
 struct Texture {

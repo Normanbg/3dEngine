@@ -133,5 +133,5 @@ void TextureImporter::DrawCheckeredPlane(){
 }
 void TextureImporter::CleanUp(){
 
-
+	glDeleteBuffers(1, &textureID);
 }

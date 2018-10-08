@@ -24,6 +24,7 @@ public:
 public: 
 	
 	uint imageID = 0;
+	GLuint textureID= 0;
 };
 
 #endif //__TEXTUREIMPORTER_H__
