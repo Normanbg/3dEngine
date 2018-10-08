@@ -13,6 +13,7 @@ class UIPanel;
 class UIPanelAbout;
 class UIPanelConfig;
 class UIPanelConsole;
+class UIPanelProperties;
 
 class ModuleGui : public Module
 {
@@ -39,6 +40,7 @@ public:
 	UIPanelAbout* panelAbout = nullptr;
 	UIPanelConfig* panelConfig = nullptr;
 	UIPanelConsole* panelConsole = nullptr;
+	UIPanelProperties* panelProperties = nullptr;
 
 	std::list<const char*>logsBuffer;
 

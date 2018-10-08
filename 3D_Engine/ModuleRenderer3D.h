@@ -83,6 +83,7 @@ public:
 	inline bool GetTexture2D()const { return _texture2D; }
 	inline bool GetWireframe()const { return _wireframe; }
 	inline bool GetNormals()const { return _normals; }
+	inline std::vector<Mesh> GetMeshesList()const { return meshes; }
 
 	inline bool GetAxis() const { return _axis; }
 	inline bool GetGrid() const { return _grid; }
