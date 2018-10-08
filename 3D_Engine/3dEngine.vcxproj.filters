@@ -37,6 +37,9 @@
     <Filter Include="Sources\Modules\GuiPanels">
       <UniqueIdentifier>{a81cd828-2af3-4703-adcb-be5cce458217}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Tools\Brofiler">
+      <UniqueIdentifier>{97b4e2e2-ecb3-444e-9d48-35fefa735edc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -335,6 +338,9 @@
     </ClInclude>
     <ClInclude Include="UIPanelProperties.h">
       <Filter>Sources\Modules\GuiPanels</Filter>
+    </ClInclude>
+    <ClInclude Include="Brofiler\Brofiler.h">
+      <Filter>Sources\Tools\Brofiler</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

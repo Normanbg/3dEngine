@@ -9,6 +9,7 @@
 #include "ModuleCamera3D.h"
 #include "ModulePhysics3D.h"
 #include "ModuleGui.h"
+#include "Brofiler/Brofiler.h"
 
 #define MAX_KEYS 300
 
@@ -29,6 +30,7 @@ ModuleInput::~ModuleInput()
 // Called before render is available
 bool ModuleInput::Init(JSON_Object* obj)
 {
+	BROFILER_CATEGORY("Input_Init", Profiler::Color::GhostWhite);
 	OWN_LOG("Init SDL input event system");
 	bool ret = true;
 	SDL_Init(0);
@@ -46,6 +48,7 @@ bool ModuleInput::Init(JSON_Object* obj)
 // Called every draw update
 update_status ModuleInput::PreUpdate(float dt)
 {
+	BROFILER_CATEGORY("Input_PreUpdate", Profiler::Color::GhostWhite);
 	SDL_PumpEvents();
 
 	const Uint8* keys = SDL_GetKeyboardState(NULL);
@@ -139,6 +142,7 @@ update_status ModuleInput::PreUpdate(float dt)
 // Called before quitting
 bool ModuleInput::CleanUp()
 {
+	BROFILER_CATEGORY("Input_CleanUp", Profiler::Color::GhostWhite);
 	OWN_LOG("Quitting SDL input event subsystem");
 	SDL_free(dropped_filedir);
 	SDL_QuitSubSystem(SDL_INIT_EVENTS);

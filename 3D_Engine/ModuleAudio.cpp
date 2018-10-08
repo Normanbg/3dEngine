@@ -1,6 +1,7 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleAudio.h"
+#include "Brofiler/Brofiler.h"
 
 #pragma comment( lib, "SDL_mixer/libx86/SDL2_mixer.lib" )
 
@@ -17,6 +18,7 @@ ModuleAudio::~ModuleAudio()
 // Called before render is available
 bool ModuleAudio::Init(JSON_Object* obj)
 {
+	BROFILER_CATEGORY("Audio_Init", Profiler::Color::Beige);
 	OWN_LOG("Loading Audio Mixer");
 	bool ret = true;
 	SDL_Init(0);
@@ -53,7 +55,7 @@ bool ModuleAudio::Init(JSON_Object* obj)
 bool ModuleAudio::CleanUp()
 {
 	OWN_LOG("Freeing sound FX, closing Mixer and Audio subsystem");
-
+	BROFILER_CATEGORY("Audio_CleanUp", Profiler::Color::Beige);
 	if(music != NULL)
 	{
 		Mix_FreeMusic(music);

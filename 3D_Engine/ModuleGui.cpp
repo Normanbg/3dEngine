@@ -20,6 +20,7 @@
 #include "ModuleRenderer3D.h"
 #include "ModuleCamera3D.h"
 #include "ModulePhysics3D.h"
+#include "Brofiler/Brofiler.h"
 
 #include <list>
 
@@ -41,6 +42,7 @@ ModuleGui::~ModuleGui()
 
 bool ModuleGui::Start()
 {
+	BROFILER_CATEGORY("GUI_Start", Profiler::Color::Chartreuse);
 	demoShowcase = false;
 
 	uiPanels.push_back(panelAbout = new UIPanelAbout("About", 150, 150, 350, 350));
@@ -57,6 +59,7 @@ bool ModuleGui::Start()
 
 update_status ModuleGui::PreUpdate(float dt)
 {
+	BROFILER_CATEGORY("GUI_PreUpdate", Profiler::Color::Chartreuse);
 	/*ImGuiIO& io = ImGui::GetIO();
 	io.DisplaySize.x = 1920.0f;*
 	/*io.DisplaySize.y = 1280.0f;*/
@@ -71,6 +74,7 @@ update_status ModuleGui::PreUpdate(float dt)
 
 update_status ModuleGui::Update(float dt)
 {
+	BROFILER_CATEGORY("GUI_Update", Profiler::Color::Chartreuse);
 	if (ImGui::BeginMainMenuBar()) {
 		//--------------HELP MENU
 		if (ImGui::BeginMenu("File")) {
@@ -171,7 +175,7 @@ update_status ModuleGui::Update(float dt)
 
 void ModuleGui::Draw() {
 
-	
+	BROFILER_CATEGORY("GUI_Draw", Profiler::Color::Chartreuse);
 	if (demoShowcase)
 		ImGui::ShowTestWindow();
 
@@ -196,6 +200,7 @@ update_status ModuleGui::PostUpdate(float dt)
 
 bool ModuleGui::CleanUp()
 {
+	BROFILER_CATEGORY("GUI_CleanUp", Profiler::Color::Chartreuse);
 	for (std::list<UIPanel*>::iterator iterator = uiPanels.begin(); iterator != uiPanels.end(); iterator++)
 	{
 		if (*iterator != nullptr)
