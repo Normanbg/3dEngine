@@ -26,6 +26,7 @@ void UIPanelProperties::Draw() {
 				ImGui::TreePop();
 			}
 			if (ImGui::TreeNode("Geometry")) {
+				ImGui::Text("Triangles: %d", meshIterator._Ptr->num_faces);
 				ImGui::TreePop();
 			}
 			if (ImGui::TreeNode("Textures")) {

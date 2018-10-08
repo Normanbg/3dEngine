@@ -70,6 +70,7 @@ void MeshImporter::LoadFromMesh(const aiScene* currSc, aiMesh * new_mesh){
 
 	if (new_mesh->HasFaces()){
 		mesh.num_index = new_mesh->mNumFaces * 3;
+		mesh.num_faces = new_mesh->mNumFaces;
 		mesh.index = new uint[mesh.num_index]; // assume each face is a triangle
 		for (uint i = 0; i < new_mesh->mNumFaces; ++i)	{
 			if (new_mesh->mFaces[i].mNumIndices != 3) {

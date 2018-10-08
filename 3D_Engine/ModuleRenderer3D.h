@@ -27,7 +27,8 @@ struct Mesh {
 	uint num_normals = 0;
 	float3* normals = nullptr;
 
-	
+	uint num_faces = 0; // assume each face is a triangle
+
 	vec3 colors = { 0,0,0 };
 
 	uint num_textureCoords = 0;
