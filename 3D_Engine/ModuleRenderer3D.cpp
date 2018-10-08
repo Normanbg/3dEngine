@@ -10,6 +10,7 @@
 #include "ModuleCamera3D.h"
 #include "ModulePhysics3D.h"
 #include "ModuleGui.h"
+#include "Brofiler/Brofiler.h"
 
 
 
@@ -31,6 +32,7 @@ ModuleRenderer3D::~ModuleRenderer3D()
 // Called before render is available
 bool ModuleRenderer3D::Init(JSON_Object* obj)
 {
+	BROFILER_CATEGORY("Renderer3D_Init", Profiler::Color::HotPink);
 	OWN_LOG("Creating 3D Renderer context");
 	bool ret = true;
 	
@@ -143,6 +145,7 @@ bool ModuleRenderer3D::Init(JSON_Object* obj)
 }
 
 bool ModuleRenderer3D::Start() {
+	BROFILER_CATEGORY("Renderer3D_Start", Profiler::Color::HotPink);
 
 	bool ret = true;
 		box = { vec{-3.0f,3.0f,-3.0f },{-3.0f,3.0f, -1.0f},{	-3.0f, 1.0f, -1.0f},{-1.0f, 1.0f,-3.0f },{-3.0f,3.0f,-3.0f},{-3.0f, 1.0f,-3.0f},
@@ -268,6 +271,7 @@ bool ModuleRenderer3D::Start() {
 // PreUpdate: clear buffer
 update_status ModuleRenderer3D::PreUpdate(float dt)
 {
+	BROFILER_CATEGORY("Renderer3D_PreUpdate", Profiler::Color::HotPink);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 
@@ -290,6 +294,7 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 // PostUpdate present buffer to screen
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
+	BROFILER_CATEGORY("Renderer3D_PostUpdate", Profiler::Color::HotPink);
 	//direct mode box 
 	/*
 	glColor4f(1.0f, 1.0f, .0f, 1.0f); // color cyan
@@ -391,6 +396,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 // Called before quitting
 bool ModuleRenderer3D::CleanUp()
 {
+	BROFILER_CATEGORY("Renderer3D_CleanUp", Profiler::Color::HotPink);
 	OWN_LOG("Destroying 3D Renderer");
 
 	importer->EndDebugLog();

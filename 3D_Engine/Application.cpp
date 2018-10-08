@@ -9,6 +9,7 @@
 #include "ModuleCamera3D.h"
 #include "ModulePhysics3D.h"
 #include "ModuleGui.h"
+#include "Brofiler\Brofiler.h"
 
 #include "./JSON/parson.h"
 
@@ -47,16 +48,16 @@ Application::Application()
 	AddModule(renderer3D);
 }
 
-Application::~Application()
-{
+Application::~Application(){
 	for (std::list < Module* > ::reverse_iterator item = list_modules.rbegin(); item != list_modules.rend(); item++) {
 		delete (*item);
 	}
 	list_modules.clear();
 }
 
-bool Application::Init()
-{
+bool Application::Init(){
+
+	BROFILER_CATEGORY("App_Init", Profiler::Color::DarkOrange);
 	bool ret = true;
 	JSON_Value* config;
 	JSON_Object* objModules = nullptr;
@@ -110,6 +111,7 @@ bool Application::Init()
 // ---------------------------------------------
 void Application::PrepareUpdate()
 {
+	BROFILER_CATEGORY("App_PrepareUpdate", Profiler::Color::DarkRed);
 	frame_count++;
 	last_sec_frame_count++;
 
@@ -131,6 +133,7 @@ void Application::PrepareUpdate()
 // ---------------------------------------------
 void Application::FinishUpdate()
 {
+	BROFILER_CATEGORY("App_FinishUpdate", Profiler::Color::DarkCyan);
 	if (want_to_save == true) SavegameNow();
 
 	if (want_to_load == true) LoadGameNow();
@@ -184,18 +187,13 @@ void Application::GetHardWareData()
 // Call PreUpdate, Update and PostUpdate on all modules
 update_status Application::Update()
 {
+	
 	update_status ret = UPDATE_CONTINUE;
 	PrepareUpdate();
 
-	for (std::list<Module*>::iterator item = list_modules.begin(); item != list_modules.end() && ret == UPDATE_CONTINUE; item++) {
-		ret = (*item)->PreUpdate(dt);
-	}
-	for (std::list<Module*>::iterator item = list_modules.begin(); item != list_modules.end() && ret == UPDATE_CONTINUE; item++) {
-		ret = (*item)->Update(dt);
-	}
-	for (std::list<Module*>::iterator item = list_modules.begin(); item != list_modules.end() && ret == UPDATE_CONTINUE; item++) {
-		ret = (*item)->PostUpdate(dt);
-	}
+	doPreUpdate();
+	doUpdate();
+	doPostUpdate();
 
 	FinishUpdate();
 	return ret;
@@ -204,6 +202,8 @@ update_status Application::Update()
 bool Application::CleanUp()
 {
 	bool ret = true;
+	BROFILER_CATEGORY("App_CleanUp", Profiler::Color::DarkGray);
+
 	std::list<Module*>::reverse_iterator item = list_modules.rbegin();
 
 	while(item != list_modules.rend() && ret == true)
@@ -365,6 +365,35 @@ void Application::SetOrganization(char* newName)
 
 	 want_to_save = false;
 	 return ret;
+ }
+
+ update_status Application::doPreUpdate() {
+	 BROFILER_CATEGORY("App_PreUpdate", Profiler::Color::DarkKhaki);
+	 update_status ret = UPDATE_CONTINUE;
+	 for (std::list<Module*>::iterator item = list_modules.begin(); item != list_modules.end() && ret == UPDATE_CONTINUE; item++) {
+
+		 ret = (*item)->PreUpdate(dt);
+	 }
+
+	 return update_status();
+ }
+
+ update_status Application::doUpdate() {
+	 BROFILER_CATEGORY("App_Update", Profiler::Color::DarkGoldenRod);
+	 update_status ret = UPDATE_CONTINUE;
+	 for (std::list<Module*>::iterator item = list_modules.begin(); item != list_modules.end() && ret == UPDATE_CONTINUE; item++) {
+		  ret = (*item)->Update(dt);
+	 }
+	 return update_status();
+ }
+
+ update_status Application::doPostUpdate(){
+	 BROFILER_CATEGORY("App_PostUpdate", Profiler::Color::DarkSalmon);
+	 update_status ret = UPDATE_CONTINUE;
+	 for (std::list<Module*>::iterator item = list_modules.begin(); item != list_modules.end() && ret == UPDATE_CONTINUE; item++) {
+		 ret = (*item)->PostUpdate(dt);
+	 }
+	 return update_status();
  }
 
  void Application::SetDataFromJson(JSON_Object* data) {

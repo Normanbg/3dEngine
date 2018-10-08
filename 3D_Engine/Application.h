@@ -71,6 +71,10 @@ private:
 	bool LoadGameNow();
 	bool SavegameNow() const;
 
+	update_status doPreUpdate();
+	update_status doUpdate();
+	update_status doPostUpdate();
+
 	mutable bool		want_to_save;
 	bool				want_to_load;
 	std::string			load_game;
