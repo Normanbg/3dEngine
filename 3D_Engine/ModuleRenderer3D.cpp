@@ -413,6 +413,10 @@ bool ModuleRenderer3D::CleanUp()
 	glDeleteBuffers(1, &buffIndicesSphereID);
 	glDeleteBuffers(1, &buffIndicesFrustumID);
 
+	for (int i = meshes.size() - 1; i >= 0; i--) {
+		meshes[i].CleanUp();
+	
+	}
 		
 	SDL_GL_DeleteContext(context); 
 	return true;
@@ -614,4 +618,11 @@ void Mesh::Draw()
 	}
 }
 
+void Mesh::CleanUp(){
 
+	delete[] index;
+	delete[] vertex;
+	delete[] normals;
+	delete[] texturesCoords;
+
+}
