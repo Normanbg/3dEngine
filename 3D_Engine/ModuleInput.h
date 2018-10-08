@@ -12,6 +12,13 @@ enum KEY_STATE
 	KEY_UP
 };
 
+enum FileType {
+	CANT_LOAD = 0,
+	FBX,
+	PNG,
+	DDS
+};
+
 class ModuleInput : public Module
 {
 public:
@@ -25,7 +32,7 @@ public:
 
 	void InputData();
 
-	int ObtainDroppedFileType(std::string droppedFileDir);
+	FileType ObtainDroppedFileType(std::string droppedFileDir);
 
 	KEY_STATE GetKey(int id) const
 	{

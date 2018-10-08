@@ -124,9 +124,23 @@ update_status ModuleInput::PreUpdate(float dt)
 			App->renderer3D->OnResize(e.window.data1, e.window.data2);
 			break;
 			case SDL_DROPFILE:
-			dropped_filedir = e.drop.file;
-			std::string str(e.drop.file);
-			App->renderer3D->LoadDroppedFBX(dropped_filedir);
+				dropped_filedir = e.drop.file;
+				std::string dropped_filedirStr(e.drop.file);
+				switch (FileType file = ObtainDroppedFileType(dropped_filedirStr))
+				{
+				case CANT_LOAD:
+					OWN_LOG("File not supported, try FBX, PNG or DSS")
+					break;
+				case FBX:
+					App->renderer3D->LoadDroppedFBX(dropped_filedir);
+					break;
+				case PNG:
+					break;
+				case DDS:
+					break;
+				default:
+					break;
+				}
 			break;
 	
 
@@ -150,6 +164,17 @@ bool ModuleInput::CleanUp()
 	return true;
 }
 
-int ModuleInput::ObtainDroppedFileType(std::string droppedFileDir){
-	return 0;
+FileType ModuleInput::ObtainDroppedFileType(std::string droppedFileDir){
+	std::string dFile = droppedFileDir;
+	if (dFile.length() > 4) {
+		std::string formatStr = dFile.substr(dFile.length() - 3);
+		if (formatStr == "FBX")
+			return FBX;
+		else if (formatStr == "png")
+			return PNG;
+		else if (formatStr == "dds")
+			return DDS;
+	}
+	else
+		return CANT_LOAD;
 }
