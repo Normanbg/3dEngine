@@ -56,7 +56,7 @@ GLuint TextureImporter::LoadTexture( const char * path) {
 				return -1;
 		}
 
-		GLuint textureID;
+		
 	
 		//glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 		glGenTextures(1, &textureID);//generates a texture buffer 
@@ -132,5 +132,5 @@ void TextureImporter::DrawCheckeredPlane(){
 }
 void TextureImporter::CleanUp(){
 
-
+	glDeleteBuffers(1, &textureID);
 }
