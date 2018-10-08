@@ -21,6 +21,8 @@ public:
 
 	void LoadFBX(char* path );
 	void LoadFBXfromDrop(const char* path);
+	void ChangeMeshTexture(const char* path);
+
 private:
 	void LoadFromMesh(const aiScene* currSc, aiMesh* mesh);
 

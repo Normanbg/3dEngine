@@ -135,8 +135,12 @@ update_status ModuleInput::PreUpdate(float dt)
 					App->renderer3D->LoadDroppedFBX(dropped_filedir);
 					break;
 				case PNG:
+					App->renderer3D->importer->ChangeMeshTexture(dropped_filedir);
+					OWN_LOG ("Changing texture to a .png file")
 					break;
 				case DDS:
+					App->renderer3D->importer->ChangeMeshTexture(dropped_filedir);
+					OWN_LOG("Changing texture to a .dds file")
 					break;
 				default:
 					break;

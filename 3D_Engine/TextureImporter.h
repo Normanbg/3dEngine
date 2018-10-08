@@ -17,7 +17,7 @@ public:
 	void CleanUp();
 
 	GLuint LoadTexture(const char* path, Mesh &currentMesh);
-	GLuint ChangeTexture(const char* path, Mesh &currentMesh);
+	GLuint LoadTextureDropped(const char* path, uint& width, uint& height);
 
 	
 	void LoadCheckeredPlane(); // for debug test
