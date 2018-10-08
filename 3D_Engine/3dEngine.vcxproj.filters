@@ -333,6 +333,9 @@
     <ClInclude Include="TextureImporter.h">
       <Filter>Sources\Tools</Filter>
     </ClInclude>
+    <ClInclude Include="UIPanelProperties.h">
+      <Filter>Sources\Modules\GuiPanels</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -532,6 +535,9 @@
     </ClCompile>
     <ClCompile Include="TextureImporter.cpp">
       <Filter>Sources\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="UIPanelProperties.cpp">
+      <Filter>Sources\Modules\GuiPanels</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
