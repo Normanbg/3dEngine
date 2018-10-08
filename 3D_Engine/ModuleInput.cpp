@@ -125,6 +125,7 @@ update_status ModuleInput::PreUpdate(float dt)
 			break;
 			case SDL_DROPFILE:
 			dropped_filedir = e.drop.file;
+			std::string str(e.drop.file);
 			App->renderer3D->LoadDroppedFBX(dropped_filedir);
 			break;
 	
@@ -147,4 +148,8 @@ bool ModuleInput::CleanUp()
 	SDL_free(dropped_filedir);
 	SDL_QuitSubSystem(SDL_INIT_EVENTS);
 	return true;
+}
+
+int ModuleInput::ObtainDroppedFileType(std::string droppedFileDir){
+	return 0;
 }

@@ -25,6 +25,8 @@ public:
 
 	void InputData();
 
+	int ObtainDroppedFileType(std::string droppedFileDir);
+
 	KEY_STATE GetKey(int id) const
 	{
 		return keyboard[id];

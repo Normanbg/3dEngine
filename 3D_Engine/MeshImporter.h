@@ -18,7 +18,7 @@ public:
 
 	void InitDebugLog();
 	void EndDebugLog();
-	
+
 	void LoadFBX(char* path );
 	void LoadFBXfromDrop(const char* path);
 private:
