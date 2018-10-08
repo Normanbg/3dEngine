@@ -16,7 +16,7 @@ public:
 	void Init();
 	void CleanUp();
 
-	GLuint LoadTexture(const char* path);
+	GLuint LoadTexture(const char* path, Mesh &currentMesh);
 	
 	void LoadCheckeredPlane(); // for debug test
 	void DrawCheckeredPlane();

@@ -28,13 +28,15 @@ struct Mesh {
 	float3* normals = nullptr;
 
 	uint num_faces = 0; // assume each face is a triangle
-
+	std::string name;
 	vec3 colors = { 0,0,0 };
 
+	uint texWidth = 0;
+	uint texHeight = 0;
 	uint num_textureCoords = 0;
 	float2* texturesCoords = nullptr;
-
 	GLuint texture = 0;
+
 
 	bool generated = false;
 

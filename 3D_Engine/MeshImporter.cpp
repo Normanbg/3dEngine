@@ -62,12 +62,11 @@ void MeshImporter::LoadFBXfromDrop(const char * path){
 void MeshImporter::LoadFromMesh(const aiScene* currSc, aiMesh * new_mesh){
 	Mesh mesh;
 
-
 	mesh.num_vertex = new_mesh->mNumVertices;
 	mesh.vertex = new float3[mesh.num_vertex];
 	memcpy(mesh.vertex, new_mesh->mVertices, sizeof(float3) * mesh.num_vertex);
 	OWN_LOG("New mesh with %d vertices", mesh.num_vertex);
-
+	mesh.name = new_mesh->mName.C_Str();
 	if (new_mesh->HasFaces()){
 		mesh.num_index = new_mesh->mNumFaces * 3;
 		mesh.num_faces = new_mesh->mNumFaces;
@@ -111,9 +110,7 @@ void MeshImporter::LoadFromMesh(const aiScene* currSc, aiMesh * new_mesh){
 
 			std::string nwPath = ROOT_PATH ;
 			nwPath += path.C_Str();
-
-			
-			mesh.texture = App->renderer3D->texImporter->LoadTexture(nwPath.c_str());
+			mesh.texture = App->renderer3D->texImporter->LoadTexture(nwPath.c_str(), mesh);
 		}
 		else {
 			OWN_LOG("Error loading texture from fbx.");

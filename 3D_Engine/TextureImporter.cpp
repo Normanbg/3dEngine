@@ -34,7 +34,7 @@ void TextureImporter::Init(){
 	ilutRenderer(ILUT_OPENGL);
 }
 
-GLuint TextureImporter::LoadTexture( const char * path) {
+GLuint TextureImporter::LoadTexture( const char * path, Mesh &currentMesh) {
 
 	ILuint imageID;	
 	
@@ -57,7 +57,8 @@ GLuint TextureImporter::LoadTexture( const char * path) {
 		}
 
 		GLuint textureID;
-	
+		currentMesh.texHeight = infoImage.Height;
+		currentMesh.texWidth = infoImage.Width;
 		//glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 		glGenTextures(1, &textureID);//generates a texture buffer 
 		glBindTexture(GL_TEXTURE_2D, textureID);
