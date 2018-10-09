@@ -34,54 +34,10 @@ void TextureImporter::Init(){
 	ilutRenderer(ILUT_OPENGL);
 }
 
-GLuint TextureImporter::LoadTexture( const char * path, Mesh &currentMesh) {
 
-	ILuint imageID;	
-	
-	ilGenImages(1, &imageID); // generates an image
-	ilBindImage(imageID);
-	
-	bool ret = ilLoadImage(path);
-	if(ret)	{
-
-		ILinfo infoImage;
-		iluGetImageInfo(&infoImage);
-
-		if (infoImage.Origin == IL_ORIGIN_UPPER_LEFT)
-			iluFlipImage();
-
-		ret = ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE);
-		if (!ret) {
-			OWN_LOG("Cannot convert image. Error: %s", ilGetError())
-				return -1;
-		}
-
-		GLuint textureID;
-		currentMesh.texHeight = infoImage.Height;
-		currentMesh.texWidth = infoImage.Width;
-		//glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-		glGenTextures(1, &textureID);//generates a texture buffer 
-		glBindTexture(GL_TEXTURE_2D, textureID);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);//parameters
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, infoImage.Width, infoImage.Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, ilGetData()); //specifies the texture
-	
-		ilDeleteImages(1, &imageID);
-		glBindTexture(GL_TEXTURE_2D, textureID);
-		return textureID;
-	}
-	else {
-	
-		OWN_LOG("Cannot load texture from path. Error: %s",ilGetError())
-			return -1;
-
-	}
-}
-
-GLuint TextureImporter::LoadTextureDropped(const char * path, uint& texWidth, uint& texHeight)
+GLuint TextureImporter::LoadTexture(const char * path, uint& texWidth, uint& texHeight)
 {
+	OWN_LOG("Loading Texture from %s", path);
 	ILuint imageID;
 
 	ilGenImages(1, &imageID); // generates an image
@@ -98,7 +54,7 @@ GLuint TextureImporter::LoadTextureDropped(const char * path, uint& texWidth, ui
 
 		ret = ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE);
 		if (!ret) {
-			OWN_LOG("Cannot convert image. Error: %s", ilGetError())
+			OWN_LOG("Cannot convert image. Error: %s", iluErrorString(ilGetError()))
 				return -1;
 		}
 
@@ -120,7 +76,7 @@ GLuint TextureImporter::LoadTextureDropped(const char * path, uint& texWidth, ui
 	}
 	else {
 
-		OWN_LOG("Cannot load texture from path. Error: %s", ilGetError())
+		OWN_LOG("Cannot load texture from path. Error: %s", iluErrorString(ilGetError()))
 			return -1;
 
 	}

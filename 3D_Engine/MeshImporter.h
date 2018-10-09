@@ -20,7 +20,7 @@ public:
 	void EndDebugLog();
 
 	void LoadFBX(char* path );
-	void LoadFBXfromDrop(const char* path);
+	
 	void ChangeMeshTexture(const char* path);
 
 private:

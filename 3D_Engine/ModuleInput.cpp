@@ -132,15 +132,19 @@ update_status ModuleInput::PreUpdate(float dt)
 					OWN_LOG("File not supported, try FBX, PNG or DSS")
 					break;
 				case FBX:
+					OWN_LOG("Dropped .fbx file");
 					App->renderer3D->LoadDroppedFBX(dropped_filedir);
+					
 					break;
 				case PNG:
+					OWN_LOG("Dropped .png file");
 					App->renderer3D->importer->ChangeMeshTexture(dropped_filedir);
-					OWN_LOG ("Changing texture to a .png file")
+					
 					break;
 				case DDS:
+					OWN_LOG("Dropped .dds file");
 					App->renderer3D->importer->ChangeMeshTexture(dropped_filedir);
-					OWN_LOG("Changing texture to a .dds file")
+					
 					break;
 				default:
 					break;
