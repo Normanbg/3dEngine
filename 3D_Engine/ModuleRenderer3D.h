@@ -87,7 +87,6 @@ public:
 	inline bool GetTexture2D()const { return _texture2D; }
 	inline bool GetWireframe()const { return _wireframe; }
 	inline bool GetNormals()const { return _normals; }
-	inline std::vector<Mesh> GetMeshesList()const { return meshes; }
 
 	inline bool GetAxis() const { return _axis; }
 	inline bool GetGrid() const { return _grid; }
@@ -101,6 +100,8 @@ public:
 	SDL_GLContext context;
 	mat3x3 NormalMatrix;
 	mat4x4 ModelMatrix, ViewMatrix, ProjectionMatrix;
+
+	std::vector<Mesh> meshes;
 	
 private:
 
@@ -144,8 +145,6 @@ private:
 	bool _axis = true;
 	bool _grid = true;
 	bool _normals = false;
-
-	std::vector<Mesh> meshes;
 
 public:
 	

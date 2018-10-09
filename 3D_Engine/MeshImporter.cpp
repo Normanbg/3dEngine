@@ -121,12 +121,13 @@ void MeshImporter::LoadFromMesh(const aiScene* currSc, aiMesh * new_mesh){
 
 void MeshImporter::ChangeMeshTexture(const char * path){
 	uint width, height;
-	std::vector<Mesh> meshRecover = App->renderer3D->GetMeshesList();
+	std::vector<Mesh>* meshCopy = &App->renderer3D->meshes;
 	GLuint texID = App->renderer3D->texImporter->LoadTextureDropped(path, width, height);
-	for (std::vector<Mesh>::iterator meshIterator = meshRecover.begin(); meshIterator != meshRecover.end(); meshIterator++) {
-		meshIterator._Ptr->texture = texID;
-		meshIterator._Ptr->texWidth = width;
-		meshIterator._Ptr->texHeight = height;
+	for (int i = 0; i < meshCopy->size(); i++) {
+		(*meshCopy)[i].texture = texID;
+		(*meshCopy)[i].texWidth = width;
+		(*meshCopy)[i].texHeight = height;
 	}
+	//App->renderer3D->meshes = meshCopy;
 }
 
