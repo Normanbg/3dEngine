@@ -172,11 +172,11 @@ FileType ModuleInput::ObtainDroppedFileType(std::string droppedFileDir){
 	std::string dFile = droppedFileDir;
 	if (dFile.length() > 4) {
 		std::string formatStr = dFile.substr(dFile.length() - 3);
-		if (formatStr == "FBX")
+		if (formatStr == "fbx" || formatStr == "FBX")
 			return FBX;
-		else if (formatStr == "png")
+		else if (formatStr == "png" || formatStr == "PNG")
 			return PNG;
-		else if (formatStr == "dds")
+		else if (formatStr == "dds" || formatStr == "DDS")
 			return DDS;
 	}
 	else

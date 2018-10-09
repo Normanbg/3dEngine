@@ -91,6 +91,8 @@ public:
 	inline bool GetAxis() const { return _axis; }
 	inline bool GetGrid() const { return _grid; }
 
+	inline std::vector<Mesh>* GetMeshesList()  { return &meshes; }
+
 	void AddMesh(Mesh* mesh);
 	void LoadDroppedFBX(char* droppedFileDir);
 
@@ -100,8 +102,6 @@ public:
 	SDL_GLContext context;
 	mat3x3 NormalMatrix;
 	mat4x4 ModelMatrix, ViewMatrix, ProjectionMatrix;
-
-	std::vector<Mesh> meshes;
 	
 private:
 
@@ -145,6 +145,8 @@ private:
 	bool _axis = true;
 	bool _grid = true;
 	bool _normals = false;
+
+	std::vector<Mesh> meshes;
 
 public:
 	

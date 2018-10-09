@@ -14,8 +14,8 @@ UIPanelProperties::~UIPanelProperties()
 
 void UIPanelProperties::Draw() {
 	ImGui::Begin(name.c_str(), &active);
-	std::vector<Mesh> meshRecover = App->renderer3D->meshes; int i = 0;
-	for (std::vector<Mesh>::iterator meshIterator = meshRecover.begin(); meshIterator != meshRecover.end(); i++, meshIterator++) {
+	std::vector<Mesh>* meshRecover = App->renderer3D->GetMeshesList(); int i = 0;
+	for (std::vector<Mesh>::iterator meshIterator = (*meshRecover).begin(); meshIterator != (*meshRecover).end(); i++, meshIterator++) {
 		char meshNumber[30];
 		sprintf_s(meshNumber, 30, "%d.%s mesh " , i + 1, meshIterator._Ptr->name.c_str());
 		if (ImGui::CollapsingHeader(meshNumber)) {

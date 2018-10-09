@@ -121,7 +121,7 @@ void MeshImporter::LoadFromMesh(const aiScene* currSc, aiMesh * new_mesh){
 
 void MeshImporter::ChangeMeshTexture(const char * path){
 	uint width, height;
-	std::vector<Mesh>* meshCopy = &App->renderer3D->meshes;
+	std::vector<Mesh>* meshCopy = App->renderer3D->GetMeshesList();
 	GLuint texID = App->renderer3D->texImporter->LoadTextureDropped(path, width, height);
 	for (int i = 0; i < meshCopy->size(); i++) {
 		(*meshCopy)[i].texture = texID;
