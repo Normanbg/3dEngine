@@ -5,6 +5,7 @@
 #include "Globals.h"
 #include "Module.h"
 #include <list>
+#include <vector>
 
 
 #include "RandomGenerator/pcg_variants.h"
@@ -42,8 +43,7 @@ public:
 	UIPanelConsole* panelConsole = nullptr;
 	UIPanelProperties* panelProperties = nullptr;
 
-	std::list<const char*>logsBuffer;
-
+	std::vector<std::string> logsBuffer;
 	uint ilVersion = 0;
 
 };

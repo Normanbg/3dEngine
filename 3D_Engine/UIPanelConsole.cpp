@@ -14,8 +14,8 @@ UIPanelConsole::~UIPanelConsole()
 void UIPanelConsole::Draw() {
 
 	ImGui::Begin(name.c_str(), &active);
-	for (std::list<const char*>::iterator it = App->gui->logsBuffer.begin(); it != App->gui->logsBuffer.end(); it++) {
-		ImGui::Text(*it);
+	for (std::vector<std::string>::iterator it = App->gui->logsBuffer.begin(); it != App->gui->logsBuffer.end(); it++) {
+		ImGui::Text((*it).c_str());
 	}
 	ImGui::End();
 
