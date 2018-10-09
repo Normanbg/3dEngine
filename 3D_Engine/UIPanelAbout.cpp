@@ -55,6 +55,8 @@ void UIPanelAbout::Draw(){
 		App->RequestBrowser("https://www.opengl.org/");
 	if (ImGui::SmallButton("JSON PARSON"))
 		App->RequestBrowser("http://kgabis.github.com/parson/");
+	if (ImGui::SmallButton("DeviceId"))
+		App->RequestBrowser("http://kgabis.github.com/parson/");//MISSING DEVIDEID LINK!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 	ImGui::Spacing();
 	ImGui::Spacing();
