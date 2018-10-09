@@ -524,7 +524,7 @@ void ModuleRenderer3D::AddMesh(Mesh*  mesh)
 }
 
 void ModuleRenderer3D::LoadDroppedFBX(char * droppedFileDir){
-	importer->LoadFBXfromDrop(droppedFileDir);
+	importer->LoadFBX(droppedFileDir);
 	GenBuffFromMeshes();	
 }
 

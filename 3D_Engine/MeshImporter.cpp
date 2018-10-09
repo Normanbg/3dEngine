@@ -25,38 +25,34 @@ void MeshImporter::EndDebugLog()
 }
 
 void MeshImporter::LoadFBX(char * path){
+	
 	std::string rootPath = ROOT_PATH;
 	rootPath += path;
+	   	 
 	const aiScene* scene = aiImportFile(rootPath.c_str(), aiProcessPreset_TargetRealtime_MaxQuality);
-	if (scene != nullptr && scene->HasMeshes())
-	{
+	if (scene == nullptr) {
+		OWN_LOG("Error loading fbx from 3DModels folder.\n Loading FBX from HardDisk");
+		scene = aiImportFile(path, aiProcessPreset_TargetRealtime_MaxQuality);
+		if (scene == nullptr){
+			OWN_LOG("Error loading scene %s", aiGetErrorString());
+			aiReleaseImport(scene);
+			return;
+		}
+	}
+	if (scene->HasMeshes())	{
+		OWN_LOG("Loading FBX mesh from %s", path);
 		// Use scene->mNumMeshes to iterate on scene->mMeshes array
 		aiMesh * meshIterator = nullptr;
 		for (int i = 0; i < scene->mNumMeshes; i++) {
 			meshIterator = scene->mMeshes[i];
 			LoadFromMesh(scene, meshIterator);
-		}
-		aiReleaseImport(scene);
-	}
-	else
-		OWN_LOG("Error loading scene %s", aiGetErrorString());
-}
+		}	
 
-void MeshImporter::LoadFBXfromDrop(const char * path){
-	const aiScene* scene = aiImportFile(path, aiProcessPreset_TargetRealtime_MaxQuality);
-	if (scene != nullptr && scene->HasMeshes())
-	{
-		// Use scene->mNumMeshes to iterate on scene->mMeshes array
-		aiMesh * meshIterator = nullptr;
-		for (int i = 0; i < scene->mNumMeshes; i++) {
-			meshIterator = scene->mMeshes[i];
-			LoadFromMesh(scene, meshIterator);
-		}
-		aiReleaseImport(scene);
-		OWN_LOG("FBX dropped loaded correctly");
 	}
-	else
-		OWN_LOG("Error loading scene %s", aiGetErrorString());
+	else{
+		OWN_LOG("Error loading FBX, scene has no meshes");		
+	}
+	aiReleaseImport(scene);
 }
 
 void MeshImporter::LoadFromMesh(const aiScene* currSc, aiMesh * new_mesh){
@@ -102,18 +98,30 @@ void MeshImporter::LoadFromMesh(const aiScene* currSc, aiMesh * new_mesh){
 		currSc->mMaterials[new_mesh->mMaterialIndex]->Get(AI_MATKEY_COLOR_DIFFUSE, color);
 		mesh.colors.x = color.r;
 		mesh.colors.y = color.g;
-		mesh.colors.z = color.b;
+		mesh.colors.z = color.b;		
 
 		aiString path;
 		aiReturn ret = currSc->mMaterials[new_mesh->mMaterialIndex]->GetTexture(aiTextureType_DIFFUSE, 0, &path);
 		if (ret == aiReturn_SUCCESS) {
 
-			std::string nwPath = ROOT_PATH ;
+			std::string nwPath = ROOT_PATH;
 			nwPath += path.C_Str();
-			mesh.texture = App->renderer3D->texImporter->LoadTexture(nwPath.c_str(), mesh);
+
+			mesh.texture = App->renderer3D->texImporter->LoadTexture(nwPath.c_str(), mesh.texWidth, mesh.texHeight);
+			OWN_LOG("Loading texture from Textures folder");
+			if (mesh.texture == -1) {
+				OWN_LOG("Texture not found. \nLoading texture from HardDisk");
+				
+				mesh.texture = App->renderer3D->texImporter->LoadTexture(path.C_Str(), mesh.texWidth, mesh.texHeight);
+				if (mesh.texture == -1) {
+
+					OWN_LOG("Texture not found.\n Error loading texture from fbx.");
+				}
+			}
 		}
 		else {
-			OWN_LOG("Error loading texture from fbx.");
+			
+			OWN_LOG("Error loading texture from fbx. Error: %s", aiGetErrorString());
 		}
 	}
 	App->renderer3D->AddMesh(&mesh);
@@ -122,7 +130,7 @@ void MeshImporter::LoadFromMesh(const aiScene* currSc, aiMesh * new_mesh){
 void MeshImporter::ChangeMeshTexture(const char * path){
 	uint width, height;
 	std::vector<Mesh>* meshCopy = App->renderer3D->GetMeshesList();
-	GLuint texID = App->renderer3D->texImporter->LoadTextureDropped(path, width, height);
+	GLuint texID = App->renderer3D->texImporter->LoadTexture(path, width, height);
 	for (int i = 0; i < meshCopy->size(); i++) {
 		(*meshCopy)[i].texture = texID;
 		(*meshCopy)[i].texWidth = width;
