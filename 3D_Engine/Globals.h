@@ -41,3 +41,5 @@ enum update_status
 #define ORGANIZATION "UPC CITM"
 #define CONFIG_FILE "config.JSON"
 #define CAMERA_SPEED 10.0f
+#define TEXTURES_PATH "Assets/Textures/"
+#define MODELS_PATH "Assets/3DModels/"

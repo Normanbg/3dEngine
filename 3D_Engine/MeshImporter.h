@@ -9,7 +9,7 @@
 #include "Assimp/include/cfileio.h"
 #pragma comment (lib, "Assimp/libx86/assimp.lib")
 
-#define ROOT_PATH "Assets/"
+
 class MeshImporter
 {
 public:

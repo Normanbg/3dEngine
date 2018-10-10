@@ -26,7 +26,7 @@ void MeshImporter::EndDebugLog()
 
 void MeshImporter::LoadFBX(char * path){
 	
-	std::string rootPath = ROOT_PATH;
+	std::string rootPath = MODELS_PATH;
 	rootPath += path;
 	   	 
 	const aiScene* scene = aiImportFile(rootPath.c_str(), aiProcessPreset_TargetRealtime_MaxQuality);
@@ -104,7 +104,7 @@ void MeshImporter::LoadFromMesh(const aiScene* currSc, aiMesh * new_mesh){
 		aiReturn ret = currSc->mMaterials[new_mesh->mMaterialIndex]->GetTexture(aiTextureType_DIFFUSE, 0, &path);
 		if (ret == aiReturn_SUCCESS) {
 
-			std::string nwPath = ROOT_PATH;
+			std::string nwPath = TEXTURES_PATH;
 			nwPath += path.C_Str();
 
 			mesh.texture = App->renderer3D->texImporter->LoadTexture(nwPath.c_str(), mesh.texWidth, mesh.texHeight);
