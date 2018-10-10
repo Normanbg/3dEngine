@@ -9,6 +9,7 @@
 #include "ModuleCamera3D.h"
 #include "ModulePhysics3D.h"
 #include "ModuleGui.h"
+#include "Brofiler/Brofiler.h"
 
 #define MAX_KEYS 300
 
@@ -29,6 +30,7 @@ ModuleInput::~ModuleInput()
 // Called before render is available
 bool ModuleInput::Init(JSON_Object* obj)
 {
+	BROFILER_CATEGORY("Input_Init", Profiler::Color::GhostWhite);
 	OWN_LOG("Init SDL input event system");
 	bool ret = true;
 	SDL_Init(0);
@@ -39,12 +41,14 @@ bool ModuleInput::Init(JSON_Object* obj)
 		ret = false;
 	}
 	json_object_clear(obj);//clear obj to free memory
+	SDL_EventState(SDL_DROPFILE, SDL_ENABLE);
 	return ret;
 }
 
 // Called every draw update
 update_status ModuleInput::PreUpdate(float dt)
 {
+	BROFILER_CATEGORY("Input_PreUpdate", Profiler::Color::GhostWhite);
 	SDL_PumpEvents();
 
 	const Uint8* keys = SDL_GetKeyboardState(NULL);
@@ -116,40 +120,67 @@ update_status ModuleInput::PreUpdate(float dt)
 			break;
 
 			case SDL_WINDOWEVENT:
-			{
-				if(e.window.event == SDL_WINDOWEVENT_RESIZED)
-					App->renderer3D->OnResize(e.window.data1, e.window.data2);
-			}
+			if(e.window.event == SDL_WINDOWEVENT_RESIZED)
+			App->renderer3D->OnResize(e.window.data1, e.window.data2);
+			break;
+			case SDL_DROPFILE:
+				dropped_filedir = e.drop.file;
+				std::string dropped_filedirStr(e.drop.file);
+				switch (FileType file = ObtainDroppedFileType(dropped_filedirStr))
+				{
+				case CANT_LOAD:
+					OWN_LOG("File not supported, try FBX, PNG or DSS")
+					break;
+				case FBX:
+					OWN_LOG("Dropped .fbx file");
+					App->renderer3D->LoadDroppedFBX(dropped_filedir);
+					
+					break;
+				case PNG:
+					OWN_LOG("Dropped .png file");
+					App->renderer3D->importer->ChangeMeshTexture(dropped_filedir);
+					
+					break;
+				case DDS:
+					OWN_LOG("Dropped .dds file");
+					App->renderer3D->importer->ChangeMeshTexture(dropped_filedir);
+					
+					break;
+				default:
+					break;
+				}
+			break;
 		}
 	}
 
-	if(quit == true || keyboard[SDL_SCANCODE_ESCAPE] == KEY_UP)
-		return UPDATE_STOP;
+	if (quit == true || keyboard[SDL_SCANCODE_ESCAPE] == KEY_UP)
+		return UPDATE_STOP;		
 
 	return UPDATE_CONTINUE;
 }
 
-void ModuleInput::InputData()
-{
 
-	if (ImGui::CollapsingHeader("Input"))
-	{
-		ImGui::Text("Mouse Position:");
-		ImGui::SameLine();
-		ImGui::TextColored(ImVec4(1, 1, 0, 1), "%d, %d", App->input->mouse_x, App->input->mouse_y);
-		ImGui::Text("Mouse Motion:");
-		ImGui::SameLine();
-		ImGui::TextColored(ImVec4(1, 1, 0, 1), "%d, %d", App->input->mouse_x_motion, App->input->mouse_y_motion);
-
-		ImGui::Text("Mouse Wheel:");
-		ImGui::SameLine();
-		ImGui::TextColored(ImVec4(1, 1, 0, 1), "%d", App->input->mouse_z);
-	}
-}
 // Called before quitting
 bool ModuleInput::CleanUp()
 {
+	BROFILER_CATEGORY("Input_CleanUp", Profiler::Color::GhostWhite);
 	OWN_LOG("Quitting SDL input event subsystem");
+	SDL_free(dropped_filedir);
 	SDL_QuitSubSystem(SDL_INIT_EVENTS);
 	return true;
+}
+
+FileType ModuleInput::ObtainDroppedFileType(std::string droppedFileDir){
+	std::string dFile = droppedFileDir;
+	if (dFile.length() > 4) {
+		std::string formatStr = dFile.substr(dFile.length() - 3);
+		if (formatStr == "fbx" || formatStr == "FBX")
+			return FBX;
+		else if (formatStr == "png" || formatStr == "PNG")
+			return PNG;
+		else if (formatStr == "dds" || formatStr == "DDS")
+			return DDS;
+	}
+	else
+		return CANT_LOAD;
 }

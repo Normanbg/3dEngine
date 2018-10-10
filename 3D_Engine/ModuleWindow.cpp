@@ -1,6 +1,7 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleWindow.h"
+#include "Brofiler/Brofiler.h"
 
 ModuleWindow::ModuleWindow(bool start_enabled) : Module(start_enabled)
 {
@@ -30,7 +31,7 @@ bool ModuleWindow::Init(JSON_Object* obj)
 	bool ret = true;
 
 	if (obj != nullptr) {		
-		GetDataFromJson(obj);
+		SetDataFromJson(obj);
 	}
 
 	if(SDL_Init(SDL_INIT_VIDEO) < 0)
@@ -45,9 +46,15 @@ bool ModuleWindow::Init(JSON_Object* obj)
 		int height = _h * SCREEN_SIZE;
 		Uint32 flags = SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN;
 
-		//Use OpenGL 2.1
-		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
+		
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+		SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+		SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
+		//Use OpenGL 3.1
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
+
 
 		if(_fullscreen == true)
 		{
@@ -146,11 +153,10 @@ void ModuleWindow::SetBrightness(float bright) {
 }
 
 void ModuleWindow::SetSize(uint w, uint h) {
-	_h = h;
-	_w = w;
+	_h = h* SCREEN_SIZE;
+	_w = w* SCREEN_SIZE;
 	SDL_SetWindowSize(window, w, h);
-
-
+	
 }
 
 void ModuleWindow::GetSize(int &w, int &h)const {
@@ -161,14 +167,15 @@ void ModuleWindow::GetSize(int &w, int &h)const {
 
 bool ModuleWindow::Load(JSON_Object* data) {
 
-	GetDataFromJson(data);
+	SetDataFromJson(data);
 	
 	SetBrightness(_brightness);
-	SetSize(_w, _h);
+	
 	SetFullscreen(_fullscreen);
 	SetResizable(_resizable);
 	SetBorderless(_borderless);
 	SetFullscreenDesktop(_fullDesktop);
+	SetSize(_w, _h);
 
 	return true;
 }
@@ -183,7 +190,7 @@ bool ModuleWindow::Save(JSON_Object* data)const {
 	return true;
 }
 
-void ModuleWindow::GetDataFromJson(JSON_Object* data) {
+void ModuleWindow::SetDataFromJson(JSON_Object* data) {
 
 	_brightness = json_object_dotget_number(data, "Brightness");
 	_w = json_object_dotget_number(data, "Width");

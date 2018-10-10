@@ -6,6 +6,9 @@
 #pragma comment( lib, "SDL/libx86/SDL2.lib" )
 #pragma comment( lib, "SDL/libx86/SDL2main.lib" )
 
+#include "Brofiler/Brofiler.h"
+#pragma comment(lib,"Brofiler/ProfilerCore32.lib" )
+
 enum main_states
 {
 	MAIN_CREATION,
@@ -20,6 +23,7 @@ Application* App = nullptr;
 int main(int argc, char ** argv)
 {
 	OWN_LOG("Starting game '%s'...", TITLE);
+	
 
 	int main_return = EXIT_FAILURE;
 	main_states state = MAIN_CREATION;
@@ -28,6 +32,7 @@ int main(int argc, char ** argv)
 	{
 		switch (state)
 		{
+			
 		case MAIN_CREATION:
 
 			OWN_LOG("-------------- Application Creation --------------");
@@ -53,6 +58,7 @@ int main(int argc, char ** argv)
 
 		case MAIN_UPDATE:
 		{
+			BROFILER_FRAME("3D_Engine");
 			int update_return = App->Update();
 
 			if (update_return == UPDATE_ERROR)

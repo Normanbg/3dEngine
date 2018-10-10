@@ -48,11 +48,13 @@
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>false</ExceptionHandling>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <AdditionalIncludeDirectories>C:\Users\carlesma\Documents\GitHub\3dEngine\3D_Engine\Brofiler;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -75,6 +77,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
+    <ClInclude Include="Brofiler\Brofiler.h" />
     <ClInclude Include="Color.h" />
     <ClInclude Include="DeviceId\DeviceId.h" />
     <ClInclude Include="DeviceId\dxgi1_4.h" />
@@ -88,6 +91,7 @@
     <ClInclude Include="ImGui\imstb_rectpack.h" />
     <ClInclude Include="ImGui\imstb_textedit.h" />
     <ClInclude Include="ImGui\imstb_truetype.h" />
+    <ClInclude Include="MeshImporter.h" />
     <ClInclude Include="JSON\parson.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="MathGeoLib\Algorithm\GJK.h" />
@@ -165,9 +169,13 @@
     <ClInclude Include="ModuleSceneIntro.h" />
     <ClInclude Include="ModuleWindow.h" />
     <ClInclude Include="PerfTimer.h" />
-    <ClInclude Include="PhysBody3D.h" />
-    <ClInclude Include="Primitive.h" />
+    <ClInclude Include="TextureImporter.h" />
     <ClInclude Include="Timer.h" />
+    <ClInclude Include="UIPanel.h" />
+    <ClInclude Include="UIPanelAbout.h" />
+    <ClInclude Include="UIPanelConfig.h" />
+    <ClInclude Include="UIPanelConsole.h" />
+    <ClInclude Include="UIPanelProperties.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
@@ -180,6 +188,7 @@
     <ClCompile Include="ImGui\imgui_impl_opengl2.cpp" />
     <ClCompile Include="ImGui\imgui_impl_sdl.cpp" />
     <ClCompile Include="ImGui\imgui_widgets.cpp" />
+    <ClCompile Include="MeshImporter.cpp" />
     <ClCompile Include="JSON\parson.c" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="log.cpp" />
@@ -230,9 +239,12 @@
     <ClCompile Include="ModuleSceneIntro.cpp" />
     <ClCompile Include="ModuleWindow.cpp" />
     <ClCompile Include="PerfTimer.cpp" />
-    <ClCompile Include="PhysBody3D.cpp" />
-    <ClCompile Include="Primitive.cpp" />
+    <ClCompile Include="TextureImporter.cpp" />
     <ClCompile Include="Timer.cpp" />
+    <ClCompile Include="UIPanelAbout.cpp" />
+    <ClCompile Include="UIPanelConfig.cpp" />
+    <ClCompile Include="UIPanelConsole.cpp" />
+    <ClCompile Include="UIPanelProperties.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="MathGeoLib\Geometry\KDTree.inl" />

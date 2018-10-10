@@ -9,6 +9,7 @@
 #include "ModuleCamera3D.h"
 #include "ModulePhysics3D.h"
 #include "ModuleGui.h"
+#include "Brofiler\Brofiler.h"
 
 #include "./JSON/parson.h"
 
@@ -47,16 +48,16 @@ Application::Application()
 	AddModule(renderer3D);
 }
 
-Application::~Application()
-{
+Application::~Application(){
 	for (std::list < Module* > ::reverse_iterator item = list_modules.rbegin(); item != list_modules.rend(); item++) {
 		delete (*item);
 	}
 	list_modules.clear();
 }
 
-bool Application::Init()
-{
+bool Application::Init(){
+
+	BROFILER_CATEGORY("App_Init", Profiler::Color::DarkOrange);
 	bool ret = true;
 	JSON_Value* config;
 	JSON_Object* objModules = nullptr;
@@ -70,7 +71,7 @@ bool Application::Init()
 		obj = json_value_get_object(config);
 		appObj = json_object_get_object(obj, "App");
 		
-		GetDataFromJson(appObj);
+		SetDataFromJson(appObj);
 
 		objModules = obj;
 		json_object_clear(appObj);
@@ -99,6 +100,7 @@ bool Application::Init()
 		item++;
 	}
 
+	
 	json_object_clear(objModules);
 	json_value_free(config);
 
@@ -109,6 +111,7 @@ bool Application::Init()
 // ---------------------------------------------
 void Application::PrepareUpdate()
 {
+	BROFILER_CATEGORY("App_PrepareUpdate", Profiler::Color::DarkRed);
 	frame_count++;
 	last_sec_frame_count++;
 
@@ -123,12 +126,14 @@ void Application::PrepareUpdate()
 	}
 	ms_timer.Start();
 
+	GetHardWareData();
 	
 }
 
 // ---------------------------------------------
 void Application::FinishUpdate()
 {
+	BROFILER_CATEGORY("App_FinishUpdate", Profiler::Color::DarkCyan);
 	if (want_to_save == true) SavegameNow();
 
 	if (want_to_load == true) LoadGameNow();
@@ -169,91 +174,34 @@ void Application::GetHardWareData()
 	uint64_t totVideoMem, currVideoMem, availbVideoMem, reserVideoMem;
 
 	if (getGraphicsDeviceInfo(nullptr, nullptr, nullptr, &totVideoMem, &currVideoMem, &availbVideoMem, &reserVideoMem))	{
-		totalVideoMemF		=	(float)totVideoMem / (1024.0f * 1024.0f);
-		currentVideoMemF	=	(float)currVideoMem / (1024.0f * 1024.0f);
-		availableVideoMemF	=	(float)availbVideoMem / (1024.0f * 1024.0f);
-		reservedVideoMemF	=	(float)reserVideoMem / (1024.0f * 1024.0f);
+		//OWN_LOG("Succesfully get graphics device data")
+		
+		totalVideoMemF =	(float)totVideoMem / (1024.0f * 1024.0f);
+		currentVideoMemF =	(float)currVideoMem / (1024.0f * 1024.0f);
+		availableVideoMemF = (float)availbVideoMem / (1024.0f * 1024.0f);
+		reservedVideoMemF = (float)reserVideoMem / (1024.0f * 1024.0f);
 	}
 }
 
-void Application::HardwareData(){
-if (ImGui::CollapsingHeader("Hardware"))
-{
-	GetHardWareData();
 
-	SDL_version version;
-	SDL_GetVersion(&version);
-
-	ImVec4 yellow(1, 1, 0, 1);
-
-	ImGui::Text("SDL Version"); ImGui::SameLine();
-	ImGui::TextColored(yellow, "%d.%d.%d", version.major, version.minor, version.patch);
-	ImGui::Separator();
-	ImGui::Text("CPU's:"); ImGui::SameLine();
-	ImGui::TextColored(yellow, "%d", SDL_GetCPUCount()); ImGui::SameLine();
-	ImGui::TextColored(yellow, "(Cache: %dkb)", SDL_GetCPUCacheLineSize());
-
-	ImGui::Text("System RAM:"); ImGui::SameLine(); 
-	ImGui::TextColored(yellow, "%0.1fGb", ((float)SDL_GetSystemRAM() / 1024));
-
-	ImGui::Text("Caps: "); ImGui::SameLine();
-
-	if (SDL_Has3DNow()) ImGui::TextColored(yellow, "3DNow,"); ImGui::SameLine();
-	if (SDL_HasAVX()) ImGui::TextColored(yellow, "AVX,"); ImGui::SameLine();
-	if (SDL_HasAltiVec()) ImGui::TextColored(yellow, "AltiVec,"); ImGui::SameLine();
-	if (SDL_HasMMX()) ImGui::TextColored(yellow, "MMX,"); ImGui::SameLine();
-	if (SDL_HasRDTSC()) ImGui::TextColored(yellow, "RDTSC,"); ImGui::SameLine();
-	if (SDL_HasSSE()) ImGui::TextColored(yellow, "SSE,"); ImGui::SameLine();
-	if (SDL_HasSSE2()) ImGui::TextColored(yellow, "SSE2,"); ImGui::SameLine();
-	if (SDL_HasSSE3()) ImGui::TextColored(yellow, "SSE3,"); ImGui::SameLine();
-	if (SDL_HasSSE41()) ImGui::TextColored(yellow, "SSE41,"); ImGui::SameLine();
-	if (SDL_HasSSE42()) ImGui::TextColored(yellow, "SSE42,");
-
-	ImGui::Separator();
-
-	ImGui::Text("GPU: "); ImGui::SameLine();
-	ImGui::TextColored(yellow, " vendor %s", renderer3D->GetGraphicsVendor());
-
-	ImGui::Text("Brand: "); ImGui::SameLine();
-	ImGui::TextColored(yellow, "%s", renderer3D->GetGraphicsModel());
-
-	ImGui::Text("VRAM Budget: "); ImGui::SameLine();
-	ImGui::TextColored(yellow, "%.2f Mb", totalVideoMemF);
-
-	ImGui::Text("VRAM Usage: "); ImGui::SameLine();
-	ImGui::TextColored(yellow, "%.2f Mb", currentVideoMemF);
-
-	ImGui::Text("VRAM Avaliable: "); ImGui::SameLine();
-	ImGui::TextColored(yellow, "%.2f Mb", availableVideoMemF);
-
-	ImGui::Text("VRAM Reserved: "); ImGui::SameLine();
-	ImGui::TextColored(yellow, "%.2f Mb", reservedVideoMemF);
-
-	/*{ FOR MAKING A GRAPHIC, DON'T ERASE!!!!!!!!!!!
-		char buf[32];
-		sprintf(buf, "%.2f/%.2f", currentVideoMemF, availableVideoMemF);
-		float percentage = (currentVideoMemF * 100) / availableVideoMemF;
-
-		ImGui::ProgressBar(percentage / 100, ImVec2(0.f, 0.f), buf);
-		ImGui::SameLine();
-		ImGui::Text("VRAM usage");
-	}*/
-}
-}
 // Call PreUpdate, Update and PostUpdate on all modules
 update_status Application::Update()
 {
+	
 	update_status ret = UPDATE_CONTINUE;
 	PrepareUpdate();
 
-	for (std::list<Module*>::iterator item = list_modules.begin(); item != list_modules.end() && ret == UPDATE_CONTINUE; item++) {
-		ret = (*item)->PreUpdate(dt);
+	ret = doPreUpdate();
+	if (ret != UPDATE_CONTINUE) {
+		return ret;
 	}
-	for (std::list<Module*>::iterator item = list_modules.begin(); item != list_modules.end() && ret == UPDATE_CONTINUE; item++) {
-		ret = (*item)->Update(dt);
+	ret = doUpdate();
+	if (ret != UPDATE_CONTINUE) {
+		return ret;
 	}
-	for (std::list<Module*>::iterator item = list_modules.begin(); item != list_modules.end() && ret == UPDATE_CONTINUE; item++) {
-		ret = (*item)->PostUpdate(dt);
+	ret = doPostUpdate();
+	if (ret != UPDATE_CONTINUE) {
+		return ret;
 	}
 
 	FinishUpdate();
@@ -263,6 +211,8 @@ update_status Application::Update()
 bool Application::CleanUp()
 {
 	bool ret = true;
+	BROFILER_CATEGORY("App_CleanUp", Profiler::Color::DarkGray);
+
 	std::list<Module*>::reverse_iterator item = list_modules.rbegin();
 
 	while(item != list_modules.rend() && ret == true)
@@ -377,7 +327,7 @@ void Application::SetOrganization(char* newName)
 		 obj = json_value_get_object(config);
 		 appObj = json_object_get_object(obj, "App");
 
-		 GetDataFromJson(appObj);
+		 SetDataFromJson(appObj);
 
 		 
 		 json_object_clear(appObj);
@@ -426,7 +376,36 @@ void Application::SetOrganization(char* newName)
 	 return ret;
  }
 
- void Application::GetDataFromJson(JSON_Object* data) {
+ update_status Application::doPreUpdate() {
+	 BROFILER_CATEGORY("App_PreUpdate", Profiler::Color::DarkKhaki);
+	 update_status ret = UPDATE_CONTINUE;
+	 for (std::list<Module*>::iterator item = list_modules.begin(); item != list_modules.end() && ret == UPDATE_CONTINUE; item++) {
+
+		 ret = (*item)->PreUpdate(dt);
+	 }
+
+	 return ret;
+ }
+
+ update_status Application::doUpdate() {
+	 BROFILER_CATEGORY("App_Update", Profiler::Color::DarkGoldenRod);
+	 update_status ret = UPDATE_CONTINUE;
+	 for (std::list<Module*>::iterator item = list_modules.begin(); item != list_modules.end() && ret == UPDATE_CONTINUE; item++) {
+		  ret = (*item)->Update(dt);
+	 }
+	 return ret;
+ }
+
+ update_status Application::doPostUpdate(){
+	 BROFILER_CATEGORY("App_PostUpdate", Profiler::Color::DarkSalmon);
+	 update_status ret = UPDATE_CONTINUE;
+	 for (std::list<Module*>::iterator item = list_modules.begin(); item != list_modules.end() && ret == UPDATE_CONTINUE; item++) {
+		 ret = (*item)->PostUpdate(dt);
+	 }
+	 return ret;
+ }
+
+ void Application::SetDataFromJson(JSON_Object* data) {
  
 	 const char* title = json_object_get_string(data, "Name");
 	 window->SetTitle((char*)title);

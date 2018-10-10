@@ -3,12 +3,17 @@
 
 #include <list>
 #include <vector>
+
 #include"./ImGui/imgui.h"
 #include "SDL\include\SDL.h"
 #include "Globals.h"
 #include "PerfTimer.h"
 #include "Timer.h"
 #include "./JSON/parson.h"
+#include "./Glew/include/glew.h"
+#include "SDL\include\SDL_opengl.h"
+#include <gl/GL.h>
+#include <gl/GLU.h>
 
 
 #define MAX_FPS_LOG 50
@@ -66,6 +71,10 @@ private:
 	bool LoadGameNow();
 	bool SavegameNow() const;
 
+	update_status doPreUpdate();
+	update_status doUpdate();
+	update_status doPostUpdate();
+
 	mutable bool		want_to_save;
 	bool				want_to_load;
 	std::string			load_game;
@@ -78,6 +87,7 @@ private:
 	float currentVideoMemF = -1.0f;
 	float availableVideoMemF = -1.0f;
 	float reservedVideoMemF = -1.0f;
+	void GetHardWareData();
 
 public:
 
@@ -111,8 +121,11 @@ public:
 	void SetTimeScale(float ts, int frameNumber = -1);
 	void PauseGame(bool pause);
 
-	void GetHardWareData();
-	void HardwareData();
+	
+	inline float GetTotalVideoMem() const {return totalVideoMemF; }
+	inline float GetCurrentVideoMem() const { return currentVideoMemF; }
+	inline float GetAvaliableVideoMem() const { return availableVideoMemF; }
+	inline float GetReservedVideoMem() const { return reservedVideoMemF; }
 
 	void SetOrganization(char* newName);
 	std::string GetOrganization() const;
@@ -125,7 +138,7 @@ private:
 	void PrepareUpdate();
 	void FinishUpdate();
 
-	void GetDataFromJson(JSON_Object* data);
+	void SetDataFromJson(JSON_Object* data);
 
 
 };
