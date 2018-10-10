@@ -80,7 +80,6 @@ update_status ModuleGui::Update(float dt)
 {
 	BROFILER_CATEGORY("GUI_Update", Profiler::Color::Chartreuse);
 	if (ImGui::BeginMainMenuBar()) {
-		//--------------HELP MENU
 		if (ImGui::BeginMenu("File")) {
 			if (ImGui::MenuItem("Quit", "ESC"))
 				return UPDATE_STOP;
@@ -95,18 +94,18 @@ update_status ModuleGui::Update(float dt)
 				App->RequestBrowser("https://github.com/Normanbg/3dEngine/releases");
 			if (ImGui::MenuItem("Report a bug"))
 				App->RequestBrowser("https://github.com/Normanbg/3dEngine/issues");
-			if (ImGui::MenuItem("About")) {
+			if (ImGui::MenuItem("About", NULL, panelAbout->isEnabled())) {
 				panelAbout->ChangeActive();
 			}
 			ImGui::EndMenu();
-			//HELP MENU--------------
 		}
 		if (ImGui::BeginMenu("View")) {
-			if (ImGui::MenuItem("Console"))
+			if (ImGui::MenuItem("Console", NULL, panelConsole->isEnabled()))
 				panelConsole->ChangeActive();
-			if (ImGui::MenuItem("Configuration"))
+			if (ImGui::MenuItem("Configuration", NULL, panelConfig->isEnabled()))
 				panelConfig->ChangeActive();
-
+			if (ImGui::MenuItem("Properties", NULL, panelProperties->isEnabled()))
+				panelProperties->ChangeActive();
 			ImGui::EndMenu();
 		}
 		ImGui::EndMainMenuBar();

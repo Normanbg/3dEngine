@@ -29,13 +29,16 @@ void UIPanelProperties::Draw() {
 			ImGui::PopID();
 			ImGui::PushID("Geometry" + i);
 			if (ImGui::TreeNode("Geometry")) {
+				ImGui::Text("Vertices: %d", meshIterator._Ptr->num_vertex);
 				ImGui::Text("Triangles: %d", meshIterator._Ptr->num_faces);
+				ImGui::Text("Indices: %d", meshIterator._Ptr->num_index);
+				ImGui::Text("Normals: %d", meshIterator._Ptr->num_normals);
 				ImGui::TreePop();
 			}
 			ImGui::PopID();
 			ImGui::PushID("Textures" + i);
 			if (ImGui::TreeNode("Textures")) {
-				ImGui::Text("Texture size:\n Width: %dpx \n Height: %dpx", meshIterator._Ptr->texWidth, meshIterator._Ptr->texHeight);
+				ImGui::Text("Texture size:\n Width: %dpx \n Height: %dpx \n Texture coords: %d", meshIterator._Ptr->texWidth, meshIterator._Ptr->texHeight, meshIterator._Ptr->num_textureCoords);
 				ImGui::TreePop();
 			}
 			ImGui::PopID();
