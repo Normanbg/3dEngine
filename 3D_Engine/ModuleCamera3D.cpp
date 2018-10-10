@@ -54,6 +54,40 @@ update_status ModuleCamera3D::Update(float dt)
 	BROFILER_CATEGORY("Camera3D_Update", Profiler::Color::Chartreuse);
 	vec3 newPos(0, 0, 0);
 
+	if (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT && App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT) {
+		float speed = CAMERA_SPEED * dt;
+		int dx = -App->input->GetMouseXMotion();
+		int dy = -App->input->GetMouseYMotion();
+
+		mouseSensitivity = 0.25f;
+		vec3 newPosition = Position - Reference;
+		if (dx != 0)
+		{
+			float DeltaX = (float)dx * mouseSensitivity;
+
+			X = rotate(X, DeltaX, vec3(0.0f, 1.0f, 0.0f));
+			Y = rotate(Y, DeltaX, vec3(0.0f, 1.0f, 0.0f));
+			Z = rotate(Z, DeltaX, vec3(0.0f, 1.0f, 0.0f));
+		}
+
+		if (dy != 0)
+		{
+			float DeltaY = (float)dy * mouseSensitivity;
+
+			Y = rotate(Y, DeltaY, X);
+			Z = rotate(Z, DeltaY, X);
+
+			if (Y.y < 0.0f)
+			{
+				Z = vec3(0.0f, Z.y > 0.0f ? 1.0f : -1.0f, 0.0f);
+				Y = cross(Z, X);
+			}
+		}
+
+		Reference = Position - Z * length(newPosition);
+		Look(Position, Reference, true);
+
+	}
 	//While Right clicking, “WASD” fps-like movement While Right clicking, “WASD” fps-like movement and free look enabled
 	if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT)
 	{

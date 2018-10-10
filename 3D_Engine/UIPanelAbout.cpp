@@ -56,7 +56,7 @@ void UIPanelAbout::Draw(){
 	if (ImGui::SmallButton("JSON PARSON"))
 		App->RequestBrowser("http://kgabis.github.com/parson/");
 	if (ImGui::SmallButton("DeviceId"))
-		App->RequestBrowser("http://kgabis.github.com/parson/");//MISSING DEVIDEID LINK!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		App->RequestBrowser("https://github.com/GameTechDev/gpudetect/blob/master/DeviceId.h");
 
 	ImGui::Spacing();
 	ImGui::Spacing();
