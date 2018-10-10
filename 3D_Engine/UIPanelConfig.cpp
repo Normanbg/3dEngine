@@ -200,7 +200,7 @@ void UIPanelConfig::Draw() {
 		bool tex2D = App->renderer3D->GetTexture2D();
 		if (ImGui::Checkbox("Texture2D", &tex2D)) {
 			App->renderer3D->SetTexture2D(tex2D);
-		}
+		}		
 		bool grid = App->renderer3D->GetGrid();
 		if (ImGui::Checkbox("Grid ", &grid)) {
 			App->renderer3D->SetGrid(grid);
@@ -214,9 +214,14 @@ void UIPanelConfig::Draw() {
 		if (ImGui::Checkbox("Wireframe", &wiref)) {
 			App->renderer3D->SetWireframe(wiref);
 		}
+		ImGui::SameLine();
 		bool normals = App->renderer3D->GetNormals();
 		if (ImGui::Checkbox("FBX Normals", &normals)) {
 			App->renderer3D->SetNormals(normals);
+		}
+		bool bBox = App->renderer3D->GetBoundingBox();
+		if (ImGui::Checkbox("Bounding Box", &bBox)) {
+			App->renderer3D->SetBoundingBox(bBox);
 		}
 	}
 	ImGui::End();

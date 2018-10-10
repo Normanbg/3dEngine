@@ -7,6 +7,7 @@
 #include "MeshImporter.h"
 #include "TextureImporter.h"
 #include <array>
+#include "MathGeoLib/Geometry/AABB.h"
 
 #include <vector>
 #define MAX_LIGHTS 8
@@ -15,15 +16,15 @@
 
 struct Mesh {
 
-	uint id_index = 0;
+	uint id_index = -1;
 	uint num_index = 0;
 	uint* index = nullptr;
 
-	uint id_vertex = 0;
+	uint id_vertex = -1;
 	uint num_vertex = 0;
 	float3* vertex = nullptr;
 
-	uint id_normals = 0;
+	uint id_normals = -1;
 	uint num_normals = 0;
 	float3* normals = nullptr;
 
@@ -37,11 +38,18 @@ struct Mesh {
 	float2* texturesCoords = nullptr;
 	GLuint texture = 0;
 
+	AABB boundingBox;
 
+	bool bBox = false;
 	bool generated = false;
 
-	void Draw();
-	void CleanUp();
+	void Draw();	
+	void CleanUp();	
+		
+	void generateBoundingBox();
+
+private:
+	void DrawBoundingBox();
 };
 
 struct Texture {
@@ -80,6 +88,8 @@ public:
 	void SetAxis(bool active) { _axis = active; }
 	void SetGrid(bool active) { _grid = active; }
 
+	void SetBoundingBox(bool active);
+
 	inline bool GetDepthTest() const { return _depthTest; }
 	inline bool GetCullFace() const { return _cullFace; }
 	inline bool GetLighting()const { return _lighting; }
@@ -87,6 +97,7 @@ public:
 	inline bool GetTexture2D()const { return _texture2D; }
 	inline bool GetWireframe()const { return _wireframe; }
 	inline bool GetNormals()const { return _normals; }
+	inline bool GetBoundingBox()const { return _bBox; }
 
 	inline bool GetAxis() const { return _axis; }
 	inline bool GetGrid() const { return _grid; }
@@ -95,6 +106,8 @@ public:
 
 	void AddMesh(Mesh* mesh);
 	void LoadDroppedFBX(char* droppedFileDir);
+
+	void ClearSceneMeshes();
 
 public:
 
@@ -145,6 +158,7 @@ private:
 	bool _axis = true;
 	bool _grid = true;
 	bool _normals = false;
+	bool _bBox = false;
 
 	std::vector<Mesh> meshes;
 

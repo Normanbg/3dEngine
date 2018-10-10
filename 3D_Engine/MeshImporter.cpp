@@ -124,6 +124,7 @@ void MeshImporter::LoadFromMesh(const aiScene* currSc, aiMesh * new_mesh){
 			OWN_LOG("Error loading texture from fbx. Error: %s", aiGetErrorString());
 		}
 	}
+	mesh.generateBoundingBox();
 	App->renderer3D->AddMesh(&mesh);
 }
 

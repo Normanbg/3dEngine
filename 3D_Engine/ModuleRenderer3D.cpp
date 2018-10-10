@@ -413,10 +413,7 @@ bool ModuleRenderer3D::CleanUp()
 	glDeleteBuffers(1, &buffIndicesSphereID);
 	glDeleteBuffers(1, &buffIndicesFrustumID);
 
-	for (int i = meshes.size() - 1; i >= 0; i--) {
-		meshes[i].CleanUp();
-	
-	}
+	ClearSceneMeshes();
 		
 	SDL_GL_DeleteContext(context); 
 	return true;
@@ -518,14 +515,32 @@ void ModuleRenderer3D::SetWireframe(bool active) {
 	_wireframe = active;
 }
 
+void ModuleRenderer3D::SetBoundingBox(bool active){
+	for (int i =  0; i < meshes.size(); i++) {
+		meshes[i].bBox = active;
+	}
+
+}
+
 void ModuleRenderer3D::AddMesh(Mesh*  mesh)
 {
+
 	meshes.push_back(*mesh);
 }
 
 void ModuleRenderer3D::LoadDroppedFBX(char * droppedFileDir){
+	ClearSceneMeshes();
 	importer->LoadFBX(droppedFileDir);
 	GenBuffFromMeshes();	
+}
+
+void ModuleRenderer3D::ClearSceneMeshes(){
+
+	OWN_LOG("Clearing meshes in scene")
+	for (int i = meshes.size()-1; i >=0 ; i--) {
+		meshes[i].CleanUp();
+	}
+	meshes.clear();
 }
 
 void ModuleRenderer3D::ShowAxis() {
@@ -554,6 +569,7 @@ void ModuleRenderer3D::ShowAxis() {
 	glVertex3f(-0.05f, -0.1f, 1.05f); glVertex3f(0.05f, -0.1f, 1.05f);
 
 	glEnd();
+	glLineWidth(1.0f);
 }
 
 void ModuleRenderer3D::ShowGrid() {
@@ -616,9 +632,68 @@ void Mesh::Draw()
 			glEnd();
 		}
 	}
+	if (bBox) {
+		DrawBoundingBox();
+	}
+}
+
+void Mesh::DrawBoundingBox(){
+
+	
+	glLineWidth(2.0f);
+	glBegin(GL_LINES);
+	glColor4f(0.0f, 1.0f, 0.0f, 1.0f); //green
+	
+	glVertex3f(boundingBox.CornerPoint(0).x, boundingBox.CornerPoint(0).y, boundingBox.CornerPoint(0).z);
+	glVertex3f(boundingBox.CornerPoint(1).x, boundingBox.CornerPoint(1).y, boundingBox.CornerPoint(1).z);
+
+	glVertex3f(boundingBox.CornerPoint(0).x, boundingBox.CornerPoint(0).y, boundingBox.CornerPoint(0).z);
+	glVertex3f(boundingBox.CornerPoint(3).x, boundingBox.CornerPoint(3).y, boundingBox.CornerPoint(3).z);
+
+	glVertex3f(boundingBox.CornerPoint(1).x, boundingBox.CornerPoint(1).y, boundingBox.CornerPoint(1).z);
+	glVertex3f(boundingBox.CornerPoint(2).x, boundingBox.CornerPoint(2).y, boundingBox.CornerPoint(2).z);
+
+	glVertex3f(boundingBox.CornerPoint(2).x, boundingBox.CornerPoint(2).y, boundingBox.CornerPoint(2).z);
+	glVertex3f(boundingBox.CornerPoint(3).x, boundingBox.CornerPoint(3).y, boundingBox.CornerPoint(3).z);
+
+	glVertex3f(boundingBox.CornerPoint(0).x, boundingBox.CornerPoint(0).y, boundingBox.CornerPoint(0).z);
+	glVertex3f(boundingBox.CornerPoint(4).x, boundingBox.CornerPoint(4).y, boundingBox.CornerPoint(4).z);
+
+	glVertex3f(boundingBox.CornerPoint(5).x, boundingBox.CornerPoint(5).y, boundingBox.CornerPoint(5).z);
+	glVertex3f(boundingBox.CornerPoint(1).x, boundingBox.CornerPoint(1).y, boundingBox.CornerPoint(1).z);
+
+
+	glVertex3f(boundingBox.CornerPoint(4).x, boundingBox.CornerPoint(4).y, boundingBox.CornerPoint(4).z);
+	glVertex3f(boundingBox.CornerPoint(5).x, boundingBox.CornerPoint(5).y, boundingBox.CornerPoint(5).z);
+
+	glVertex3f(boundingBox.CornerPoint(5).x, boundingBox.CornerPoint(5).y, boundingBox.CornerPoint(5).z);
+	glVertex3f(boundingBox.CornerPoint(6).x, boundingBox.CornerPoint(6).y, boundingBox.CornerPoint(6).z);
+
+	glVertex3f(boundingBox.CornerPoint(6).x, boundingBox.CornerPoint(6).y, boundingBox.CornerPoint(6).z);
+	glVertex3f(boundingBox.CornerPoint(7).x, boundingBox.CornerPoint(7).y, boundingBox.CornerPoint(7).z);
+
+	glVertex3f(boundingBox.CornerPoint(4).x, boundingBox.CornerPoint(4).y, boundingBox.CornerPoint(4).z);
+	glVertex3f(boundingBox.CornerPoint(7).x, boundingBox.CornerPoint(7).y, boundingBox.CornerPoint(7).z);
+
+	glVertex3f(boundingBox.CornerPoint(7).x, boundingBox.CornerPoint(7).y, boundingBox.CornerPoint(7).z);
+	glVertex3f(boundingBox.CornerPoint(3).x, boundingBox.CornerPoint(3).y, boundingBox.CornerPoint(3).z);
+
+	glVertex3f(boundingBox.CornerPoint(6).x, boundingBox.CornerPoint(6).y, boundingBox.CornerPoint(6).z);
+	glVertex3f(boundingBox.CornerPoint(2).x, boundingBox.CornerPoint(2).y, boundingBox.CornerPoint(2).z);
+
+	glEnd();
+	glLineWidth(1.0f);
+	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
 void Mesh::CleanUp(){
+
+	if(id_index!=-1)
+		glDeleteBuffers(1, &id_index);
+	if (id_vertex != -1)
+		glDeleteBuffers(1, &id_vertex);
+	if (id_normals != -1)
+		glDeleteBuffers(1, &id_normals);
 
 	delete[] index;
 	delete[] vertex;
@@ -626,3 +701,14 @@ void Mesh::CleanUp(){
 	delete[] texturesCoords;
 
 }
+
+void Mesh::generateBoundingBox(){
+
+	AABB aabb;
+
+	aabb.SetNegativeInfinity();
+	aabb.Enclose((vec*)vertex,num_vertex);
+	
+	boundingBox = aabb;
+}
+
