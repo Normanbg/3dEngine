@@ -164,7 +164,6 @@
     <ClInclude Include="ModulePhysics3D.h" />
     <ClInclude Include="ModuleRenderer3D.h" />
     <ClInclude Include="Module.h" />
-    <ClInclude Include="ModuleAudio.h" />
     <ClInclude Include="ModuleInput.h" />
     <ClInclude Include="ModuleSceneIntro.h" />
     <ClInclude Include="ModuleWindow.h" />
@@ -230,7 +229,6 @@
     <ClCompile Include="MathGeoLib\Math\SSEMath.cpp" />
     <ClCompile Include="MathGeoLib\Math\TransformOps.cpp" />
     <ClCompile Include="MathGeoLib\Time\Clock.cpp" />
-    <ClCompile Include="ModuleAudio.cpp" />
     <ClCompile Include="ModuleCamera3D.cpp" />
     <ClCompile Include="ModuleGui.cpp" />
     <ClCompile Include="ModuleInput.cpp" />

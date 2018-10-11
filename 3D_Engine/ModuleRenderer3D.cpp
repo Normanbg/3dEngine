@@ -5,7 +5,6 @@
 //#include <gl/GLU.h>
 #include "ModuleWindow.h"
 #include "ModuleInput.h"
-#include "ModuleAudio.h"
 #include "ModuleSceneIntro.h"
 #include "ModuleCamera3D.h"
 #include "ModulePhysics3D.h"
@@ -26,8 +25,8 @@ ModuleRenderer3D::ModuleRenderer3D(bool start_enabled) : Module(start_enabled)
 }
 
 // Destructor
-ModuleRenderer3D::~ModuleRenderer3D()
-{
+ModuleRenderer3D::~ModuleRenderer3D(){
+
 	delete texImporter;
 	delete importer;
 }
