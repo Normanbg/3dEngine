@@ -131,27 +131,6 @@ private:
 
 	bool _vSync;
 
-
-	std::array<vec, 36> box;
-	std::array<vec, 8> box2;
-	std::array<uint, 36> boxIndices;
-	std::array<vec, 6> plane;
-	std::array<vec, 6> ray;
-	std::array<vec, 8> frustum;
-
-	std::vector<vec> sphere;
-	std::vector<uint> sphereIndices;
-
-
-	uint buffBoxID = 0;
-	uint buffBox2ID = 0;
-	uint buffsphereID = 0;
-	uint buffPlaneID = 0;
-	uint buffRayID = 0;
-	uint buffIndicesID = 0;
-	uint buffIndicesSphereID = 0; 
-	uint buffIndicesFrustumID = 0;
-	
 	bool _depthTest = true;
 	bool _lighting = true;
 	bool _cullFace = true;

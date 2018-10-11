@@ -148,122 +148,9 @@ bool ModuleRenderer3D::Start() {
 	BROFILER_CATEGORY("Renderer3D_Start", Profiler::Color::HotPink);
 
 	bool ret = true;
-		box = { vec{-3.0f,3.0f,-3.0f },{-3.0f,3.0f, -1.0f},{	-3.0f, 1.0f, -1.0f},{-1.0f, 1.0f,-3.0f },{-3.0f,3.0f,-3.0f},{-3.0f, 1.0f,-3.0f},
-	{-1.0f,3.0f, -1.0f },{	-3.0f,3.0f,-3.0f},{-1.0f,3.0f,-3.0f},{-1.0f, 1.0f,-3.0f},{-1.0f,3.0f,-3.0f},{-3.0f,3.0f,-3.0f},{-3.0f,3.0f,-3.0f},
-	{-3.0f, 1.0f, -1.0f},{	-3.0f, 1.0f,-3.0f},{-1.0f,3.0f, -1.0f},{-3.0f,3.0f, -1.0f},{-3.0f,3.0f,-3.0f},{	-3.0f, 1.0f, -1.0f},{-3.0f,3.0f, -1.0f},
-	{-1.0f,3.0f, -1.0f},{-1.0f, 1.0f, -1.0f},{-1.0f,3.0f,-3.0f},{-1.0f, 1.0f,-3.0f},{-1.0f,3.0f,-3.0f},{-1.0f, 1.0f, -1.0f},{	-1.0f,3.0f, -1.0f},
-	{-1.0f, 1.0f, -1.0f},{	-1.0f, 1.0f,-3.0f},{-3.0f, 1.0f,-3.0f},{	-1.0f,1.0f, -1.0f},{-3.0f, 1.0f,-3.0f},{-3.0f, 1.0f, -3.0f},{-1.0f, 1.0f, -1.0f},
-	{-3.0f, 1.0f, -1.0f},{	-1.0f,3.0f, -1.0f} }; // Box divided into triangles, 102 coords of its triangles (6faces* 2triangles* 3vertex* 3coords)
-
-	glGenBuffers(1, (GLuint*) &(buffBoxID));  // generates 1 buffer. then it assign a GLuint to its mem adress.
-	glBindBuffer(GL_ARRAY_BUFFER, buffBoxID); // set the type of buffer
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float)*box.size() * 3, &box[0], GL_STATIC_DRAW); // send the buffer data to VRAM
-	
-	box2 = { vec{.0f,.0f,.0f},  {1.0f,.0f,.0f} ,{.0f,1.0f,.0f} , {1.0f,1.0f,.0f} , {.0f,.0f,1.0f} , {1.0f,.0f,1.0f} , {.0f,1.0f,1.0f}  ,  {1.0f,1.0f,1.0f} };
-	//Box2 divided into the 8 vertex that it has
-
-	glGenBuffers(1, (GLuint*) &(buffBox2ID));
-	glBindBuffer(GL_ARRAY_BUFFER, buffBox2ID); 
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float)*box2.size()*3 , &box2[0], GL_STATIC_DRAW); 
-
-	boxIndices = {0,1,2 , 1,3,2 , 3,1,5 , 5,7,3 , 7,5,4 , 6,7,4 , 6,4,0, 0,2,6  , 6,2,3 , 6,3,7 , 0,4,5 , 0,5,1 };
-
-	glGenBuffers(1, (GLuint*)&(buffIndicesID));
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffIndicesID);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * boxIndices.size(),&boxIndices[0], GL_STATIC_DRAW);
-
-	//Plane
-	plane = { vec{0.0f, 0.0f, 0.0f},{ 15.0f,0.0f, 0.0f},{ 0.0f, 0.0f, 15.0f }, {	0.0f, 0.0f, 15.0f },{ 15.0f,0.0f,0.0f },{ 15.0f,0.0f, 15.0f } };
-	glGenBuffers(1, (GLuint*) &(buffPlaneID));  // generates 1 buffer. then it assign a GLuint to its mem adress.
-	glBindBuffer(GL_ARRAY_BUFFER, buffPlaneID); // set the type of buffer
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float)*plane.size() * 3, &plane[0], GL_STATIC_DRAW);
-
-	//Ray
-	ray = { vec{ 0.0f, 0.0f, 0.0f },{ 0.03f,0.0f, 0.0f },{ 0.0f, 0.0f, 105.0f },{ 0.0f, 0.0f, 105.0f },{ 0.03f,0.0f,0.0f },{ 0.03f,0.0f, 105.0f } };
-	glGenBuffers(1, (GLuint*) &(buffRayID));  // generates 1 buffer. then it assign a GLuint to its mem adress.
-	glBindBuffer(GL_ARRAY_BUFFER, buffRayID); // set the type of buffer
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float)*ray.size() * 3, &ray[0], GL_STATIC_DRAW);
-
-	//Frustum
-	frustum = { vec{ 5.0f,5.0f,5.0f },{ 6.0f,5.0f,5.0f },{ 5.0f,6.0f,5.0f },{ 6.0f,6.0f,5.0f },		{4.75f,4.75f,6.0f },{ 6.25f,4.75f,6.0f },{ 4.75f,6.25f,6.0f },{ 6.25f,6.25f,6.0f } };
-
-	glGenBuffers(1, (GLuint*) &(buffIndicesFrustumID));
-	glBindBuffer(GL_ARRAY_BUFFER, buffIndicesFrustumID);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float)*frustum.size() * 3, &frustum[0], GL_STATIC_DRAW);
-	
-	//---sphere
-	float radius = 1;
-	float sectors =10;
-	float stacks = 10;
-	vec position( 0,0, 0);
-
-	float x, y, z, xy;                              // vertex position
-	
-	float sectorStep = 2 * pi / sectors;
-	float stackStep = pi / stacks;
-	float sectorAngle, stackAngle;
-
-	for (int i = 0; i <= stacks; ++i)
-	{
-		stackAngle = pi / 2 - i * stackStep;        // starting from pi/2 to -pi/2
-		xy = radius * cosf(stackAngle);             // r * cos(u)
-		y = position.y+ radius * sinf(stackAngle);              // r * sin(u)
-
-													// add (sectorCount+1) vertices per stack
-													// the first and last vertices have same position and normal, but different tex coods
-		for (int j = 0; j <= sectors; ++j)
-		{
-			sectorAngle = j * sectorStep;
-
-			// vertex position (x, y, z)
-			z = position.z+ xy  * cosf(sectorAngle);             // r * cos(u) * cos(v)
-			x = position.x + xy * sinf(sectorAngle);             // r * cos(u) * sin(v)
-			sphere.push_back(vec(x, y, z));
-						
-		}
-	}
-
-	glGenBuffers(1, (GLuint*) &(buffsphereID));
-	glBindBuffer(GL_ARRAY_BUFFER, buffsphereID);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float)*sphere.size() * 3, &sphere[0], GL_STATIC_DRAW);
-
-
-
-	int k1, k2;
-	for (int i = 0; i < stacks; ++i)
-	{
-		k1 = i * (sectors + 1);     // beginning of current stack
-		k2 = k1 + sectors + 1;      // beginning of next stack
-
-		for (int j = 0; j < sectors; ++j, ++k1, ++k2)
-		{
-			// 2 triangles per sector excluding 1st and last stacks
-			if (i != 0)
-			{
-				sphereIndices.push_back(k1);
-				sphereIndices.push_back(k2);
-				sphereIndices.push_back(k1 + 1);
-			}
-
-			if (i != (stacks - 1))
-			{
-				sphereIndices.push_back(k1 + 1);
-				sphereIndices.push_back(k2);
-				sphereIndices.push_back(k2 + 1);
-			}
-		}
-	}
-
-	glGenBuffers(1, (GLuint*)&(buffIndicesSphereID));
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffIndicesSphereID);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * sphereIndices.size(), &sphereIndices[0], GL_STATIC_DRAW);
-	
 	
 	importer->LoadFBX("BakerHouse.fbx");
 	GenBuffFromMeshes();
-
-	
-	//texImporter->LoadCheckeredPlane();
 
 	return ret;
 }
@@ -295,59 +182,9 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
 	BROFILER_CATEGORY("Renderer3D_PostUpdate", Profiler::Color::HotPink);
-	//direct mode box 
-	/*
-	glColor4f(1.0f, 1.0f, .0f, 1.0f); // color cyan
 
-	glBegin(GL_TRIANGLES);
-	glVertex3f(0.0f, 10.0f, 0.0f); glVertex3f(10.0f, 0.0f, 0.0f); glVertex3f(0.0f, 0.0f, 0.0f);
-	glVertex3f(0.0f, 10.0f, 0.0f); glVertex3f(10.0f, 10.0f, 0.0f); glVertex3f(10.0f, 0.0f, 0.0f);
-	glVertex3f(10.0f, 10.0f, 0.0f); glVertex3f(10.0f, 0.0f, 10.0f); glVertex3f(10.0f, 0.0f, 0.0f);
-	glVertex3f(10.0f, 10.0f, 0.0f); glVertex3f(10.0f, 10.0f, 10.0f); glVertex3f(10.0f, 0.0f, 10.0f);
-	glVertex3f(0.0f, 10.0f, 10.0f); glVertex3f(10.0f, 0.0f, 10.0f); glVertex3f(10.0f, 10.0f, 10.0f);
-	glVertex3f(0.0f, 10.0f, 10.0f); glVertex3f(0.0f, 0.0f, 10.0f); glVertex3f(10.0f, 0.0f, 10.0f);
-	glVertex3f(0.0f, 0.0f, 0.0f); glVertex3f(0.0f, 0.0f, 10.0f); glVertex3f(0.0f, 10.0f, 10.0f);
-	glVertex3f(0.0f, 10.0f, 0.0f); glVertex3f(0.0f, 0.0f, 0.0f); glVertex3f(0.0f, 10.0f, 10.0f);
-	glVertex3f(10.0f, 10.0f, 0.0f); glVertex3f(0.0f, 10.0f, 0.0f); glVertex3f(0.0f, 10.0f, 10.0f);
-	glVertex3f(0.0f, 10.0f, 10.0f); glVertex3f(10.0f, 10.0f, 10.0f); glVertex3f(10.0f, 10.0f, 0.0f);
-	glVertex3f(10.0f, 0.0f, 10.0f); glVertex3f(0.0f, 0.0f, 10.0f); glVertex3f(10.0f, 0.0f, 0.0f);
-	glVertex3f(0.0f, 0.0f, 10.0f); glVertex3f(0.0f, 0.0f, 0.0f); glVertex3f(10.0f, 0.0f, 0.0f);
-	glEnd();
-*/
-
-
-	///-------------------BOX DRAWING
-	glLineWidth(1.0f); 
-	glEnableClientState(GL_VERTEX_ARRAY);//enables vertex array
-
-
-	//---Ray
-
-	glColor4f(.0f, 1.0f, .0f, 1.0f);
-
-	glBindBuffer(GL_ARRAY_BUFFER, buffRayID);// sets the type of buffer
-	glVertexPointer(3, GL_FLOAT, 0, NULL);  // points the first vertex
-	glDrawArrays(GL_TRIANGLES, 0, 6);
-	glBindBuffer(GL_ARRAY_BUFFER, 0); //resets the buffer
-
-	//Frustum
-	glColor4f(0.5f, 1.0f, 0.5f, 1.0f);
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffIndicesID);
-	glVertexPointer(3, GL_FLOAT, 0, &frustum[0]);
-	glDrawElements(GL_TRIANGLES, boxIndices.size(), GL_UNSIGNED_INT, NULL);
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);//resets the buffer
-
-	glDisableClientState(GL_VERTEX_ARRAY);
 	DrawMeshes();
-
-	
-	
-	//texImporter->DrawCheckeredPlane();
-	
-	//-------------------------------------------------Need to call Debug Draw
-
+	glBindBuffer(GL_ARRAY_BUFFER, 0); //resets the buffer
 
 	App->gui->Draw();
 
@@ -364,15 +201,6 @@ bool ModuleRenderer3D::CleanUp()
 
 	importer->EndDebugLog();
 	texImporter->CleanUp();
-	glDeleteBuffers(1, &buffBoxID);
-	glDeleteBuffers(1, &buffBox2ID);
-	glDeleteBuffers(1, &buffsphereID);
-	glDeleteBuffers(1, &buffPlaneID);
-	glDeleteBuffers(1, &buffRayID);
-	glDeleteBuffers(1, &buffIndicesID);
-	glDeleteBuffers(1, &buffIndicesSphereID);
-	glDeleteBuffers(1, &buffIndicesFrustumID);
-
 	ClearSceneMeshes();
 		
 	SDL_GL_DeleteContext(context); 
