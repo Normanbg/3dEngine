@@ -495,6 +495,17 @@ void ModuleRenderer3D::AddTexture(Texture*  tex)
 	textures.push_back(*tex);
 }
 
+Texture* ModuleRenderer3D::GetTextureFromID(GLuint id) 
+{
+	for (int i = 0; i < textures.size(); i++) {
+		if (textures[i].textureID = id) {
+			return &textures[i];
+		}
+	}
+	OWN_LOG("Error getting texture from ID");
+	return nullptr;
+}
+
 void ModuleRenderer3D::LoadDroppedFBX(char * droppedFileDir){
 	ClearSceneMeshes();
 	importer->LoadFBX(droppedFileDir);
@@ -581,7 +592,7 @@ void Mesh::Draw()
 		glBindTexture(GL_TEXTURE_2D, 0);
 		glBindTexture(GL_ELEMENT_ARRAY_BUFFER, 0);
 		
-		glBindTexture(GL_TEXTURE_2D, tex->textureID);
+		glBindTexture(GL_TEXTURE_2D, texID);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_index);
 		glVertexPointer(3, GL_FLOAT, 0, &(vertex[0]));		
 		glTexCoordPointer(2, GL_FLOAT, 0, &(texturesCoords[0]));

@@ -17,6 +17,7 @@ struct Texture {
 	uint texWidth = 0;
 	uint texHeight = 0;
 
+
 	GLuint textureID = 0;
 
 	void CleanUp();
@@ -40,12 +41,11 @@ struct Mesh {
 	std::string name;
 	vec3 colors = { 0,0,0 };
 
-	//uint texWidth = 0;
-	//uint texHeight = 0;
+	
 	uint num_textureCoords = 0;
 	float2* texturesCoords = nullptr;
-	//GLuint texture = 0;
-	Texture* tex;
+
+	GLuint texID = 0;
 
 	AABB boundingBox;
 
@@ -111,6 +111,8 @@ public:
 
 	void AddMesh(Mesh* mesh);
 	void AddTexture(Texture* tex);
+	Texture* GetTextureFromID(GLuint id);
+
 	void LoadDroppedFBX(char* droppedFileDir);
 
 	void ClearSceneMeshes();
