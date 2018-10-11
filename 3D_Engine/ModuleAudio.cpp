@@ -7,7 +7,6 @@
 
 ModuleAudio::ModuleAudio(bool start_enabled) : Module(start_enabled), music(NULL)
 {
-
 	name = "Audio";
 }
 

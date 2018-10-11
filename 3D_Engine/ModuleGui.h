@@ -1,4 +1,3 @@
-#pragma once
 #ifndef __ModuleGui_H__
 #define __ModuleGui_H__
 
@@ -38,10 +37,10 @@ public:
 	bool demoShowcase = false;
 
 	std::list<UIPanel*> uiPanels;
-	UIPanelAbout* panelAbout = nullptr;
-	UIPanelConfig* panelConfig = nullptr;
-	UIPanelConsole* panelConsole = nullptr;
-	UIPanelProperties* panelProperties = nullptr;
+	UIPanelAbout*		panelAbout		= nullptr;
+	UIPanelConfig*		panelConfig		= nullptr;
+	UIPanelConsole*		panelConsole	= nullptr;
+	UIPanelProperties*	panelProperties	= nullptr;
 
 	std::vector<std::string> logsBuffer;
 	uint ilVersion = 0;

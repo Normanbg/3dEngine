@@ -30,8 +30,6 @@ public:
 	update_status PreUpdate(float dt);
 	bool CleanUp();
 
-	void InputData();
-
 	FileType ObtainDroppedFileType(std::string droppedFileDir);
 
 	KEY_STATE GetKey(int id) const
@@ -77,7 +75,6 @@ private:
 	int mouse_z;
 	int mouse_x_motion;
 	int mouse_y_motion;
-	//int mouse_z_motion;
 
 	char* dropped_filedir = nullptr;
 };

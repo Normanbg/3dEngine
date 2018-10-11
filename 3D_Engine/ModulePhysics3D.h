@@ -20,24 +20,7 @@ public:
 	update_status PostUpdate(float dt);
 	bool CleanUp();
 
-	/*void AddBody(const math::Sphere& sph);
-	void AddBody(const math::Capsule& caps);
-	void AddBody(const math::Plane& plane);*/
-	/*void AddBody(const math::AABB& aabb);*/
-/*
-	void AddConstraintP2P(PhysBody3D& bodyA, PhysBody3D& bodyB, const vec3& anchorA, const vec3& anchorB);
-	void AddConstraintHinge(PhysBody3D& bodyA, PhysBody3D& bodyB, const vec3& anchorA, const vec3& anchorB, const vec3& axisS, const vec3& axisB, bool disable_collision = false);
-*/
-
-	bool isIntersecting();
 private:
 
 	bool debug;
-	
-	/*std::list<math::Sphere> spheres;
-	std::list<math::Capsule> capsules;
-	std::list<math::Plane> planes;*/
-	//std::list<math::AABB> aabbs;
-	
-	
 };

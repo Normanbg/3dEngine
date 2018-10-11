@@ -129,7 +129,7 @@ update_status ModuleInput::PreUpdate(float dt)
 				switch (FileType file = ObtainDroppedFileType(dropped_filedirStr))
 				{
 				case CANT_LOAD:
-					OWN_LOG("File not supported, try FBX, PNG or DSS")
+					OWN_LOG("File not supported, try FBX, PNG or DDS")
 					break;
 				case FBX:
 					OWN_LOG("Dropped .fbx file");
