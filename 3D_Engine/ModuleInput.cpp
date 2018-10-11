@@ -2,7 +2,6 @@
 #include "Application.h"
 #include "ModuleInput.h"
 #include "ModuleWindow.h"
-#include "ModuleSceneIntro.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleCamera3D.h"
 #include "ModuleGui.h"

@@ -5,7 +5,6 @@
 //#include <gl/GLU.h>
 #include "ModuleWindow.h"
 #include "ModuleInput.h"
-#include "ModuleSceneIntro.h"
 #include "ModuleCamera3D.h"
 #include "ModuleGui.h"
 #include "Brofiler/Brofiler.h"
