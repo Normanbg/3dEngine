@@ -120,6 +120,7 @@ void MeshImporter::LoadFromMesh(const aiScene* currSc, aiMesh * new_mesh){
 						OWN_LOG("Texture not found.\n Error loading texture from fbx.");
 						return;
 					}
+
 				}
 				_text.path = nwPath;
 				mesh.texID = _text.textureID;
