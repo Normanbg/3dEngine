@@ -6,7 +6,6 @@
 #include "ModuleSceneIntro.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleCamera3D.h"
-#include "ModulePhysics3D.h"
 #include "ModuleGui.h"
 #include "Brofiler\Brofiler.h"
 
@@ -23,7 +22,6 @@ Application::Application()
 	scene_intro = new ModuleSceneIntro(this);
 	renderer3D = new ModuleRenderer3D(this);
 	camera = new ModuleCamera3D(this);
-	physics = new ModulePhysics3D(this);
 	gui = new ModuleGui(this);
 	
 	_organization = ORGANIZATION;
@@ -35,7 +33,6 @@ Application::Application()
 	AddModule(window);
 	AddModule(camera);
 	AddModule(input);
-	AddModule(physics);
 	AddModule(gui);
 	
 	// Scenes
