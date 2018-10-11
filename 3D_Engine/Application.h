@@ -7,7 +7,6 @@
 #include"./ImGui/imgui.h"
 #include "SDL\include\SDL.h"
 #include "Globals.h"
-#include "PerfTimer.h"
 #include "Timer.h"
 #include "./JSON/parson.h"
 #include "./Glew/include/glew.h"
@@ -51,7 +50,6 @@ private:
 	float	prevTime_scale = 1.f;
 	int		time_scaleFrames = -1;
 
-	PerfTimer	ptimer;
 	Uint64		frame_count = 0;
 	Uint32		framerate_cap = FRAMERATE_CAP;
 	Uint32		prev_framerate_cap = 0;

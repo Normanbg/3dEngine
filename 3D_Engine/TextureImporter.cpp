@@ -5,7 +5,7 @@
 #include "ModuleRenderer3D.h"
 #include "Devil/include/il.h"
 #include "Devil/include/ilut.h"
-#include "DevIL\include\ilu.h"
+#include "DevIL/include/ilu.h"
 
 
 #pragma comment( lib, "Devil/libx86/DevIL.lib" )
