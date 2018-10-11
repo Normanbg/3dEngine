@@ -106,18 +106,21 @@ void MeshImporter::LoadFromMesh(const aiScene* currSc, aiMesh * new_mesh){
 
 			std::string nwPath = TEXTURES_PATH;
 			nwPath += path.C_Str();
-
-			mesh.texture = App->renderer3D->texImporter->LoadTexture(nwPath.c_str(), mesh.texWidth, mesh.texHeight);
+			Texture textu;			
+			textu.textureID = App->renderer3D->texImporter->LoadTexture(nwPath.c_str(),textu.texWidth,textu.texHeight);
 			OWN_LOG("Loading texture from Textures folder");
-			if (mesh.texture == -1) {
+			if (textu.textureID == -1) {
 				OWN_LOG("Texture not found. \nLoading texture from HardDisk");
 				
-				mesh.texture = App->renderer3D->texImporter->LoadTexture(path.C_Str(), mesh.texWidth, mesh.texHeight);
-				if (mesh.texture == -1) {
+				textu.textureID = App->renderer3D->texImporter->LoadTexture(path.C_Str(), textu.texWidth, textu.texHeight);
+				if (textu.textureID == -1) {
 
 					OWN_LOG("Texture not found.\n Error loading texture from fbx.");
+					return;
 				}
 			}
+			mesh.tex = &textu;
+			App->renderer3D->AddTexture(&textu);
 		}
 		else {
 			
@@ -133,9 +136,9 @@ void MeshImporter::ChangeMeshTexture(const char * path){
 	std::vector<Mesh>* meshCopy = App->renderer3D->GetMeshesList();
 	GLuint texID = App->renderer3D->texImporter->LoadTexture(path, width, height);
 	for (int i = 0; i < meshCopy->size(); i++) {
-		(*meshCopy)[i].texture = texID;
-		(*meshCopy)[i].texWidth = width;
-		(*meshCopy)[i].texHeight = height;
+		(*meshCopy)[i].tex->texWidth = texID;
+		(*meshCopy)[i].tex->texWidth = width;
+		(*meshCopy)[i].tex->texWidth = height;
 	}
 	//App->renderer3D->meshes = meshCopy;
 }

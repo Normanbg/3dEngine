@@ -12,7 +12,15 @@
 #include <vector>
 #define MAX_LIGHTS 8
 
+struct Texture {
 
+	uint texWidth = 0;
+	uint texHeight = 0;
+
+	GLuint textureID = 0;
+
+	void CleanUp();
+};
 
 struct Mesh {
 
@@ -32,11 +40,12 @@ struct Mesh {
 	std::string name;
 	vec3 colors = { 0,0,0 };
 
-	uint texWidth = 0;
-	uint texHeight = 0;
+	//uint texWidth = 0;
+	//uint texHeight = 0;
 	uint num_textureCoords = 0;
 	float2* texturesCoords = nullptr;
-	GLuint texture = 0;
+	//GLuint texture = 0;
+	Texture* tex;
 
 	AABB boundingBox;
 
@@ -52,10 +61,6 @@ private:
 	void DrawBoundingBox();
 };
 
-struct Texture {
-
-
-};
 class ModuleRenderer3D : public Module
 {
 public:
@@ -105,6 +110,7 @@ public:
 	inline std::vector<Mesh>* GetMeshesList()  { return &meshes; }
 
 	void AddMesh(Mesh* mesh);
+	void AddTexture(Texture* tex);
 	void LoadDroppedFBX(char* droppedFileDir);
 
 	void ClearSceneMeshes();
@@ -164,4 +170,5 @@ private:
 	bool _bBox = false;
 
 	std::vector<Mesh> meshes;	
+	std::vector<Texture> textures;
 };

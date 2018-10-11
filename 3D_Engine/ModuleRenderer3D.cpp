@@ -487,8 +487,12 @@ void ModuleRenderer3D::SetBoundingBox(bool active){
 
 void ModuleRenderer3D::AddMesh(Mesh*  mesh)
 {
-
 	meshes.push_back(*mesh);
+}
+
+void ModuleRenderer3D::AddTexture(Texture*  tex)
+{
+	textures.push_back(*tex);
 }
 
 void ModuleRenderer3D::LoadDroppedFBX(char * droppedFileDir){
@@ -504,6 +508,9 @@ void ModuleRenderer3D::ClearSceneMeshes(){
 		meshes[i].CleanUp();
 	}
 	meshes.clear();
+	for (int i = textures.size() - 1; i >= 0; i--) {
+		textures[i].CleanUp();
+	}
 }
 
 void ModuleRenderer3D::ShowAxis() {
@@ -573,8 +580,8 @@ void Mesh::Draw()
 	else {
 		glBindTexture(GL_TEXTURE_2D, 0);
 		glBindTexture(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-		glBindTexture(GL_TEXTURE_2D, texture);
+		
+		glBindTexture(GL_TEXTURE_2D, tex->textureID);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_index);
 		glVertexPointer(3, GL_FLOAT, 0, &(vertex[0]));		
 		glTexCoordPointer(2, GL_FLOAT, 0, &(texturesCoords[0]));
@@ -663,6 +670,10 @@ void Mesh::CleanUp(){
 	delete[] normals;
 	delete[] texturesCoords;
 
+}
+
+void Texture::CleanUp() {
+	int needtoDO = 0;
 }
 
 void Mesh::generateBoundingBox(){

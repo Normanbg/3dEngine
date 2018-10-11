@@ -38,9 +38,9 @@ void UIPanelProperties::Draw() {
 			ImGui::PopID();
 			ImGui::PushID("Textures" + i);
 			if (ImGui::TreeNode("Textures")) {
-				ImGui::Text("Texture size:\n Width: %dpx \n Height: %dpx \n Texture coords: %d", meshIterator._Ptr->texWidth, meshIterator._Ptr->texHeight, meshIterator._Ptr->num_textureCoords);
+				ImGui::Text("Texture size:\n Width: %dpx \n Height: %dpx \n Texture coords: %d", meshIterator._Ptr->tex->texWidth, meshIterator._Ptr->tex->texHeight, meshIterator._Ptr->num_textureCoords);
 				float windowSize = ImGui::GetWindowContentRegionWidth();
-				ImGui::Image((void*)(meshIterator._Ptr->texture), ImVec2(windowSize, windowSize));
+				ImGui::Image((void*)(meshIterator._Ptr->tex->textureID), ImVec2(windowSize, windowSize));
 				ImGui::TreePop();
 			}
 			ImGui::PopID();
