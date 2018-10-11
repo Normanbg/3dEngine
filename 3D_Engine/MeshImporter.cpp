@@ -105,22 +105,29 @@ void MeshImporter::LoadFromMesh(const aiScene* currSc, aiMesh * new_mesh){
 		if (ret == aiReturn_SUCCESS) {
 
 			std::string nwPath = TEXTURES_PATH;
-			nwPath += path.C_Str();
-			Texture _text;			
-			_text.textureID = App->renderer3D->texImporter->LoadTexture(nwPath.c_str(),_text.texWidth,_text.texHeight);
-			OWN_LOG("Loading texture from Textures folder");
-			if (_text.textureID == -1) {
-				OWN_LOG("Texture not found. \nLoading texture from HardDisk");
-				
-				_text.textureID = App->renderer3D->texImporter->LoadTexture(path.C_Str(), _text.texWidth, _text.texHeight);
+			nwPath += path.C_Str();			
+			GLuint check = App->renderer3D->CheckIfImageAlreadyLoaded(nwPath.c_str());
+			if (check == -1) {
+				Texture _text;
+				_text.textureID = App->renderer3D->texImporter->LoadTexture(nwPath.c_str(), _text.texWidth, _text.texHeight);
+				OWN_LOG("Loading texture from Textures folder");
 				if (_text.textureID == -1) {
+					OWN_LOG("Texture not found. \nLoading texture from HardDisk");
 
-					OWN_LOG("Texture not found.\n Error loading texture from fbx.");
-					return;
+					_text.textureID = App->renderer3D->texImporter->LoadTexture(path.C_Str(), _text.texWidth, _text.texHeight);
+					if (_text.textureID == -1) {
+
+						OWN_LOG("Texture not found.\n Error loading texture from fbx.");
+						return;
+					}
 				}
+				_text.path = nwPath;
+				mesh.texID = _text.textureID;
+				App->renderer3D->AddTexture(&_text);
 			}
-			mesh.texID = _text.textureID;
-			App->renderer3D->AddTexture(&_text);
+			else {
+			mesh.texID = check;
+			}
 		}
 		else {
 			
@@ -131,13 +138,28 @@ void MeshImporter::LoadFromMesh(const aiScene* currSc, aiMesh * new_mesh){
 	App->renderer3D->AddMesh(&mesh);
 }
 
-void MeshImporter::ChangeMeshTexture(const char * path){
-	uint width, height;
+void MeshImporter::ChangeMeshTexture(const char * path) {
+
 	std::vector<Mesh>* meshCopy = App->renderer3D->GetMeshesList();
-	GLuint _texID = App->renderer3D->texImporter->LoadTexture(path, width, height);
-	for (int i = 0; i < meshCopy->size(); i++) {
-		(*meshCopy)[i].texID = _texID;
+
+	GLuint check = App->renderer3D->CheckIfImageAlreadyLoaded(path);
+	if (check == -1) {
+
+		Texture tex;
+		tex.textureID = App->renderer3D->texImporter->LoadTexture(path, tex.texWidth, tex.texHeight);
+		tex.path = path;
+		App->renderer3D->AddTexture(&tex);
+
+		for (int i = 0; i < meshCopy->size(); i++) {
+			(*meshCopy)[i].texID = tex.textureID;
+		}
 	}
-	//App->renderer3D->meshes = meshCopy;
+	else {
+		for (int i = 0; i < meshCopy->size(); i++) {
+			(*meshCopy)[i].texID = check;
+		}
+	}
 }
+	//App->renderer3D->meshes = meshCopy;
+
 

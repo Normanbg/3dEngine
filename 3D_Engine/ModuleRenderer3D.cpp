@@ -485,6 +485,16 @@ void ModuleRenderer3D::SetBoundingBox(bool active){
 
 }
 
+GLuint ModuleRenderer3D::CheckIfImageAlreadyLoaded(const char * _path)
+{
+	for (int i = 0; i < App->renderer3D->textures.size();i++) {
+		if (strcmp(textures[i].path.c_str() ,_path)==0) {
+			return textures[i].textureID;
+		}
+	}
+	return -1;
+}
+
 void ModuleRenderer3D::AddMesh(Mesh*  mesh)
 {
 	meshes.push_back(*mesh);
@@ -522,6 +532,7 @@ void ModuleRenderer3D::ClearSceneMeshes(){
 	for (int i = textures.size() - 1; i >= 0; i--) {
 		textures[i].CleanUp();
 	}
+	textures.clear();
 }
 
 void ModuleRenderer3D::ShowAxis() {
@@ -684,7 +695,8 @@ void Mesh::CleanUp(){
 }
 
 void Texture::CleanUp() {
-	int needtoDO = 0;
+	if (textureID != -1)
+		glDeleteBuffers(1, &textureID);
 }
 
 void Mesh::generateBoundingBox(){

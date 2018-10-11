@@ -71,7 +71,9 @@ GLuint TextureImporter::LoadTexture(const char * path, uint& texWidth, uint& tex
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, infoImage.Width, infoImage.Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, ilGetData()); //specifies the texture
 
 		ilDeleteImages(1, &imageID);
+
 		glBindTexture(GL_TEXTURE_2D, textureID);
+		
 		return textureID;
 	}
 	else {

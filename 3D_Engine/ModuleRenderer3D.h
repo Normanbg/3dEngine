@@ -17,8 +17,9 @@ struct Texture {
 	uint texWidth = 0;
 	uint texHeight = 0;
 
+	std::string path;
 
-	GLuint textureID = 0;
+	GLuint textureID = -1;
 
 	void CleanUp();
 };
@@ -106,6 +107,8 @@ public:
 
 	inline bool GetAxis() const { return _axis; }
 	inline bool GetGrid() const { return _grid; }
+
+	GLuint CheckIfImageAlreadyLoaded(const char*);
 
 	inline std::vector<Mesh>* GetMeshesList()  { return &meshes; }
 
