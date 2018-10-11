@@ -12,7 +12,17 @@
 #include <vector>
 #define MAX_LIGHTS 8
 
+struct Texture {
 
+	uint texWidth = 0;
+	uint texHeight = 0;
+
+	std::string path;
+
+	GLuint textureID = -1;
+
+	void CleanUp();
+};
 
 struct Mesh {
 
@@ -32,11 +42,11 @@ struct Mesh {
 	std::string name;
 	vec3 colors = { 0,0,0 };
 
-	uint texWidth = 0;
-	uint texHeight = 0;
+	
 	uint num_textureCoords = 0;
 	float2* texturesCoords = nullptr;
-	GLuint texture = 0;
+
+	GLuint texID = 0;
 
 	AABB boundingBox;
 
@@ -52,10 +62,6 @@ private:
 	void DrawBoundingBox();
 };
 
-struct Texture {
-
-
-};
 class ModuleRenderer3D : public Module
 {
 public:
@@ -102,9 +108,14 @@ public:
 	inline bool GetAxis() const { return _axis; }
 	inline bool GetGrid() const { return _grid; }
 
+	GLuint CheckIfImageAlreadyLoaded(const char*);
+
 	inline std::vector<Mesh>* GetMeshesList()  { return &meshes; }
 
 	void AddMesh(Mesh* mesh);
+	void AddTexture(Texture* tex);
+	Texture* GetTextureFromID(GLuint id);
+
 	void LoadDroppedFBX(char* droppedFileDir);
 
 	void ClearSceneMeshes();
@@ -131,6 +142,27 @@ private:
 
 	bool _vSync;
 
+
+	std::array<vec, 36> box;
+	std::array<vec, 8> box2;
+	std::array<uint, 36> boxIndices;
+	std::array<vec, 6> plane;
+	std::array<vec, 6> ray;
+	std::array<vec, 8> frustum;
+
+	std::vector<vec> sphere;
+	std::vector<uint> sphereIndices;
+
+
+	uint buffBoxID = 0;
+	uint buffBox2ID = 0;
+	uint buffsphereID = 0;
+	uint buffPlaneID = 0;
+	uint buffRayID = 0;
+	uint buffIndicesID = 0;
+	uint buffIndicesSphereID = 0; 
+	uint buffIndicesFrustumID = 0;
+	
 	bool _depthTest = true;
 	bool _lighting = true;
 	bool _cullFace = true;
@@ -143,4 +175,5 @@ private:
 	bool _bBox = false;
 
 	std::vector<Mesh> meshes;	
+	std::vector<Texture> textures;
 };

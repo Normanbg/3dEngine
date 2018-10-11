@@ -6,9 +6,9 @@ configuration:
 build:
   verbosity: minimal
 before_package:
-- ps: Copy-Item C:\projects\3dEngine\3D_Engine\$env:CONFIGURATION\3dEngine.exe C:\projects\3dEngine\Game\.
+- ps: Copy-Item C:\projects\3dEngine\3D_Engine\$env:CONFIGURATION\3dEngine.exe C:\projects\3dEngine\3D_Engine\Game\.
 artifacts:
-- path: Game
+- path: 3D_Engine\Game
   name: 3dEngine
 deploy:
 - provider: GitHub

@@ -2,8 +2,10 @@
 #include "Application.h"
 #include "ModuleWindow.h"
 #include "ModuleInput.h"
+#include "ModuleSceneIntro.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleCamera3D.h"
+#include "ModulePhysics3D.h"
 #include "ModuleGui.h"
 #include "Brofiler/Brofiler.h"
 
@@ -50,18 +52,14 @@ update_status ModuleCamera3D::Update(float dt)
 {
 	BROFILER_CATEGORY("Camera3D_Update", Profiler::Color::Chartreuse);
 	vec3 newPos(0, 0, 0);
-	float speed = CAMERA_SPEED * dt;
 
-	//Alt+Left click should orbit the object
-	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_LALT))	{
+	if (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT && App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT) {
+		float speed = CAMERA_SPEED * dt;
 		int dx = -App->input->GetMouseXMotion();
 		int dy = -App->input->GetMouseYMotion();
 
 		mouseSensitivity = 0.25f;
-
-		Reference = { 0,0,0 };//WILL BE THE POSITION WHEN WE HAVE IT!!! 
-		
-
+		vec3 newPosition = Position - Reference;
 		if (dx != 0)
 		{
 			float DeltaX = (float)dx * mouseSensitivity;
@@ -85,12 +83,15 @@ update_status ModuleCamera3D::Update(float dt)
 			}
 		}
 
-		Position = Reference + Z * length(Position);
-	}
+		Reference = Position - Z * length(newPosition);
+		Look(Position, Reference, true);
 
+	}
 	//While Right clicking, “WASD” fps-like movement While Right clicking, “WASD” fps-like movement and free look enabled
 	if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT)
 	{
+		float speed = CAMERA_SPEED * dt;
+
 		if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT)
 			speed *= 2.0f;
 

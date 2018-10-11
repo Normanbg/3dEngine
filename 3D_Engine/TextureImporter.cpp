@@ -5,7 +5,7 @@
 #include "ModuleRenderer3D.h"
 #include "Devil/include/il.h"
 #include "Devil/include/ilut.h"
-#include "DevIL/include/ilu.h"
+#include "DevIL\include\ilu.h"
 
 
 #pragma comment( lib, "Devil/libx86/DevIL.lib" )
@@ -66,12 +66,14 @@ GLuint TextureImporter::LoadTexture(const char * path, uint& texWidth, uint& tex
 		glBindTexture(GL_TEXTURE_2D, textureID);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);//parameters
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, infoImage.Width, infoImage.Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, ilGetData()); //specifies the texture
 
 		ilDeleteImages(1, &imageID);
+
 		glBindTexture(GL_TEXTURE_2D, textureID);
+		
 		return textureID;
 	}
 	else {
