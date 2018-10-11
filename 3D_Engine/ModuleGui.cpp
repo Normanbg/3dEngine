@@ -48,9 +48,11 @@ bool ModuleGui::Start()
 	uiPanels.push_back(panelProperties = new UIPanelProperties("Properties", 775, 0, 250, 550, true));
 
 	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO();
 
 	ImGui_ImplSDL2_InitForOpenGL(App->window->window, App->renderer3D->context);
 	ImGui_ImplOpenGL2_Init();
+
 	return true;
 }
 
@@ -152,4 +154,8 @@ bool ModuleGui::CleanUp()
 
 void ModuleGui::AddConsoleLogs(const char* log){
 	logsBuffer.push_back(log);
+}
+
+bool ModuleGui::GetMouseOnGui() const{
+	return ImGui::GetIO().WantCaptureMouse;
 }

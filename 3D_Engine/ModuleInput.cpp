@@ -100,7 +100,8 @@ update_status ModuleInput::PreUpdate(float dt)
 		switch(e.type)
 		{
 			case SDL_MOUSEWHEEL:
-			mouse_z = e.wheel.y;
+				if (!App->gui->GetMouseOnGui())
+					mouse_z = e.wheel.y;
 			break;
 
 			case SDL_MOUSEMOTION:

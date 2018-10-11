@@ -30,8 +30,8 @@ public:
 
 	void Draw();
 
-
 	void AddConsoleLogs(const char* log);
+	bool GetMouseOnGui() const;
 
 public:
 	bool demoShowcase = false;

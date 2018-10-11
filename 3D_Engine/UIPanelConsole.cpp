@@ -18,5 +18,4 @@ void UIPanelConsole::Draw() {
 		ImGui::Text((*it).c_str());
 	}
 	ImGui::End();
-
 }
