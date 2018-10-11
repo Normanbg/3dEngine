@@ -516,6 +516,7 @@ void ModuleRenderer3D::SetWireframe(bool active) {
 }
 
 void ModuleRenderer3D::SetBoundingBox(bool active){
+	_bBox = active;
 	for (int i =  0; i < meshes.size(); i++) {
 		meshes[i].bBox = active;
 	}
@@ -579,7 +580,7 @@ void ModuleRenderer3D::ShowGrid() {
 	glBegin(GL_LINES);
 
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-	float d = 200.0f;
+	float d = 100.0f;
 
 	for (float i = -d; i <= d; i += 1.0f)
 	{

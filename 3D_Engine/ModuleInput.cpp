@@ -182,5 +182,6 @@ FileType ModuleInput::ObtainDroppedFileType(std::string droppedFileDir){
 			return DDS;
 	}
 	else
+		OWN_LOG("Cannot load %s file.  Format not recognized", droppedFileDir)
 		return CANT_LOAD;
 }
