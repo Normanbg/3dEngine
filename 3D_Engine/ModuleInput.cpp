@@ -1,13 +1,9 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleInput.h"
-
 #include "ModuleWindow.h"
-#include "ModuleAudio.h"
-#include "ModuleSceneIntro.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleCamera3D.h"
-#include "ModulePhysics3D.h"
 #include "ModuleGui.h"
 #include "Brofiler/Brofiler.h"
 
@@ -129,7 +125,7 @@ update_status ModuleInput::PreUpdate(float dt)
 				switch (FileType file = ObtainDroppedFileType(dropped_filedirStr))
 				{
 				case CANT_LOAD:
-					OWN_LOG("File not supported, try FBX, PNG or DSS")
+					OWN_LOG("File not supported, try FBX, PNG or DDS")
 					break;
 				case FBX:
 					OWN_LOG("Dropped .fbx file");
@@ -182,5 +178,6 @@ FileType ModuleInput::ObtainDroppedFileType(std::string droppedFileDir){
 			return DDS;
 	}
 	else
+		OWN_LOG("Cannot load %s file.  Format not recognized", droppedFileDir)
 		return CANT_LOAD;
 }

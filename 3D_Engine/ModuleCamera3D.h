@@ -20,22 +20,21 @@ public:
 	void Move(const vec3 &Movement);
 	float* GetViewMatrix();
 
-private:
-
-	void CalculateViewMatrix();
-	bool debug = false;
-
 public:
-	
+
 	bool free_camera = false;
 
 	vec3 X, Y, Z, Position, Reference;
 	float mouseSensitivity = 0.25f;
 	float scroolWheelSensitivity = 10.0f;
 	float zoomDistance = 20.0f;
-	
 
 private:
+
+	void CalculateViewMatrix();
+
+private:
+	bool debug = false;
 	vec3 offset_to_player;
 	mat4x4 ViewMatrix, ViewMatrixInverse;
 	

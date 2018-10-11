@@ -5,10 +5,7 @@
 //#include <gl/GLU.h>
 #include "ModuleWindow.h"
 #include "ModuleInput.h"
-#include "ModuleAudio.h"
-#include "ModuleSceneIntro.h"
 #include "ModuleCamera3D.h"
-#include "ModulePhysics3D.h"
 #include "ModuleGui.h"
 #include "Brofiler/Brofiler.h"
 
@@ -26,8 +23,8 @@ ModuleRenderer3D::ModuleRenderer3D(bool start_enabled) : Module(start_enabled)
 }
 
 // Destructor
-ModuleRenderer3D::~ModuleRenderer3D()
-{
+ModuleRenderer3D::~ModuleRenderer3D(){
+
 	delete texImporter;
 	delete importer;
 }
@@ -323,43 +320,6 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	glLineWidth(1.0f); 
 	glEnableClientState(GL_VERTEX_ARRAY);//enables vertex array
 
-	////---TO DRAW BOX with glDrawArrays()
-	//glColor4f(.0f, 1.0f, 1.0f, 1.0f); // color cyan
-
-	//glBindBuffer(GL_ARRAY_BUFFER, buffBoxID);// sets the type of buffer
-	//glVertexPointer(3, GL_FLOAT, 0, NULL);  // points the first vertex
-	//glDrawArrays(GL_TRIANGLES, 0, 36); //Draw tris in the 36 nº of vertex that a box has (6faces * 2tris * 3vertex)
-	//glBindBuffer(GL_ARRAY_BUFFER, 0); //resets the buffer
-
-	////---TO DRAW BOX 2 with glDrawElements()
-	//glColor4f(1.0f, .0f, 1.0f, 1.0f);// color magenta
-
-	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffIndicesID);
-	//glVertexPointer(3, GL_FLOAT, 0, &box2[0]);
-	//glDrawElements(GL_TRIANGLES, boxIndices.size(), GL_UNSIGNED_INT,NULL);
-
-	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);//resets the buffer
-
-	//glColor4f(1.0f, 1.0f, 1.0f, 1.0f);// color white
-	//
-	//-----TO DRAW SPHERE with glDrawElements() 
-
-	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffIndicesSphereID);
-	//glVertexPointer(3, GL_FLOAT, 0, &sphere[0]);	
-	//glDrawElements(GL_TRIANGLES, sphereIndices.size(), GL_UNSIGNED_INT,NULL);
-	//
-	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);//resets the buffer
-
-	///---------------------------
-	
-	//---plane
-
-	glColor4f(.0f, 0.5f, 1.0f, 1.0f); 
-
-	glBindBuffer(GL_ARRAY_BUFFER, buffPlaneID);// sets the type of buffer
-	glVertexPointer(3, GL_FLOAT, 0, NULL);  // points the first vertex
-	glDrawArrays(GL_TRIANGLES, 0, 6); 
-	glBindBuffer(GL_ARRAY_BUFFER, 0); //resets the buffer
 
 	//---Ray
 
@@ -516,6 +476,7 @@ void ModuleRenderer3D::SetWireframe(bool active) {
 }
 
 void ModuleRenderer3D::SetBoundingBox(bool active){
+	_bBox = active;
 	for (int i =  0; i < meshes.size(); i++) {
 		meshes[i].bBox = active;
 	}
@@ -579,7 +540,7 @@ void ModuleRenderer3D::ShowGrid() {
 	glBegin(GL_LINES);
 
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-	float d = 200.0f;
+	float d = 100.0f;
 
 	for (float i = -d; i <= d; i += 1.0f)
 	{

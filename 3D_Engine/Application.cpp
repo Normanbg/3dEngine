@@ -3,11 +3,8 @@
 #include "DeviceId\DeviceId.h"
 #include "ModuleWindow.h"
 #include "ModuleInput.h"
-#include "ModuleAudio.h"
-#include "ModuleSceneIntro.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleCamera3D.h"
-#include "ModulePhysics3D.h"
 #include "ModuleGui.h"
 #include "Brofiler\Brofiler.h"
 
@@ -21,11 +18,8 @@ Application::Application()
 
 	window = new ModuleWindow();
 	input = new ModuleInput(this);
-	audio = new ModuleAudio(this);
-	scene_intro = new ModuleSceneIntro(this);
 	renderer3D = new ModuleRenderer3D(this);
 	camera = new ModuleCamera3D(this);
-	physics = new ModulePhysics3D(this);
 	gui = new ModuleGui(this);
 	
 	_organization = ORGANIZATION;
@@ -37,12 +31,9 @@ Application::Application()
 	AddModule(window);
 	AddModule(camera);
 	AddModule(input);
-	AddModule(audio);
-	AddModule(physics);
 	AddModule(gui);
 	
 	// Scenes
-	AddModule(scene_intro);
 
 	// Renderer last!
 	AddModule(renderer3D);

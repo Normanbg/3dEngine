@@ -115,6 +115,9 @@ public:
 	SDL_GLContext context;
 	mat3x3 NormalMatrix;
 	mat4x4 ModelMatrix, ViewMatrix, ProjectionMatrix;
+
+	MeshImporter* importer;
+	TextureImporter* texImporter;
 	
 private:
 
@@ -160,11 +163,5 @@ private:
 	bool _normals = false;
 	bool _bBox = false;
 
-	std::vector<Mesh> meshes;
-
-public:
-	
-	MeshImporter* importer;
-	TextureImporter* texImporter;
-	
+	std::vector<Mesh> meshes;	
 };

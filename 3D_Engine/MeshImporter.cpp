@@ -116,6 +116,7 @@ void MeshImporter::LoadFromMesh(const aiScene* currSc, aiMesh * new_mesh){
 				if (mesh.texture == -1) {
 
 					OWN_LOG("Texture not found.\n Error loading texture from fbx.");
+					return;
 				}
 			}
 		}
