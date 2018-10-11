@@ -1,9 +1,7 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleInput.h"
-
 #include "ModuleWindow.h"
-#include "ModuleAudio.h"
 #include "ModuleSceneIntro.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleCamera3D.h"
@@ -182,5 +180,6 @@ FileType ModuleInput::ObtainDroppedFileType(std::string droppedFileDir){
 			return DDS;
 	}
 	else
+		OWN_LOG("Cannot load %s file.  Format not recognized", droppedFileDir)
 		return CANT_LOAD;
 }
