@@ -97,10 +97,12 @@ update_status ModuleInput::PreUpdate(float dt)
 	SDL_Event e;
 	while(SDL_PollEvent(&e))
 	{
+		App->gui->ImplGuiInputs(&e);
 		switch(e.type)
 		{
 			case SDL_MOUSEWHEEL:
-			mouse_z = e.wheel.y;
+				if (!App->gui->MouseOnGui())
+					mouse_z = e.wheel.y;
 			break;
 
 			case SDL_MOUSEMOTION:

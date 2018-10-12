@@ -78,6 +78,7 @@ update_status ModuleGui::Update(float dt)
 				return UPDATE_STOP;
 			ImGui::EndMenu();
 		}
+
 		if (ImGui::BeginMenu("Help")) {
 			if (ImGui::MenuItem("Gui Demo"))
 				demoShowcase = !demoShowcase;
@@ -152,4 +153,12 @@ bool ModuleGui::CleanUp()
 
 void ModuleGui::AddConsoleLogs(const char* log){
 	logsBuffer.push_back(log);
+}
+
+void ModuleGui::ImplGuiInputs(SDL_Event * e){
+	ImGui_ImplSDL2_ProcessEvent(e);
+}
+
+bool ModuleGui::MouseOnGui() const {
+	return ImGui::GetIO().WantCaptureMouse;
 }

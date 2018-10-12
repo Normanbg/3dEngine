@@ -9,6 +9,8 @@
 
 #include "RandomGenerator/pcg_variants.h"
 
+union SDL_Event;
+
 class UIPanel;
 class UIPanelAbout;
 class UIPanelConfig;
@@ -32,6 +34,8 @@ public:
 
 
 	void AddConsoleLogs(const char* log);
+	void ImplGuiInputs(SDL_Event* e);
+	bool MouseOnGui() const;
 
 public:
 	bool demoShowcase = false;
