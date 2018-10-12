@@ -143,10 +143,8 @@ update_status ModuleCamera3D::Update(float dt)
 
 	if (App->input->GetKey(SDL_SCANCODE_F)== KEY_REPEAT){
 		
-		vec v = App->renderer3D->GetAvgPosFromMeshes();
-		LookAt({ v.x, v.y, v.z });
-		vec3 moveVec = { v.x*3.0f, v.y*1.5f,v.z*3.0f };
-		MoveTo(moveVec);
+		FocusToMeshes();
+		
 	}
 	//-----Zoom
 	if (App->input->GetMouseZ() != 0) {
@@ -235,6 +233,14 @@ void ModuleCamera3D::MoveTo(const vec3 Movement)
 float* ModuleCamera3D::GetViewMatrix()
 {
 	return &ViewMatrix;
+}
+
+void ModuleCamera3D::FocusToMeshes(){
+	vec v = App->renderer3D->GetAvgPosFromMeshes();
+	vec3 moveVec = { v.x*3.0f, v.y*2.0f,v.z*3.0f };
+	MoveTo(moveVec);
+	
+	LookAt({ 0,0,0 });
 }
 
 // -----------------------------------------------------------------

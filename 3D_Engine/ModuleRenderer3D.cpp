@@ -529,8 +529,9 @@ Texture* ModuleRenderer3D::GetTextureFromID(GLuint id)
 
 void ModuleRenderer3D::LoadDroppedFBX(char * droppedFileDir){
 	ClearSceneMeshes();
-	importer->LoadFBX(droppedFileDir);
+	importer->LoadFBX(droppedFileDir);	
 	GenBuffFromMeshes();	
+	App->camera->FocusToMeshes();
 }
 
 void ModuleRenderer3D::ClearSceneMeshes(){
