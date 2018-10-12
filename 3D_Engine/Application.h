@@ -24,10 +24,8 @@ class Module;
 class ModuleWindow;
 class ModuleInput;
 class ModuleAudio;
-class ModuleSceneIntro;
 class ModuleRenderer3D;
 class ModuleCamera3D;
-class ModulePhysics3D;
 class ModuleGui;
 
 class Application
@@ -35,11 +33,10 @@ class Application
 public:
 	ModuleWindow* window;
 	ModuleInput* input;
-	ModuleAudio* audio;
-	ModuleSceneIntro* scene_intro;
+	ModuleAudio* audio;	
 	ModuleRenderer3D* renderer3D;
 	ModuleCamera3D* camera;
-	ModulePhysics3D* physics;
+	
 	ModuleGui* gui;
 
 private:
