@@ -44,7 +44,7 @@ bool ModuleGui::Start()
 
 	uiPanels.push_back(panelAbout = new UIPanelAbout("About", 150, 150, 350, 350));
 	uiPanels.push_back(panelConfig = new UIPanelConfig("Configuration", 1025, 0, 250, 550, true));
-	uiPanels.push_back(panelConsole = new UIPanelConsole("Console", 50, 650, 800, 350, true));
+	uiPanels.push_back(panelConsole = new UIPanelConsole("Console", 50, 650, 1165, 350, true));
 	uiPanels.push_back(panelProperties = new UIPanelProperties("Properties", 775, 0, 250, 550, true));
 
 	ImGui::CreateContext();

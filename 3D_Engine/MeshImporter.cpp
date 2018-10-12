@@ -11,10 +11,11 @@ MeshImporter::MeshImporter()
 MeshImporter::~MeshImporter()
 {
 }
-
+void LogCall(const char* msg, char* userData);
 void MeshImporter::InitDebugLog(){
 	struct aiLogStream stream;
 	stream = aiGetPredefinedLogStream(aiDefaultLogStream_DEBUGGER, nullptr);
+	stream.callback = LogCall;
 	aiAttachLogStream(&stream);
 	
 }
@@ -163,3 +164,6 @@ void MeshImporter::ChangeMeshTexture(const char * path) {
 	//App->renderer3D->meshes = meshCopy;
 
 
+void LogCall(const char* msg, char* userData) {
+	OWN_LOG("%s", msg);
+}
