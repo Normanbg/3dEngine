@@ -485,6 +485,17 @@ void ModuleRenderer3D::SetBoundingBox(bool active){
 
 }
 
+
+vec ModuleRenderer3D::GetAvgPosFromMeshes() 
+{
+	vec sumPoints = vec(0,0,0);
+	
+	for (int i = 0; i < meshes.size(); i++) {
+		sumPoints += meshes[i].getMiddlePoint();
+	}
+	return { sumPoints.x / meshes.size(), sumPoints.y / meshes.size(), sumPoints.z / meshes.size() };
+}
+
 GLuint ModuleRenderer3D::CheckIfImageAlreadyLoaded(const char * _path)
 {
 	for (int i = 0; i < App->renderer3D->textures.size();i++) {
@@ -633,6 +644,7 @@ void Mesh::DrawBoundingBox(){
 
 	
 	glLineWidth(2.0f);
+
 	glBegin(GL_LINES);
 	glColor4f(0.0f, 1.0f, 0.0f, 1.0f); //green
 	
@@ -672,6 +684,7 @@ void Mesh::DrawBoundingBox(){
 
 	glVertex3f(boundingBox.CornerPoint(6).x, boundingBox.CornerPoint(6).y, boundingBox.CornerPoint(6).z);
 	glVertex3f(boundingBox.CornerPoint(2).x, boundingBox.CornerPoint(2).y, boundingBox.CornerPoint(2).z);
+
 	
 	glEnd();
 	glLineWidth(1.0f);
@@ -707,5 +720,11 @@ void Mesh::generateBoundingBox(){
 	aabb.Enclose((vec*)vertex,num_vertex);
 	
 	boundingBox = aabb;
+}
+
+vec Mesh::getMiddlePoint()const {
+	vec ret = { (boundingBox.maxPoint.x + boundingBox.minPoint.x) / 2, (boundingBox.maxPoint.y + boundingBox.minPoint.y) / 2, (boundingBox.maxPoint.z + boundingBox.minPoint.z) / 2 };
+
+	return ret;
 }
 

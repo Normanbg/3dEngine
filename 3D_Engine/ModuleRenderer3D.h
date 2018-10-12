@@ -57,6 +57,7 @@ struct Mesh {
 	void CleanUp();	
 		
 	void generateBoundingBox();
+	vec getMiddlePoint()const ;
 
 private:
 	void DrawBoundingBox();
@@ -107,6 +108,8 @@ public:
 
 	inline bool GetAxis() const { return _axis; }
 	inline bool GetGrid() const { return _grid; }
+
+	vec GetAvgPosFromMeshes();
 
 	GLuint CheckIfImageAlreadyLoaded(const char*);
 

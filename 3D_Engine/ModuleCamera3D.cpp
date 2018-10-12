@@ -96,7 +96,7 @@ update_status ModuleCamera3D::Update(float dt)
 			speed *= 2.0f;
 
 		if (App->input->GetKey(SDL_SCANCODE_R) == KEY_REPEAT) newPos.y += speed;
-		if (App->input->GetKey(SDL_SCANCODE_F) == KEY_REPEAT) newPos.y -= speed;
+		if (App->input->GetKey(SDL_SCANCODE_T) == KEY_REPEAT) newPos.y -= speed;
 
 		if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) newPos -= Z * speed;
 		if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) newPos += Z * speed;
@@ -141,6 +141,13 @@ update_status ModuleCamera3D::Update(float dt)
 		Reference = Position - Z * length(newPosition);
 	}
 
+	if (App->input->GetKey(SDL_SCANCODE_F)== KEY_REPEAT){
+		
+		vec v = App->renderer3D->GetAvgPosFromMeshes();
+		LookAt({ v.x, v.y, v.z });
+		vec3 moveVec = { v.x*3.0f, v.y*1.5f,v.z*3.0f };
+		MoveTo(moveVec);
+	}
 	//-----Zoom
 	if (App->input->GetMouseZ() != 0) {
 		newPos = (0, 0, 0);
@@ -212,6 +219,14 @@ void ModuleCamera3D::Move(const vec3 &Movement)
 {
 	Position += Movement;
 	Reference += Movement;
+
+	CalculateViewMatrix();
+}
+
+void ModuleCamera3D::MoveTo(const vec3 Movement)
+{
+	Position = Movement;
+	Reference = Movement;
 
 	CalculateViewMatrix();
 }

@@ -117,8 +117,7 @@ void MeshImporter::LoadFromMesh(const aiScene* currSc, aiMesh * new_mesh){
 					_text.textureID = App->renderer3D->texImporter->LoadTexture(path.C_Str(), _text.texWidth, _text.texHeight);
 					if (_text.textureID == -1) {
 
-						OWN_LOG("Texture not found.\n Error loading texture from fbx.");
-						return;
+						OWN_LOG("Texture not found in the HardDrisk.\n Error loading texture from fbx.");
 					}
 
 				}
