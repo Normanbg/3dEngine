@@ -185,14 +185,14 @@ bool ModuleRenderer3D::Start() {
 	glGenBuffers(1, (GLuint*) &(buffRayID));  // generates 1 buffer. then it assign a GLuint to its mem adress.
 	glBindBuffer(GL_ARRAY_BUFFER, buffRayID); // set the type of buffer
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float)*ray.size() * 3, &ray[0], GL_STATIC_DRAW);
-
+	/*
 	//Frustum
 	frustum = { vec{ 5.0f,5.0f,5.0f },{ 6.0f,5.0f,5.0f },{ 5.0f,6.0f,5.0f },{ 6.0f,6.0f,5.0f },		{4.75f,4.75f,6.0f },{ 6.25f,4.75f,6.0f },{ 4.75f,6.25f,6.0f },{ 6.25f,6.25f,6.0f } };
 
 	glGenBuffers(1, (GLuint*) &(buffIndicesFrustumID));
 	glBindBuffer(GL_ARRAY_BUFFER, buffIndicesFrustumID);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float)*frustum.size() * 3, &frustum[0], GL_STATIC_DRAW);
-	
+	*/
 	//---sphere
 	float radius = 1;
 	float sectors =10;
@@ -333,6 +333,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	glBindBuffer(GL_ARRAY_BUFFER, 0); //resets the buffer
 
 	//Frustum
+	/*
 	glColor4f(0.5f, 1.0f, 0.5f, 1.0f);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffIndicesID);
@@ -340,7 +341,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	glDrawElements(GL_TRIANGLES, boxIndices.size(), GL_UNSIGNED_INT, NULL);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);//resets the buffer
-
+*/
 	glDisableClientState(GL_VERTEX_ARRAY);
 	DrawMeshes();
 
@@ -373,7 +374,7 @@ bool ModuleRenderer3D::CleanUp()
 	glDeleteBuffers(1, &buffRayID);
 	glDeleteBuffers(1, &buffIndicesID);
 	glDeleteBuffers(1, &buffIndicesSphereID);
-	glDeleteBuffers(1, &buffIndicesFrustumID);
+	//glDeleteBuffers(1, &buffIndicesFrustumID);
 
 	ClearSceneMeshes();
 		
