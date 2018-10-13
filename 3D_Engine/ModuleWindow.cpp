@@ -137,7 +137,7 @@ void ModuleWindow::SetFullscreenDesktop(bool fulldesktop) {
 	_fullDesktop = fulldesktop;
 	uint x = 0;
 	uint y = 0;
-	uint margin = 30;
+	const uint margin = 30;
 	
 	if (fulldesktop) {
 		SDL_DisplayMode dMode;

@@ -80,7 +80,7 @@ public:
 	bool Load(JSON_Object* data)override;
 	bool Save(JSON_Object* data) const;
 
-	void OnResize(int width, int height);
+	void OnResize(const int width, const int height);
 	char* GetGraphicsModel() const;
 	char* GetGraphicsVendor() const;
 

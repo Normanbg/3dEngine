@@ -210,7 +210,7 @@ bool ModuleRenderer3D::CleanUp()
 }
 
 
-void ModuleRenderer3D::OnResize(int width, int height)
+void ModuleRenderer3D::OnResize(const int width, const int height)
 {
 	glViewport(0, 0, width, height);
 
@@ -411,7 +411,7 @@ void ModuleRenderer3D::ShowGrid() {
 	glBegin(GL_LINES);
 
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-	float d = 100.0f;
+	const float d = 100.0f;
 
 	for (float i = -d; i <= d; i += 1.0f)
 	{

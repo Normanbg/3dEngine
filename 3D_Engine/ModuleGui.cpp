@@ -128,11 +128,6 @@ void ModuleGui::Draw() {
 }
 
 
-update_status ModuleGui::PostUpdate(float dt)
-{
-	
-	return UPDATE_CONTINUE;
-}
 
 bool ModuleGui::CleanUp()
 {
@@ -151,11 +146,11 @@ bool ModuleGui::CleanUp()
 	return true;
 }
 
-void ModuleGui::AddConsoleLogs(const char* log){
+void ModuleGui::AddConsoleLogs(const char* log)  {
 	logsBuffer.push_back(log);
 }
 
-void ModuleGui::ImplGuiInputs(SDL_Event * e){
+void ModuleGui::ImplGuiInputs(SDL_Event * e) const{
 	ImGui_ImplSDL2_ProcessEvent(e);
 }
 

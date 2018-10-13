@@ -17,9 +17,9 @@ public:
 	~MeshImporter();
 
 	void InitDebugLog();
-	void EndDebugLog();
+	void EndDebugLog() const ;
 
-	void LoadFBX(char* path );
+	void LoadFBX(const char* path );
 	
 	void ChangeMeshTexture(const char* path);
 
@@ -27,7 +27,7 @@ private:
 	void LoadFromMesh(const aiScene* currSc, aiMesh* mesh);
 
 private:
-	char* droppedFile = nullptr;
+	const char* droppedFile = nullptr;
 };
 
 #endif //__MESHIMPORTER_H__

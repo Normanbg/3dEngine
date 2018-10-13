@@ -26,15 +26,14 @@ public:
 
 	bool  Start();
 	update_status PreUpdate(float dt);
-	update_status Update(float dt);
-	update_status PostUpdate(float dt);
+	update_status Update(float dt);	
 	bool CleanUp();
 
 	void Draw();
 
 
-	void AddConsoleLogs(const char* log);
-	void ImplGuiInputs(SDL_Event* e);
+	void AddConsoleLogs(const char* log) ;
+	void ImplGuiInputs(SDL_Event* e)const;
 	bool MouseOnGui() const;
 
 public:

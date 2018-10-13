@@ -15,13 +15,12 @@ public:
 
 	void Init();
 	void CleanUp();
-
-	GLuint LoadTexture(const char* path, Mesh &currentMesh);
+		
 	GLuint LoadTexture(const char* path, uint& width, uint& height);
 
 	
 	void LoadCheckeredPlane(); // for debug test
-	void DrawCheckeredPlane();
+	void DrawCheckeredPlane()const ;
 
 public: 
 	

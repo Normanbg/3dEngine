@@ -114,7 +114,7 @@ update_status ModuleCamera3D::Update(float dt)
 
 		if (dx != 0)
 		{
-			float DeltaX = (float)dx * mouseSensitivity;
+			const float DeltaX = (float)dx * mouseSensitivity;
 
 			X = rotate(X, DeltaX, vec3(0.0f, 1.0f, 0.0f));
 			Y = rotate(Y, DeltaX, vec3(0.0f, 1.0f, 0.0f));
@@ -123,7 +123,7 @@ update_status ModuleCamera3D::Update(float dt)
 
 		if (dy != 0)
 		{
-			float DeltaY = (float)dy * mouseSensitivity;
+			const float DeltaY = (float)dy * mouseSensitivity;
 
 			Y = rotate(Y, DeltaY, X);
 			Z = rotate(Z, DeltaY, X);
@@ -159,18 +159,7 @@ update_status ModuleCamera3D::Update(float dt)
 		Position += newPos;
 	}
 
-	if (!free_camera) {		
-		
-			/*Position.x = App->player->vehicle->vehicle->getChassisWorldTransform().getOrigin().getX() - 10 * App->player->vehicle->vehicle->getForwardVector().getX();
-			Position.y = App->player->vehicle->vehicle->getChassisWorldTransform().getOrigin().getY() + 5 * App->player->vehicle->vehicle->getUpAxis();
-			Position.z = App->player->vehicle->vehicle->getChassisWorldTransform().getOrigin().getZ() - 15 * App->player->vehicle->vehicle->getForwardVector().getZ();
-
-			float player_x = App->player->vehicle->vehicle->getChassisWorldTransform().getOrigin().getX() + 15 * App->player->vehicle->vehicle->getForwardVector().getX();
-			float player_z = App->player->vehicle->vehicle->getChassisWorldTransform().getOrigin().getZ() + 15 * App->player->vehicle->vehicle->getForwardVector().getZ();
-
-			LookAt(vec3(player_x, 1, player_z));*/
-		
-	}
+	
 	// Recalculate matrix -------------
 	CalculateViewMatrix();
 
@@ -227,7 +216,7 @@ void ModuleCamera3D::MoveTo(const vec3 Movement)
 }
 
 // -----------------------------------------------------------------
-float* ModuleCamera3D::GetViewMatrix()
+float* ModuleCamera3D::GetViewMatrix() 
 {
 	return &ViewMatrix;
 }

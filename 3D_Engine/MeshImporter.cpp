@@ -20,12 +20,11 @@ void MeshImporter::InitDebugLog(){
 	
 }
 
-void MeshImporter::EndDebugLog()
-{
+void MeshImporter::EndDebugLog() const{
 	aiDetachAllLogStreams();
 }
 
-void MeshImporter::LoadFBX(char * path){
+void MeshImporter::LoadFBX(const char * path){
 	
 	std::string rootPath = MODELS_PATH;
 	rootPath += path;
