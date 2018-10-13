@@ -1,5 +1,5 @@
 # 3dEngine
-This 3D engine is created for the subject of [Bachelor’s Degree in Video Games by UPC at CITM](https://www.citm.upc.edu/ing/estudis/graus-videojocs/) "3D Engines" by [Norman Benet](https://github.com/Normanbg) & [Carles Margelí](https://github.com/Margeli).
+This 3D engine is created for the subject "3D Engines" of [Bachelor’s Degree in Video Games by UPC at CITM](https://www.citm.upc.edu/ing/estudis/graus-videojocs/) by [Norman Benet](https://github.com/Normanbg) & [Carles Margelí](https://github.com/Margeli).
 
 ## Installation:
 Decompress the .zip file in any directory and execute the executable inside the decompressed folder.
