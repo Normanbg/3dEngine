@@ -6,12 +6,19 @@ Decompress the .zip file in any directory and execute the executable inside the 
 
 ### Controls:
 **Mouse Wheel** to zoom in and out.
+
 **Mouse Right click** for free look around.
+
 **Mouse Right click + A or D** to move  the X-axis.
+
 **Mouse Right click + R or T** to move around the Y-axis.
+
 **Mouse Right click + W or S** to move around the Z-axis.
+
 **Holding SHIFT** duplicates movement speed.
+
 **Alt + Mouse Left click** to orbit an object.
+
 **F** focus the camera around the geometry.
 
 ### How to change models or textures:
