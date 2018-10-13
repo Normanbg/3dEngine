@@ -49,9 +49,9 @@ void UIPanelProperties::Draw() {
 		}
 	}
 	if (ImGui::CollapsingHeader("Textures List")) {
-		std::vector<Texture>* tex = App->renderer3D->GetTexturesList(); int i = 0;
-		for (std::vector<Texture>::iterator texIterator = (*tex).begin(); texIterator != (*tex).end(); i++, texIterator++) {
-			ImGui::PushID("Texture" + i);
+		std::vector<Texture>* tex = App->renderer3D->GetTexturesList(); int j = 0;
+		for (std::vector<Texture>::iterator texIterator = (*tex).begin(); texIterator != (*tex).end(); j++, texIterator++) {
+			ImGui::PushID("Texture" + j);
 			if (ImGui::TreeNode("Texture")) {				
 				ImGui::Text("Texture size:\n Width: %dpx \n Height: %dpx \n Texture ID: %d", texIterator->texWidth, texIterator->texHeight, (*texIterator).textureID);
 				float windowSize = ImGui::GetWindowContentRegionWidth();

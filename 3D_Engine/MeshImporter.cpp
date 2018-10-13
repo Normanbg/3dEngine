@@ -105,26 +105,28 @@ void MeshImporter::LoadFromMesh(const aiScene* currSc, aiMesh * new_mesh){
 		aiReturn ret = currSc->mMaterials[new_mesh->mMaterialIndex]->GetTexture(aiTextureType_DIFFUSE, 0, &path);
 		if (ret == aiReturn_SUCCESS) {
 
-			std::string nwPath = TEXTURES_PATH;
-			nwPath += path.C_Str();			
-			GLuint check = App->renderer3D->CheckIfImageAlreadyLoaded(nwPath.c_str());
+			std::string localPath = TEXTURES_PATH;
+			localPath += path.C_Str();			
+			GLuint check = App->renderer3D->CheckIfImageAlreadyLoaded(localPath.c_str());
 			if (check == -1) {
 				Texture _text;
-				_text.textureID = App->renderer3D->texImporter->LoadTexture(nwPath.c_str(), _text.texWidth, _text.texHeight);
+				_text.textureID = App->renderer3D->texImporter->LoadTexture(localPath.c_str(), _text.texWidth, _text.texHeight);
 				OWN_LOG("Loading texture from Textures folder");
-				if (_text.textureID == -1) {
+				if (_text.textureID == -1) { // fisrt check if texture is in local path "Assets/Textures"
 					OWN_LOG("Texture not found. \nLoading texture from HardDisk");
 
 					_text.textureID = App->renderer3D->texImporter->LoadTexture(path.C_Str(), _text.texWidth, _text.texHeight);
-					if (_text.textureID == -1) {
+					if (_text.textureID == -1) {// second check if texture is in absolute path C:\\...
 
 						OWN_LOG("Texture not found in the HardDrisk.\n Error loading texture from fbx.");
 					}
 
 				}
-				_text.path = nwPath;
-				mesh.texID = _text.textureID;
-				App->renderer3D->AddTexture(&_text);
+				if (_text.textureID != -1) { // if texture can be loaded
+					_text.path = localPath;
+					mesh.texID = _text.textureID;
+					App->renderer3D->AddTexture(&_text);
+				}
 			}
 			else {
 			mesh.texID = check;

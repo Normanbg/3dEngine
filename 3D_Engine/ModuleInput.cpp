@@ -139,6 +139,11 @@ update_status ModuleInput::PreUpdate(float dt)
 					App->renderer3D->importer->ChangeMeshTexture(dropped_filedir);
 					
 					break;
+				case JPG:
+					OWN_LOG("Dropped .jpg file");
+					App->renderer3D->importer->ChangeMeshTexture(dropped_filedir);
+
+					break;
 				case DDS:
 					OWN_LOG("Dropped .dds file");
 					App->renderer3D->importer->ChangeMeshTexture(dropped_filedir);
@@ -176,6 +181,8 @@ FileType ModuleInput::ObtainDroppedFileType(std::string droppedFileDir){
 			return FBX;
 		else if (formatStr == "png" || formatStr == "PNG")
 			return PNG;
+		else if (formatStr == "jpg" || formatStr == "JPG")
+			return JPG;
 		else if (formatStr == "dds" || formatStr == "DDS")
 			return DDS;
 	}

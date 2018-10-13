@@ -16,6 +16,7 @@ enum FileType {
 	CANT_LOAD = 0,
 	FBX,
 	PNG,
+	JPG,
 	DDS
 };
 
