@@ -9,7 +9,7 @@ Decompress the .zip file in any directory and execute the executable inside the 
 
 **Mouse Right click** for free look around.
 
-**Mouse Right click + A or D** to move  the X-axis.
+**Mouse Right click + A or D** to move around the X-axis.
 
 **Mouse Right click + R or T** to move around the Y-axis.
 
