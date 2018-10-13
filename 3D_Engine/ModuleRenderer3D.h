@@ -114,6 +114,7 @@ public:
 	GLuint CheckIfImageAlreadyLoaded(const char*);
 
 	inline std::vector<Mesh>* GetMeshesList()  { return &meshes; }
+	inline std::vector<Texture>* GetTexturesList()   { return &textures; }
 
 	void AddMesh(Mesh* mesh);
 	void AddTexture(Texture* tex);

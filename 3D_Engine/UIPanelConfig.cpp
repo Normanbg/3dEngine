@@ -33,11 +33,14 @@ void UIPanelConfig::Draw() {
 		const int maxSize = 64;
 
 		std::string aux = App->window->GetWindowTitle();
-		ImGui::InputText("App Name", (char*)aux.c_str(), maxSize);
-		std::string aux2 = App->GetOrganization();
+		if (ImGui::InputText("App Name", (char*)aux.c_str(), maxSize)) {
+			App->window->SetTitle((char*)aux.c_str());
+		}
+		aux = App->GetOrganization();
 		//char str2[maxSize] = aux;
-		ImGui::InputText("Organization", (char*)aux2.c_str(), maxSize);
-
+		if (ImGui::InputText("Organization", (char*)aux.c_str(), maxSize)) {
+			App->SetOrganization((char*)aux.c_str());
+		}
 		int DefaultFpsCap = (App->GetFramerateCap());
 
 		ImGui::SliderInt("Max FPS", &(DefaultFpsCap), 1, 120);

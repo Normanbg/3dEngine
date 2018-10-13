@@ -15,6 +15,7 @@ UIPanelProperties::~UIPanelProperties()
 void UIPanelProperties::Draw() {
 	ImGui::Begin(name.c_str(), &active);
 	std::vector<Mesh>* meshRecover = App->renderer3D->GetMeshesList(); int i = 0;
+
 	for (std::vector<Mesh>::iterator meshIterator = (*meshRecover).begin(); meshIterator != (*meshRecover).end(); i++, meshIterator++) {
 		char meshNumber[30];
 		sprintf_s(meshNumber, 30, "%d.%s mesh " , i + 1, meshIterator._Ptr->name.c_str());
@@ -42,6 +43,19 @@ void UIPanelProperties::Draw() {
 				ImGui::Text("Texture size:\n Width: %dpx \n Height: %dpx \n Texture coords: %d", tex->texWidth, tex->texHeight, meshIterator._Ptr->num_textureCoords);
 				float windowSize = ImGui::GetWindowContentRegionWidth();
 				ImGui::Image((void*)(meshIterator._Ptr->texID), ImVec2(windowSize, windowSize));
+				ImGui::TreePop();
+			}
+			ImGui::PopID();
+		}
+	}
+	if (ImGui::CollapsingHeader("Textures List")) {
+		std::vector<Texture>* tex = App->renderer3D->GetTexturesList(); int i = 0;
+		for (std::vector<Texture>::iterator texIterator = (*tex).begin(); texIterator != (*tex).end(); i++, texIterator++) {
+			ImGui::PushID("Texture" + i);
+			if (ImGui::TreeNode("Texture")) {				
+				ImGui::Text("Texture size:\n Width: %dpx \n Height: %dpx \n Texture ID: %d", texIterator->texWidth, texIterator->texHeight, (*texIterator).textureID);
+				float windowSize = ImGui::GetWindowContentRegionWidth();
+				ImGui::Image((void*)(texIterator._Ptr->textureID), ImVec2(windowSize, windowSize));
 				ImGui::TreePop();
 			}
 			ImGui::PopID();
