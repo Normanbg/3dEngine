@@ -1,8 +1,6 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleRenderer3D.h"
-//#include <gl/GL.h>
-//#include <gl/GLU.h>
 #include "ModuleWindow.h"
 #include "ModuleInput.h"
 #include "ModuleCamera3D.h"
