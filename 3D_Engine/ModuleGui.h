@@ -48,6 +48,11 @@ public:
 	std::vector<std::string> logsBuffer;
 	uint ilVersion = 0;
 
+	uint dropFX = 0;
+	uint closeFX = 0;
+	uint openFX = 0;
+	uint searchingFX = 0; //Used when open an URL
+
 };
 
 #endif 

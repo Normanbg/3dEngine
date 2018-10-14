@@ -1,6 +1,7 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleWindow.h"
+#include "ModuleAudio.h"
 #include "ModuleInput.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleCamera3D.h"
@@ -138,11 +139,13 @@ update_status ModuleCamera3D::Update(float dt)
 		Reference = Position - Z * length(newPosition);
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_F)== KEY_REPEAT){
-		
-		FocusToMeshes();
-		
+	if (App->input->GetKey(SDL_SCANCODE_F)== KEY_REPEAT){		
+		FocusToMeshes();		
 	}
+	if (App->input->GetKey(SDL_SCANCODE_O) == KEY_DOWN) {
+		App->audio->PlayFx(dropFX);
+	}
+
 	//-----Zoom
 	if (App->input->GetMouseZ() != 0) {
 		newPos = (0, 0, 0);

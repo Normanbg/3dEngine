@@ -39,7 +39,8 @@ private:
 	bool debug = false;
 	vec3 offset_to_player;
 	mat4x4 ViewMatrix, ViewMatrixInverse;
-	
+
+	uint dropFX = 0;
 };
 
 #endif 

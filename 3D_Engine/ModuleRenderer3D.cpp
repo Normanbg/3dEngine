@@ -128,7 +128,6 @@ bool ModuleRenderer3D::Init(JSON_Object* obj)
 		SetColorMaterial(true);
 		SetTexture2D(true);
 	}
-
 	// Projection matrix for
 	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
@@ -146,7 +145,7 @@ bool ModuleRenderer3D::Start() {
 	BROFILER_CATEGORY("Renderer3D_Start", Profiler::Color::HotPink);
 
 	bool ret = true;
-	
+
 	importer->LoadFBX("BakerHouse.fbx");
 	GenBuffFromMeshes();
 

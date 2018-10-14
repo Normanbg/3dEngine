@@ -11,15 +11,12 @@
 #include "UIPanelProperties.h"
 #include "ModuleWindow.h"
 #include "ModuleInput.h"
+#include "ModuleAudio.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleCamera3D.h"
 #include "Brofiler/Brofiler.h"
 
 #include <list>
-
-
-
-
 
 
 ModuleGui::ModuleGui(bool start_enabled) : Module(start_enabled)
@@ -41,6 +38,10 @@ bool ModuleGui::Start()
 {
 	BROFILER_CATEGORY("GUI_Start", Profiler::Color::Chartreuse);
 	demoShowcase = false;
+	dropFX = App->audio->LoadFx("fx/drop.wav");
+	closeFX = App->audio->LoadFx("fx/close.wav");
+	openFX = App->audio->LoadFx("fx/open.wav");
+	searchingFX = App->audio->LoadFx("fx/searching.wav");
 
 	uiPanels.push_back(panelAbout = new UIPanelAbout("About", 150, 150, 350, 350));
 	uiPanels.push_back(panelConfig = new UIPanelConfig("Configuration", 1025, 0, 250, 550, true));
@@ -76,8 +77,10 @@ update_status ModuleGui::Update(float dt)
 		if (ImGui::BeginMenu("Help")) {
 			if (ImGui::MenuItem("Gui Demo"))
 				demoShowcase = !demoShowcase;
-			if (ImGui::MenuItem("Documentation"))
+			if (ImGui::MenuItem("Documentation")) {
 				App->RequestBrowser("https://github.com/Normanbg/3dEngine/wiki");
+				App->audio->PlayFx(searchingFX);
+			}
 			if (ImGui::MenuItem("Download latest"))
 				App->RequestBrowser("https://github.com/Normanbg/3dEngine/releases");
 			if (ImGui::MenuItem("Report a bug"))
@@ -88,12 +91,30 @@ update_status ModuleGui::Update(float dt)
 			ImGui::EndMenu();
 		}
 		if (ImGui::BeginMenu("View")) {
-			if (ImGui::MenuItem("Console", NULL, panelConsole->isEnabled()))
+			if (ImGui::MenuItem("Console", NULL, panelConsole->isEnabled())) {
+				if (panelConsole->isEnabled()) {
+					App->audio->PlayFx(closeFX);
+				}
+				else
+					App->audio->PlayFx(openFX);
 				panelConsole->ChangeActive();
-			if (ImGui::MenuItem("Configuration", NULL, panelConfig->isEnabled()))
+			}
+			if (ImGui::MenuItem("Configuration", NULL, panelConfig->isEnabled())) {
+				if (panelConfig->isEnabled()) {
+					App->audio->PlayFx(closeFX);
+				}
+				else
+					App->audio->PlayFx(openFX);
 				panelConfig->ChangeActive();
-			if (ImGui::MenuItem("Properties", NULL, panelProperties->isEnabled()))
+			}
+			if (ImGui::MenuItem("Properties", NULL, panelProperties->isEnabled())) {
+				if (panelProperties->isEnabled()) {
+					App->audio->PlayFx(closeFX);
+				}
+				else
+					App->audio->PlayFx(openFX);
 				panelProperties->ChangeActive();
+			}
 			ImGui::EndMenu();
 		}
 		ImGui::EndMainMenuBar();

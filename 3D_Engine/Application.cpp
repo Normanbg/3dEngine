@@ -3,6 +3,7 @@
 #include "DeviceId\DeviceId.h"
 #include "ModuleWindow.h"
 #include "ModuleInput.h"
+#include "ModuleAudio.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleCamera3D.h"
 #include "ModuleGui.h"
@@ -18,6 +19,7 @@ Application::Application()
 
 	window = new ModuleWindow();
 	input = new ModuleInput(this);
+	audio = new ModuleAudio(this);
 	renderer3D = new ModuleRenderer3D(this);
 	camera = new ModuleCamera3D(this);
 	gui = new ModuleGui(this);
@@ -31,6 +33,7 @@ Application::Application()
 	AddModule(window);
 	AddModule(camera);
 	AddModule(input);
+	AddModule(audio);
 
 	AddModule(gui);
 	

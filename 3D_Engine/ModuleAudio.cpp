@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "ModuleAudio.h"
 #include "Brofiler/Brofiler.h"
+#include <algorithm>
 
 #pragma comment( lib, "SDL_mixer/libx86/SDL2_mixer.lib" )
 
@@ -60,7 +61,7 @@ bool ModuleAudio::CleanUp()
 		Mix_FreeMusic(music);
 	}
 
-	std::list<Mix_Chunk*>::iterator item;
+	std::vector<Mix_Chunk*>::iterator item;
 
 	for(item = fx.begin(); item != fx.end(); item++)
 	{
@@ -78,48 +79,48 @@ bool ModuleAudio::CleanUp()
 bool ModuleAudio::PlayMusic(const char* path, float fade_time)
 {
 	bool ret = true;
-	//
-	//if(music != NULL)
-	//{
-	//	if(fade_time > 0.0f)
-	//	{
-	//		Mix_FadeOutMusic((int) (fade_time * 1000.0f));
-	//	}
-	//	else
-	//	{
-	//		Mix_HaltMusic();
-	//	}
+	
+	if(music != NULL)
+	{
+		if(fade_time > 0.0f)
+		{
+			Mix_FadeOutMusic((int) (fade_time * 1000.0f));
+		}
+		else
+		{
+			Mix_HaltMusic();
+		}
 
-	//	// this call blocks until fade out is done
-	//	Mix_FreeMusic(music);
-	//}
+		// this call blocks until fade out is done
+		Mix_FreeMusic(music);
+	}
 
-	//music = Mix_LoadMUS(path);
+	music = Mix_LoadMUS(path);
 
-	//if(music == NULL)
-	//{
-	//	LOG("Cannot load music %s. Mix_GetError(): %s\n", path, Mix_GetError());
-	//	ret = false;
-	//}
-	//else
-	//{
-	//	if(fade_time > 0.0f)
-	//	{
-	//		if(Mix_FadeInMusic(music, -1, (int) (fade_time * 1000.0f)) < 0)
-	//		{
-	//			LOG("Cannot fade in music %s. Mix_GetError(): %s", path, Mix_GetError());
-	//			ret = false;
-	//		}
-	//	}
-	//	else
-	//	{
-	//		if(Mix_PlayMusic(music, -1) < 0)
-	//		{
-	//			LOG("Cannot play in music %s. Mix_GetError(): %s", path, Mix_GetError());
-	//			ret = false;
-	//		}
-	//	}
-	//}
+	if(music == NULL)
+	{
+		OWN_LOG("Cannot load music %s. Mix_GetError(): %s\n", path, Mix_GetError());
+		ret = false;
+	}
+	else
+	{
+		if(fade_time > 0.0f)
+		{
+			if(Mix_FadeInMusic(music, -1, (int) (fade_time * 1000.0f)) < 0)
+			{
+				OWN_LOG("Cannot fade in music %s. Mix_GetError(): %s", path, Mix_GetError());
+				ret = false;
+			}
+		}
+		else
+		{
+			if(Mix_PlayMusic(music, -1) < 0)
+			{
+				OWN_LOG("Cannot play in music %s. Mix_GetError(): %s", path, Mix_GetError());
+				ret = false;
+			}
+		}
+	}
 
 	OWN_LOG("Successfully playing %s", path);
 	return ret;
@@ -129,12 +130,14 @@ bool ModuleAudio::PlayMusic(const char* path, float fade_time)
 unsigned int ModuleAudio::LoadFx(const char* path)
 {
 	unsigned int ret = 0;
+	std::string rootPath = AUDIO_PATH;
+	rootPath += path; 
 
-	Mix_Chunk* chunk = Mix_LoadWAV(path);
+	Mix_Chunk* chunk = Mix_LoadWAV(rootPath.c_str());
 
 	if(chunk == NULL)
 	{
-		OWN_LOG("Cannot load wav %s. Mix_GetError(): %s", path, Mix_GetError());
+		OWN_LOG("Cannot load wav %s. Mix_GetError(): %s", rootPath.c_str(), Mix_GetError());
 	}
 	else
 	{
@@ -150,13 +153,14 @@ bool ModuleAudio::PlayFx(unsigned int id, int repeat)
 {
 	bool ret = false;
 
-	//Mix_Chunk* chunk = NULL;
-	//
-	//if(fx.at(id-1, chunk) == true)
-	//{
-	//	Mix_PlayChannel(-1, chunk, repeat);
-	//	ret = true;
-	//}
+	Mix_Chunk* chunk = fx[id-1];
+	if (chunk != NULL)
+	{
+		Mix_PlayChannel(-1, chunk, repeat);
+		ret = true;
+	}
+	else
+		OWN_LOG("Fx not founded on the fx list");
 
 	return ret;
 }
