@@ -1,4 +1,4 @@
-
+﻿
 ﻿# 3dEngine
 This 3D engine is created for the subject "3D Engines" of [Bachelor’s Degree in Video Games by UPC at CITM](https://www.citm.upc.edu/ing/estudis/graus-videojocs/) by [Norman Benet](https://github.com/Normanbg) & [Carles Margelí](https://github.com/Margeli).
 
@@ -33,7 +33,8 @@ Drag and drop the file directly to the engine. Only FBX, DDS, PNG or JPG support
 
 ### Innovation:
 For this delivery the 3d Engine has the innovation feature of Anisotropic Filtering that is already active. 
-In addition, is able to load textures in JPG format. In assets there's a .jpg texture to test it, as innovation part.
+Another aspect of innovation is the Audio, there are sound when open/close window from the main menu, when open a link & also when a file is dropped.  
+In addition, is able to load textures in JPG format. In assets there is a .jpg texture to test it.
 
 ### License:
 MIT License
