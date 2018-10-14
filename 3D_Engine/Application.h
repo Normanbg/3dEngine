@@ -95,14 +95,14 @@ public:
 	update_status Update();
 	bool CleanUp();
 
-	void RequestBrowser(std::string link);
+	void RequestBrowser(const char* link) const;
 
 	void LoadGame();
-	void SaveGame() const;
+	void SaveGame();
 
 	
-	std::vector<float> GetFpsLog();
-	std::vector<float> GetMsLog();
+	std::vector<float> GetFpsLog()const;
+	std::vector<float> GetMsLog()const;
 	
 	std::vector<float> fps_log;
 	std::vector<float> ms_log;

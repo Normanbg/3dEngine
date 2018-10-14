@@ -215,9 +215,8 @@ bool Application::CleanUp()
 	return ret;
 }
 
-void Application::RequestBrowser(std::string link)
-{
-	ShellExecute(NULL, "open", link.c_str(), NULL, NULL, SW_SHOWNORMAL);
+void Application::RequestBrowser(const char* link) const{
+	ShellExecute(NULL, "open", link, NULL, NULL, SW_SHOWNORMAL);
 }
 
 void Application::AddModule(Module* mod)
@@ -246,10 +245,10 @@ void Application::StoreMsLog() {
 	}
 }
 
-std::vector<float> Application::GetFpsLog() {
+std::vector<float> Application::GetFpsLog() const  {
 	return fps_log;
 }
-std::vector<float> Application::GetMsLog() {
+std::vector<float> Application::GetMsLog()const {
 	return ms_log;
 }
 
@@ -298,7 +297,7 @@ void Application::SetOrganization(char* newName)
 	 want_to_load = true;
  }
 
- void Application::SaveGame() const
+ void Application::SaveGame()
  {
 	 want_to_save = true;
  }
