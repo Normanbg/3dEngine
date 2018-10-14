@@ -19,8 +19,7 @@ public:
 	GLuint LoadTexture(const char* path, uint& width, uint& height);
 
 	
-	void LoadCheckeredPlane(); // for debug test
-	void DrawCheckeredPlane()const ;
+
 
 public: 
 	
