@@ -32,9 +32,11 @@ public:
 	void Draw();
 
 
+
 	void AddConsoleLogs(const char* log) ;
 	void ImplGuiInputs(SDL_Event* e)const;
 	bool MouseOnGui() const;
+
 
 public:
 	bool demoShowcase = false;
