@@ -333,6 +333,9 @@
     <ClInclude Include="Brofiler\Brofiler.h">
       <Filter>Sources\Tools\Brofiler</Filter>
     </ClInclude>
+    <ClInclude Include="ModuleAudio.h">
+      <Filter>Sources\Modules</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleCamera3D.cpp">
@@ -526,6 +529,9 @@
     </ClCompile>
     <ClCompile Include="UIPanelProperties.cpp">
       <Filter>Sources\Modules\GuiPanels</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleAudio.cpp">
+      <Filter>Sources\Modules</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
