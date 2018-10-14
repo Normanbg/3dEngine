@@ -1,4 +1,4 @@
-# 3dEngine
+﻿# 3dEngine
 This 3D engine is created for the subject "3D Engines" of [Bachelor’s Degree in Video Games by UPC at CITM](https://www.citm.upc.edu/ing/estudis/graus-videojocs/) by [Norman Benet](https://github.com/Normanbg) & [Carles Margelí](https://github.com/Margeli).
 
 ## Installation:
@@ -29,6 +29,9 @@ Drag and drop the file directly to the engine. Only FBX, DDS, PNG or JPG support
 
 ### Latest release:
 [https://github.com/Normanbg/3dEngine/releases](https://github.com/Normanbg/3dEngine/releases)
+
+### Innovation:
+For this delivery this 3d Engine is able to load textures in JPG format. In assets there is a .jpg texture to test it as innovation part.
 
 ### License:
 MIT License
