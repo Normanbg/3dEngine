@@ -14,7 +14,7 @@ public:
 	~TextureImporter();
 
 	void Init();
-	void CleanUp();
+	
 		
 	GLuint LoadTexture(const char* path, uint& width, uint& height);
 
@@ -25,7 +25,7 @@ public:
 public: 
 	
 	uint imageID = 0;
-	GLuint textureID= 0;
+	
 };
 
 #endif //__TEXTUREIMPORTER_H__

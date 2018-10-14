@@ -26,6 +26,10 @@ struct Texture {
 
 struct Mesh {
 
+	vec position;
+	vec scale;
+	Quat rotation;
+
 	uint id_index = -1;
 	uint num_index = 0;
 	uint* index = nullptr;

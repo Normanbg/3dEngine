@@ -199,7 +199,7 @@ bool ModuleRenderer3D::CleanUp()
 	OWN_LOG("Destroying 3D Renderer");
 
 	importer->EndDebugLog();
-	texImporter->CleanUp();
+	
 
 	ClearSceneMeshes();
 		

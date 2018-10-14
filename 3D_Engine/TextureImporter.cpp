@@ -61,7 +61,7 @@ GLuint TextureImporter::LoadTexture(const char * path, uint& texWidth, uint& tex
 		GLuint textureID;
 		texHeight = infoImage.Height;
 		texWidth = infoImage.Width;
-		//glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+		
 		glGenTextures(1, &textureID);//generates a texture buffer 
 		glBindTexture(GL_TEXTURE_2D, textureID);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);//parameters
@@ -129,8 +129,4 @@ void TextureImporter::DrawCheckeredPlane()const{
 	
 	glEnd();
 
-}
-void TextureImporter::CleanUp(){
-
-	glDeleteBuffers(1, &textureID);
 }

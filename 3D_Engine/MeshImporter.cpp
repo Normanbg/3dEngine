@@ -56,13 +56,27 @@ void MeshImporter::LoadFBX(const char * path){
 }
 
 void MeshImporter::LoadFromMesh(const aiScene* currSc, aiMesh * new_mesh){
+	
+	bool error= false;
+	
 	Mesh mesh;
 
+	const aiNode* node = currSc->mRootNode;
+	aiVector3D _scale;
+	aiQuaternion _rotation;
+	aiVector3D _position;
+	node->mTransformation.Decompose(_scale, _rotation, _position);
+
+	mesh.position = { _position.x, _position.y, _position.z };
+	mesh.rotation = { _rotation.x, _rotation.y, _rotation.z, _rotation.w };
+	mesh.scale = { _scale.x, _scale.y, _scale.z };
+	
 	mesh.num_vertex = new_mesh->mNumVertices;
 	mesh.vertex = new float3[mesh.num_vertex];
 	memcpy(mesh.vertex, new_mesh->mVertices, sizeof(float3) * mesh.num_vertex);
 	OWN_LOG("New mesh with %d vertices", mesh.num_vertex);
 	mesh.name = new_mesh->mName.C_Str();
+
 	if (new_mesh->HasFaces()){
 		mesh.num_index = new_mesh->mNumFaces * 3;
 		mesh.num_faces = new_mesh->mNumFaces;
@@ -70,19 +84,21 @@ void MeshImporter::LoadFromMesh(const aiScene* currSc, aiMesh * new_mesh){
 		for (uint i = 0; i < new_mesh->mNumFaces; ++i)	{
 			if (new_mesh->mFaces[i].mNumIndices != 3) {
 				OWN_LOG("WARNING, geometry face with != 3 indices!");
+				error = true;
+
 			}
 			else {
 				memcpy(&mesh.index[i * 3], new_mesh->mFaces[i].mIndices, 3 * sizeof(uint));
 			}
-		}		
+		}
 	}
-	if (new_mesh->HasNormals()) {
+	if (new_mesh->HasNormals() && !error) {
 		mesh.num_normals = new_mesh->mNumVertices;
 		mesh.normals = new float3[mesh.num_normals];
 		memcpy(mesh.normals, new_mesh->mNormals, sizeof(float3) * mesh.num_normals);
 		OWN_LOG("New mesh with %d normals", mesh.num_normals);
 	}	
-	if (new_mesh->GetNumUVChannels() > 0) {
+	if (new_mesh->GetNumUVChannels() > 0 && !error) {
 		mesh.num_textureCoords = mesh.num_vertex;
 		mesh.texturesCoords = new float2[mesh.num_textureCoords];
 		
@@ -92,7 +108,7 @@ void MeshImporter::LoadFromMesh(const aiScene* currSc, aiMesh * new_mesh){
 		}
 		OWN_LOG("New mesh with %d UVs", mesh.num_textureCoords);
 	}
-	if (currSc->HasMaterials()) {
+	if (currSc->HasMaterials()&&!error) {
 	
 		aiColor3D color(0.f, 0.f, 0.f);
 		currSc->mMaterials[new_mesh->mMaterialIndex]->Get(AI_MATKEY_COLOR_DIFFUSE, color);
@@ -136,8 +152,13 @@ void MeshImporter::LoadFromMesh(const aiScene* currSc, aiMesh * new_mesh){
 			OWN_LOG("Error loading texture from fbx. Error: %s", aiGetErrorString());
 		}
 	}
-	mesh.generateBoundingBox();
-	App->renderer3D->AddMesh(&mesh);
+	if (!error) {
+		mesh.generateBoundingBox();
+		App->renderer3D->AddMesh(&mesh);
+	}
+	else {
+		OWN_LOG("Error loading mesh");
+	}
 }
 
 void MeshImporter::ChangeMeshTexture(const char * path) {

@@ -22,9 +22,12 @@ void UIPanelProperties::Draw() {
 		if (ImGui::CollapsingHeader(meshNumber)) {
 			ImGui::PushID("Transformation" + i);
 			if (ImGui::TreeNode("Transformation")) {
-				ImGui::Text("Position:\n X: %0.1f \n Y: %0.1f \n Z: %0.1f", 0.0f, 0.0f, 0.0f);
-				ImGui::Text("Rotation:\n X: %0.1f \n Y: %0.1f \n Z: %0.1f", 0.0f, 0.0f, 0.0f);
-				ImGui::Text("Scale:\n X: %0.1f \n Y: %0.1f \n Z: %0.1f", 1.0f, 1.0f, 1.0f);
+				ImGui::Text("Position:\n X: %0.1f \n Y: %0.1f \n Z: %0.1f", meshIterator._Ptr->position.x, meshIterator._Ptr->position.y, meshIterator._Ptr->position.z);
+				
+				vec eulerRot = meshIterator._Ptr->rotation.ToEulerXYZ();//to transform quaternion to Euler angle
+				eulerRot *= 180/ pi; // radians to degrees
+				ImGui::Text("Rotation:\n X: %0.1f \n Y: %0.1f \n Z: %0.1f", eulerRot.x, eulerRot.y, eulerRot.z);
+				ImGui::Text("Scale:\n X: %0.1f \n Y: %0.1f \n Z: %0.1f", meshIterator._Ptr->scale.x, meshIterator._Ptr->scale.y, meshIterator._Ptr->scale.z);
 				ImGui::TreePop();
 			}
 			ImGui::PopID();
