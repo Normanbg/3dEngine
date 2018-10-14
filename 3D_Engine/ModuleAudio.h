@@ -4,6 +4,8 @@
 #include "Module.h"
 #include "SDL_mixer\include\SDL_mixer.h"
 
+#include <vector>
+
 #define DEFAULT_MUSIC_FADE_TIME 2.0f
 
 class ModuleAudio : public Module
@@ -30,7 +32,7 @@ public:
 private:
 
 	Mix_Music * music;
-	std::list<Mix_Chunk*>	fx;
+	std::vector<Mix_Chunk*>	fx;
 };
 
 #endif // __ModuleAudio_H__

@@ -61,7 +61,7 @@ bool ModuleAudio::CleanUp()
 		Mix_FreeMusic(music);
 	}
 
-	std::list<Mix_Chunk*>::iterator item;
+	std::vector<Mix_Chunk*>::iterator item;
 
 	for(item = fx.begin(); item != fx.end(); item++)
 	{
@@ -130,12 +130,14 @@ bool ModuleAudio::PlayMusic(const char* path, float fade_time)
 unsigned int ModuleAudio::LoadFx(const char* path)
 {
 	unsigned int ret = 0;
+	std::string rootPath = AUDIO_PATH;
+	rootPath += path; 
 
-	Mix_Chunk* chunk = Mix_LoadWAV(path);
+	Mix_Chunk* chunk = Mix_LoadWAV(rootPath.c_str());
 
 	if(chunk == NULL)
 	{
-		OWN_LOG("Cannot load wav %s. Mix_GetError(): %s", path, Mix_GetError());
+		OWN_LOG("Cannot load wav %s. Mix_GetError(): %s", rootPath.c_str(), Mix_GetError());
 	}
 	else
 	{
@@ -151,9 +153,8 @@ bool ModuleAudio::PlayFx(unsigned int id, int repeat)
 {
 	bool ret = false;
 
-	Mix_Chunk* chunk = NULL;
-	std::list<Mix_Chunk*>::iterator findIter = std::find(fx.begin(), fx.end(), chunk);
-	if (findIter != fx.end())
+	Mix_Chunk* chunk = fx[id-1];
+	if (chunk != NULL)
 	{
 		Mix_PlayChannel(-1, chunk, repeat);
 		ret = true;

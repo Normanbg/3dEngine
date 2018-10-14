@@ -43,3 +43,4 @@ enum update_status
 #define CAMERA_SPEED 10.0f
 #define TEXTURES_PATH "Assets/Textures/"
 #define MODELS_PATH "Assets/3DModels/"
+#define AUDIO_PATH "Assets/Audio/"

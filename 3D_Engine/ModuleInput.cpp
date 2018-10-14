@@ -1,6 +1,7 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleInput.h"
+#include "ModuleAudio.h"
 #include "ModuleWindow.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleCamera3D.h"
@@ -38,6 +39,7 @@ bool ModuleInput::Init(JSON_Object* obj)
 	}
 	json_object_clear(obj);//clear obj to free memory
 	SDL_EventState(SDL_DROPFILE, SDL_ENABLE);
+
 	return ret;
 }
 
@@ -124,6 +126,7 @@ update_status ModuleInput::PreUpdate(float dt)
 			case SDL_DROPFILE:
 				dropped_filedir = e.drop.file;
 				std::string dropped_filedirStr(e.drop.file);
+				App->audio->PlayFx(App->gui->dropFX);
 				switch (FileType file = ObtainDroppedFileType(dropped_filedirStr))
 				{
 				case CANT_LOAD:
