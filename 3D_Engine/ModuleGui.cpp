@@ -44,9 +44,9 @@ bool ModuleGui::Start()
 	searchingFX = App->audio->LoadFx("fx/searching.wav");
 
 	uiPanels.push_back(panelAbout = new UIPanelAbout("About", 150, 150, 350, 350));
-	uiPanels.push_back(panelConfig = new UIPanelConfig("Configuration", 1025, 0, 250, 550, true));
+	uiPanels.push_back(panelConfig = new UIPanelConfig("Configuration", 1025, 15, 250, 550, true));
 	uiPanels.push_back(panelConsole = new UIPanelConsole("Console", 50, 650, 1165, 350, true));
-	uiPanels.push_back(panelProperties = new UIPanelProperties("Properties", 775, 0, 250, 550, true));
+	uiPanels.push_back(panelProperties = new UIPanelProperties("Properties", 775, 15, 250, 550, true));
 
 	ImGui::CreateContext();
 
@@ -75,17 +75,32 @@ update_status ModuleGui::Update(float dt)
 		}
 
 		if (ImGui::BeginMenu("Help")) {
-			if (ImGui::MenuItem("Gui Demo"))
+			if (ImGui::MenuItem("Gui Demo")){
+				if (demoShowcase) {
+					App->audio->PlayFx(closeFX);
+				}
+				else
+					App->audio->PlayFx(openFX);
 				demoShowcase = !demoShowcase;
+				}
 			if (ImGui::MenuItem("Documentation")) {
 				App->RequestBrowser("https://github.com/Normanbg/3dEngine/wiki");
 				App->audio->PlayFx(searchingFX);
 			}
-			if (ImGui::MenuItem("Download latest"))
+			if (ImGui::MenuItem("Download latest")) {
 				App->RequestBrowser("https://github.com/Normanbg/3dEngine/releases");
-			if (ImGui::MenuItem("Report a bug"))
+				App->audio->PlayFx(searchingFX);
+			}
+			if (ImGui::MenuItem("Report a bug")) {
 				App->RequestBrowser("https://github.com/Normanbg/3dEngine/issues");
+				App->audio->PlayFx(searchingFX);
+			}
 			if (ImGui::MenuItem("About", NULL, panelAbout->isEnabled())) {
+				if (panelAbout->isEnabled()) {
+					App->audio->PlayFx(closeFX);
+				}
+				else
+					App->audio->PlayFx(openFX);
 				panelAbout->ChangeActive();
 			}
 			ImGui::EndMenu();
