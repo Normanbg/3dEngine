@@ -31,7 +31,8 @@ Drag and drop the file directly to the engine. Only FBX, DDS, PNG or JPG support
 [https://github.com/Normanbg/3dEngine/releases](https://github.com/Normanbg/3dEngine/releases)
 
 ### Innovation:
-For this delivery this 3d Engine is able to load textures in JPG format. In assets there is a .jpg texture to test it as innovation part.
+For this delivery the 3d Engine has the innovation feature of Anisotropic Filtering that is already active. 
+In addition, is able to load textures in JPG format. In assets there's a .jpg texture to test it, as innovation part.
 
 ### License:
 MIT License
