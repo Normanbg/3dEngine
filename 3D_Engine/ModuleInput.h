@@ -16,6 +16,7 @@ enum FileType {
 	CANT_LOAD = 0,
 	FBX,
 	PNG,
+	JPG,
 	DDS
 };
 
@@ -77,4 +78,6 @@ private:
 	int mouse_y_motion;
 
 	char* dropped_filedir = nullptr;
+	uint dropFX = 0;
+
 };

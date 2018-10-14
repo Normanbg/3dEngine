@@ -50,14 +50,15 @@ update_status ModuleCamera3D::Update(float dt)
 {
 	BROFILER_CATEGORY("Camera3D_Update", Profiler::Color::Chartreuse);
 	vec3 newPos(0, 0, 0);
+	float speed = CAMERA_SPEED * dt;
 
-	if (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT && App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT) {
-		float speed = CAMERA_SPEED * dt;
+	//Alt+Left click should orbit the object
+	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_LALT)) {
 		int dx = -App->input->GetMouseXMotion();
 		int dy = -App->input->GetMouseYMotion();
 
 		mouseSensitivity = 0.25f;
-		vec3 newPosition = Position - Reference;
+		Reference = { 0,0,0 };//WILL BE THE POSITION WHEN WE HAVE IT!!! 
 		if (dx != 0)
 		{
 			float DeltaX = (float)dx * mouseSensitivity;
@@ -81,20 +82,18 @@ update_status ModuleCamera3D::Update(float dt)
 			}
 		}
 
-		Reference = Position - Z * length(newPosition);
-		Look(Position, Reference, true);
-
+		Position = Reference + Z * length(Position);
 	}
 	//While Right clicking, “WASD” fps-like movement While Right clicking, “WASD” fps-like movement and free look enabled
 	if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT)
 	{
-		float speed = CAMERA_SPEED * dt;
+		speed = CAMERA_SPEED * dt;
 
 		if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT)
 			speed *= 2.0f;
 
 		if (App->input->GetKey(SDL_SCANCODE_R) == KEY_REPEAT) newPos.y += speed;
-		if (App->input->GetKey(SDL_SCANCODE_F) == KEY_REPEAT) newPos.y -= speed;
+		if (App->input->GetKey(SDL_SCANCODE_T) == KEY_REPEAT) newPos.y -= speed;
 
 		if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) newPos -= Z * speed;
 		if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) newPos += Z * speed;
@@ -115,7 +114,7 @@ update_status ModuleCamera3D::Update(float dt)
 
 		if (dx != 0)
 		{
-			float DeltaX = (float)dx * mouseSensitivity;
+			const float DeltaX = (float)dx * mouseSensitivity;
 
 			X = rotate(X, DeltaX, vec3(0.0f, 1.0f, 0.0f));
 			Y = rotate(Y, DeltaX, vec3(0.0f, 1.0f, 0.0f));
@@ -124,7 +123,7 @@ update_status ModuleCamera3D::Update(float dt)
 
 		if (dy != 0)
 		{
-			float DeltaY = (float)dy * mouseSensitivity;
+			const float DeltaY = (float)dy * mouseSensitivity;
 
 			Y = rotate(Y, DeltaY, X);
 			Z = rotate(Z, DeltaY, X);
@@ -137,6 +136,10 @@ update_status ModuleCamera3D::Update(float dt)
 		}
 
 		Reference = Position - Z * length(newPosition);
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_F)== KEY_REPEAT){		
+		FocusToMeshes();		
 	}
 
 	//-----Zoom
@@ -155,18 +158,7 @@ update_status ModuleCamera3D::Update(float dt)
 		Position += newPos;
 	}
 
-	if (!free_camera) {		
-		
-			/*Position.x = App->player->vehicle->vehicle->getChassisWorldTransform().getOrigin().getX() - 10 * App->player->vehicle->vehicle->getForwardVector().getX();
-			Position.y = App->player->vehicle->vehicle->getChassisWorldTransform().getOrigin().getY() + 5 * App->player->vehicle->vehicle->getUpAxis();
-			Position.z = App->player->vehicle->vehicle->getChassisWorldTransform().getOrigin().getZ() - 15 * App->player->vehicle->vehicle->getForwardVector().getZ();
-
-			float player_x = App->player->vehicle->vehicle->getChassisWorldTransform().getOrigin().getX() + 15 * App->player->vehicle->vehicle->getForwardVector().getX();
-			float player_z = App->player->vehicle->vehicle->getChassisWorldTransform().getOrigin().getZ() + 15 * App->player->vehicle->vehicle->getForwardVector().getZ();
-
-			LookAt(vec3(player_x, 1, player_z));*/
-		
-	}
+	
 	// Recalculate matrix -------------
 	CalculateViewMatrix();
 
@@ -214,10 +206,27 @@ void ModuleCamera3D::Move(const vec3 &Movement)
 	CalculateViewMatrix();
 }
 
+void ModuleCamera3D::MoveTo(const vec3 Movement)
+{
+	Position = Movement;
+	Reference = Movement;
+
+	CalculateViewMatrix();
+}
+
 // -----------------------------------------------------------------
-float* ModuleCamera3D::GetViewMatrix()
+float* ModuleCamera3D::GetViewMatrix() 
 {
 	return &ViewMatrix;
+}
+
+void ModuleCamera3D::FocusToMeshes(){
+	vec v = App->renderer3D->GetAvgPosFromMeshes();
+	vec3 displacement = { 10, 10, 10 };
+	vec3 moveVec = { v.x*2.5f, v.y*2.0f,v.z*2.5f };
+	MoveTo(displacement + moveVec);
+	
+	LookAt({ 0,0,0 });
 }
 
 // -----------------------------------------------------------------

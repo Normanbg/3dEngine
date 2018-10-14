@@ -14,19 +14,17 @@ public:
 	~TextureImporter();
 
 	void Init();
-	void CleanUp();
-
-	GLuint LoadTexture(const char* path, Mesh &currentMesh);
+	
+		
 	GLuint LoadTexture(const char* path, uint& width, uint& height);
 
 	
-	void LoadCheckeredPlane(); // for debug test
-	void DrawCheckeredPlane();
+
 
 public: 
 	
 	uint imageID = 0;
-	GLuint textureID= 0;
+	
 };
 
 #endif //__TEXTUREIMPORTER_H__

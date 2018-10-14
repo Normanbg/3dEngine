@@ -12,11 +12,9 @@ public:
 	Timer();
 
 	void Start();
-	
 	void Stop();
 
 	float Read();
-	
 	float ReadSec();
 
 private:

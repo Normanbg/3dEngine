@@ -11,15 +11,12 @@
 #include "UIPanelProperties.h"
 #include "ModuleWindow.h"
 #include "ModuleInput.h"
+#include "ModuleAudio.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleCamera3D.h"
 #include "Brofiler/Brofiler.h"
 
 #include <list>
-
-
-
-
 
 
 ModuleGui::ModuleGui(bool start_enabled) : Module(start_enabled)
@@ -41,11 +38,15 @@ bool ModuleGui::Start()
 {
 	BROFILER_CATEGORY("GUI_Start", Profiler::Color::Chartreuse);
 	demoShowcase = false;
+	dropFX = App->audio->LoadFx("fx/drop.wav");
+	closeFX = App->audio->LoadFx("fx/close.wav");
+	openFX = App->audio->LoadFx("fx/open.wav");
+	searchingFX = App->audio->LoadFx("fx/searching.wav");
 
 	uiPanels.push_back(panelAbout = new UIPanelAbout("About", 150, 150, 350, 350));
-	uiPanels.push_back(panelConfig = new UIPanelConfig("Configuration", 1025, 0, 250, 550, true));
-	uiPanels.push_back(panelConsole = new UIPanelConsole("Console", 50, 650, 800, 350, true));
-	uiPanels.push_back(panelProperties = new UIPanelProperties("Properties", 775, 0, 250, 550, true));
+	uiPanels.push_back(panelConfig = new UIPanelConfig("Configuration", 1025, 15, 250, 550, true));
+	uiPanels.push_back(panelConsole = new UIPanelConsole("Console", 50, 650, 1165, 350, true));
+	uiPanels.push_back(panelProperties = new UIPanelProperties("Properties", 775, 15, 250, 550, true));
 
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO();
@@ -59,12 +60,6 @@ bool ModuleGui::Start()
 update_status ModuleGui::PreUpdate(float dt)
 {
 	BROFILER_CATEGORY("GUI_PreUpdate", Profiler::Color::Chartreuse);
-	/*ImGuiIO& io = ImGui::GetIO();
-	io.DisplaySize.x = 1920.0f;*
-	/*io.DisplaySize.y = 1280.0f;*/
-	/*ImGui_ImplOpenGL2_NewFrame();
-	ImGui_ImplSDL2_NewFrame(App->window->window);
-	ImGui::NewFrame();*/
 	ImGui_ImplOpenGL2_NewFrame();
 	ImGui_ImplSDL2_NewFrame(App->window->window);
 	ImGui::NewFrame();
@@ -80,27 +75,63 @@ update_status ModuleGui::Update(float dt)
 				return UPDATE_STOP;
 			ImGui::EndMenu();
 		}
+
 		if (ImGui::BeginMenu("Help")) {
-			if (ImGui::MenuItem("Gui Demo"))
+			if (ImGui::MenuItem("Gui Demo")){
+				if (demoShowcase) {
+					App->audio->PlayFx(closeFX);
+				}
+				else
+					App->audio->PlayFx(openFX);
 				demoShowcase = !demoShowcase;
-			if (ImGui::MenuItem("Documentation"))
+				}
+			if (ImGui::MenuItem("Documentation")) {
 				App->RequestBrowser("https://github.com/Normanbg/3dEngine/wiki");
-			if (ImGui::MenuItem("Download latest"))
+				App->audio->PlayFx(searchingFX);
+			}
+			if (ImGui::MenuItem("Download latest")) {
 				App->RequestBrowser("https://github.com/Normanbg/3dEngine/releases");
-			if (ImGui::MenuItem("Report a bug"))
+				App->audio->PlayFx(searchingFX);
+			}
+			if (ImGui::MenuItem("Report a bug")) {
 				App->RequestBrowser("https://github.com/Normanbg/3dEngine/issues");
+				App->audio->PlayFx(searchingFX);
+			}
 			if (ImGui::MenuItem("About", NULL, panelAbout->isEnabled())) {
+				if (panelAbout->isEnabled()) {
+					App->audio->PlayFx(closeFX);
+				}
+				else
+					App->audio->PlayFx(openFX);
 				panelAbout->ChangeActive();
 			}
 			ImGui::EndMenu();
 		}
 		if (ImGui::BeginMenu("View")) {
-			if (ImGui::MenuItem("Console", NULL, panelConsole->isEnabled()))
+			if (ImGui::MenuItem("Console", NULL, panelConsole->isEnabled())) {
+				if (panelConsole->isEnabled()) {
+					App->audio->PlayFx(closeFX);
+				}
+				else
+					App->audio->PlayFx(openFX);
 				panelConsole->ChangeActive();
-			if (ImGui::MenuItem("Configuration", NULL, panelConfig->isEnabled()))
+			}
+			if (ImGui::MenuItem("Configuration", NULL, panelConfig->isEnabled())) {
+				if (panelConfig->isEnabled()) {
+					App->audio->PlayFx(closeFX);
+				}
+				else
+					App->audio->PlayFx(openFX);
 				panelConfig->ChangeActive();
-			if (ImGui::MenuItem("Properties", NULL, panelProperties->isEnabled()))
+			}
+			if (ImGui::MenuItem("Properties", NULL, panelProperties->isEnabled())) {
+				if (panelProperties->isEnabled()) {
+					App->audio->PlayFx(closeFX);
+				}
+				else
+					App->audio->PlayFx(openFX);
 				panelProperties->ChangeActive();
+			}
 			ImGui::EndMenu();
 		}
 		ImGui::EndMainMenuBar();
@@ -129,11 +160,6 @@ void ModuleGui::Draw() {
 }
 
 
-update_status ModuleGui::PostUpdate(float dt)
-{
-	
-	return UPDATE_CONTINUE;
-}
 
 bool ModuleGui::CleanUp()
 {
@@ -152,10 +178,16 @@ bool ModuleGui::CleanUp()
 	return true;
 }
 
-void ModuleGui::AddConsoleLogs(const char* log){
+void ModuleGui::AddConsoleLogs(const char* log)  {
 	logsBuffer.push_back(log);
 }
 
-bool ModuleGui::GetMouseOnGui() const{
+
+void ModuleGui::ImplGuiInputs(SDL_Event * e) const{
+	ImGui_ImplSDL2_ProcessEvent(e);
+}
+
+bool ModuleGui::MouseOnGui() const {
+
 	return ImGui::GetIO().WantCaptureMouse;
 }

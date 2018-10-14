@@ -7,6 +7,7 @@
 #include"./ImGui/imgui.h"
 #include "SDL\include\SDL.h"
 #include "Globals.h"
+#include "PerfTimer.h"
 #include "Timer.h"
 #include "./JSON/parson.h"
 #include "./Glew/include/glew.h"
@@ -23,10 +24,8 @@ class Module;
 class ModuleWindow;
 class ModuleInput;
 class ModuleAudio;
-class ModuleSceneIntro;
 class ModuleRenderer3D;
 class ModuleCamera3D;
-class ModulePhysics3D;
 class ModuleGui;
 
 class Application
@@ -34,11 +33,10 @@ class Application
 public:
 	ModuleWindow* window;
 	ModuleInput* input;
-	ModuleAudio* audio;
-	ModuleSceneIntro* scene_intro;
+	ModuleAudio* audio;	
 	ModuleRenderer3D* renderer3D;
 	ModuleCamera3D* camera;
-	ModulePhysics3D* physics;
+	
 	ModuleGui* gui;
 
 private:
@@ -50,6 +48,7 @@ private:
 	float	prevTime_scale = 1.f;
 	int		time_scaleFrames = -1;
 
+	PerfTimer	ptimer;
 	Uint64		frame_count = 0;
 	Uint32		framerate_cap = FRAMERATE_CAP;
 	Uint32		prev_framerate_cap = 0;
@@ -96,14 +95,14 @@ public:
 	update_status Update();
 	bool CleanUp();
 
-	void RequestBrowser(std::string link);
+	void RequestBrowser(const char* link) const;
 
 	void LoadGame();
-	void SaveGame() const;
+	void SaveGame();
 
 	
-	std::vector<float> GetFpsLog();
-	std::vector<float> GetMsLog();
+	std::vector<float> GetFpsLog()const;
+	std::vector<float> GetMsLog()const;
 	
 	std::vector<float> fps_log;
 	std::vector<float> ms_log;

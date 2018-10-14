@@ -41,6 +41,7 @@ bool ModuleWindow::Init(JSON_Object* obj)
 	}
 	else
 	{
+	
 		//Create window
 		int width = _w * SCREEN_SIZE;
 		int height = _h * SCREEN_SIZE;
@@ -134,16 +135,23 @@ void ModuleWindow::SetBorderless(bool borderless) {
 }
 void ModuleWindow::SetFullscreenDesktop(bool fulldesktop) {
 	_fullDesktop = fulldesktop;
-	SDL_DisplayMode dMode;
-	SDL_GetDesktopDisplayMode(0, &dMode);
+	uint x = 0;
+	uint y = 0;
+	const uint margin = 30;
+	
 	if (fulldesktop) {
-		SDL_SetWindowSize(window,SCREEN_WIDTH*SCREEN_SIZE, SCREEN_HEIGHT*SCREEN_SIZE);
-		SDL_SetWindowPosition(window, 0, 0);
+		SDL_DisplayMode dMode;
+		SDL_GetDesktopDisplayMode(0, &dMode);
+		_w = dMode.w;
+		_h = dMode.h;		
 	}
-	else {
-		SDL_SetWindowSize(window, SCREEN_SIZE*_w, SCREEN_SIZE*_h );
-		SDL_SetWindowPosition(window,0, 0);
+	else {		
+		_w = SCREEN_WIDTH;
+		_h = SCREEN_HEIGHT;
+		x = y = margin;		
 	}
+	SDL_SetWindowSize(window, SCREEN_SIZE*_w, SCREEN_SIZE*_h);
+	SDL_SetWindowPosition(window, x, y);
 
 }
 
@@ -154,8 +162,8 @@ void ModuleWindow::SetBrightness(float bright) {
 }
 
 void ModuleWindow::SetSize(uint w, uint h) {
-	_h = h* SCREEN_SIZE;
-	_w = w* SCREEN_SIZE;
+	_h = h;
+	_w = w;
 	SDL_SetWindowSize(window, w, h);
 	
 }

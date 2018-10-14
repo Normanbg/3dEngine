@@ -18,7 +18,9 @@ public:
 	void Look(const vec3 &Position, const vec3 &Reference, bool RotateAroundReference = false);
 	void LookAt(const vec3 &Spot);
 	void Move(const vec3 &Movement);
-	float* GetViewMatrix();
+	void MoveTo(const vec3 Movement);
+	float* GetViewMatrix() ;
+	void FocusToMeshes();
 
 public:
 
@@ -37,7 +39,7 @@ private:
 	bool debug = false;
 	vec3 offset_to_player;
 	mat4x4 ViewMatrix, ViewMatrixInverse;
-	
+
 };
 
 #endif 

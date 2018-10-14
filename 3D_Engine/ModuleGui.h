@@ -9,6 +9,8 @@
 
 #include "RandomGenerator/pcg_variants.h"
 
+union SDL_Event;
+
 class UIPanel;
 class UIPanelAbout;
 class UIPanelConfig;
@@ -24,14 +26,17 @@ public:
 
 	bool  Start();
 	update_status PreUpdate(float dt);
-	update_status Update(float dt);
-	update_status PostUpdate(float dt);
+	update_status Update(float dt);	
 	bool CleanUp();
 
 	void Draw();
 
-	void AddConsoleLogs(const char* log);
-	bool GetMouseOnGui() const;
+
+
+	void AddConsoleLogs(const char* log) ;
+	void ImplGuiInputs(SDL_Event* e)const;
+	bool MouseOnGui() const;
+
 
 public:
 	bool demoShowcase = false;
@@ -44,6 +49,11 @@ public:
 
 	std::vector<std::string> logsBuffer;
 	uint ilVersion = 0;
+
+	uint dropFX = 0;
+	uint closeFX = 0;
+	uint openFX = 0;
+	uint searchingFX = 0; //Used when open an URL
 
 };
 

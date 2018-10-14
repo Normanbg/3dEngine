@@ -1,6 +1,7 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleInput.h"
+#include "ModuleAudio.h"
 #include "ModuleWindow.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleCamera3D.h"
@@ -38,6 +39,7 @@ bool ModuleInput::Init(JSON_Object* obj)
 	}
 	json_object_clear(obj);//clear obj to free memory
 	SDL_EventState(SDL_DROPFILE, SDL_ENABLE);
+
 	return ret;
 }
 
@@ -97,10 +99,13 @@ update_status ModuleInput::PreUpdate(float dt)
 	SDL_Event e;
 	while(SDL_PollEvent(&e))
 	{
+		App->gui->ImplGuiInputs(&e);
 		switch(e.type)
 		{
 			case SDL_MOUSEWHEEL:
-				if (!App->gui->GetMouseOnGui())
+
+				if (!App->gui->MouseOnGui())
+
 					mouse_z = e.wheel.y;
 			break;
 
@@ -123,10 +128,11 @@ update_status ModuleInput::PreUpdate(float dt)
 			case SDL_DROPFILE:
 				dropped_filedir = e.drop.file;
 				std::string dropped_filedirStr(e.drop.file);
+				App->audio->PlayFx(App->gui->dropFX);
 				switch (FileType file = ObtainDroppedFileType(dropped_filedirStr))
 				{
 				case CANT_LOAD:
-					OWN_LOG("File not supported, try FBX, PNG or DDS")
+					OWN_LOG("File not supported, try FBX, PNG, JPG or DDS")
 					break;
 				case FBX:
 					OWN_LOG("Dropped .fbx file");
@@ -137,6 +143,11 @@ update_status ModuleInput::PreUpdate(float dt)
 					OWN_LOG("Dropped .png file");
 					App->renderer3D->importer->ChangeMeshTexture(dropped_filedir);
 					
+					break;
+				case JPG:
+					OWN_LOG("Dropped .jpg file");
+					App->renderer3D->importer->ChangeMeshTexture(dropped_filedir);
+
 					break;
 				case DDS:
 					OWN_LOG("Dropped .dds file");
@@ -175,6 +186,8 @@ FileType ModuleInput::ObtainDroppedFileType(std::string droppedFileDir){
 			return FBX;
 		else if (formatStr == "png" || formatStr == "PNG")
 			return PNG;
+		else if (formatStr == "jpg" || formatStr == "JPG")
+			return JPG;
 		else if (formatStr == "dds" || formatStr == "DDS")
 			return DDS;
 	}

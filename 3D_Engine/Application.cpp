@@ -3,6 +3,7 @@
 #include "DeviceId\DeviceId.h"
 #include "ModuleWindow.h"
 #include "ModuleInput.h"
+#include "ModuleAudio.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleCamera3D.h"
 #include "ModuleGui.h"
@@ -18,6 +19,7 @@ Application::Application()
 
 	window = new ModuleWindow();
 	input = new ModuleInput(this);
+	audio = new ModuleAudio(this);
 	renderer3D = new ModuleRenderer3D(this);
 	camera = new ModuleCamera3D(this);
 	gui = new ModuleGui(this);
@@ -31,6 +33,8 @@ Application::Application()
 	AddModule(window);
 	AddModule(camera);
 	AddModule(input);
+	AddModule(audio);
+
 	AddModule(gui);
 	
 	// Scenes
@@ -214,9 +218,8 @@ bool Application::CleanUp()
 	return ret;
 }
 
-void Application::RequestBrowser(std::string link)
-{
-	ShellExecute(NULL, "open", link.c_str(), NULL, NULL, SW_SHOWNORMAL);
+void Application::RequestBrowser(const char* link) const{
+	ShellExecute(NULL, "open", link, NULL, NULL, SW_SHOWNORMAL);
 }
 
 void Application::AddModule(Module* mod)
@@ -245,10 +248,10 @@ void Application::StoreMsLog() {
 	}
 }
 
-std::vector<float> Application::GetFpsLog() {
+std::vector<float> Application::GetFpsLog() const  {
 	return fps_log;
 }
-std::vector<float> Application::GetMsLog() {
+std::vector<float> Application::GetMsLog()const {
 	return ms_log;
 }
 
@@ -297,7 +300,7 @@ void Application::SetOrganization(char* newName)
 	 want_to_load = true;
  }
 
- void Application::SaveGame() const
+ void Application::SaveGame()
  {
 	 want_to_save = true;
  }

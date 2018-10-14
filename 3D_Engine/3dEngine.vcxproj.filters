@@ -267,6 +267,9 @@
     <ClInclude Include="ModuleGui.h">
       <Filter>Sources\Modules</Filter>
     </ClInclude>
+    <ClInclude Include="PerfTimer.h">
+      <Filter>Sources\Tools</Filter>
+    </ClInclude>
     <ClInclude Include="ImGui\imconfig.h">
       <Filter>Sources\Tools\ImGui</Filter>
     </ClInclude>
@@ -329,6 +332,9 @@
     </ClInclude>
     <ClInclude Include="Brofiler\Brofiler.h">
       <Filter>Sources\Tools\Brofiler</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleAudio.h">
+      <Filter>Sources\Modules</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -473,6 +479,9 @@
     <ClCompile Include="ModuleGui.cpp">
       <Filter>Sources\Modules</Filter>
     </ClCompile>
+    <ClCompile Include="PerfTimer.cpp">
+      <Filter>Sources\Tools</Filter>
+    </ClCompile>
     <ClCompile Include="ImGui\imgui.cpp">
       <Filter>Sources\Tools\ImGui</Filter>
     </ClCompile>
@@ -520,6 +529,9 @@
     </ClCompile>
     <ClCompile Include="UIPanelProperties.cpp">
       <Filter>Sources\Modules\GuiPanels</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleAudio.cpp">
+      <Filter>Sources\Modules</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

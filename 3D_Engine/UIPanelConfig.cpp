@@ -33,11 +33,14 @@ void UIPanelConfig::Draw() {
 		const int maxSize = 64;
 
 		std::string aux = App->window->GetWindowTitle();
-		ImGui::InputText("App Name", (char*)aux.c_str(), maxSize);
-		std::string aux2 = App->GetOrganization();
+		if (ImGui::InputText("App Name", (char*)aux.c_str(), maxSize)) {
+			App->window->SetTitle((char*)aux.c_str());
+		}
+		aux = App->GetOrganization();
 		//char str2[maxSize] = aux;
-		ImGui::InputText("Organization", (char*)aux2.c_str(), maxSize);
-
+		if (ImGui::InputText("Organization", (char*)aux.c_str(), maxSize)) {
+			App->SetOrganization((char*)aux.c_str());
+		}
 		int DefaultFpsCap = (App->GetFramerateCap());
 
 		ImGui::SliderInt("Max FPS", &(DefaultFpsCap), 1, 120);
@@ -117,8 +120,6 @@ void UIPanelConfig::Draw() {
 		float currVidMem = 0;
 		float availVidMem = 0;
 		float reserVidMem = 0;		
-	
-		//App->GetHardWareData(totalVidMem, currVidMem, availVidMem, reserVidMem);
 
 		SDL_version version;
 		SDL_GetVersion(&version);
@@ -168,15 +169,6 @@ void UIPanelConfig::Draw() {
 		ImGui::Text("VRAM Reserved: "); ImGui::SameLine();
 		ImGui::TextColored(yellow, "%.2f Mb", App->GetReservedVideoMem());
 
-		/*{ FOR MAKING A GRAPHIC, DON'T ERASE!!!!!!!!!!!
-		char buf[32];
-		sprintf(buf, "%.2f/%.2f", currentVideoMemF, availableVideoMemF);
-		float percentage = (currentVideoMemF * 100) / availableVideoMemF;
-
-		ImGui::ProgressBar(percentage / 100, ImVec2(0.f, 0.f), buf);
-		ImGui::SameLine();
-		ImGui::Text("VRAM usage");
-		}*/
 	}
 	if (ImGui::CollapsingHeader("Render")) {
 		bool depthTest = App->renderer3D->GetDepthTest();
@@ -222,6 +214,21 @@ void UIPanelConfig::Draw() {
 		bool bBox = App->renderer3D->GetBoundingBox();
 		if (ImGui::Checkbox("Bounding Box", &bBox)) {
 			App->renderer3D->SetBoundingBox(bBox);
+		}
+	}
+	if (ImGui::CollapsingHeader("Textures")) {
+		std::vector<Texture>* tex = App->renderer3D->GetTexturesList(); int j = 0;
+		for (std::vector<Texture>::iterator texIterator = (*tex).begin(); texIterator != (*tex).end(); j++, texIterator++) {
+			ImGui::PushID("Texture" + j);
+			char textNumber[30];
+			sprintf_s(textNumber, 30, "Texture %d", j + 1);
+			if (ImGui::TreeNode(textNumber)) {
+				ImGui::Text("Texture size:\n Width: %dpx \n Height: %dpx \n Texture ID: %d", texIterator->texWidth, texIterator->texHeight, (*texIterator).textureID);
+				float windowSize = ImGui::GetWindowContentRegionWidth();
+				ImGui::Image((void*)(texIterator._Ptr->textureID), ImVec2(windowSize, windowSize));
+				ImGui::TreePop();
+			}
+			ImGui::PopID();
 		}
 	}
 	ImGui::End();

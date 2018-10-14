@@ -1,8 +1,6 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleRenderer3D.h"
-//#include <gl/GL.h>
-//#include <gl/GLU.h>
 #include "ModuleWindow.h"
 #include "ModuleInput.h"
 #include "ModuleCamera3D.h"
@@ -130,7 +128,6 @@ bool ModuleRenderer3D::Init(JSON_Object* obj)
 		SetColorMaterial(true);
 		SetTexture2D(true);
 	}
-
 	// Projection matrix for
 	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
@@ -148,122 +145,9 @@ bool ModuleRenderer3D::Start() {
 	BROFILER_CATEGORY("Renderer3D_Start", Profiler::Color::HotPink);
 
 	bool ret = true;
-		box = { vec{-3.0f,3.0f,-3.0f },{-3.0f,3.0f, -1.0f},{	-3.0f, 1.0f, -1.0f},{-1.0f, 1.0f,-3.0f },{-3.0f,3.0f,-3.0f},{-3.0f, 1.0f,-3.0f},
-	{-1.0f,3.0f, -1.0f },{	-3.0f,3.0f,-3.0f},{-1.0f,3.0f,-3.0f},{-1.0f, 1.0f,-3.0f},{-1.0f,3.0f,-3.0f},{-3.0f,3.0f,-3.0f},{-3.0f,3.0f,-3.0f},
-	{-3.0f, 1.0f, -1.0f},{	-3.0f, 1.0f,-3.0f},{-1.0f,3.0f, -1.0f},{-3.0f,3.0f, -1.0f},{-3.0f,3.0f,-3.0f},{	-3.0f, 1.0f, -1.0f},{-3.0f,3.0f, -1.0f},
-	{-1.0f,3.0f, -1.0f},{-1.0f, 1.0f, -1.0f},{-1.0f,3.0f,-3.0f},{-1.0f, 1.0f,-3.0f},{-1.0f,3.0f,-3.0f},{-1.0f, 1.0f, -1.0f},{	-1.0f,3.0f, -1.0f},
-	{-1.0f, 1.0f, -1.0f},{	-1.0f, 1.0f,-3.0f},{-3.0f, 1.0f,-3.0f},{	-1.0f,1.0f, -1.0f},{-3.0f, 1.0f,-3.0f},{-3.0f, 1.0f, -3.0f},{-1.0f, 1.0f, -1.0f},
-	{-3.0f, 1.0f, -1.0f},{	-1.0f,3.0f, -1.0f} }; // Box divided into triangles, 102 coords of its triangles (6faces* 2triangles* 3vertex* 3coords)
 
-	glGenBuffers(1, (GLuint*) &(buffBoxID));  // generates 1 buffer. then it assign a GLuint to its mem adress.
-	glBindBuffer(GL_ARRAY_BUFFER, buffBoxID); // set the type of buffer
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float)*box.size() * 3, &box[0], GL_STATIC_DRAW); // send the buffer data to VRAM
-	
-	box2 = { vec{.0f,.0f,.0f},  {1.0f,.0f,.0f} ,{.0f,1.0f,.0f} , {1.0f,1.0f,.0f} , {.0f,.0f,1.0f} , {1.0f,.0f,1.0f} , {.0f,1.0f,1.0f}  ,  {1.0f,1.0f,1.0f} };
-	//Box2 divided into the 8 vertex that it has
-
-	glGenBuffers(1, (GLuint*) &(buffBox2ID));
-	glBindBuffer(GL_ARRAY_BUFFER, buffBox2ID); 
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float)*box2.size()*3 , &box2[0], GL_STATIC_DRAW); 
-
-	boxIndices = {0,1,2 , 1,3,2 , 3,1,5 , 5,7,3 , 7,5,4 , 6,7,4 , 6,4,0, 0,2,6  , 6,2,3 , 6,3,7 , 0,4,5 , 0,5,1 };
-
-	glGenBuffers(1, (GLuint*)&(buffIndicesID));
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffIndicesID);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * boxIndices.size(),&boxIndices[0], GL_STATIC_DRAW);
-
-	//Plane
-	plane = { vec{0.0f, 0.0f, 0.0f},{ 15.0f,0.0f, 0.0f},{ 0.0f, 0.0f, 15.0f }, {	0.0f, 0.0f, 15.0f },{ 15.0f,0.0f,0.0f },{ 15.0f,0.0f, 15.0f } };
-	glGenBuffers(1, (GLuint*) &(buffPlaneID));  // generates 1 buffer. then it assign a GLuint to its mem adress.
-	glBindBuffer(GL_ARRAY_BUFFER, buffPlaneID); // set the type of buffer
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float)*plane.size() * 3, &plane[0], GL_STATIC_DRAW);
-
-	//Ray
-	ray = { vec{ 0.0f, 0.0f, 0.0f },{ 0.03f,0.0f, 0.0f },{ 0.0f, 0.0f, 105.0f },{ 0.0f, 0.0f, 105.0f },{ 0.03f,0.0f,0.0f },{ 0.03f,0.0f, 105.0f } };
-	glGenBuffers(1, (GLuint*) &(buffRayID));  // generates 1 buffer. then it assign a GLuint to its mem adress.
-	glBindBuffer(GL_ARRAY_BUFFER, buffRayID); // set the type of buffer
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float)*ray.size() * 3, &ray[0], GL_STATIC_DRAW);
-
-	//Frustum
-	frustum = { vec{ 5.0f,5.0f,5.0f },{ 6.0f,5.0f,5.0f },{ 5.0f,6.0f,5.0f },{ 6.0f,6.0f,5.0f },		{4.75f,4.75f,6.0f },{ 6.25f,4.75f,6.0f },{ 4.75f,6.25f,6.0f },{ 6.25f,6.25f,6.0f } };
-
-	glGenBuffers(1, (GLuint*) &(buffIndicesFrustumID));
-	glBindBuffer(GL_ARRAY_BUFFER, buffIndicesFrustumID);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float)*frustum.size() * 3, &frustum[0], GL_STATIC_DRAW);
-	
-	//---sphere
-	float radius = 1;
-	float sectors =10;
-	float stacks = 10;
-	vec position( 0,0, 0);
-
-	float x, y, z, xy;                              // vertex position
-	
-	float sectorStep = 2 * pi / sectors;
-	float stackStep = pi / stacks;
-	float sectorAngle, stackAngle;
-
-	for (int i = 0; i <= stacks; ++i)
-	{
-		stackAngle = pi / 2 - i * stackStep;        // starting from pi/2 to -pi/2
-		xy = radius * cosf(stackAngle);             // r * cos(u)
-		y = position.y+ radius * sinf(stackAngle);              // r * sin(u)
-
-													// add (sectorCount+1) vertices per stack
-													// the first and last vertices have same position and normal, but different tex coods
-		for (int j = 0; j <= sectors; ++j)
-		{
-			sectorAngle = j * sectorStep;
-
-			// vertex position (x, y, z)
-			z = position.z+ xy  * cosf(sectorAngle);             // r * cos(u) * cos(v)
-			x = position.x + xy * sinf(sectorAngle);             // r * cos(u) * sin(v)
-			sphere.push_back(vec(x, y, z));
-						
-		}
-	}
-
-	glGenBuffers(1, (GLuint*) &(buffsphereID));
-	glBindBuffer(GL_ARRAY_BUFFER, buffsphereID);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float)*sphere.size() * 3, &sphere[0], GL_STATIC_DRAW);
-
-
-
-	int k1, k2;
-	for (int i = 0; i < stacks; ++i)
-	{
-		k1 = i * (sectors + 1);     // beginning of current stack
-		k2 = k1 + sectors + 1;      // beginning of next stack
-
-		for (int j = 0; j < sectors; ++j, ++k1, ++k2)
-		{
-			// 2 triangles per sector excluding 1st and last stacks
-			if (i != 0)
-			{
-				sphereIndices.push_back(k1);
-				sphereIndices.push_back(k2);
-				sphereIndices.push_back(k1 + 1);
-			}
-
-			if (i != (stacks - 1))
-			{
-				sphereIndices.push_back(k1 + 1);
-				sphereIndices.push_back(k2);
-				sphereIndices.push_back(k2 + 1);
-			}
-		}
-	}
-
-	glGenBuffers(1, (GLuint*)&(buffIndicesSphereID));
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffIndicesSphereID);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * sphereIndices.size(), &sphereIndices[0], GL_STATIC_DRAW);
-	
-	
 	importer->LoadFBX("BakerHouse.fbx");
 	GenBuffFromMeshes();
-
-	
-	//texImporter->LoadCheckeredPlane();
 
 	return ret;
 }
@@ -295,59 +179,10 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
 	BROFILER_CATEGORY("Renderer3D_PostUpdate", Profiler::Color::HotPink);
-	//direct mode box 
-	/*
-	glColor4f(1.0f, 1.0f, .0f, 1.0f); // color cyan
 
-	glBegin(GL_TRIANGLES);
-	glVertex3f(0.0f, 10.0f, 0.0f); glVertex3f(10.0f, 0.0f, 0.0f); glVertex3f(0.0f, 0.0f, 0.0f);
-	glVertex3f(0.0f, 10.0f, 0.0f); glVertex3f(10.0f, 10.0f, 0.0f); glVertex3f(10.0f, 0.0f, 0.0f);
-	glVertex3f(10.0f, 10.0f, 0.0f); glVertex3f(10.0f, 0.0f, 10.0f); glVertex3f(10.0f, 0.0f, 0.0f);
-	glVertex3f(10.0f, 10.0f, 0.0f); glVertex3f(10.0f, 10.0f, 10.0f); glVertex3f(10.0f, 0.0f, 10.0f);
-	glVertex3f(0.0f, 10.0f, 10.0f); glVertex3f(10.0f, 0.0f, 10.0f); glVertex3f(10.0f, 10.0f, 10.0f);
-	glVertex3f(0.0f, 10.0f, 10.0f); glVertex3f(0.0f, 0.0f, 10.0f); glVertex3f(10.0f, 0.0f, 10.0f);
-	glVertex3f(0.0f, 0.0f, 0.0f); glVertex3f(0.0f, 0.0f, 10.0f); glVertex3f(0.0f, 10.0f, 10.0f);
-	glVertex3f(0.0f, 10.0f, 0.0f); glVertex3f(0.0f, 0.0f, 0.0f); glVertex3f(0.0f, 10.0f, 10.0f);
-	glVertex3f(10.0f, 10.0f, 0.0f); glVertex3f(0.0f, 10.0f, 0.0f); glVertex3f(0.0f, 10.0f, 10.0f);
-	glVertex3f(0.0f, 10.0f, 10.0f); glVertex3f(10.0f, 10.0f, 10.0f); glVertex3f(10.0f, 10.0f, 0.0f);
-	glVertex3f(10.0f, 0.0f, 10.0f); glVertex3f(0.0f, 0.0f, 10.0f); glVertex3f(10.0f, 0.0f, 0.0f);
-	glVertex3f(0.0f, 0.0f, 10.0f); glVertex3f(0.0f, 0.0f, 0.0f); glVertex3f(10.0f, 0.0f, 0.0f);
-	glEnd();
-*/
+	glBindBuffer(GL_ARRAY_BUFFER, 0); ///THIS LINE MAKES ALL DRAW BY RESETING THE BUFFER, NEEDED???????
 
-
-	///-------------------BOX DRAWING
-	glLineWidth(1.0f); 
-	glEnableClientState(GL_VERTEX_ARRAY);//enables vertex array
-
-
-	//---Ray
-
-	glColor4f(.0f, 1.0f, .0f, 1.0f);
-
-	glBindBuffer(GL_ARRAY_BUFFER, buffRayID);// sets the type of buffer
-	glVertexPointer(3, GL_FLOAT, 0, NULL);  // points the first vertex
-	glDrawArrays(GL_TRIANGLES, 0, 6);
-	glBindBuffer(GL_ARRAY_BUFFER, 0); //resets the buffer
-
-	//Frustum
-	glColor4f(0.5f, 1.0f, 0.5f, 1.0f);
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffIndicesID);
-	glVertexPointer(3, GL_FLOAT, 0, &frustum[0]);
-	glDrawElements(GL_TRIANGLES, boxIndices.size(), GL_UNSIGNED_INT, NULL);
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);//resets the buffer
-
-	glDisableClientState(GL_VERTEX_ARRAY);
 	DrawMeshes();
-
-	
-	
-	//texImporter->DrawCheckeredPlane();
-	
-	//-------------------------------------------------Need to call Debug Draw
-
 
 	App->gui->Draw();
 
@@ -363,15 +198,7 @@ bool ModuleRenderer3D::CleanUp()
 	OWN_LOG("Destroying 3D Renderer");
 
 	importer->EndDebugLog();
-	texImporter->CleanUp();
-	glDeleteBuffers(1, &buffBoxID);
-	glDeleteBuffers(1, &buffBox2ID);
-	glDeleteBuffers(1, &buffsphereID);
-	glDeleteBuffers(1, &buffPlaneID);
-	glDeleteBuffers(1, &buffRayID);
-	glDeleteBuffers(1, &buffIndicesID);
-	glDeleteBuffers(1, &buffIndicesSphereID);
-	glDeleteBuffers(1, &buffIndicesFrustumID);
+	
 
 	ClearSceneMeshes();
 		
@@ -380,7 +207,7 @@ bool ModuleRenderer3D::CleanUp()
 }
 
 
-void ModuleRenderer3D::OnResize(int width, int height)
+void ModuleRenderer3D::OnResize(const int width, const int height)
 {
 	glViewport(0, 0, width, height);
 
@@ -483,16 +310,53 @@ void ModuleRenderer3D::SetBoundingBox(bool active){
 
 }
 
+
+vec ModuleRenderer3D::GetAvgPosFromMeshes() 
+{
+	vec sumPoints = vec(0,0,0);
+	
+	for (int i = 0; i < meshes.size(); i++) {
+		sumPoints += meshes[i].getMiddlePoint();
+	}
+	return { sumPoints.x / meshes.size(), sumPoints.y / meshes.size(), sumPoints.z / meshes.size() };
+}
+
+GLuint ModuleRenderer3D::CheckIfImageAlreadyLoaded(const char * _path)
+{
+	for (int i = 0; i < App->renderer3D->textures.size();i++) {
+		if (strcmp(textures[i].path.c_str() ,_path)==0) {
+			return textures[i].textureID;
+		}
+	}
+	return -1;
+}
+
 void ModuleRenderer3D::AddMesh(Mesh*  mesh)
 {
-
 	meshes.push_back(*mesh);
+}
+
+void ModuleRenderer3D::AddTexture(Texture*  tex)
+{
+	textures.push_back(*tex);
+}
+
+Texture* ModuleRenderer3D::GetTextureFromID(GLuint id) 
+{
+	for (int i = 0; i < textures.size(); i++) {
+		if (textures[i].textureID = id) {
+			return &textures[i];
+		}
+	}
+	OWN_LOG("Error getting texture from ID");
+	return nullptr;
 }
 
 void ModuleRenderer3D::LoadDroppedFBX(char * droppedFileDir){
 	ClearSceneMeshes();
-	importer->LoadFBX(droppedFileDir);
+	importer->LoadFBX(droppedFileDir);	
 	GenBuffFromMeshes();	
+	App->camera->FocusToMeshes();
 }
 
 void ModuleRenderer3D::ClearSceneMeshes(){
@@ -502,6 +366,10 @@ void ModuleRenderer3D::ClearSceneMeshes(){
 		meshes[i].CleanUp();
 	}
 	meshes.clear();
+	for (int i = textures.size() - 1; i >= 0; i--) {
+		textures[i].CleanUp();
+	}
+	textures.clear();
 }
 
 void ModuleRenderer3D::ShowAxis() {
@@ -540,7 +408,7 @@ void ModuleRenderer3D::ShowGrid() {
 	glBegin(GL_LINES);
 
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-	float d = 100.0f;
+	const float d = 100.0f;
 
 	for (float i = -d; i <= d; i += 1.0f)
 	{
@@ -571,8 +439,8 @@ void Mesh::Draw()
 	else {
 		glBindTexture(GL_TEXTURE_2D, 0);
 		glBindTexture(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-		glBindTexture(GL_TEXTURE_2D, texture);
+		
+		glBindTexture(GL_TEXTURE_2D, texID);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_index);
 		glVertexPointer(3, GL_FLOAT, 0, &(vertex[0]));		
 		glTexCoordPointer(2, GL_FLOAT, 0, &(texturesCoords[0]));
@@ -602,6 +470,7 @@ void Mesh::DrawBoundingBox(){
 
 	
 	glLineWidth(2.0f);
+
 	glBegin(GL_LINES);
 	glColor4f(0.0f, 1.0f, 0.0f, 1.0f); //green
 	
@@ -641,6 +510,7 @@ void Mesh::DrawBoundingBox(){
 
 	glVertex3f(boundingBox.CornerPoint(6).x, boundingBox.CornerPoint(6).y, boundingBox.CornerPoint(6).z);
 	glVertex3f(boundingBox.CornerPoint(2).x, boundingBox.CornerPoint(2).y, boundingBox.CornerPoint(2).z);
+
 	
 	glEnd();
 	glLineWidth(1.0f);
@@ -663,6 +533,11 @@ void Mesh::CleanUp(){
 
 }
 
+void Texture::CleanUp() {
+	if (textureID != -1)
+		glDeleteBuffers(1, &textureID);
+}
+
 void Mesh::generateBoundingBox(){
 
 	AABB aabb;
@@ -671,5 +546,11 @@ void Mesh::generateBoundingBox(){
 	aabb.Enclose((vec*)vertex,num_vertex);
 	
 	boundingBox = aabb;
+}
+
+vec Mesh::getMiddlePoint()const {
+	vec ret = { (boundingBox.maxPoint.x + boundingBox.minPoint.x) / 2, (boundingBox.maxPoint.y + boundingBox.minPoint.y) / 2, (boundingBox.maxPoint.z + boundingBox.minPoint.z) / 2 };
+
+	return ret;
 }
 
