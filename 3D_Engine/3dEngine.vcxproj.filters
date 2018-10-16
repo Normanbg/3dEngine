@@ -40,6 +40,9 @@
     <Filter Include="Sources\Tools\Brofiler">
       <UniqueIdentifier>{97b4e2e2-ecb3-444e-9d48-35fefa735edc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Objects &amp; Components">
+      <UniqueIdentifier>{52353106-687c-4b8a-ab23-37f4bb1744df}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -339,9 +342,11 @@
     <ClInclude Include="ModuleScene.h">
       <Filter>Sources\Modules\Game</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject.h" />
     <ClInclude Include="Component.h">
-      <Filter>Sources\Tools</Filter>
+      <Filter>Sources\Objects &amp; Components</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>Sources\Objects &amp; Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -540,7 +545,12 @@
     <ClCompile Include="ModuleAudio.cpp">
       <Filter>Sources\Modules</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="ModuleScene.cpp">
+      <Filter>Sources\Modules\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>Sources\Objects &amp; Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="MathGeoLib\Geometry\KDTree.inl">

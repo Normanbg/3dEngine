@@ -4,6 +4,7 @@ class GameObject;
 
 enum ComponentType {
 	NO_TYPE = 0,
+
 	TRANSFORM,
 	MESH,
 	MATERIAL
@@ -17,5 +18,5 @@ public:
 public:
 	bool active = false;
 	ComponentType type;
-	GameObject* parent; //Warning! Duplication with childs of components
+	GameObject* myGo; //Warning! Duplication with childs of components
 };

@@ -14,6 +14,7 @@ enum KEY_STATE
 
 enum FileType {
 	CANT_LOAD = 0,
+
 	FBX,
 	PNG,
 	JPG,

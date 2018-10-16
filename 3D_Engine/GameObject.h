@@ -4,6 +4,7 @@
 #include "ModuleScene.h"
 #include "Component.h"
 #include <string>
+#include <vector>
 
 
 class GameObject
@@ -15,8 +16,11 @@ public:
 	Component* CreateComponent(ComponentType type);
 
 public:
-	std::string name;
-	GameObject* parent;
+	std::string					name;
+	std::vector <Component*>	components;
+	GameObject*					parent;
+	std::vector <GameObject*>	childrens;
+
 };
 
 
