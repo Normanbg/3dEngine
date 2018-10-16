@@ -43,6 +43,9 @@
     <Filter Include="Sources\Objects &amp; Components">
       <UniqueIdentifier>{52353106-687c-4b8a-ab23-37f4bb1744df}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Objects &amp; Components\Components">
+      <UniqueIdentifier>{ad85996c-8a64-4f36-acd6-9a0255ab8702}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
