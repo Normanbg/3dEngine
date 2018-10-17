@@ -2,6 +2,7 @@
 #define __COMPONENTMESH_H__
 
 #include "Component.h"
+
 class ComponentMesh : public Component
 {
 public:
@@ -9,6 +10,8 @@ public:
 	~ComponentMesh();
 
 	bool Update() override;
+
+	void CleanUp() override;
 
 };
 

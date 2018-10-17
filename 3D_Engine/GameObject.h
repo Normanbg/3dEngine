@@ -3,7 +3,9 @@
 
 #include "ModuleScene.h"
 #include "ModuleRenderer3D.h"
+#include "ModuleTextures.h"
 #include "Component.h"
+#include "ComponentTransformation.h"
 #include <string>
 #include <vector>
 
@@ -19,11 +21,16 @@ public:
 	void CleanUp();
 	Component* AddComponent(ComponentType type);
 
+private:
+	ComponentTransformation* CreateComponentTranformation();
+
 public:
 	std::string					name;
 	std::vector <Component*>	components;
 	GameObject*					parent;
 	std::vector <GameObject*>	childrens;
+
+
 
 };
 

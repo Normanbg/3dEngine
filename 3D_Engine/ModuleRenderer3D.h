@@ -1,4 +1,6 @@
-#pragma once
+#ifndef __RENDERERER3D_H__
+#define __RENDERERER3D_H__
+
 #include "Module.h"
 #include "Globals.h"
 #include "glmath.h"
@@ -168,3 +170,6 @@ private:
 	std::vector<Mesh> meshes;	
 	std::vector<Texture> textures;
 };
+
+#endif // !__RENDERER3D_H__
+

@@ -4,7 +4,9 @@
 #include "ModuleWindow.h"
 #include "ModuleInput.h"
 #include "ModuleAudio.h"
+#include "ModuleScene.h"
 #include "ModuleRenderer3D.h"
+#include "ModuleTextures.h"
 #include "ModuleCamera3D.h"
 #include "ModuleGui.h"
 #include "Brofiler\Brofiler.h"
@@ -23,6 +25,8 @@ Application::Application()
 	renderer3D = new ModuleRenderer3D(this);
 	camera = new ModuleCamera3D(this);
 	gui = new ModuleGui(this);
+	scene = new ModuleScene(this);
+	textures = new ModuleTextures(this);
 	
 	_organization = ORGANIZATION;
 	// The order of calls is very important!
@@ -34,6 +38,8 @@ Application::Application()
 	AddModule(camera);
 	AddModule(input);
 	AddModule(audio);
+	AddModule(textures);
+	AddModule(scene);
 
 	AddModule(gui);
 	

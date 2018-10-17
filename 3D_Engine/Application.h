@@ -27,6 +27,9 @@ class ModuleAudio;
 class ModuleRenderer3D;
 class ModuleCamera3D;
 class ModuleGui;
+class ModuleScene;
+class ModuleTextures;
+
 
 class Application
 {
@@ -36,6 +39,8 @@ public:
 	ModuleAudio* audio;	
 	ModuleRenderer3D* renderer3D;
 	ModuleCamera3D* camera;
+	ModuleScene* scene;
+	ModuleTextures* textures;
 	
 	ModuleGui* gui;
 

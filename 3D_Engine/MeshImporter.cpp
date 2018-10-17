@@ -3,6 +3,8 @@
 #include "ModuleRenderer3D.h"
 
 
+
+
 MeshImporter::MeshImporter()
 {
 }
@@ -30,6 +32,7 @@ void MeshImporter::LoadFBX(const char * path){
 	rootPath += path;
 	   	 
 	const aiScene* scene = aiImportFile(rootPath.c_str(), aiProcessPreset_TargetRealtime_MaxQuality);
+	//---checks if fbx path exist
 	if (scene == nullptr) {
 		OWN_LOG("Error loading fbx from 3DModels folder.\n Loading FBX from HardDisk");
 		scene = aiImportFile(path, aiProcessPreset_TargetRealtime_MaxQuality);
@@ -38,7 +41,9 @@ void MeshImporter::LoadFBX(const char * path){
 			aiReleaseImport(scene);
 			return;
 		}
-	}
+	}//------
+	
+	
 	if (scene->HasMeshes())	{
 		OWN_LOG("Loading FBX mesh from %s", path);
 		// Use scene->mNumMeshes to iterate on scene->mMeshes array

@@ -15,3 +15,7 @@ bool ComponentMesh::Update()
 {
 	return true	;
 }
+
+void ComponentMesh::CleanUp()
+{
+}

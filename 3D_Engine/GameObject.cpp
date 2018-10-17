@@ -41,15 +41,55 @@ bool GameObject::PostUpdate(){
 	return ret;
 }
 
-Component * GameObject::AddComponent(ComponentType type){
+void GameObject::CleanUp(){
+
+	if (components.empty() == false) {
+		for (int i = components.size() - 1; i >= 0; i--) {
+			components[i]->CleanUp();
+		}
+	}
+	components.clear();
+
+	if (childrens.empty() == false) {
+		for (int i = childrens.size() - 1; i >= 0; i--) {
+			childrens[i]->CleanUp();
+		}
+	}
+	childrens.clear();
+
+	if (parent) {
+		parent = nullptr;
+	}
+	
+}
+
+Component * GameObject::AddComponent(ComponentType type) {
 	Component* ret;
 
 	switch (type) {
 	case ComponentType::MESH:
 		ret = App->renderer3D->CreateComponentMesh();
-	}
+		break;
 
+	case ComponentType::MATERIAL:
+		ret = App->textures->CreateComponentMaterial();
+		break;
+
+	case ComponentType::TRANSFORM:
+		ret = CreateComponentTranformation();
+		break;
+
+	case ComponentType::NO_TYPE:
+		return nullptr;
+	}
 	ret->myGO = this;
 	components.push_back(ret);
+	return ret;
+}
+
+ComponentTransformation * GameObject::CreateComponentTranformation()
+{
+	ComponentTransformation* ret;
+
 	return ret;
 }

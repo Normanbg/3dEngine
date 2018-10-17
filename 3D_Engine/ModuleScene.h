@@ -5,7 +5,6 @@
 #include "Application.h"
 #include "Module.h"
 
-#include <vector>
 
 class GameObject;
 
