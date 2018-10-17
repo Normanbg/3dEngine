@@ -2,6 +2,7 @@
 #define __GAMEOBJECT_H__
 
 #include "ModuleScene.h"
+#include "ModuleRenderer3D.h"
 #include "Component.h"
 #include <string>
 #include <vector>
@@ -12,8 +13,11 @@ class GameObject
 public:
 	GameObject();
 	~GameObject();
-	void Update();
-	Component* CreateComponent(ComponentType type);
+	bool PreUpdate();
+	bool Update();
+	bool PostUpdate();
+	void CleanUp();
+	Component* AddComponent(ComponentType type);
 
 public:
 	std::string					name;

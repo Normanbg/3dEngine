@@ -11,12 +11,14 @@ enum ComponentType {
 };
 class Component {
 public:
-	virtual void Enable();
-	virtual void Update();
-	virtual void Disable();
+	virtual void Enable() { active = true; }
+	virtual bool PreUpdate() { return true; }
+	virtual bool Update() { return true; }
+	virtual bool PostUpdate() { return true; }
+	virtual void Disable() { active = false; }
 
 public:
 	bool active = false;
 	ComponentType type;
-	GameObject* myGo; //Warning! Duplication with childs of components
+	GameObject* myGO; //Warning! Duplication with childs of components
 };

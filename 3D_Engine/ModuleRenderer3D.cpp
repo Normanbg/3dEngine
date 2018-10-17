@@ -372,6 +372,12 @@ void ModuleRenderer3D::ClearSceneMeshes(){
 	textures.clear();
 }
 
+ComponentMesh* ModuleRenderer3D::CreateComponentMesh() {
+	ComponentMesh* ret;
+
+	return ret;
+}
+
 void ModuleRenderer3D::ShowAxis() {
 
 	

@@ -6,6 +6,10 @@ ModuleScene::ModuleScene(bool start_enabled) : Module(start_enabled){
 	name = "scene";
 }
 
+ModuleScene::~ModuleScene()
+{
+}
+
 bool ModuleScene::Init(JSON_Object * obj)
 {
 
@@ -13,14 +17,55 @@ bool ModuleScene::Init(JSON_Object * obj)
 	return true;
 }
 
-void ModuleScene::CreateGameObject(GameObject* gameObject){
+update_status ModuleScene::PreUpdate(float dt)
+{
+	bool ret = true;
+	for (int i = 0; i < root->childrens.size() - 1; i++) {
+		ret &= root->childrens[i]->PreUpdate();
+	}
 
-	root->childrens;
-	
+	update_status retUS;
+	ret ? retUS = UPDATE_CONTINUE : retUS = UPDATE_ERROR;
+	return retUS;
 }
 
-update_status ModuleScene::Update(float dt)
+GameObject* ModuleScene::AddGameObject(){
+	GameObject* ret = new GameObject();
+	ret->parent = root;
+	root->childrens.push_back(ret);
+	
+	return ret;
+}
+
+update_status ModuleScene::Update(float dt){
+
+	bool ret = true;
+
+	for (int i = 0; i < root->childrens.size() - 1; i++) {
+		ret &= root->childrens[i]->Update();
+	}
+
+	update_status retUS;
+	ret ? retUS = UPDATE_CONTINUE : retUS = UPDATE_ERROR;
+	return retUS;
+}
+
+update_status ModuleScene::PostUpdate(float dt){
+
+	bool ret = true;
+
+	for (int i = 0; i < root->childrens.size() - 1; i++) {
+		ret &= root->childrens[i]->PostUpdate();
+	}
+	
+	update_status retUS;
+	ret ? retUS = UPDATE_CONTINUE : retUS = UPDATE_ERROR;
+	return retUS;
+}
+
+bool ModuleScene::CleanUp()
 {
-	return UPDATE_CONTINUE;
+	
+	return false;
 }
 

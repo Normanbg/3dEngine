@@ -6,9 +6,10 @@
 #include "MathGeoLib\Math\MathAll.h"
 #include "MeshImporter.h"
 #include "TextureImporter.h"
-#include <array>
 #include "MathGeoLib/Geometry/AABB.h"
+#include "ComponentMesh.h"
 
+#include <array>
 #include <vector>
 #define MAX_LIGHTS 8
 
@@ -127,6 +128,9 @@ public:
 	void LoadDroppedFBX(char* droppedFileDir);
 
 	void ClearSceneMeshes();
+
+	ComponentMesh* CreateComponentMesh();
+	
 
 public:
 

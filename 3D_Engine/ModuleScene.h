@@ -1,9 +1,9 @@
 #ifndef __MODULE_SCENE_H__
 #define __MODULE_SCENE_H__
 
-#include "Module.h"
-#include "Application.h"
 
+#include "Application.h"
+#include "Module.h"
 
 #include <vector>
 
@@ -16,13 +16,13 @@ public:
 	ModuleScene(bool start_enabled = true);
 	~ModuleScene();
 
-	bool Init(JSON_Object* obj);
-	update_status PreUpdate(float dt);
-	update_status Update(float dt);
-	update_status PostUpdate(float dt);
-	bool CleanUp();
+	bool Init(JSON_Object* obj) override;
+	update_status PreUpdate(float dt) override;
+	update_status Update(float dt) override;
+	update_status PostUpdate(float dt) override;
+	bool CleanUp() override;
 
-	void CreateGameObject(GameObject* gameObject);
+	GameObject* AddGameObject();
 
 public:
 	GameObject* root;
