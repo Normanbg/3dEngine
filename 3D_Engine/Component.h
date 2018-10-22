@@ -8,7 +8,8 @@ enum ComponentType {
 
 	TRANSFORM,
 	MESH,
-	MATERIAL
+	MATERIAL,
+	CAMERA
 };
 class Component {
 public:
