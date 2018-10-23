@@ -16,7 +16,44 @@ SceneImporter::~SceneImporter()
 void SceneImporter::LoadFBXtoPEI(const char * FBXpath, const char* name)
 {
 	//NEED TO LOAD FROM /ASSETS
-	
+	std::string fileName = name;
+	fileName += OWN_FILE_FORMAT;
+
+	std::ofstream dataFile(fileName.c_str());
+	OWN_LOG("Creating PEI file");
+
+	dataScene newScene;
+
+	newScene.scale = { 0,0,0 };
+	newScene.position = { 1,1,1 };
+	newScene.colors = { 2,2,2 };
+	newScene.rotation = { 3,3,3,3 };
+
+	uint size = sizeof(uint) + sizeof(float3) * 3 + sizeof(Quat); // numMeshes+(scale+pos+color) + rotation in bytes
+	char* data = new char[size];
+	char* cursor = data;
+	float3 transform[3] = { newScene.scale, newScene.position, newScene.colors };
+
+	uint bytes = sizeof(transform);
+	memcpy(data, transform, bytes);
+	/*
+	cursor += bytes;
+	bytes = sizeof(newScene.position);
+	memcpy(cursor, &newScene.position, bytes);
+
+	cursor += bytes;
+	bytes = sizeof(newScene.colors);
+	memcpy(cursor, &newScene.colors, bytes);
+
+	cursor += bytes;
+	bytes = sizeof(newScene.rotation);
+	memcpy(cursor, &newScene.rotation, bytes);
+	*/
+	dataFile.write(data, size);
+
+	dataFile.close();
+
+
 	// AND EXPORT TO /LIBRARY
 	
 	std::string rootPath = MODELS_PATH;
@@ -57,24 +94,22 @@ void SceneImporter::LoadFBXtoPEI(const char * FBXpath, const char* name)
 		char* data = new char[size];
 		char* cursor = data;
 
-		uint bytes = sizeof(uint);
-		memcpy(cursor, &newScene.numMeshes, bytes);
-
-		bytes = sizeof(float3);//sizeof float3
-		cursor += bytes;
+		uint bytes = sizeof(newScene.scale);
 		memcpy(cursor, &newScene.scale, bytes);
 
 		cursor += bytes;
+		bytes = sizeof(newScene.position);
 		memcpy(cursor, &newScene.position, bytes);
 
 		cursor += bytes;
+		bytes = sizeof(newScene.colors);
 		memcpy(cursor, &newScene.colors, bytes);
 
 		cursor += bytes;
-		bytes = sizeof(Quat);//sizeof float3
+		bytes = sizeof(newScene.rotation);
 		memcpy(cursor, &newScene.rotation, bytes);
 
-		dataFile.write(data, size);
+		dataFile << data;
 
 		aiMesh * meshIterator = nullptr;
 		for (int i = 0; i < newScene.numMeshes; i++) {
@@ -91,35 +126,9 @@ void SceneImporter::LoadFBXtoPEI(const char * FBXpath, const char* name)
 
 }
 
-void SceneImporter::ImportFromMesh(aiMesh * new_mesh, ofstream* dataFile)
+void SceneImporter::ImportFromMesh( aiMesh * new_mesh, ofstream* dataFile)
 {
-	bool error = false;
-
 	dataMesh newMesh;
-	newMesh.num_vertex = new_mesh->mNumVertices; //-----------vertex
-	newMesh.vertex = new float3[newMesh.num_vertex];
-	memcpy(newMesh.vertex, new_mesh->mVertices, sizeof(float3) * newMesh.num_vertex);
-	OWN_LOG("Importing new mesh with %d vertices", newMesh.num_vertex);
-
-	if (new_mesh->HasFaces()) { //------------indices
-		newMesh.num_index = new_mesh->mNumFaces * 3;		
-		newMesh.index = new uint[newMesh.num_index]; // assume each face is a triangle
-		for (uint i = 0; i < new_mesh->mNumFaces; ++i) {
-			if (new_mesh->mFaces[i].mNumIndices != 3) {
-				OWN_LOG("WARNING, geometry face with != 3 indices!");
-				error = true;
-
-			}
-			else {
-				memcpy(&newMesh.index[i * 3], new_mesh->mFaces[i].mIndices, 3 * sizeof(uint));
-			}
-		}
-	}
-	if (new_mesh->HasNormals() && !error) { //------------normals
-		
-		newMesh.normals = new float3[newMesh.num_vertex];
-		memcpy(newMesh.normals, new_mesh->mNormals, sizeof(float3) * newMesh.num_vertex);
-		
-	}
-
+	*dataFile << "newTest" << endl;
 }
+
