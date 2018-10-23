@@ -1,6 +1,8 @@
 #include "ModuleScene.h"
 #include "GameObject.h"
 
+#include "SceneImporter.h"
+
 ModuleScene::ModuleScene(bool start_enabled) : Module(start_enabled){
 
 	name = "scene";
@@ -9,12 +11,13 @@ ModuleScene::ModuleScene(bool start_enabled) : Module(start_enabled){
 
 ModuleScene::~ModuleScene()
 {
-	
-}
 
+}
 bool ModuleScene::Init(JSON_Object * obj)
 {
-
+	
+	SceneImporter* sc = new SceneImporter;
+	sc->LoadFBXtoPEI("figure","figure");
 
 	return true;
 }

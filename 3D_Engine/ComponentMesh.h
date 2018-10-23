@@ -36,7 +36,7 @@ struct NewMesh {
 	uint num_textureCoords = 0;
 	float2* texturesCoords = nullptr;
 
-	GLuint texID = 0;
+	//GLuint texID = 0;
 
 	AABB boundingBox;
 

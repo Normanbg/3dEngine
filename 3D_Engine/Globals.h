@@ -44,3 +44,4 @@ enum update_status
 #define TEXTURES_PATH "Assets/Textures/"
 #define MODELS_PATH "Assets/3DModels/"
 #define AUDIO_PATH "Assets/Audio/"
+#define OWN_FILE_FORMAT ".pei"
