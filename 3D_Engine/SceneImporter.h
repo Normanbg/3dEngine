@@ -2,11 +2,10 @@
 #define __SCENEIMPORTER_H__
 
 #include "MathGeoLib\Math\MathAll.h"
-#include "Globals.h"
 
 #include <iostream>
 #include <fstream> 
-using namespace std;
+
 
 
 #include "Assimp/include/cimport.h"
@@ -14,6 +13,8 @@ using namespace std;
 #include "Assimp/include/postprocess.h"
 #include "Assimp/include/cfileio.h"
 #pragma comment (lib, "Assimp/libx86/assimp.lib")
+
+
 
 class SceneImporter
 {
@@ -47,10 +48,10 @@ public:
 
 public:
 	void ImportFBXtoPEI(const char* path, const char* name);
-	void LoadPEItoComponent(const char* fileName);
+	void LoadPEI(const char* fileName);
 
 private:
-	void ImportFromMesh(const aiScene* currSc, aiMesh * new_mesh, ofstream* dataFile);
+	void ImportFromMesh(const aiScene* currSc, aiMesh * new_mesh, std::ofstream* dataFile);
 };
 
 #endif //__SCENEIMPORTER_H__

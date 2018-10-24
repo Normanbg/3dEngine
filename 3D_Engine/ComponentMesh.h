@@ -15,33 +15,6 @@
 #include "Assimp/include/cfileio.h"
 #pragma comment (lib, "Assimp/libx86/assimp.lib")
 
-struct NewMesh {
-
-	uint id_index = -1;
-	uint num_index = 0;
-	uint* index = nullptr;
-
-	uint id_vertex = -1;
-	uint num_vertex = 0;
-	float3* vertex = nullptr;
-
-	uint id_normals = -1;
-	uint num_normals = 0;
-	float3* normals = nullptr;
-
-	uint num_faces = 0; // assume each face is a triangle
-	const char* name;
-	vec colors = { 0,0,0 };
-
-	uint num_textureCoords = 0;
-	float2* texturesCoords = nullptr;
-
-	//GLuint texID = 0;
-
-	AABB boundingBox;
-
-
-};
 
 
 class ComponentMesh : public Component
@@ -49,6 +22,20 @@ class ComponentMesh : public Component
 public:
 	ComponentMesh();
 	~ComponentMesh();
+
+	uint num_index = 0;
+	uint* index = nullptr;
+
+	uint num_vertex = 0;
+	float3* vertex = nullptr;
+	
+	uint num_normals = 0;
+	float3* normals = nullptr;
+
+	uint num_textureCoords = 0;
+	float2* texturesCoords = nullptr;
+
+	AABB boundingBox;
 
 	bool Update() override;
 

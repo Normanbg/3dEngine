@@ -1,6 +1,11 @@
-#include "SceneImporter.h"
+#include "ModuleScene.h"
+#include "GameObject.h"
 #include "Globals.h"
+#include "SceneImporter.h"
+#include <string>
 
+
+using namespace std;
 
 
 
@@ -91,7 +96,7 @@ void SceneImporter::ImportFBXtoPEI(const char * FBXpath, const char* name)
 }
 
 
-void SceneImporter::ImportFromMesh(const aiScene* currSc, aiMesh * new_mesh, ofstream* dataFile)
+void SceneImporter::ImportFromMesh(const aiScene* currSc, aiMesh * new_mesh,std::ofstream* dataFile)
 {
 	bool error = false;
 
@@ -131,7 +136,8 @@ void SceneImporter::ImportFromMesh(const aiScene* currSc, aiMesh * new_mesh, ofs
 	}
 
 	if (currSc->HasMaterials() && !error) {
-
+/* ///check if material is in the path
+			///if it is, load texture, convert to .dds & added as a component
 		aiMaterial* material = currSc->mMaterials[new_mesh->mMaterialIndex];
 
 		aiColor3D color(0.f, 0.f, 0.f);
@@ -143,8 +149,7 @@ void SceneImporter::ImportFromMesh(const aiScene* currSc, aiMesh * new_mesh, ofs
 		aiString path;
 		aiReturn ret = material->GetTexture(aiTextureType_DIFFUSE, 0, &path);
 		if (ret == aiReturn_SUCCESS) {
-			/* //check if material is in the path
-			//if it is, load texture, convert to .dds & added as a component
+			
 
 			std::string localPath = TEXTURES_PATH;
 			localPath += path.C_Str();
@@ -172,28 +177,24 @@ void SceneImporter::ImportFromMesh(const aiScene* currSc, aiMesh * new_mesh, ofs
 			}
 		else {
 			mesh.texID = check;
-		}*/
 		}
+		
 		else {
 
 			OWN_LOG("Error loading texture from fbx. Error: %s", aiGetErrorString());
-		}
+		}}*/
 	}
 	if (!error) { // writting into file
 	
 		uint ranges[2] = { newMesh.num_index, newMesh.num_vertex };
 
-		uint size = sizeof(ranges) + sizeof(float)*3 + sizeof(uint)*newMesh.num_index + sizeof(float3)*newMesh.num_vertex*2+ sizeof(float2) * newMesh.num_vertex; // numIndex + numVertex + colors + index + vertex + normals + textureCoords
+		uint size = sizeof(ranges) + sizeof(uint)*newMesh.num_index + sizeof(float3)*newMesh.num_vertex*2+ sizeof(float2) * newMesh.num_vertex; // numIndex + numVertex + index + vertex + normals + textureCoords
 		
 		char* data = new char[size];
 		char* cursor = data;
 
 		uint bytes = sizeof(ranges);
 		memcpy(cursor, ranges, bytes);
-
-		bytes = sizeof(float)*3;//sizeof float[3]
-		cursor += bytes;
-		memcpy(cursor, newMesh.colors, bytes);
 
 		bytes = sizeof(uint)* newMesh.num_index;
 		cursor += bytes;
@@ -213,9 +214,88 @@ void SceneImporter::ImportFromMesh(const aiScene* currSc, aiMesh * new_mesh, ofs
 		dataFile->write(data, size);
 	}
 }
-void SceneImporter::LoadPEItoComponent(const char * fileName)
+
+void SceneImporter::LoadPEI(const char * fileName)
 {
+	
+
+	GameObject* gameObject = App->scene->AddGameObject();
+	gameObject->name = fileName;
+	
+	ComponentTransformation* compTrans = (ComponentTransformation*)gameObject->AddComponent(TRANSFORM);
+	
+	uint numMeshes = 0;
+	
+	uint size = sizeof(uint) + sizeof(float3) * 2 + sizeof(Quat);
+
 	std::ifstream dataFile(fileName);
 
-	//dataFile.read();
+	char* scenedata =	new char[size];
+	char* cursor = scenedata;
+	dataFile.read(scenedata, size);
+	
+	uint bytes = sizeof(uint);
+	memcpy(cursor, &numMeshes, bytes);
+
+	
+	cursor += bytes;
+	memcpy(&compTrans->position, cursor, bytes);
+
+	cursor += bytes;
+	bytes = sizeof(Quat);//sizeof quat
+	memcpy(&compTrans->rotation, cursor, bytes);
+	
+
+	dataFile.seekg(size);
+
+	uint totalSize = size;
+
+	for (int i = 0; i < numMeshes; i++) {
+		
+		ComponentMesh* compMesh = (ComponentMesh*)gameObject->AddComponent(MESH);
+		
+
+		uint ranges[2];
+
+		uint size2 = sizeof(ranges); // [numIndex + numVertex]
+
+		char* headerdata = new char[size2];		
+
+		dataFile.read(headerdata, size2);
+
+		uint mbytes = sizeof(ranges);
+		memcpy(ranges, headerdata, mbytes); //r
+
+		compMesh->num_index = ranges[0];
+		compMesh->num_vertex = compMesh->num_textureCoords = compMesh->num_normals = ranges[1];
+		uint size3 = sizeof(uint)* ranges[0] + sizeof(float3)*ranges[1]* 2 + sizeof(float2) * ranges[1];
+
+		char* geodata = new char[size3];
+		char* mcursor = geodata;
+
+		
+		dataFile.seekg(totalSize+size2);
+
+		dataFile.read(geodata, size3);
+
+		mbytes = sizeof(uint) *ranges[0];//index
+		
+		memcpy(compMesh->index, mcursor, mbytes);
+
+		mbytes = sizeof(float3)*ranges[1];//vertex
+		mcursor += mbytes;
+		memcpy(compMesh->vertex,mcursor , mbytes);
+
+		mbytes = sizeof(float3)* ranges[1];
+		mcursor += mbytes;
+		memcpy(compMesh->normals, mcursor, mbytes);
+
+		mbytes = sizeof(float2)* ranges[1];
+		mcursor += mbytes;
+		memcpy(compMesh->texturesCoords,mcursor, mbytes);
+
+		totalSize += size2 + size3;
+
+	}
+	dataFile.close();
 }
