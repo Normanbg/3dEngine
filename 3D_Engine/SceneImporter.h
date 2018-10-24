@@ -22,13 +22,15 @@ class SceneImporter
 		float3 scale;
 		Quat rotation;
 
-		float3 colors = { 0,0,0 };
+		
 
 		uint numMeshes;
 
 	};
+
 	struct dataMesh {
 		
+		float colors[3];
 
 		uint num_index = 0;
 		uint* index = nullptr;
@@ -36,20 +38,19 @@ class SceneImporter
 		uint num_vertex = 0;
 		float3* vertex = nullptr;
 		float3* normals = nullptr;
-		float3* texturesCoords = nullptr;
-	};
-
-	
+		float2* texturesCoords = nullptr;
+	};	
 
 public:
 	SceneImporter();
 	~SceneImporter();
 
 public:
-	void LoadFBXtoPEI(const char* path, const char* name);
+	void ImportFBXtoPEI(const char* path, const char* name);
+	void LoadPEItoComponent(const char* fileName);
 
 private:
-	void ImportFromMesh (aiMesh * new_mesh, ofstream* dataFile);
+	void ImportFromMesh(const aiScene* currSc, aiMesh * new_mesh, ofstream* dataFile);
 };
 
 #endif //__SCENEIMPORTER_H__

@@ -13,9 +13,9 @@ SceneImporter::~SceneImporter()
 {
 }
 
-void SceneImporter::LoadFBXtoPEI(const char * FBXpath, const char* name)
+void SceneImporter::ImportFBXtoPEI(const char * FBXpath, const char* name)
 {
-	//NEED TO LOAD FROM /ASSETS
+	//NEED TO LOAD FROM /ASSETS in a file system module
 	
 	// AND EXPORT TO /LIBRARY
 	
@@ -53,7 +53,8 @@ void SceneImporter::LoadFBXtoPEI(const char * FBXpath, const char* name)
 
 		newScene.numMeshes = scene->mNumMeshes;
 
-		uint size = sizeof(uint) + sizeof(float3) * 3 + sizeof(Quat); // numMeshes+(scale+pos+color) + rotation in bytes
+
+		uint size = sizeof(uint) + sizeof(float3) * 2 + sizeof(Quat); // numMeshes+(scale+pos) + rotation in bytes
 		char* data = new char[size];
 		char* cursor = data;
 
@@ -67,9 +68,7 @@ void SceneImporter::LoadFBXtoPEI(const char * FBXpath, const char* name)
 		cursor += bytes;
 		memcpy(cursor, &newScene.position, bytes);
 
-		cursor += bytes;
-		memcpy(cursor, &newScene.colors, bytes);
-
+		
 		cursor += bytes;
 		bytes = sizeof(Quat);//sizeof float3
 		memcpy(cursor, &newScene.rotation, bytes);
@@ -79,7 +78,7 @@ void SceneImporter::LoadFBXtoPEI(const char * FBXpath, const char* name)
 		aiMesh * meshIterator = nullptr;
 		for (int i = 0; i < newScene.numMeshes; i++) {
 			meshIterator = scene->mMeshes[i];
-			ImportFromMesh( meshIterator, &dataFile);
+			ImportFromMesh(scene, meshIterator, &dataFile);
 		}
 		dataFile.close();
 	}
@@ -91,7 +90,8 @@ void SceneImporter::LoadFBXtoPEI(const char * FBXpath, const char* name)
 
 }
 
-void SceneImporter::ImportFromMesh(aiMesh * new_mesh, ofstream* dataFile)
+
+void SceneImporter::ImportFromMesh(const aiScene* currSc, aiMesh * new_mesh, ofstream* dataFile)
 {
 	bool error = false;
 
@@ -102,7 +102,7 @@ void SceneImporter::ImportFromMesh(aiMesh * new_mesh, ofstream* dataFile)
 	OWN_LOG("Importing new mesh with %d vertices", newMesh.num_vertex);
 
 	if (new_mesh->HasFaces()) { //------------indices
-		newMesh.num_index = new_mesh->mNumFaces * 3;		
+		newMesh.num_index = new_mesh->mNumFaces * 3;
 		newMesh.index = new uint[newMesh.num_index]; // assume each face is a triangle
 		for (uint i = 0; i < new_mesh->mNumFaces; ++i) {
 			if (new_mesh->mFaces[i].mNumIndices != 3) {
@@ -116,10 +116,106 @@ void SceneImporter::ImportFromMesh(aiMesh * new_mesh, ofstream* dataFile)
 		}
 	}
 	if (new_mesh->HasNormals() && !error) { //------------normals
-		
+
 		newMesh.normals = new float3[newMesh.num_vertex];
 		memcpy(newMesh.normals, new_mesh->mNormals, sizeof(float3) * newMesh.num_vertex);
-		
+
+	}
+	if (new_mesh->GetNumUVChannels() > 0 && !error) { //------------textureCoords
+		newMesh.texturesCoords = new float2[newMesh.num_vertex];
+
+		for (int i = 0; i < (newMesh.num_vertex); i++) {
+			newMesh.texturesCoords[i].x = new_mesh->mTextureCoords[0][i].x;
+			newMesh.texturesCoords[i].y = new_mesh->mTextureCoords[0][i].y;
+		}
 	}
 
+	if (currSc->HasMaterials() && !error) {
+
+		aiMaterial* material = currSc->mMaterials[new_mesh->mMaterialIndex];
+
+		aiColor3D color(0.f, 0.f, 0.f);
+		material->Get(AI_MATKEY_COLOR_DIFFUSE, color);
+		newMesh.colors[0] = color.r;
+		newMesh.colors[1] = color.g;
+		newMesh.colors[2] = color.b;
+
+		aiString path;
+		aiReturn ret = material->GetTexture(aiTextureType_DIFFUSE, 0, &path);
+		if (ret == aiReturn_SUCCESS) {
+			/* //check if material is in the path
+			//if it is, load texture, convert to .dds & added as a component
+
+			std::string localPath = TEXTURES_PATH;
+			localPath += path.C_Str();
+			GLuint check = App->renderer3D->CheckIfImageAlreadyLoaded(localPath.c_str());
+			if (check == -1) {
+				Texture _text;
+				_text.textureID = App->renderer3D->texImporter->LoadTexture(localPath.c_str(), _text.texWidth, _text.texHeight);
+				OWN_LOG("Loading texture from Textures folder");
+				if (_text.textureID == -1) { // fisrt check if texture is in local path "Assets/Textures"
+					OWN_LOG("Texture not found. \nLoading texture from HardDisk");
+
+					_text.textureID = App->renderer3D->texImporter->LoadTexture(path.C_Str(), _text.texWidth, _text.texHeight);
+					if (_text.textureID == -1) {// second check if texture is in absolute path C:\\...
+
+						OWN_LOG("Texture not found in the HardDrisk.\n Error loading texture from fbx.");
+					}
+
+				}
+				if (_text.textureID != -1) { // if texture can be loaded
+					_text.path = localPath;
+					mesh.texID = _text.textureID;
+					App->renderer3D->AddTexture(&_text);
+				}
+
+			}
+		else {
+			mesh.texID = check;
+		}*/
+		}
+		else {
+
+			OWN_LOG("Error loading texture from fbx. Error: %s", aiGetErrorString());
+		}
+	}
+	if (!error) { // writting into file
+	
+		uint ranges[2] = { newMesh.num_index, newMesh.num_vertex };
+
+		uint size = sizeof(ranges) + sizeof(float)*3 + sizeof(uint)*newMesh.num_index + sizeof(float3)*newMesh.num_vertex*2+ sizeof(float2) * newMesh.num_vertex; // numIndex + numVertex + colors + index + vertex + normals + textureCoords
+		
+		char* data = new char[size];
+		char* cursor = data;
+
+		uint bytes = sizeof(ranges);
+		memcpy(cursor, ranges, bytes);
+
+		bytes = sizeof(float)*3;//sizeof float[3]
+		cursor += bytes;
+		memcpy(cursor, newMesh.colors, bytes);
+
+		bytes = sizeof(uint)* newMesh.num_index;
+		cursor += bytes;
+		memcpy(cursor, newMesh.index, bytes);
+	
+		bytes = sizeof(float3)* newMesh.num_vertex;
+		cursor += bytes;
+		memcpy(cursor, newMesh.vertex, bytes);
+
+		cursor += bytes;
+		memcpy(cursor, newMesh.normals, bytes);
+		
+		bytes = sizeof(float2)* newMesh.num_vertex;
+		cursor += bytes;
+		memcpy(cursor, newMesh.texturesCoords, bytes);
+		
+		dataFile->write(data, size);
+	}
+}
+void SceneImporter::LoadPEItoComponent(const char * fileName)
+{
+	std::ifstream dataFile(fileName);
+
+	//dataFile.read();
 }
