@@ -7,7 +7,7 @@
 #include "ModuleScene.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleTextures.h"
-#include "ModuleCamera3D.h"
+#include "ModuleEditorCamera.h"
 #include "ModuleGui.h"
 #include "Brofiler\Brofiler.h"
 
@@ -23,7 +23,7 @@ Application::Application()
 	input = new ModuleInput(this);
 	audio = new ModuleAudio(this);
 	renderer3D = new ModuleRenderer3D(this);
-	camera = new ModuleCamera3D(this);
+	camera = new ModuleEditorCamera(this);
 	gui = new ModuleGui(this);
 	scene = new ModuleScene(this);
 	textures = new ModuleTextures(this);

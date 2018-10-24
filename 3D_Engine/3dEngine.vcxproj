@@ -161,7 +161,7 @@
     <ClInclude Include="JSON\parson.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="ModuleAudio.h" />
-    <ClInclude Include="ModuleCamera3D.h" />
+    <ClInclude Include="ModuleEditorCamera.h" />
     <ClInclude Include="ModuleGui.h" />
     <ClInclude Include="ModuleRenderer3D.h" />
     <ClInclude Include="Module.h" />
@@ -230,7 +230,7 @@
     <ClCompile Include="log.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="ModuleAudio.cpp" />
-    <ClCompile Include="ModuleCamera3D.cpp" />
+    <ClCompile Include="ModuleEditorCamera.cpp" />
     <ClCompile Include="ModuleGui.cpp" />
     <ClCompile Include="ModuleInput.cpp" />
     <ClCompile Include="ModuleRenderer3D.cpp" />

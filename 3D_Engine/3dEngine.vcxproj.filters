@@ -51,9 +51,6 @@
     <ClInclude Include="Module.h">
       <Filter>Sources\Modules</Filter>
     </ClInclude>
-    <ClInclude Include="ModuleCamera3D.h">
-      <Filter>Sources\Modules</Filter>
-    </ClInclude>
     <ClInclude Include="ModuleInput.h">
       <Filter>Sources\Modules</Filter>
     </ClInclude>
@@ -348,11 +345,11 @@
     <ClInclude Include="MathGeoLib\Time\Clock.h">
       <Filter>Sources\Tools\MathGeoLib</Filter>
     </ClInclude>
+    <ClInclude Include="ModuleEditorCamera.h">
+      <Filter>Sources\Modules</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ModuleCamera3D.cpp">
-      <Filter>Sources\Modules</Filter>
-    </ClCompile>
     <ClCompile Include="ModuleInput.cpp">
       <Filter>Sources\Modules</Filter>
     </ClCompile>
@@ -547,6 +544,9 @@
     </ClCompile>
     <ClCompile Include="MathGeoLib\Time\Clock.cpp">
       <Filter>Sources\Tools\MathGeoLib</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleEditorCamera.cpp">
+      <Filter>Sources\Modules</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
