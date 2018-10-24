@@ -5,11 +5,10 @@
 #include "Globals.h"
 #include "glmath.h"
 #include "Light.h"
-#include "MathGeoLib\Math\MathAll.h"
 #include "MeshImporter.h"
 #include "TextureImporter.h"
-#include "MathGeoLib/Geometry/AABB.h"
 #include "ComponentMesh.h"
+#include "MathGeoLib/MathGeoLib.h"
 
 #include <array>
 #include <vector>
@@ -29,8 +28,8 @@ struct Texture {
 
 struct Mesh {
 
-	vec position;
-	vec scale;
+	float3 position;
+	float3 scale;
 	Quat rotation;
 
 	uint id_index = -1;
@@ -64,7 +63,7 @@ struct Mesh {
 	void CleanUp();	
 		
 	void generateBoundingBox();
-	vec getMiddlePoint()const ;
+	float3 getMiddlePoint()const ;
 
 private:
 	void DrawBoundingBox();
@@ -116,7 +115,7 @@ public:
 	inline bool GetAxis() const { return _axis; }
 	inline bool GetGrid() const { return _grid; }
 
-	vec GetAvgPosFromMeshes();
+	float3 GetAvgPosFromMeshes();
 
 	GLuint CheckIfImageAlreadyLoaded(const char*);
 

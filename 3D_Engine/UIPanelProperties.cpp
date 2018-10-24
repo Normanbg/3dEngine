@@ -24,7 +24,7 @@ void UIPanelProperties::Draw() {
 			if (ImGui::TreeNode("Transformation")) {
 				ImGui::Text("Position:\n X: %0.1f \n Y: %0.1f \n Z: %0.1f", meshIterator._Ptr->position.x, meshIterator._Ptr->position.y, meshIterator._Ptr->position.z);
 				
-				vec eulerRot = meshIterator._Ptr->rotation.ToEulerXYZ();//to transform quaternion to Euler angle
+				float3 eulerRot = meshIterator._Ptr->rotation.ToEulerXYZ();//to transform quaternion to Euler angle
 				eulerRot *= 180/ pi; // radians to degrees
 				ImGui::Text("Rotation:\n X: %0.1f \n Y: %0.1f \n Z: %0.1f", eulerRot.x, eulerRot.y, eulerRot.z);
 				ImGui::Text("Scale:\n X: %0.1f \n Y: %0.1f \n Z: %0.1f", meshIterator._Ptr->scale.x, meshIterator._Ptr->scale.y, meshIterator._Ptr->scale.z);

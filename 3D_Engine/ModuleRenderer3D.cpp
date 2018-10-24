@@ -311,9 +311,9 @@ void ModuleRenderer3D::SetBoundingBox(bool active){
 }
 
 
-vec ModuleRenderer3D::GetAvgPosFromMeshes() 
+float3 ModuleRenderer3D::GetAvgPosFromMeshes() 
 {
-	vec sumPoints = vec(0,0,0);
+	float3 sumPoints = float3(0,0,0);
 	
 	for (int i = 0; i < meshes.size(); i++) {
 		sumPoints += meshes[i].getMiddlePoint();
@@ -549,13 +549,13 @@ void Mesh::generateBoundingBox(){
 	AABB aabb;
 
 	aabb.SetNegativeInfinity();
-	aabb.Enclose((vec*)vertex,num_vertex);
+	aabb.Enclose((float3*)vertex,num_vertex);
 	
 	boundingBox = aabb;
 }
 
-vec Mesh::getMiddlePoint()const {
-	vec ret = { (boundingBox.maxPoint.x + boundingBox.minPoint.x) / 2, (boundingBox.maxPoint.y + boundingBox.minPoint.y) / 2, (boundingBox.maxPoint.z + boundingBox.minPoint.z) / 2 };
+float3 Mesh::getMiddlePoint()const {
+	float3 ret = { (boundingBox.maxPoint.x + boundingBox.minPoint.x) / 2, (boundingBox.maxPoint.y + boundingBox.minPoint.y) / 2, (boundingBox.maxPoint.z + boundingBox.minPoint.z) / 2 };
 
 	return ret;
 }
