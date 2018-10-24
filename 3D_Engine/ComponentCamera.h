@@ -21,6 +21,12 @@ public:
 	void Move(const float3 &Movement);
 	void MoveTo(const float3 Movement);
 
+	void SetNearPlaneDistance(float nearPlaneDist);
+	void SetFarPlaneDistance(float farPlaneDist);
+
+	float GetNearPlaneDistance() const { return camFrustum.NearPlaneDistance; }
+	float GetFarPlaneDistance() const { return camFrustum.FarPlaneDistance; }
+
 public: 
 	Frustum camFrustum;
 
