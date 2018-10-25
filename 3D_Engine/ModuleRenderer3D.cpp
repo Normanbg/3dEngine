@@ -4,6 +4,7 @@
 #include "ModuleWindow.h"
 #include "ModuleInput.h"
 #include "ModuleEditorCamera.h"
+#include "GameObject.h"
 #include "ModuleGui.h"
 #include "Brofiler/Brofiler.h"
 
@@ -160,6 +161,11 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 	glLoadIdentity();
 
 	glMatrixMode(GL_MODELVIEW);
+
+	///NEEDS TO BE CHANGED FOR BEING THE CAM AT THE FRUSTUM POS!!!!
+	/*ComponentCamera* cam = (ComponentCamera*)App->camera->editorCam_G0->GetComponent(ComponentType::CAMERA);
+	glLoadMatrixf(cam->GetViewMatrix());*/
+
 	glLoadMatrixf(App->camera->GetViewMatrix());
 
 	// light 0 on cam pos
@@ -183,7 +189,8 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	glBindBuffer(GL_ARRAY_BUFFER, 0); ///THIS LINE MAKES ALL DRAW BY RESETING THE BUFFER, NEEDED???????
 
 	DrawMeshes();
-
+	ComponentCamera* cam = (ComponentCamera*)App->camera->editorCam_G0->GetComponent(ComponentType::CAMERA);
+	cam->DebugDraw();
 	App->gui->Draw();
 
 
@@ -356,7 +363,7 @@ void ModuleRenderer3D::LoadDroppedFBX(char * droppedFileDir){
 	ClearSceneMeshes();
 	importer->LoadFBX(droppedFileDir);	
 	GenBuffFromMeshes();	
-	App->camera->FocusToMeshes();
+	//App->camera->FocusToMeshes();
 }
 
 void ModuleRenderer3D::ClearSceneMeshes(){

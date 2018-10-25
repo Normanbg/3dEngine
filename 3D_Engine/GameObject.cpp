@@ -78,12 +78,28 @@ Component * GameObject::AddComponent(ComponentType type) {
 	case ComponentType::TRANSFORM:
 		ret = CreateComponentTranformation();
 		break;
+	
+	case ComponentType::CAMERA:
+		ret = new ComponentCamera();//MUST DO SOMETHING?
+		break;
 
 	case ComponentType::NO_TYPE:
 		return nullptr;
 	}
 	ret->myGO = this;
 	components.push_back(ret);
+	return ret;
+}
+
+Component * GameObject::GetComponent(ComponentType type)
+{
+	Component* ret = nullptr;
+	//WILL ONLY FIND THE FIRST COMPONENT EQUAL TO TYPE OF EACH G0
+	for (std::vector<Component*>::iterator it = components.begin(); it != components.end(); it++)
+	{
+		if ((*it)->type == type);
+		return (*it);
+	}
 	return ret;
 }
 

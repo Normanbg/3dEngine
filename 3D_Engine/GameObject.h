@@ -6,6 +6,7 @@
 #include "ModuleTextures.h"
 #include "Component.h"
 #include "ComponentTransformation.h"
+#include "ComponentCamera.h"
 #include <string>
 #include <vector>
 
@@ -20,6 +21,7 @@ public:
 	bool PostUpdate();
 	void CleanUp();
 	Component* AddComponent(ComponentType type);
+	Component* GetComponent(ComponentType type);
 
 private:
 	ComponentTransformation* CreateComponentTranformation();

@@ -4,6 +4,7 @@
 #include "Module.h"
 #include "Globals.h"
 
+class GameObject;
 
 class ModuleEditorCamera : public Module
 {
@@ -30,6 +31,9 @@ public:
 	float mouseSensitivity = 0.25f;
 	float scroolWheelSensitivity = 10.0f;
 	float zoomDistance = 20.0f;
+
+	//---------
+	GameObject* editorCam_G0;
 
 private:
 

@@ -19,6 +19,7 @@ public:
 	void LookAt(const float3 &Spot);
 	void Move(const float3 &Movement);
 	void MoveTo(const float3 Movement);
+	void DebugDraw();
 
 	void SetNearPlaneDistance(float nearPlaneDist);
 	void SetFarPlaneDistance(float farPlaneDist);
@@ -26,7 +27,8 @@ public:
 	void SetAspectRatio(float aspectRatio);
 	float GetNearPlaneDistance() const { return camFrustum.nearPlaneDistance; }
 	float GetFarPlaneDistance() const { return camFrustum.farPlaneDistance; }
-	
+	float* GetViewMatrix();
+	float* GetProjMatrix();
 
 public: 
 	Frustum camFrustum;

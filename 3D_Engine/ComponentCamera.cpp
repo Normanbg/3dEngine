@@ -12,8 +12,9 @@ ComponentCamera::ComponentCamera()
 	camFrustum.up = float3::unitY;
 
 	camFrustum.nearPlaneDistance = 1.0f;
-	camFrustum.farPlaneDistance = 600.0f;
+	camFrustum.farPlaneDistance = 40.0f;
 	camFrustum.verticalFov = DEGTORAD * 60.0f;
+	SetAspectRatio(1.3f);
 }
 
 ComponentCamera::~ComponentCamera()
@@ -184,3 +185,76 @@ void ComponentCamera::SetAspectRatio(float aspectRatio){
 	camFrustum.horizontalFov = 2.0f * atanf(tanf(camFrustum.verticalFov * 0.5f) * aspectRatio);
 }
 
+float * ComponentCamera::GetViewMatrix()
+{
+	static float4x4 matrix = camFrustum.ViewMatrix();
+	matrix.Transpose();
+
+	return (float*)matrix.v;
+}
+
+float * ComponentCamera::GetProjMatrix()
+{
+	static float4x4 matrix = camFrustum.ProjectionMatrix();
+	matrix.Transpose();
+
+	return (float*)matrix.v;
+}
+
+void ComponentCamera::DebugDraw()
+{
+	float3 vertices[8];
+	camFrustum.GetCornerPoints(vertices);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+	glColor3f(0, 255, 0);
+
+	glBegin(GL_LINES);
+	glVertex3fv((GLfloat*)&vertices[1]);
+	glVertex3fv((GLfloat*)&vertices[5]);
+	glVertex3fv((GLfloat*)&vertices[7]);
+	glVertex3fv((GLfloat*)&vertices[3]);
+
+	glVertex3fv((GLfloat*)&vertices[3]);
+	glVertex3fv((GLfloat*)&vertices[1]);
+
+	glVertex3fv((GLfloat*)&vertices[4]);
+	glVertex3fv((GLfloat*)&vertices[0]);
+	glVertex3fv((GLfloat*)&vertices[2]);
+	glVertex3fv((GLfloat*)&vertices[6]);
+
+	glVertex3fv((GLfloat*)&vertices[6]);
+	glVertex3fv((GLfloat*)&vertices[4]);
+
+	glVertex3fv((GLfloat*)&vertices[5]);
+	glVertex3fv((GLfloat*)&vertices[4]);
+	glVertex3fv((GLfloat*)&vertices[6]);
+	glVertex3fv((GLfloat*)&vertices[7]);
+
+	glVertex3fv((GLfloat*)&vertices[7]);
+	glVertex3fv((GLfloat*)&vertices[5]);
+
+	glVertex3fv((GLfloat*)&vertices[0]);
+	glVertex3fv((GLfloat*)&vertices[1]);
+	glVertex3fv((GLfloat*)&vertices[3]);
+	glVertex3fv((GLfloat*)&vertices[2]);
+
+	glVertex3fv((GLfloat*)&vertices[2]);
+	glVertex3fv((GLfloat*)&vertices[6]);
+
+	glVertex3fv((GLfloat*)&vertices[3]);
+	glVertex3fv((GLfloat*)&vertices[7]);
+	glVertex3fv((GLfloat*)&vertices[6]);
+	glVertex3fv((GLfloat*)&vertices[2]);
+
+	glVertex3fv((GLfloat*)&vertices[2]);
+	glVertex3fv((GLfloat*)&vertices[0]);
+
+	glVertex3fv((GLfloat*)&vertices[0]);
+	glVertex3fv((GLfloat*)&vertices[4]);
+	glVertex3fv((GLfloat*)&vertices[5]);
+	glVertex3fv((GLfloat*)&vertices[1]);
+
+	glEnd();
+
+}

@@ -4,13 +4,14 @@
 #include "ModuleInput.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleEditorCamera.h"
+#include "GameObject.h"
 #include "ModuleGui.h"
 #include "Brofiler/Brofiler.h"
 
 
 ModuleEditorCamera::ModuleEditorCamera(bool start_enabled) : Module(start_enabled)
 {
-	CalculateViewMatrix();
+	//CalculateViewMatrix();
 
 	X = vec3(1.0f, 0.0f, 0.0f);
 	Y = vec3(0.0f, 1.0f, 0.0f);
@@ -22,7 +23,7 @@ ModuleEditorCamera::ModuleEditorCamera(bool start_enabled) : Module(start_enable
 	Position = vec3(0.0f, 40.0f, 60.0f);
 	Reference = vec3(0.0f, 0.0f, 0.0f);
 	
-	LookAt(Reference);
+	//LookAt(Reference);
 }
 
 ModuleEditorCamera::~ModuleEditorCamera()
@@ -33,6 +34,8 @@ bool ModuleEditorCamera::Start()
 {
 	OWN_LOG("Setting up the camera");
 	bool ret = true;
+	editorCam_G0 = new GameObject();
+	editorCam_G0->AddComponent(ComponentType::CAMERA);
 
 	return ret;
 }
