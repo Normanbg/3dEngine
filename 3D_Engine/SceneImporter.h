@@ -19,7 +19,11 @@
 class SceneImporter
 {
 public:
-	struct dataScene {
+	class dataScene {
+	public:
+		dataScene() {};
+		~dataScene() {};
+	
 		float3 position;
 		float3 scale;
 		Quat rotation;
@@ -30,8 +34,13 @@ public:
 
 	};
 
-	struct dataMesh {
+	class dataMesh {
 		
+	public:
+		dataMesh() {};
+		~dataMesh() {
+			
+		};
 		float colors[3];
 
 		uint num_index = 0;
