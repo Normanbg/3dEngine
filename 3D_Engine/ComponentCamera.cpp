@@ -185,6 +185,22 @@ void ComponentCamera::SetAspectRatio(float aspectRatio){
 	camFrustum.horizontalFov = 2.0f * atanf(tanf(camFrustum.verticalFov * 0.5f) * aspectRatio);
 }
 
+void ComponentCamera::SetMouseSensitivity(float newMouseSens)
+{
+	mouseSensitivity = newMouseSens;
+}
+
+//Distance used for never arriving to vec 0, + bigger = velocity decreases before
+void ComponentCamera::SetScroolWheelSensitivity(float newScroolSensitivity)
+{
+	scroolWheelSensitivity = newScroolSensitivity;
+}
+
+void ComponentCamera::SetDistToReduceZoomVel(float newZoomDistance)
+{
+	zoomDistance = newZoomDistance;
+}
+
 float * ComponentCamera::GetViewMatrix()
 {
 	static float4x4 matrix = camFrustum.ViewMatrix();

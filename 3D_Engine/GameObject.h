@@ -7,8 +7,10 @@
 #include "Component.h"
 #include "ComponentTransformation.h"
 #include "ComponentCamera.h"
-#include <string>
-#include <vector>
+
+
+class string;
+class vector;
 
 
 class GameObject

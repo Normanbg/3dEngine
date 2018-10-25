@@ -25,6 +25,10 @@ public:
 	void SetFarPlaneDistance(float farPlaneDist);
 	void SetFov(float fov);
 	void SetAspectRatio(float aspectRatio);
+	void SetMouseSensitivity(float newMouseSens);
+	void SetScroolWheelSensitivity(float newScroolSensitivity);
+	void SetDistToReduceZoomVel(float newZoomDistance);
+
 	float GetNearPlaneDistance() const { return camFrustum.nearPlaneDistance; }
 	float GetFarPlaneDistance() const { return camFrustum.farPlaneDistance; }
 	float* GetViewMatrix();
@@ -32,13 +36,14 @@ public:
 
 public: 
 	Frustum camFrustum;
-	float mouseSensitivity = 0.25f;
-	float scroolWheelSensitivity = 10.0f;
-	float zoomDistance = 20.0f;
-
 
 private:
 	void CalculateViewMatrix();
+
+private:
+	float mouseSensitivity = 0.25f;
+	float scroolWheelSensitivity = 10.0f;
+	float zoomDistance = 20.0f;
 
 };
 

@@ -8,7 +8,8 @@
 #include "UIPanelAbout.h"
 #include "UIPanelConfig.h"
 #include "UIPanelConsole.h"
-#include "UIPanelProperties.h"
+#include "UIPanelInspector.h"
+#include "UIPanelHierarchy.h"
 #include "ModuleWindow.h"
 #include "ModuleInput.h"
 #include "ModuleAudio.h"
@@ -46,7 +47,8 @@ bool ModuleGui::Start()
 	uiPanels.push_back(panelAbout = new UIPanelAbout("About", 150, 150, 350, 350));
 	uiPanels.push_back(panelConfig = new UIPanelConfig("Configuration", 1025, 15, 250, 550, true));
 	uiPanels.push_back(panelConsole = new UIPanelConsole("Console", 50, 650, 1165, 350, true));
-	uiPanels.push_back(panelProperties = new UIPanelProperties("Properties", 775, 15, 250, 550, true));
+	uiPanels.push_back(panelInspector = new UIPanelInspector("Inspector", 775, 15, 250, 550, true));
+	uiPanels.push_back(panelHierarchy = new UIPanelHierarchy("Hierarchy", 0, 15, 250, 550, true));
 
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO();
@@ -124,13 +126,21 @@ update_status ModuleGui::Update(float dt)
 					App->audio->PlayFx(openFX);
 				panelConfig->ChangeActive();
 			}
-			if (ImGui::MenuItem("Properties", NULL, panelProperties->isEnabled())) {
-				if (panelProperties->isEnabled()) {
+			if (ImGui::MenuItem("Inspector", NULL, panelInspector->isEnabled())) {
+				if (panelInspector->isEnabled()) {
 					App->audio->PlayFx(closeFX);
 				}
 				else
 					App->audio->PlayFx(openFX);
-				panelProperties->ChangeActive();
+				panelInspector->ChangeActive();
+			}
+			if (ImGui::MenuItem("Hierarchy", NULL, panelInspector->isEnabled())) {
+				if (panelHierarchy->isEnabled()) {
+					App->audio->PlayFx(closeFX);
+				}
+				else
+					App->audio->PlayFx(openFX);
+				panelInspector->ChangeActive();
 			}
 			ImGui::EndMenu();
 		}

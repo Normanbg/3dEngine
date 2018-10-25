@@ -15,7 +15,8 @@ class UIPanel;
 class UIPanelAbout;
 class UIPanelConfig;
 class UIPanelConsole;
-class UIPanelProperties;
+class UIPanelInspector;
+class UIPanelHierarchy;
 
 class ModuleGui : public Module
 {
@@ -45,8 +46,9 @@ public:
 	UIPanelAbout*		panelAbout		= nullptr;
 	UIPanelConfig*		panelConfig		= nullptr;
 	UIPanelConsole*		panelConsole	= nullptr;
-	UIPanelProperties*	panelProperties	= nullptr;
-
+	UIPanelInspector*	panelInspector	= nullptr;
+	UIPanelHierarchy*	panelHierarchy = nullptr;
+	
 	std::vector<std::string> logsBuffer;
 	uint ilVersion = 0;
 

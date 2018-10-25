@@ -1,6 +1,7 @@
 #include "GameObject.h"
 
-
+#include <vector>
+#include <string>
 
 GameObject::GameObject()
 {
@@ -27,7 +28,6 @@ bool GameObject::Update(){
 	for (int i = 0; i < components.size() - 1; i++) {
 		ret &= components[i]->Update();
 	}
-	
 	return ret;
 }
 

@@ -132,9 +132,6 @@
     <ClInclude Include="TextureImporter.h">
       <Filter>Sources\Tools</Filter>
     </ClInclude>
-    <ClInclude Include="UIPanelProperties.h">
-      <Filter>Sources\Modules\GuiPanels</Filter>
-    </ClInclude>
     <ClInclude Include="Brofiler\Brofiler.h">
       <Filter>Sources\Tools\Brofiler</Filter>
     </ClInclude>
@@ -348,6 +345,12 @@
     <ClInclude Include="ModuleEditorCamera.h">
       <Filter>Sources\Modules</Filter>
     </ClInclude>
+    <ClInclude Include="UIPanelInspector.h">
+      <Filter>Sources\Modules\GuiPanels</Filter>
+    </ClInclude>
+    <ClInclude Include="UIPanelHierarchy.h">
+      <Filter>Sources\Modules\GuiPanels</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleInput.cpp">
@@ -421,9 +424,6 @@
     </ClCompile>
     <ClCompile Include="TextureImporter.cpp">
       <Filter>Sources\Tools</Filter>
-    </ClCompile>
-    <ClCompile Include="UIPanelProperties.cpp">
-      <Filter>Sources\Modules\GuiPanels</Filter>
     </ClCompile>
     <ClCompile Include="ModuleAudio.cpp">
       <Filter>Sources\Modules</Filter>
@@ -547,6 +547,12 @@
     </ClCompile>
     <ClCompile Include="ModuleEditorCamera.cpp">
       <Filter>Sources\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="UIPanelInspector.cpp">
+      <Filter>Sources\Modules\GuiPanels</Filter>
+    </ClCompile>
+    <ClCompile Include="UIPanelHierarchy.cpp">
+      <Filter>Sources\Modules\GuiPanels</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
