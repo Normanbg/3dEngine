@@ -47,8 +47,11 @@ public:
 	~SceneImporter();
 
 public:
+
+	void Init();
 	void ImportFBXtoPEI(const char* path, const char* name);
 	void LoadPEI(const char* fileName);
+	void CleanUp();
 
 private:
 	void ImportFromMesh(const aiScene* currSc, aiMesh * new_mesh, std::ofstream* dataFile);

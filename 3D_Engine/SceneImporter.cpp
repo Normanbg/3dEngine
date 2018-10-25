@@ -18,6 +18,17 @@ SceneImporter::~SceneImporter()
 {
 }
 
+void LogCall(const char* msg, char* userData);
+
+void SceneImporter::Init()
+{
+	struct aiLogStream stream;
+	stream = aiGetPredefinedLogStream(aiDefaultLogStream_DEBUGGER, nullptr);
+	stream.callback = LogCall;
+	aiAttachLogStream(&stream);
+
+}
+
 void SceneImporter::ImportFBXtoPEI(const char * FBXpath, const char* name)
 {
 	//NEED TO LOAD FROM /ASSETS in a file system module
@@ -27,10 +38,11 @@ void SceneImporter::ImportFBXtoPEI(const char * FBXpath, const char* name)
 	std::string rootPath = MODELS_PATH;
 	rootPath += FBXpath;
 
-	const aiScene* scene = aiImportFile(rootPath.c_str(), aiProcessPreset_TargetRealtime_MaxQuality);
+	const aiScene* scene = aiImportFile(rootPath.c_str(), aiProcessPreset_TargetRealtime_MaxQuality); 
 
 	if (scene == nullptr) {
 		OWN_LOG("Error loading fbx from Assets/3DModels folder.");
+		aiReleaseImport(scene);
 		return;
 	}
 
@@ -46,7 +58,7 @@ void SceneImporter::ImportFBXtoPEI(const char * FBXpath, const char* name)
 
 		dataScene newScene;
 
-		const aiNode* node = scene->mRootNode;
+		const aiNode* node = scene->mRootNode; // NEEDTO delete pointer?
 
 		aiVector3D _scale;
 		aiQuaternion _rotation;
@@ -59,18 +71,18 @@ void SceneImporter::ImportFBXtoPEI(const char * FBXpath, const char* name)
 		newScene.numMeshes = scene->mNumMeshes;
 
 
-		uint size = sizeof(uint) + sizeof(float3) * 2 + sizeof(Quat); // numMeshes+(scale+pos) + rotation in bytes
+		uint size = sizeof(uint) +sizeof(float3) * 2 + sizeof(Quat); // numMeshes+(scale+pos) + rotation in bytes
 		char* data = new char[size];
 		char* cursor = data;
 
-		uint bytes = sizeof(uint);
-		memcpy(cursor, &newScene.numMeshes, bytes);
-
-		bytes = sizeof(float3);//sizeof float3
-		cursor += bytes;
+		uint bytes = sizeof(uint); // 4bytes
+		memcpy(cursor, &newScene.numMeshes, bytes); // copies 4B from cursor
+		
+		cursor += bytes; 
+		bytes = sizeof(float3);//sizeof float3		
 		memcpy(cursor, &newScene.scale, bytes);
 
-		cursor += bytes;
+		cursor += bytes;//sizeof float3		
 		memcpy(cursor, &newScene.position, bytes);
 
 		
@@ -80,17 +92,26 @@ void SceneImporter::ImportFBXtoPEI(const char * FBXpath, const char* name)
 
 		dataFile.write(data, size);
 
-		aiMesh * meshIterator = nullptr;
+		delete[] data;
+		data = nullptr;
+		cursor = nullptr;
+
+		aiMesh * meshIterator = nullptr; // NEEDTO delete pointer?
+
 		for (int i = 0; i < newScene.numMeshes; i++) {
 			meshIterator = scene->mMeshes[i];
 			ImportFromMesh(scene, meshIterator, &dataFile);
 		}
+		
+		aiReleaseImport(scene);
+
+		
 		dataFile.close();
 	}
 	else {
 		OWN_LOG("Error loading FBX, scene has no meshes");
 	}
-	aiReleaseImport(scene);
+	
 	
 
 }
@@ -196,22 +217,26 @@ void SceneImporter::ImportFromMesh(const aiScene* currSc, aiMesh * new_mesh,std:
 		uint bytes = sizeof(ranges);
 		memcpy(cursor, ranges, bytes);
 
-		bytes = sizeof(uint)* newMesh.num_index;
 		cursor += bytes;
+		bytes = sizeof(uint)* newMesh.num_index;		
 		memcpy(cursor, newMesh.index, bytes);
 	
-		bytes = sizeof(float3)* newMesh.num_vertex;
 		cursor += bytes;
+		bytes = sizeof(float3)* newMesh.num_vertex;
 		memcpy(cursor, newMesh.vertex, bytes);
 
 		cursor += bytes;
 		memcpy(cursor, newMesh.normals, bytes);
 		
-		bytes = sizeof(float2)* newMesh.num_vertex;
 		cursor += bytes;
+		bytes = sizeof(float2)* newMesh.num_vertex;		
 		memcpy(cursor, newMesh.texturesCoords, bytes);
 		
 		dataFile->write(data, size);
+
+		delete[] data;
+		data = nullptr;
+		cursor = nullptr;
 	}
 }
 
@@ -224,7 +249,7 @@ void SceneImporter::LoadPEI(const char * fileName)
 	
 	ComponentTransformation* compTrans = (ComponentTransformation*)gameObject->AddComponent(TRANSFORM);
 	
-	uint numMeshes = 0;
+	
 	
 	uint size = sizeof(uint) + sizeof(float3) * 2 + sizeof(Quat);
 
@@ -234,17 +259,25 @@ void SceneImporter::LoadPEI(const char * fileName)
 	char* cursor = scenedata;
 	dataFile.read(scenedata, size);
 	
+	uint numMeshes = 0;
 	uint bytes = sizeof(uint);
 	memcpy(cursor, &numMeshes, bytes);
 
-	
+	cursor += bytes;	
+	bytes = sizeof(float3);
+	memcpy(&compTrans->scale, cursor, bytes);
+
 	cursor += bytes;
+	
 	memcpy(&compTrans->position, cursor, bytes);
 
 	cursor += bytes;
 	bytes = sizeof(Quat);//sizeof quat
 	memcpy(&compTrans->rotation, cursor, bytes);
 	
+	delete[] scenedata;
+	scenedata = nullptr;
+	cursor = nullptr;
 
 	dataFile.seekg(size);
 
@@ -257,45 +290,61 @@ void SceneImporter::LoadPEI(const char * fileName)
 
 		uint ranges[2];
 
-		uint size2 = sizeof(ranges); // [numIndex + numVertex]
+		uint rangesSize = sizeof(ranges); // [numIndex + numVertex]
 
-		char* headerdata = new char[size2];		
+		char* headerdata = new char[rangesSize];		
 
-		dataFile.read(headerdata, size2);
+		dataFile.read(headerdata, rangesSize);
 
 		uint mbytes = sizeof(ranges);
-		memcpy(ranges, headerdata, mbytes); //r
+		memcpy(ranges, headerdata, mbytes); 
+
+		delete[] headerdata;
+		headerdata = nullptr;
 
 		compMesh->num_index = ranges[0];
 		compMesh->num_vertex = compMesh->num_textureCoords = compMesh->num_normals = ranges[1];
-		uint size3 = sizeof(uint)* ranges[0] + sizeof(float3)*ranges[1]* 2 + sizeof(float2) * ranges[1];
+		uint meshDataSize = sizeof(uint)* ranges[0] + sizeof(float3)*ranges[1]* 2 + sizeof(float2) * ranges[1];
 
-		char* geodata = new char[size3];
+		char* geodata = new char[meshDataSize];
 		char* mcursor = geodata;
 
 		
-		dataFile.seekg(totalSize+size2);
+		dataFile.seekg(totalSize+rangesSize);
 
-		dataFile.read(geodata, size3);
+		dataFile.read(geodata, meshDataSize);
 
 		mbytes = sizeof(uint) *ranges[0];//index
 		
 		memcpy(compMesh->index, mcursor, mbytes);
 
-		mbytes = sizeof(float3)*ranges[1];//vertex
 		mcursor += mbytes;
+		mbytes = sizeof(float3)*ranges[1];//vertex		
 		memcpy(compMesh->vertex,mcursor , mbytes);
-
-		mbytes = sizeof(float3)* ranges[1];
+				
 		mcursor += mbytes;
 		memcpy(compMesh->normals, mcursor, mbytes);
 
-		mbytes = sizeof(float2)* ranges[1];
 		mcursor += mbytes;
+		mbytes = sizeof(float2)* ranges[1];		
 		memcpy(compMesh->texturesCoords,mcursor, mbytes);
 
-		totalSize += size2 + size3;
+		totalSize += rangesSize + meshDataSize;
 
+		delete[] geodata;
+		geodata = nullptr;
+		mcursor = nullptr;
+		compMesh = nullptr;
 	}
+
+
+	delete gameObject;
+	gameObject = nullptr;
+
 	dataFile.close();
+}
+
+void SceneImporter::CleanUp()
+{
+	aiDetachAllLogStreams();
 }

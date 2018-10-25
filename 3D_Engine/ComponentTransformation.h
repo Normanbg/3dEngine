@@ -2,8 +2,8 @@
 #define __COMPONENTTRANS_H__
 
 #include "Component.h"
-#include "MathGeoLib\Geometry\GeometryAll.h"
-
+#include "MathGeoLib/Geometry/GeometryAll.h"
+#include "MathGeoLib/Math/Quat.h"
 class ComponentTransformation :	public Component
 {
 public:

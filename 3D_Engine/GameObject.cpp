@@ -89,7 +89,7 @@ Component * GameObject::AddComponent(ComponentType type) {
 
 ComponentTransformation * GameObject::CreateComponentTranformation()
 {
-	ComponentTransformation* ret;
+	ComponentTransformation* ret = new ComponentTransformation();
 
 	return ret;
 }

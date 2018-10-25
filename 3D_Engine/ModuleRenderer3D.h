@@ -6,7 +6,7 @@
 
 #include "Light.h"
 #include "MathGeoLib\Math\MathAll.h"
-#include "MeshImporter.h"
+#include "SceneImporter.h"
 #include "TextureImporter.h"
 #include "MathGeoLib/Geometry/AABB.h"
 #include "ComponentMesh.h"
@@ -141,7 +141,7 @@ public:
 	mat3x3 NormalMatrix;
 	mat4x4 ModelMatrix, ViewMatrix, ProjectionMatrix;
 
-	MeshImporter* importer;
+	SceneImporter* importer;
 	TextureImporter* texImporter;
 	
 private:

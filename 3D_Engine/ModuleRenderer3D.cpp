@@ -131,10 +131,10 @@ bool ModuleRenderer3D::Init(JSON_Object* obj)
 	// Projection matrix for
 	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
-	importer = new MeshImporter();
+	importer = new SceneImporter();
 	texImporter = new TextureImporter();	
 
-	importer->InitDebugLog();
+	importer->Init();
 	texImporter->Init();
 	
 	json_object_clear(obj);//clear obj to free memory
@@ -146,7 +146,8 @@ bool ModuleRenderer3D::Start() {
 
 	bool ret = true;
 
-	importer->LoadFBX("BakerHouse.fbx");
+	importer->ImportFBXtoPEI("BakerHouse.fbx","Baker_house");
+	importer->LoadPEI("Baker_house.pei");
 	GenBuffFromMeshes();
 
 	return ret;
@@ -197,7 +198,7 @@ bool ModuleRenderer3D::CleanUp()
 	BROFILER_CATEGORY("Renderer3D_CleanUp", Profiler::Color::HotPink);
 	OWN_LOG("Destroying 3D Renderer");
 
-	importer->EndDebugLog();
+	importer->CleanUp();
 	
 
 	ClearSceneMeshes();
@@ -354,7 +355,7 @@ Texture* ModuleRenderer3D::GetTextureFromID(GLuint id)
 
 void ModuleRenderer3D::LoadDroppedFBX(char * droppedFileDir){
 	ClearSceneMeshes();
-	importer->LoadFBX(droppedFileDir);	
+	//importer->LoadFBX(droppedFileDir);	
 	GenBuffFromMeshes();	
 	App->camera->FocusToMeshes();
 }
