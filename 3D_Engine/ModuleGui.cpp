@@ -38,7 +38,7 @@ ModuleGui::~ModuleGui()
 bool ModuleGui::Start()
 {
 	BROFILER_CATEGORY("GUI_Start", Profiler::Color::Chartreuse);
-	demoShowcase = false;
+	
 	dropFX = App->audio->LoadFx("fx/drop.wav");
 	closeFX = App->audio->LoadFx("fx/close.wav");
 	openFX = App->audio->LoadFx("fx/open.wav");
@@ -49,19 +49,25 @@ bool ModuleGui::Start()
 	uiPanels.push_back(panelConsole = new UIPanelConsole("Console", 50, 650, 1165, 350, true));
 	uiPanels.push_back(panelInspector = new UIPanelInspector("Inspector", 775, 15, 250, 550, true));
 	uiPanels.push_back(panelHierarchy = new UIPanelHierarchy("Hierarchy", 0, 15, 250, 550, true));
-
 	ImGui::CreateContext();
-	ImGuiIO& io = ImGui::GetIO();
-
+	demoShowcase = false;
 	ImGui_ImplSDL2_InitForOpenGL(App->window->window, App->renderer3D->context);
 	ImGui_ImplOpenGL2_Init();
 
+	ImGuiIO& io = ImGui::GetIO();
+
+	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+
+	
 	return true;
 }
 
 update_status ModuleGui::PreUpdate(float dt)
 {
 	BROFILER_CATEGORY("GUI_PreUpdate", Profiler::Color::Chartreuse);
+	ImGuiIO& io = ImGui::GetIO();
+
+	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 	ImGui_ImplOpenGL2_NewFrame();
 	ImGui_ImplSDL2_NewFrame(App->window->window);
 	ImGui::NewFrame();
@@ -147,7 +153,11 @@ update_status ModuleGui::Update(float dt)
 		ImGui::EndMainMenuBar();
 
 	}
-	
+	ImGui::Begin(name.c_str());
+	for (std::vector<std::string>::iterator it = App->gui->logsBuffer.begin(); it != App->gui->logsBuffer.end(); it++) {
+		ImGui::Text((*it).c_str());
+	}
+	ImGui::End();
 	return UPDATE_CONTINUE;
 }
 
@@ -159,8 +169,8 @@ void ModuleGui::Draw() {
 
 	for (std::list<UIPanel*>::iterator iterator = uiPanels.begin(); iterator != uiPanels.end(); iterator++) {
 		if ((*iterator)->isEnabled()) {
-			ImGui::SetNextWindowPos({ (*iterator)->positionX, (*iterator)->positionY });
-			ImGui::SetNextWindowSize({ (*iterator)->width, (*iterator)->height }, ImGuiSetCond_Once);
+			ImGui::SetNextWindowPos({ (*iterator)->positionX, (*iterator)->positionY }, ImGuiCond_FirstUseEver);
+			ImGui::SetNextWindowSize({ (*iterator)->width, (*iterator)->height }, ImGuiCond_FirstUseEver);
 			(*iterator)->Draw();
 		}
 	}
