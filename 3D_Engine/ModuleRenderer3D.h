@@ -9,7 +9,7 @@
 #include "SceneImporter.h"
 #include "TextureImporter.h"
 #include "MathGeoLib/Geometry/AABB.h"
-#include "ComponentMesh.h"
+
 
 #include <array>
 #include <vector>
@@ -131,7 +131,7 @@ public:
 
 	void ClearSceneMeshes();
 
-	ComponentMesh* CreateComponentMesh();
+	
 	
 
 public:

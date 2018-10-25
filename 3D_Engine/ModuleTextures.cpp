@@ -36,8 +36,3 @@ bool ModuleTextures::CleanUp()
 }
 
 
-ComponentMaterial* ModuleTextures::CreateComponentMaterial() {
-	ComponentMaterial* ret;
-
-	return ret;
-}

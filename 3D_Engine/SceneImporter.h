@@ -18,6 +18,7 @@
 
 class SceneImporter
 {
+public:
 	struct dataScene {
 		float3 position;
 		float3 scale;

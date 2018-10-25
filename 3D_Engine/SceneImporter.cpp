@@ -219,18 +219,22 @@ void SceneImporter::ImportFromMesh(const aiScene* currSc, aiMesh * new_mesh,std:
 
 		cursor += bytes;
 		bytes = sizeof(uint)* newMesh.num_index;		
-		memcpy(cursor, newMesh.index, bytes);
-	
+		memcpy(cursor, &newMesh.index, bytes);
+		uint i = newMesh.index[1];
+		uint i2 = newMesh.index[2];
+		uint i3 = newMesh.index[3];
+		uint ifi = newMesh.index[newMesh.num_index - 1];
+		uint ifdi = newMesh.index[10];
 		cursor += bytes;
 		bytes = sizeof(float3)* newMesh.num_vertex;
-		memcpy(cursor, newMesh.vertex, bytes);
+		memcpy(cursor, &newMesh.vertex, bytes);
 
 		cursor += bytes;
-		memcpy(cursor, newMesh.normals, bytes);
+		memcpy(cursor, &newMesh.normals, bytes);
 		
 		cursor += bytes;
 		bytes = sizeof(float2)* newMesh.num_vertex;		
-		memcpy(cursor, newMesh.texturesCoords, bytes);
+		memcpy(cursor, &newMesh.texturesCoords, bytes);
 		
 		dataFile->write(data, size);
 
@@ -261,7 +265,7 @@ void SceneImporter::LoadPEI(const char * fileName)
 	
 	uint numMeshes = 0;
 	uint bytes = sizeof(uint);
-	memcpy(cursor, &numMeshes, bytes);
+	memcpy(&numMeshes, cursor, bytes);
 
 	cursor += bytes;	
 	bytes = sizeof(float3);
@@ -279,7 +283,7 @@ void SceneImporter::LoadPEI(const char * fileName)
 	scenedata = nullptr;
 	cursor = nullptr;
 
-	dataFile.seekg(size);
+	
 
 	uint totalSize = size;
 
@@ -287,12 +291,15 @@ void SceneImporter::LoadPEI(const char * fileName)
 		
 		ComponentMesh* compMesh = (ComponentMesh*)gameObject->AddComponent(MESH);
 		
+		//---read ranges
+		uint ranges[2]; // [numIndex , numVertex]
 
-		uint ranges[2];
-
-		uint rangesSize = sizeof(ranges); // [numIndex + numVertex]
+		uint rangesSize = sizeof(ranges); 
 
 		char* headerdata = new char[rangesSize];		
+
+		dataFile.seekg(totalSize);
+		
 
 		dataFile.read(headerdata, rangesSize);
 
@@ -301,38 +308,52 @@ void SceneImporter::LoadPEI(const char * fileName)
 
 		delete[] headerdata;
 		headerdata = nullptr;
+		//---
 
 		compMesh->num_index = ranges[0];
 		compMesh->num_vertex = compMesh->num_textureCoords = compMesh->num_normals = ranges[1];
-		uint meshDataSize = sizeof(uint)* ranges[0] + sizeof(float3)*ranges[1]* 2 + sizeof(float2) * ranges[1];
 
-		char* geodata = new char[meshDataSize];
-		char* mcursor = geodata;
+		compMesh->index = new uint[compMesh->num_index];
+		compMesh->vertex = new float3[compMesh->num_vertex];
+		compMesh->normals = new float3[compMesh->num_normals];
+		compMesh->texturesCoords = new float2[compMesh->num_textureCoords];
 
+		uint meshDataSize = sizeof(uint)* compMesh->num_index + sizeof(float3)*compMesh->num_vertex* 2 + sizeof(float2) * compMesh->num_vertex;
+
+		char* meshdata = new char[meshDataSize];
+		char* mcursor = meshdata;
+
+		
 		
 		dataFile.seekg(totalSize+rangesSize);
 
-		dataFile.read(geodata, meshDataSize);
+		dataFile.read(meshdata, meshDataSize);
 
-		mbytes = sizeof(uint) *ranges[0];//index
 		
-		memcpy(compMesh->index, mcursor, mbytes);
 
+		mbytes = sizeof(uint) *compMesh->num_index;//index		
+		memcpy(&compMesh->index, mcursor, mbytes);
+
+		uint j = compMesh->index[1];
+		uint j2 = compMesh->index[2];
+		uint j3 = compMesh->index[3];
+		uint jf = compMesh->index[compMesh->num_index - 1];
+		uint jfi = compMesh->index[10];
 		mcursor += mbytes;
-		mbytes = sizeof(float3)*ranges[1];//vertex		
+		mbytes = sizeof(float3)*compMesh->num_vertex;//vertex		
 		memcpy(compMesh->vertex,mcursor , mbytes);
 				
 		mcursor += mbytes;
 		memcpy(compMesh->normals, mcursor, mbytes);
 
 		mcursor += mbytes;
-		mbytes = sizeof(float2)* ranges[1];		
+		mbytes = sizeof(float2)* compMesh->num_vertex;
 		memcpy(compMesh->texturesCoords,mcursor, mbytes);
 
 		totalSize += rangesSize + meshDataSize;
 
-		delete[] geodata;
-		geodata = nullptr;
+		delete[] meshdata;
+		meshdata = nullptr;
 		mcursor = nullptr;
 		compMesh = nullptr;
 	}

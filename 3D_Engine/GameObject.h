@@ -6,6 +6,8 @@
 #include "ModuleTextures.h"
 #include "Component.h"
 #include "ComponentTransformation.h"
+#include "ComponentMesh.h"
+#include "ComponentMaterial.h"
 #include <string>
 #include <vector>
 
@@ -22,7 +24,7 @@ public:
 	Component* AddComponent(ComponentType type);
 
 private:
-	ComponentTransformation* CreateComponentTranformation();
+	
 
 public:
 	std::string					name;

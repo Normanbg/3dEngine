@@ -360,23 +360,17 @@ void ModuleRenderer3D::LoadDroppedFBX(char * droppedFileDir){
 	App->camera->FocusToMeshes();
 }
 
-void ModuleRenderer3D::ClearSceneMeshes(){
+void ModuleRenderer3D::ClearSceneMeshes() {
 
 	OWN_LOG("Clearing meshes in scene")
-	for (int i = meshes.size()-1; i >=0 ; i--) {
-		meshes[i].CleanUp();
-	}
+		for (int i = meshes.size() - 1; i >= 0; i--) {
+			meshes[i].CleanUp();
+		}
 	meshes.clear();
 	for (int i = textures.size() - 1; i >= 0; i--) {
 		textures[i].CleanUp();
 	}
 	textures.clear();
-}
-
-ComponentMesh* ModuleRenderer3D::CreateComponentMesh() {
-	ComponentMesh* ret;
-
-	return ret;
 }
 
 void ModuleRenderer3D::ShowAxis() {
