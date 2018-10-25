@@ -68,19 +68,19 @@ Component * GameObject::AddComponent(ComponentType type) {
 
 	switch (type) {
 	case ComponentType::MESH:
-		ret = App->renderer3D->CreateComponentMesh();
+		ret = new ComponentMesh();
 		break;
 
 	case ComponentType::MATERIAL:
-		ret = App->textures->CreateComponentMaterial();
+		ret = new ComponentMaterial();
 		break;
 
 	case ComponentType::TRANSFORM:
-		ret = CreateComponentTranformation();
+		ret = new ComponentTransformation();
 		break;
 	
 	case ComponentType::CAMERA:
-		ret = new ComponentCamera();//MUST DO SOMETHING?
+		ret = new ComponentCamera();
 		break;
 
 	case ComponentType::NO_TYPE:
@@ -100,12 +100,5 @@ Component * GameObject::GetComponent(ComponentType type)
 		if ((*it)->type == type);
 		return (*it);
 	}
-	return ret;
-}
-
-ComponentTransformation * GameObject::CreateComponentTranformation()
-{
-	ComponentTransformation* ret;
-
 	return ret;
 }

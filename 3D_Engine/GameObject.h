@@ -25,9 +25,6 @@ public:
 	Component* AddComponent(ComponentType type);
 	Component* GetComponent(ComponentType type);
 
-private:
-	ComponentTransformation* CreateComponentTranformation();
-
 public:
 	std::string					name;
 	std::vector <Component*>	components;
