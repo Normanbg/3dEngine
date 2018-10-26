@@ -54,9 +54,9 @@ bool ModuleGui::Start()
 	ImGui_ImplSDL2_InitForOpenGL(App->window->window, App->renderer3D->context);
 	ImGui_ImplOpenGL2_Init();
 
-	ImGuiIO& io = ImGui::GetIO();
+	io = &ImGui::GetIO();
 
-	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+	io->ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
 	
 	return true;
@@ -65,9 +65,7 @@ bool ModuleGui::Start()
 update_status ModuleGui::PreUpdate(float dt)
 {
 	BROFILER_CATEGORY("GUI_PreUpdate", Profiler::Color::Chartreuse);
-	ImGuiIO& io = ImGui::GetIO();
-
-	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+	
 	ImGui_ImplOpenGL2_NewFrame();
 	ImGui_ImplSDL2_NewFrame(App->window->window);
 	ImGui::NewFrame();

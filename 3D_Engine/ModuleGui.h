@@ -9,6 +9,7 @@
 
 #include "RandomGenerator/pcg_variants.h"
 
+struct ImGuiIO;
 union SDL_Event;
 
 class UIPanel;
@@ -56,7 +57,7 @@ public:
 	uint closeFX = 0;
 	uint openFX = 0;
 	uint searchingFX = 0; //Used when open an URL
-
+	ImGuiIO* io;
 };
 
 #endif 
