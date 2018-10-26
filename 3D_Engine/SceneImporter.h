@@ -19,28 +19,18 @@
 class SceneImporter
 {
 public:
-	class dataScene {
-	public:
-		dataScene() {};
-		~dataScene() {};
+	struct dataScene {
 	
 		float3 position;
 		float3 scale;
 		Quat rotation;
-
 		
-
 		uint numMeshes;
 
 	};
 
-	class dataMesh {
-		
+	struct dataMesh {
 	public:
-		dataMesh() {};
-		~dataMesh() {
-			
-		};
 		float colors[3];
 
 		uint num_index = 0;
@@ -62,6 +52,8 @@ public:
 	void ImportFBXtoPEI(const char* path, const char* name);
 	void LoadPEI(const char* fileName);
 	void CleanUp();
+
+	
 
 private:
 	void ImportFromMesh(const aiScene* currSc, aiMesh * new_mesh, std::ofstream* dataFile);
