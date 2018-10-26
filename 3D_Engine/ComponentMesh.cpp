@@ -18,11 +18,8 @@ ComponentMesh::~ComponentMesh()
 
 bool ComponentMesh::Update()
 {
-	if (!generated) {
-		GenerateBuffer();
-		generated = true;
-}
-	Draw();
+	
+	//Draw();
 	return true	;
 }
 

@@ -14,7 +14,10 @@ GameObject::~GameObject()
 bool GameObject::PreUpdate(){
 	bool ret = true;
 
-	for (int i = 0; i < components.size() - 1; i++) {
+	for (int i = 0; i < components.size(); i++) {
+		ret &= components[i]->PreUpdate();
+	}
+	for (int i = 0; i < childrens.size() ; i++) {
 		ret &= components[i]->PreUpdate();
 	}
 	   
@@ -24,7 +27,10 @@ bool GameObject::PreUpdate(){
 bool GameObject::Update(){
 	bool ret = true;
 
-	for (int i = 0; i < components.size() - 1; i++) {
+	for (int i = 0; i < components.size() ; i++) {
+		ret &= components[i]->Update();
+	}
+	for (int i = 0; i < childrens.size() ; i++) {
 		ret &= components[i]->Update();
 	}
 	
@@ -34,7 +40,10 @@ bool GameObject::Update(){
 bool GameObject::PostUpdate(){
 	bool ret = true;
 
-	for (int i = 0; i < components.size() - 1; i++) {
+	for (int i = 0; i < components.size(); i++) {
+		ret &= components[i]->PostUpdate();
+	}
+	for (int i = 0; i < childrens.size(); i++) {
 		ret &= components[i]->PostUpdate();
 	}
 

@@ -352,10 +352,14 @@ void SceneImporter::LoadPEI(const char * fileName)
 
 		totalSize += rangesSize + meshDataSize;
 
+
+		compMesh->GenerateBuffer();
 		delete[] meshdata;
 		meshdata = nullptr;
 		mcursor = nullptr;
 		compMesh = nullptr;
+
+
 	}
 
 

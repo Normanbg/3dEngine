@@ -49,8 +49,8 @@ update_status ModuleScene::Update(float dt){
 
 	bool ret = true;
 	if (root->childrens.empty() == false) {
-		for (int i = 0; i < root->childrens.size() - 1; i++) {
-			ret &= root->childrens[i]->Update();
+		for (int i = 0; i < root->childrens.size() ; i++) {
+			ret = root->childrens[i]->Update();
 		}
 	}
 	update_status retUS;

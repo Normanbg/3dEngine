@@ -29,7 +29,7 @@ class ModuleCamera3D;
 class ModuleGui;
 class ModuleScene;
 class ModuleTextures;
-
+class ModuleFileSystem;
 
 class Application
 {
@@ -41,7 +41,7 @@ public:
 	ModuleCamera3D* camera;
 	ModuleScene* scene;
 	ModuleTextures* textures;
-	
+	ModuleFileSystem* fileSys;
 	ModuleGui* gui;
 
 private:

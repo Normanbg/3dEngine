@@ -88,3 +88,47 @@ GLuint TextureImporter::LoadTexture(const char * path, uint& texWidth, uint& tex
 
 	}
 }
+
+void ImportToDDS( const char* path) {
+
+	OWN_LOG("Loading Texture from %s", path);
+	ILuint imageID;
+
+	ilGenImages(1, &imageID); // generates an image
+	ilBindImage(imageID);
+
+	bool ret = ilLoadImage(path);
+	if (!ret) {
+		OWN_LOG("Cannot Load Texture from %s", path);
+		ilDeleteImages(1, &imageID);
+		return;
+	}
+	else{
+		ILinfo infoImage;
+		iluGetImageInfo(&infoImage);
+
+		ILenum error = ilGetError();
+		if (error != IL_NO_ERROR) {
+			OWN_LOG("Error getting image info Error:", iluErrorString(error));
+		}
+
+
+
+		ILuint size;
+		ILubyte *data; 
+		ilSetInteger(IL_DXTC_FORMAT, IL_DXT5);// To pick a specific DXT compression use 
+		size = ilSaveL(IL_DDS, NULL, 0); // gets the size of the data buffer
+		if (size != 0) {
+			data = new ILubyte[size]; // allocate data buffer
+			if (ilSaveL(IL_DDS, data, size) > 0) // Save with the ilSaveIL function
+			{
+				OWN_LOG("Imported succsfully into SSD");
+			}
+			delete[]data;
+			
+
+		}
+		data = nullptr;
+		ilDeleteImages(1, &imageID);
+	}
+}
