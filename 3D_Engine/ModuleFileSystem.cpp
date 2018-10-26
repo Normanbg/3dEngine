@@ -21,7 +21,7 @@ ModuleFileSystem::ModuleFileSystem(bool start_enabled) : Module(start_enabled)
 
 	//Create main files if they do not exist and add them to the search path
 	const char* mainPaths[] = {
-		MODELS_PATH, TEXTURES_PATH, AUDIO_PATH, LIBRARY_PATH, SETTINGS_PATH
+		MODELS_PATH, TEXTURES_PATH, AUDIO_PATH, LIB_MODELS_PATH, LIB_TEXTURES_PATH, SETTINGS_PATH
 	};
 	for (uint i = 0; i < NUM_PATHS; ++i)
 	{
@@ -47,13 +47,32 @@ bool ModuleFileSystem::addPath(const char * path)
 	return ret;
 }
 
-void ModuleFileSystem::writeFile(const char * fileName, const void * data, uint bytes)
+uint ModuleFileSystem::writeFile(const char * fileName, const void * data, uint bytes)
 {
+	PHYSFS_file* file = PHYSFS_openWrite(fileName);
+	if (file == nullptr)
+	{
+		OWN_LOG("Error opening file. Error:", PHYSFS_getLastError());
+		return 0;
+	}
+	else{
+		
+		uint written = PHYSFS_write(file, (const void*)data, 1, bytes);
+		PHYSFS_close(file);
 
+		if (written != bytes)
+		{
+			OWN_LOG("Writting file error. Not all data readen Error:  %s", PHYSFS_getLastError());
+			return 0;
+		}
+
+		return written;
+	}
+	
 
 }
 
-uint ModuleFileSystem::readFile(const char * fileName, void ** data, uint bytes)
+uint ModuleFileSystem::readFile(const char * fileName, char** data)
 {
 	PHYSFS_file* file = PHYSFS_openRead(fileName);
 	uint ret = 0;
@@ -66,13 +85,15 @@ uint ModuleFileSystem::readFile(const char * fileName, void ** data, uint bytes)
 		{
 			*data = new char[size];
 			uint readed = (uint)PHYSFS_read(file, *data, 1, size);
+			delete[] data;
 			if (readed != size)
 			{
 				OWN_LOG("File System error while reading from file %s: %s\n", file, PHYSFS_getLastError());
-				delete[] data;
-				return;
+				
+				return ret;
 			}
 			else
+				
 				ret = readed;
 		}
 		PHYSFS_close(file);
@@ -81,4 +102,62 @@ uint ModuleFileSystem::readFile(const char * fileName, void ** data, uint bytes)
 		OWN_LOG("File System error while opening file %s: %s\n", file, PHYSFS_getLastError());
 
 	return ret;
+}
+
+void ModuleFileSystem::GetNameFromPath(const char * full_path, std::string * path, std::string * file, std::string * extension) const
+{
+	if (full_path != nullptr)
+	{
+		std::string nwFullPath = full_path;
+		NormalizePath(nwFullPath);
+		size_t posSlash = nwFullPath.find_last_of("\\/");
+		size_t posDot = nwFullPath.find_last_of(".");
+
+		if (path != nullptr)
+		{
+			if (posSlash < nwFullPath.length())
+				*path = nwFullPath.substr(0, posSlash + 1);
+			else
+				path->clear();
+		}
+
+		if (file != nullptr)
+		{
+			if (posSlash < nwFullPath.length())
+				*file = nwFullPath.substr(posSlash + 1);
+			else
+				*file = nwFullPath;
+		}
+
+		if (extension != nullptr)
+		{
+			if (posDot < nwFullPath.length())
+				*extension = nwFullPath.substr(posDot + 1);
+			else
+				extension->clear();
+		}
+	}
+
+}
+
+void ModuleFileSystem::NormalizePath(char * full_path) const
+{
+	uint len = strlen(full_path);
+	for (int i = 0; i < len; ++i)
+	{
+		if (full_path[i] == '\\')
+			full_path[i] = '/';
+		else
+			full_path[i] = tolower(full_path[i]);
+	}
+}
+void ModuleFileSystem::NormalizePath(std::string & full_path) const
+{
+	for (std::string::iterator charIterator = full_path.begin(); charIterator != full_path.end(); ++charIterator)
+	{
+		if (*charIterator == '\\')
+			*charIterator = '/';
+		else
+			*charIterator = tolower(*charIterator);
+	}
 }

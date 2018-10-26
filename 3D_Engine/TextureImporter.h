@@ -14,7 +14,7 @@ public:
 	~TextureImporter();
 
 	void Init();
-	
+	void ImportToDDS(const char * path);
 		
 	GLuint LoadTexture(const char* path, uint& width, uint& height);
 
@@ -28,6 +28,5 @@ public:
 };
 
 #endif //__TEXTUREIMPORTER_H__
-
 
 

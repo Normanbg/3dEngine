@@ -3,6 +3,7 @@
 #include "ModuleGui.h"
 #include "TextureImporter.h"
 #include "ModuleRenderer3D.h"
+#include "ModuleFileSystem.h"
 #include "Devil/include/il.h"
 #include "Devil/include/ilut.h"
 #include "DevIL\include\ilu.h"
@@ -89,17 +90,22 @@ GLuint TextureImporter::LoadTexture(const char * path, uint& texWidth, uint& tex
 	}
 }
 
-void ImportToDDS( const char* path) {
+
+
+void TextureImporter::ImportToDDS( const char* path) {
 
 	OWN_LOG("Loading Texture from %s", path);
 	ILuint imageID;
 
+	std::string nwPath = TEXTURES_PATH;
+	nwPath += path;
+	nwPath += ".png";
 	ilGenImages(1, &imageID); // generates an image
 	ilBindImage(imageID);
 
-	bool ret = ilLoadImage(path);
+	bool ret = ilLoadImage(nwPath.c_str());
 	if (!ret) {
-		OWN_LOG("Cannot Load Texture from %s", path);
+		OWN_LOG("Cannot Load Texture from %s", nwPath.c_str());
 		ilDeleteImages(1, &imageID);
 		return;
 	}
@@ -112,8 +118,6 @@ void ImportToDDS( const char* path) {
 			OWN_LOG("Error getting image info Error:", iluErrorString(error));
 		}
 
-
-
 		ILuint size;
 		ILubyte *data; 
 		ilSetInteger(IL_DXTC_FORMAT, IL_DXT5);// To pick a specific DXT compression use 
@@ -122,7 +126,13 @@ void ImportToDDS( const char* path) {
 			data = new ILubyte[size]; // allocate data buffer
 			if (ilSaveL(IL_DDS, data, size) > 0) // Save with the ilSaveIL function
 			{
-				OWN_LOG("Imported succsfully into SSD");
+				OWN_LOG("Imported succsfully into DDS");
+				
+				std::string filename = path;				
+				App->fileSys->GetNameFromPath(path, nullptr, &filename, nullptr);
+				
+				std::string libPath = LIB_TEXTURES_PATH + filename+ ".dds";
+				App->fileSys ->writeFile(libPath.c_str(), data, size);
 			}
 			delete[]data;
 			

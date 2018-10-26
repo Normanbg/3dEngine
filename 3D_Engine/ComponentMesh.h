@@ -6,6 +6,7 @@
 #include "MathGeoLib\Math\MathAll.h"
 #include "MathGeoLib/Geometry/AABB.h"
 
+
 #include <array>
 #include <vector>
 
@@ -40,6 +41,8 @@ public:
 
 	GLuint texID = 0;
 
+
+	update_status PreUpdate(float dt);
 	AABB boundingBox;
 
 	bool Update() override;

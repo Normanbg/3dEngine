@@ -42,10 +42,11 @@ enum update_status
 #define CONFIG_FILE "config.JSON"
 #define CAMERA_SPEED 10.0f
 
-#define NUM_PATHS 5
+#define NUM_PATHS 6
 #define TEXTURES_PATH "Assets/Textures/"
 #define MODELS_PATH "Assets/3DModels/"
 #define AUDIO_PATH "Assets/Audio/"
-#define LIBRARY_PATH "Library/"
+#define LIB_TEXTURES_PATH "Library/Textures/"
+#define LIB_MODELS_PATH "Library/3DModels/"
 #define SETTINGS_PATH "Settings/"
 #define OWN_FILE_FORMAT ".pei"

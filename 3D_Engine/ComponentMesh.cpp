@@ -9,6 +9,7 @@
 
 ComponentMesh::ComponentMesh()
 {
+	texID = 1;
 }
 
 
@@ -16,10 +17,18 @@ ComponentMesh::~ComponentMesh()
 {
 }
 
+
+update_status ComponentMesh::PreUpdate(float dt)
+{
+	glBindBuffer(GL_ARRAY_BUFFER, 0); ///THIS LINE MAKES ALL DRAW BY RESETING THE BUFFER, NEEDED???????
+
+	return update_status();
+}
+
 bool ComponentMesh::Update()
 {
 	
-	//Draw();
+	Draw();
 	return true	;
 }
 
@@ -29,6 +38,7 @@ void ComponentMesh::CleanUp()
 
 void ComponentMesh::GenerateBuffer()
 {
+	
 	glGenBuffers(1, (GLuint*) &(id_vertex));  // generates 1 buffer. then it assign a GLuint to its mem adress.
 	glBindBuffer(GL_ARRAY_BUFFER, id_vertex); // set the type of buffer
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float3)*num_vertex, &vertex[0], GL_STATIC_DRAW);
@@ -43,11 +53,12 @@ void ComponentMesh::GenerateBuffer()
 }
 void ComponentMesh::Draw()
 {
+	
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
 	//glColor3f(colors.x, colors.y, colors.z);
-
+	
 	if (num_index == 0) {// if the mesh has no index
 		glBindBuffer(GL_ARRAY_BUFFER, id_vertex);
 		glVertexPointer(3, GL_FLOAT, 0, NULL);
@@ -57,11 +68,13 @@ void ComponentMesh::Draw()
 	else {
 		glBindTexture(GL_TEXTURE_2D, 0);
 		glBindTexture(GL_ELEMENT_ARRAY_BUFFER, 0);
-
+		
 		glBindTexture(GL_TEXTURE_2D, texID);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_index);
-		glVertexPointer(3, GL_FLOAT, 0, &(vertex[0]));
+		glVertexPointer(3, GL_FLOAT, 0, NULL);
 		glTexCoordPointer(2, GL_FLOAT, 0, &(texturesCoords[0]));
+		GLenum error = glGetError();
+		OWN_LOG("Error initializing OpenGL! %s\n", gluErrorString(error))
 		glDrawElements(GL_TRIANGLES, num_index, GL_UNSIGNED_INT, NULL);
 
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);

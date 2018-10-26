@@ -148,6 +148,7 @@ bool ModuleRenderer3D::Start() {
 
 	importer->ImportFBXtoPEI("BakerHouse.fbx","Baker_house");
 	importer->LoadPEI("Baker_house.pei");
+	texImporter->ImportToDDS("Baker_house");
 	GenBuffFromMeshes();
 
 	return ret;
@@ -187,6 +188,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 
 	App->gui->Draw();
 
+	
 
 	SDL_GL_SwapWindow(App->window->window); 
 	return UPDATE_CONTINUE;

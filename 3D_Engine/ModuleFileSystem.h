@@ -13,8 +13,14 @@ public:
 
 	bool addPath(const char* path);
 
-	void writeFile(const char* fileName, const void* data, uint bytes);
-	uint readFile(const char* fileName, void** data, uint bytes);
+	uint writeFile(const char* fileName, const void* data, uint bytes);
+	uint readFile(const char* fileName, char** data);
+
+	void NormalizePath(char * full_path) const;
+
+	void NormalizePath(std::string & full_path) const;
+
+	void GetNameFromPath(const char * full_path, std::string * path, std::string * file, std::string * extension) const;
 };
 
 #endif // __MODULE_FS_H__

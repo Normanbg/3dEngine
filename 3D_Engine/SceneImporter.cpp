@@ -1,8 +1,11 @@
+
+
 #include "ModuleScene.h"
 #include "GameObject.h"
-#include "ComponentMesh.h"
+
 #include "Globals.h"
 #include "SceneImporter.h"
+
 #include <string>
 
 
@@ -127,6 +130,8 @@ void SceneImporter::ImportFromMesh(const aiScene* currSc, aiMesh * new_mesh,std:
 	newMesh.vertex = new float3[newMesh.num_vertex];
 	memcpy(newMesh.vertex, new_mesh->mVertices, sizeof(float3) * newMesh.num_vertex);
 	OWN_LOG("Importing new mesh with %d vertices", newMesh.num_vertex);
+	float3 dsel42te = newMesh.vertex[34];
+	float3 deld3te = newMesh.vertex[newMesh.num_vertex-1];
 
 	if (new_mesh->HasFaces()) { //------------indices
 		newMesh.num_index = new_mesh->mNumFaces * 3;
@@ -139,14 +144,15 @@ void SceneImporter::ImportFromMesh(const aiScene* currSc, aiMesh * new_mesh,std:
 			}
 			else {
 				memcpy(&newMesh.index[i * 3], new_mesh->mFaces[i].mIndices, 3 * sizeof(uint));
+				
 			}
 		}
 	}
+	
 	if (new_mesh->HasNormals() && !error) { //------------normals
 
 		newMesh.normals = new float3[newMesh.num_vertex];
 		memcpy(newMesh.normals, new_mesh->mNormals, sizeof(float3) * newMesh.num_vertex);
-
 	}
 	if (new_mesh->GetNumUVChannels() > 0 && !error) { //------------textureCoords
 		newMesh.texturesCoords = new float2[newMesh.num_vertex];
@@ -156,9 +162,9 @@ void SceneImporter::ImportFromMesh(const aiScene* currSc, aiMesh * new_mesh,std:
 			newMesh.texturesCoords[i].y = new_mesh->mTextureCoords[0][i].y;
 		}
 	}
-
 	if (currSc->HasMaterials() && !error) {
-/* ///check if material is in the path
+		//need to load a texture outside the mesh. as a scene
+ ///check if material is in the path
 			///if it is, load texture, convert to .dds & added as a component
 		aiMaterial* material = currSc->mMaterials[new_mesh->mMaterialIndex];
 
@@ -171,7 +177,7 @@ void SceneImporter::ImportFromMesh(const aiScene* currSc, aiMesh * new_mesh,std:
 		aiString path;
 		aiReturn ret = material->GetTexture(aiTextureType_DIFFUSE, 0, &path);
 		if (ret == aiReturn_SUCCESS) {
-			
+
 
 			std::string localPath = TEXTURES_PATH;
 			localPath += path.C_Str();
@@ -192,20 +198,21 @@ void SceneImporter::ImportFromMesh(const aiScene* currSc, aiMesh * new_mesh,std:
 				}
 				if (_text.textureID != -1) { // if texture can be loaded
 					_text.path = localPath;
-					mesh.texID = _text.textureID;
+					//mesh.texID = _text.textureID;
 					App->renderer3D->AddTexture(&_text);
 				}
 
 			}
-		else {
-			mesh.texID = check;
+			else {
+				//mesh.texID = check;
+			}
 		}
-		
 		else {
 
 			OWN_LOG("Error loading texture from fbx. Error: %s", aiGetErrorString());
-		}}*/
+		}
 	}
+	
 	if (!error) { // writting into file
 	
 		uint ranges[2] = { newMesh.num_index, newMesh.num_vertex };
@@ -221,11 +228,7 @@ void SceneImporter::ImportFromMesh(const aiScene* currSc, aiMesh * new_mesh,std:
 		cursor += bytes;
 		bytes = sizeof(uint)* newMesh.num_index;		
 		memcpy(cursor, newMesh.index, bytes);
-		uint i = newMesh.index[1];
-		uint i2 = newMesh.index[2];
-		uint i3 = newMesh.index[3];
-		uint ifi = newMesh.index[newMesh.num_index - 1];
-		uint ifdi = newMesh.index[10];
+		
 		cursor += bytes;
 		bytes = sizeof(float3)* newMesh.num_vertex;
 		memcpy(cursor, newMesh.vertex, bytes);
@@ -319,7 +322,7 @@ void SceneImporter::LoadPEI(const char * fileName)
 
 		compMesh->num_index = ranges[0];
 		compMesh->num_vertex = ranges[1];//= mesh.num_textureCoords = compMesh->num_normals 
-
+	
 		compMesh->index = new uint[compMesh->num_index];
 		compMesh->vertex = new float3[compMesh->num_vertex];
 		compMesh->normals = new float3[compMesh->num_vertex];
@@ -338,11 +341,11 @@ void SceneImporter::LoadPEI(const char * fileName)
 
 		mbytes = sizeof(uint) *compMesh->num_index;//index		
 		memcpy(compMesh->index, mcursor, mbytes);
-				
+		
 		mcursor += mbytes;
 		mbytes = sizeof(float3)*compMesh->num_vertex;//vertex		
 		memcpy(compMesh->vertex,mcursor , mbytes);
-				
+		
 		mcursor += mbytes;
 		memcpy(compMesh->normals, mcursor, mbytes);
 
