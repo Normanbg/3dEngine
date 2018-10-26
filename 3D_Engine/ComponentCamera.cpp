@@ -217,6 +217,10 @@ float * ComponentCamera::GetProjMatrix()
 	return (float*)matrix.v;
 }
 
+//void ComponentCamera::FrustumCulling(){
+//
+//}
+
 void ComponentCamera::DebugDraw()
 {
 	float3 vertices[8];

@@ -22,7 +22,6 @@
 
 ModuleGui::ModuleGui(bool start_enabled) : Module(start_enabled)
 {
-
 	name = "Gui";
 }
 
@@ -56,7 +55,7 @@ bool ModuleGui::Start()
 
 	io = &ImGui::GetIO();
 	io->ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-	//SetWinDockInv();
+	
 	
 	return true;
 }
@@ -68,6 +67,7 @@ update_status ModuleGui::PreUpdate(float dt)
 	ImGui_ImplOpenGL2_NewFrame();
 	ImGui_ImplSDL2_NewFrame(App->window->window);
 	ImGui::NewFrame();
+	//SetWinDockInv();
 	return UPDATE_CONTINUE;
 }
 
@@ -208,8 +208,7 @@ bool ModuleGui::MouseOnGui() const {
 	return ImGui::GetIO().WantCaptureMouse;
 }
 
-void ModuleGui::SetWinDockInv(){
-	
+void ModuleGui::SetWinDockInv(){	
 	ImGuiViewport* viewport = ImGui::GetMainViewport();
 	ImGui::SetNextWindowPos(viewport->Pos);
 	ImGui::SetNextWindowSize(viewport->Size);
