@@ -21,7 +21,7 @@ public:
 	update_status PostUpdate(float dt) override;
 	bool CleanUp() override;
 
-	GameObject* AddGameObject();
+	GameObject* AddGameObject(char* name);
 
 public:
 	GameObject* root;

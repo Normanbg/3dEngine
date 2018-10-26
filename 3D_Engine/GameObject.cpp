@@ -3,8 +3,9 @@
 #include <vector>
 #include <string>
 
-GameObject::GameObject()
+GameObject::GameObject(char * Name)
 {
+	name = Name;
 	transformComp = new ComponentTransformation();
 	transformComp->type = TRANSFORM;
 	components.push_back(transformComp);
@@ -17,7 +18,7 @@ GameObject::~GameObject()
 bool GameObject::PreUpdate(){
 	bool ret = true;
 
-	for (int i = 0; i < components.size() - 1; i++) {
+	for (int i = 0; i < components.size(); i++) {
 		ret &= components[i]->PreUpdate();
 	}
 	   
@@ -27,7 +28,7 @@ bool GameObject::PreUpdate(){
 bool GameObject::Update(){
 	bool ret = true;
 
-	for (int i = 0; i < components.size() - 1; i++) {
+	for (int i = 0; i < components.size(); i++) {
 		ret &= components[i]->Update();
 	}
 	return ret;
@@ -36,7 +37,7 @@ bool GameObject::Update(){
 bool GameObject::PostUpdate(){
 	bool ret = true;
 
-	for (int i = 0; i < components.size() - 1; i++) {
+	for (int i = 0; i < components.size(); i++) {
 		ret &= components[i]->PostUpdate();
 	}
 
@@ -136,4 +137,9 @@ ComponentCamera * GameObject::GetComponentCamera()
 			return (ComponentCamera*)(*it);
 	}
 	return ret;
+}
+
+void GameObject::setName(char * _name)
+{
+	name = _name;
 }

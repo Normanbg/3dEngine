@@ -16,6 +16,16 @@ UIPanelInspector::~UIPanelInspector()
 
 void UIPanelInspector::Draw() {
 	ImGui::Begin(name.c_str(), &active);
+
+	std::vector<GameObject*> rootChildsRecover = App->scene->root->childrens;
+	//NEEDS RECURSIVITY FOR ALL GAME OBJECTS, IF IT IS SELECTED = SHOW COMPONENTS
+	/*for (std::vector<GameObject*>::iterator childsIt = rootChildsRecover.begin(); childsIt != rootChildsRecover.end(); childsIt++)
+	{
+		char meshNumber[30];
+		sprintf_s(meshNumber, 30, "%d.%s ", i + 1, meshIterator._Ptr->name.c_str());
+	}
+*/
+	//----
 	std::vector<Mesh>* meshRecover = App->renderer3D->GetMeshesList(); int i = 0;
 	for (std::vector<Mesh>::iterator meshIterator = (*meshRecover).begin(); meshIterator != (*meshRecover).end(); i++, meshIterator++) {
 		char meshNumber[30];

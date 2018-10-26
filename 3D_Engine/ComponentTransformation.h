@@ -27,6 +27,8 @@ public:
 	void setScale(float3 _newscale);
 	void setRotQuat(Quat qNewRot);
 	void setRotEuler(float3 _newrot);
+	float3 getPos();
+
 	void UpdateLocalMatrix();
 
 public:

@@ -18,7 +18,7 @@ class vector;
 class GameObject
 {
 public:
-	GameObject();
+	GameObject(char * name);
 	~GameObject();
 	bool PreUpdate();
 	bool Update();
@@ -28,6 +28,7 @@ public:
 	Component* AddComponent(ComponentType type);
 	ComponentTransformation* GetTransformComponent();
 	ComponentCamera* GetComponentCamera();
+	void setName(char* _name);
 
 public:
 	std::string					name;

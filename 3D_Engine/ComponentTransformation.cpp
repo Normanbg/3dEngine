@@ -78,3 +78,8 @@ void ComponentTransformation::setRotEuler(float3 _newrot)
 	transform.rotationQuat = Quat::FromEulerXYZ(transform.rotEuler.x * DEGTORAD, transform.rotEuler.y * DEGTORAD, transform.rotEuler.z * DEGTORAD);
 	UpdateLocalMatrix();
 }
+
+float3 ComponentTransformation::getPos()
+{
+	return transform.position;
+}
