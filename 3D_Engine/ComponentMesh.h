@@ -23,23 +23,33 @@ public:
 	ComponentMesh();
 	~ComponentMesh();
 
+	uint id_index = -1;
 	uint num_index = 0;
 	uint* index = nullptr;
 
+	uint id_vertex = -1;
 	uint num_vertex = 0;
 	float3* vertex = nullptr;
 	
+	uint id_normals = -1;
 	uint num_normals = 0;
 	float3* normals = nullptr;
 
 	uint num_textureCoords = 0;
 	float2* texturesCoords = nullptr;
 
+	GLuint texID = 0;
+
 	AABB boundingBox;
 
 	bool Update() override;
 
 	void CleanUp() override;
+
+	void GenerateBuffer();
+	void Draw();
+
+	bool generated = false;
 
 };
 
