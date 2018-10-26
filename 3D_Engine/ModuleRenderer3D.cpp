@@ -189,8 +189,8 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	glBindBuffer(GL_ARRAY_BUFFER, 0); ///THIS LINE MAKES ALL DRAW BY RESETING THE BUFFER, NEEDED???????
 
 	DrawMeshes();
-	//ComponentCamera* cam = (ComponentCamera*)App->camera->editorCam_G0->GetComponent(ComponentType::CAMERA);
-	//cam->DebugDraw();
+	ComponentCamera* cam = App->camera->editorCam_G0->GetComponentCamera();
+	cam->DebugDraw();
 	App->gui->Draw();
 
 

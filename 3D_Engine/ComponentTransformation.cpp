@@ -30,7 +30,7 @@ void ComponentTransformation::setGlobalMatrix(float4x4 newGlobalMat)
 	globalMatrix = newGlobalMat;
 	if (myGO->parent != nullptr)	
 	{
-		ComponentTransformation* parentTrans = (ComponentTransformation*)myGO->parent->GetComponent(TRANSFORM);
+		ComponentTransformation* parentTrans = myGO->GetTransformComponent();
 		float4x4 newlocalMatrix = parentTrans->globalMatrix * globalMatrix;
 		setLocalMatrix(newlocalMatrix);
 	}

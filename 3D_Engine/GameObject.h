@@ -7,6 +7,8 @@
 #include "Component.h"
 #include "ComponentTransformation.h"
 #include "ComponentCamera.h"
+#include "ComponentMesh.h"
+#include "ComponentMaterial.h"
 
 
 class string;
@@ -24,8 +26,8 @@ public:
 	void CleanUp();
 	void CalculateAllGlobalMatrix();
 	Component* AddComponent(ComponentType type);
-	Component* GetComponent(ComponentType type);
-
+	ComponentTransformation* GetTransformComponent();
+	ComponentCamera* GetComponentCamera();
 
 public:
 	std::string					name;

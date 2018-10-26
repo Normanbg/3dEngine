@@ -5,9 +5,10 @@
 
 GameObject::GameObject()
 {
+	transformComp = new ComponentTransformation();
+	transformComp->type = TRANSFORM;
 	components.push_back(transformComp);
 }
-
 
 GameObject::~GameObject()
 {
@@ -87,18 +88,22 @@ Component * GameObject::AddComponent(ComponentType type) {
 	switch (type) {
 	case ComponentType::MESH:
 		ret = new ComponentMesh();
+		ret->type = MESH;
 		break;
 
 	case ComponentType::MATERIAL:
 		ret = new ComponentMaterial();
+		ret->type = MATERIAL;
 		break;
 
 	case ComponentType::TRANSFORM:
 		ret = new ComponentTransformation();
+		ret->type = TRANSFORM;
 		break;
 	
 	case ComponentType::CAMERA:
 		ret = new ComponentCamera();
+		ret->type = CAMERA;
 		break;
 
 	case ComponentType::NO_TYPE:
@@ -109,14 +114,26 @@ Component * GameObject::AddComponent(ComponentType type) {
 	return ret;
 }
 
-Component * GameObject::GetComponent(ComponentType type)
+ComponentTransformation * GameObject::GetTransformComponent()
 {
-	Component* ret = nullptr;
+	ComponentTransformation* ret = nullptr;
 	//WILL ONLY FIND THE FIRST COMPONENT EQUAL TO TYPE OF EACH G0
 	for (std::vector<Component*>::iterator it = components.begin(); it != components.end(); it++)
 	{
-		if ((*it)->type == type);
-		return (*it);
+		if ((*it)->type == TRANSFORM)
+			return (ComponentTransformation*)(*it);
+	}
+	return ret;
+}
+
+ComponentCamera * GameObject::GetComponentCamera()
+{
+	ComponentCamera* ret = nullptr;
+	//WILL ONLY FIND THE FIRST COMPONENT EQUAL TO TYPE OF EACH G0
+	for (std::vector<Component*>::iterator it = components.begin(); it != components.end(); it++)
+	{
+		if ((*it)->type == CAMERA)
+			return (ComponentCamera*)(*it);
 	}
 	return ret;
 }
