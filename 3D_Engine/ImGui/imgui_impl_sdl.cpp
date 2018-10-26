@@ -35,16 +35,13 @@
 //  2017-08-25: Inputs: MousePos set to -FLT_MAX,-FLT_MAX when mouse is unavailable/missing (instead of -1,-1).
 //  2016-10-15: Misc: Added a void* user_data parameter to Clipboard function handlers.
 
-
 #include "imgui.h"
 #include "imgui_impl_sdl.h"
 
 // SDL
 // (the multi-viewports feature requires SDL features supported from SDL 2.0.5+)
-
 #include "../SDL/include/SDL.h"
 #include "../SDL/include/SDL_syswm.h"
-
 #define SDL_HAS_WARP_MOUSE_GLOBAL           SDL_VERSION_ATLEAST(2,0,4)
 #define SDL_HAS_CAPTURE_MOUSE               SDL_VERSION_ATLEAST(2,0,4)
 #define SDL_HAS_WINDOW_OPACITY              SDL_VERSION_ATLEAST(2,0,5)
@@ -141,7 +138,7 @@ bool ImGui_ImplSDL2_ProcessEvent(SDL_Event* event)
     return false;
 }
 
-static bool    ImGui_ImplSDL2_Init(SDL_Window* window, void* sdl_gl_context)
+static bool ImGui_ImplSDL2_Init(SDL_Window* window, void* sdl_gl_context)
 {
     g_Window = window;
 
@@ -494,16 +491,16 @@ static void ImGui_ImplSDL2_SwapBuffers(ImGuiViewport* viewport, void*)
 
 // Vulkan support (the Vulkan renderer needs to call a platform-side support function to create the surface)
 // SDL is graceful enough to _not_ need <vulkan/vulkan.h> so we can safely include this.
-//#if SDL_HAS_VULKAN
-//#include <SDL_vulkan.h>
-//static int ImGui_ImplSDL2_CreateVkSurface(ImGuiViewport* viewport, ImU64 vk_instance, const void* vk_allocator, ImU64* out_vk_surface)
-//{
-//    ImGuiViewportDataSDL2* data = (ImGuiViewportDataSDL2*)viewport->PlatformUserData;
-//    (void)vk_allocator;
-//    SDL_bool ret = SDL_Vulkan_CreateSurface(data->Window, (VkInstance)vk_instance, (VkSurfaceKHR*)out_vk_surface);
-//    return ret ? 0 : 1; // ret ? VK_SUCCESS : VK_NOT_READY 
-//}
-//#endif // SDL_HAS_VULKAN
+#if SDL_HAS_VULKAN
+#include "../SDL/include/SDL_vulkan.h"
+static int ImGui_ImplSDL2_CreateVkSurface(ImGuiViewport* viewport, ImU64 vk_instance, const void* vk_allocator, ImU64* out_vk_surface)
+{
+    ImGuiViewportDataSDL2* data = (ImGuiViewportDataSDL2*)viewport->PlatformUserData;
+    (void)vk_allocator;
+    SDL_bool ret = SDL_Vulkan_CreateSurface(data->Window, (VkInstance)vk_instance, (VkSurfaceKHR*)out_vk_surface);
+    return ret ? 0 : 1; // ret ? VK_SUCCESS : VK_NOT_READY 
+}
+#endif // SDL_HAS_VULKAN
 
 // FIXME-PLATFORM: SDL doesn't have an event to notify the application of display/monitor changes
 static void ImGui_ImplSDL2_UpdateMonitors()
@@ -526,7 +523,7 @@ static void ImGui_ImplSDL2_UpdateMonitors()
 #endif
 #if SDL_HAS_PER_MONITOR_DPI
         float dpi = 0.0f;
-        if (SDL_GetDisplayDPI(n, &dpi, NULL, NULL))
+        if (!SDL_GetDisplayDPI(n, &dpi, NULL, NULL))
             monitor.DpiScale = dpi / 96.0f;
 #endif
         platform_io.Monitors.push_back(monitor);
@@ -549,9 +546,9 @@ static void ImGui_ImplSDL2_InitPlatformInterface(SDL_Window* window, void* sdl_g
     platform_io.Platform_SetWindowTitle = ImGui_ImplSDL2_SetWindowTitle;
     platform_io.Platform_RenderWindow = ImGui_ImplSDL2_RenderWindow;
     platform_io.Platform_SwapBuffers = ImGui_ImplSDL2_SwapBuffers;
-//#if SDL_HAS_VULKAN
-//    platform_io.Platform_CreateVkSurface = ImGui_ImplSDL2_CreateVkSurface;
-//#endif
+#if SDL_HAS_VULKAN
+    platform_io.Platform_CreateVkSurface = ImGui_ImplSDL2_CreateVkSurface;
+#endif
 
     // SDL2 by default doesn't pass mouse clicks to the application when the click focused a window. This is getting in the way of our interactions and we disable that behavior.
 #if SDL_HAS_MOUSE_FOCUS_CLICKTHROUGH

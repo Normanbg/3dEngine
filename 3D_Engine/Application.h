@@ -4,7 +4,7 @@
 #include <list>
 #include <vector>
 
-#include"./ImGui/imgui.h"
+#include "ImGui/imgui.h"
 #include "SDL\include\SDL.h"
 #include "Globals.h"
 #include "PerfTimer.h"

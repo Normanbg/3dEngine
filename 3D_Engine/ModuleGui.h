@@ -58,6 +58,9 @@ public:
 	uint openFX = 0;
 	uint searchingFX = 0; //Used when open an URL
 	ImGuiIO* io;
+
+private:
+	void SetWinDockInv();
 };
 
 #endif 
