@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "ModuleWindow.h"
 #include "ModuleInput.h"
+#include "ModuleScene.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleEditorCamera.h"
 #include "GameObject.h"
@@ -34,7 +35,7 @@ bool ModuleEditorCamera::Start()
 {
 	OWN_LOG("Setting up the camera");
 	bool ret = true;
-	editorCam_G0 = new GameObject();
+	editorCam_G0 = App->scene->AddGameObject();
 	editorCam_G0->AddComponent(ComponentType::CAMERA);
 
 	return ret;

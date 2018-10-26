@@ -5,6 +5,7 @@
 
 GameObject::GameObject()
 {
+	components.push_back(transformComp);
 }
 
 
@@ -61,6 +62,23 @@ void GameObject::CleanUp(){
 		parent = nullptr;
 	}
 	
+}
+
+void GameObject::CalculateAllGlobalMatrix(){
+	if (parent == nullptr)
+	{
+		transformComp->globalMatrix = transformComp->localMatrix;
+	}
+	else
+		transformComp->globalMatrix = parent->transformComp->globalMatrix * transformComp->localMatrix;
+
+	if (!childrens.empty())
+	{
+		for (std::vector<GameObject*>::iterator it = childrens.begin(); it != childrens.end(); it++)
+		{
+			(*it)->CalculateAllGlobalMatrix();
+		}
+	}
 }
 
 Component * GameObject::AddComponent(ComponentType type) {

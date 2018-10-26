@@ -4,7 +4,7 @@
 ModuleScene::ModuleScene(bool start_enabled) : Module(start_enabled){
 
 	name = "scene";
-	root = new GameObject;
+	root = new GameObject();
 }
 
 ModuleScene::~ModuleScene()
@@ -45,6 +45,9 @@ GameObject* ModuleScene::AddGameObject(){
 update_status ModuleScene::Update(float dt){
 
 	bool ret = true;
+	root->CalculateAllGlobalMatrix();
+
+
 	if (root->childrens.empty() == false) {
 		for (int i = 0; i < root->childrens.size() - 1; i++) {
 			ret &= root->childrens[i]->Update();

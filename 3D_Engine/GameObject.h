@@ -22,17 +22,17 @@ public:
 	bool Update();
 	bool PostUpdate();
 	void CleanUp();
+	void CalculateAllGlobalMatrix();
 	Component* AddComponent(ComponentType type);
 	Component* GetComponent(ComponentType type);
+
 
 public:
 	std::string					name;
 	std::vector <Component*>	components;
-	GameObject*					parent;
+	GameObject*					parent = nullptr;
 	std::vector <GameObject*>	childrens;
-
-
-
+	ComponentTransformation*	transformComp;
 };
 
 
