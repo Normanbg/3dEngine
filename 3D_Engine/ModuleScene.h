@@ -21,7 +21,10 @@ public:
 	update_status PostUpdate(float dt) override;
 	bool CleanUp() override;
 
-	GameObject* AddGameObject(char* name);
+
+
+	void DrawMeshes();
+	GameObject* AddGameObject(const char* name);
 
 public:
 	GameObject* root;

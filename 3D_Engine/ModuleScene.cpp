@@ -1,5 +1,8 @@
+#include "Application.h"
 #include "ModuleScene.h"
 #include "GameObject.h"
+
+
 
 ModuleScene::ModuleScene(bool start_enabled) : Module(start_enabled){
 
@@ -9,12 +12,13 @@ ModuleScene::ModuleScene(bool start_enabled) : Module(start_enabled){
 
 ModuleScene::~ModuleScene()
 {
-	
-}
 
+}
 bool ModuleScene::Init(JSON_Object * obj)
 {
-
+	
+	//SceneImporter* sc = new SceneImporter;
+	//sc->ImportFBXtoPEI("figure","figure");
 
 	return true;
 }
@@ -34,7 +38,7 @@ update_status ModuleScene::PreUpdate(float dt)
 	return retUS;
 }
 
-GameObject* ModuleScene::AddGameObject(char* name){
+GameObject* ModuleScene::AddGameObject(const char* name){
 	GameObject* ret = new GameObject(name);
 	ret->parent = root;
 	root->childrens.push_back(ret);
@@ -49,6 +53,7 @@ update_status ModuleScene::Update(float dt){
 
 
 	if (root->childrens.empty() == false) {
+
 		for (int i = 0; i < root->childrens.size(); i++) {
 			ret &= root->childrens[i]->Update();
 		}
@@ -81,3 +86,23 @@ bool ModuleScene::CleanUp()
 	return true;
 }
 
+void ModuleScene::DrawMeshes() {
+	GameObject* iterator;
+
+	std::vector<Component*> components;
+
+	for (int i = 0;i< root->childrens.size();i++){
+		iterator = root->childrens[i];
+		iterator->GetComponents(MESH,components);
+		
+	}
+	ComponentMesh* mesh;
+	for (int i = 0; i < components.size(); i++) {
+		mesh = (ComponentMesh *) components[i];
+		mesh->Draw();
+	
+	}
+
+	iterator = nullptr;
+	mesh = nullptr;
+}

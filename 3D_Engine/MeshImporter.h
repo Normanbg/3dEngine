@@ -21,10 +21,10 @@ public:
 
 	void LoadFBX(const char* path );
 	
-	void ChangeMeshTexture(const char* path);
+	//void ChangeMeshTexture(const char* path);
 
 private:
-	void LoadFromMesh(const aiScene* currSc, aiMesh* mesh);
+	//void LoadFromMesh(const aiScene* currSc, aiMesh* mesh);
 
 private:
 	const char* droppedFile = nullptr;

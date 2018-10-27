@@ -11,11 +11,16 @@ struct Transform
 	Quat rotationQuat = Quat::identity;
 };
 
+
 class ComponentTransformation :	public Component
 {
 public:
 	ComponentTransformation();
 	~ComponentTransformation();
+
+	float3 position;
+	float3 scale;
+	Quat rotation;
 
 	bool Update() override;
 

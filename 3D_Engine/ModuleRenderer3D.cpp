@@ -6,7 +6,9 @@
 #include "ModuleEditorCamera.h"
 #include "GameObject.h"
 #include "ModuleGui.h"
+#include "ModuleScene.h"
 #include "Brofiler/Brofiler.h"
+
 
 
 
@@ -132,10 +134,10 @@ bool ModuleRenderer3D::Init(JSON_Object* obj)
 	// Projection matrix for
 	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
-	importer = new MeshImporter();
+	importer = new SceneImporter();
 	texImporter = new TextureImporter();	
 
-	importer->InitDebugLog();
+	importer->Init();
 	texImporter->Init();
 	
 	json_object_clear(obj);//clear obj to free memory
@@ -147,8 +149,10 @@ bool ModuleRenderer3D::Start() {
 
 	bool ret = true;
 
-	importer->LoadFBX("BakerHouse.fbx");
-	GenBuffFromMeshes();
+	importer->ImportFBXtoPEI("BakerHouse.fbx","Baker_house");
+	importer->LoadPEI("Baker_house.pei");
+	
+	//GenBuffFromMeshes();
 
 	return ret;
 }
@@ -188,11 +192,17 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0); ///THIS LINE MAKES ALL DRAW BY RESETING THE BUFFER, NEEDED???????
 
-	DrawMeshes();
+
+	//DrawMeshes();
+	App->scene->DrawMeshes();
+
+
 	ComponentCamera* cam = App->camera->editorCam_G0->GetComponentCamera();
 	cam->DebugDraw();
+
 	App->gui->Draw();
 
+	
 
 	SDL_GL_SwapWindow(App->window->window); 
 	return UPDATE_CONTINUE;
@@ -204,7 +214,7 @@ bool ModuleRenderer3D::CleanUp()
 	BROFILER_CATEGORY("Renderer3D_CleanUp", Profiler::Color::HotPink);
 	OWN_LOG("Destroying 3D Renderer");
 
-	importer->EndDebugLog();
+	importer->CleanUp();
 	
 
 	ClearSceneMeshes();
@@ -242,33 +252,33 @@ void ModuleRenderer3D::SetDataFromJson(JSON_Object* data) {
 	_vSync = json_object_dotget_boolean(data, "VSync");
 
 }
-
-void ModuleRenderer3D::GenBuffFromMeshes(){
-	Mesh* meshIterator;
-	for (int i = 0; i < meshes.size(); i++) {
-		meshIterator = &meshes[i];
-		if (!meshIterator->generated) {
-			glGenBuffers(1, (GLuint*) &(meshIterator->id_vertex));  // generates 1 buffer. then it assign a GLuint to its mem adress.
-			glBindBuffer(GL_ARRAY_BUFFER, meshIterator->id_vertex); // set the type of buffer
-			glBufferData(GL_ARRAY_BUFFER, sizeof(float3)*meshIterator->num_vertex, &meshIterator->vertex[0], GL_STATIC_DRAW);
-			glGenBuffers(1, (GLuint*) &(meshIterator->id_normals));
-			glBindBuffer(GL_ARRAY_BUFFER, meshIterator->id_normals);
-			glBufferData(GL_ARRAY_BUFFER, sizeof(float3)*meshIterator->num_normals, &meshIterator->normals[0], GL_STATIC_DRAW);
-			if (meshIterator->num_index > 0) {
-				glGenBuffers(1, (GLuint*) &(meshIterator->id_index));
-				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, meshIterator->id_index);
-				glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * meshIterator->num_index, &meshIterator->index[0], GL_STATIC_DRAW);
-			}
-			meshIterator->generated = true;
-		}
-	}
-}
-
-void ModuleRenderer3D::DrawMeshes(){
-	for (int i = 0; i < meshes.size(); i++) {
-		meshes[i].Draw();
-	}		
-}
+//
+//void ModuleRenderer3D::GenBuffFromMeshes(){
+//	Mesh* meshIterator;
+//	for (int i = 0; i < meshes.size(); i++) {
+//		meshIterator = &meshes[i];
+//		if (!meshIterator->generated) {
+//			glGenBuffers(1, (GLuint*) &(meshIterator->id_vertex));  // generates 1 buffer. then it assign a GLuint to its mem adress.
+//			glBindBuffer(GL_ARRAY_BUFFER, meshIterator->id_vertex); // set the type of buffer
+//			glBufferData(GL_ARRAY_BUFFER, sizeof(float3)*meshIterator->num_vertex, &meshIterator->vertex[0], GL_STATIC_DRAW);
+//			glGenBuffers(1, (GLuint*) &(meshIterator->id_normals));
+//			glBindBuffer(GL_ARRAY_BUFFER, meshIterator->id_normals);
+//			glBufferData(GL_ARRAY_BUFFER, sizeof(float3)*meshIterator->num_normals, &meshIterator->normals[0], GL_STATIC_DRAW);
+//			if (meshIterator->num_index > 0) {
+//				glGenBuffers(1, (GLuint*) &(meshIterator->id_index));
+//				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, meshIterator->id_index);
+//				glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * meshIterator->num_index, &meshIterator->index[0], GL_STATIC_DRAW);
+//			}
+//			meshIterator->generated = true;
+//		}
+//	}
+//}
+//
+//void ModuleRenderer3D::DrawMeshes(){
+//	for (int i = 0; i < meshes.size(); i++) {
+//		meshes[i].Draw();
+//	}		
+//}
 
 bool ModuleRenderer3D::Load(JSON_Object* data) {
 
@@ -310,15 +320,20 @@ void ModuleRenderer3D::SetWireframe(bool active) {
 }
 
 void ModuleRenderer3D::SetBoundingBox(bool active){
-	_bBox = active;
-	for (int i =  0; i < meshes.size(); i++) {
-		meshes[i].bBox = active;
-	}
+	//_bBox = active;
+	//for (int i =  0; i < meshes.size(); i++) {
+	//	meshes[i].bBox = active;
+	//}
 
 }
 
 
+/*
+vec ModuleRenderer3D::GetAvgPosFromMeshes() 
+
+
 float3 ModuleRenderer3D::GetAvgPosFromMeshes() 
+
 {
 	float3 sumPoints = float3(0,0,0);
 	
@@ -327,7 +342,14 @@ float3 ModuleRenderer3D::GetAvgPosFromMeshes()
 	}
 	return { sumPoints.x / meshes.size(), sumPoints.y / meshes.size(), sumPoints.z / meshes.size() };
 }
+void ModuleRenderer3D::AddMesh(Mesh*  mesh)
+{
+	meshes.push_back(*mesh);
+}
 
+*/
+
+/*
 GLuint ModuleRenderer3D::CheckIfImageAlreadyLoaded(const char * _path)
 {
 	for (int i = 0; i < App->renderer3D->textures.size();i++) {
@@ -338,10 +360,6 @@ GLuint ModuleRenderer3D::CheckIfImageAlreadyLoaded(const char * _path)
 	return -1;
 }
 
-void ModuleRenderer3D::AddMesh(Mesh*  mesh)
-{
-	meshes.push_back(*mesh);
-}
 
 void ModuleRenderer3D::AddTexture(Texture*  tex)
 {
@@ -358,31 +376,29 @@ Texture* ModuleRenderer3D::GetTextureFromID(GLuint id)
 	OWN_LOG("Error getting texture from ID");
 	return nullptr;
 }
-
+*/
 void ModuleRenderer3D::LoadDroppedFBX(char * droppedFileDir){
 	ClearSceneMeshes();
-	importer->LoadFBX(droppedFileDir);	
-	GenBuffFromMeshes();	
-	//App->camera->FocusToMeshes();
+
+	//importer->LoadFBX(droppedFileDir);	
+	//GenBuffFromMeshes();	
+	App->camera->FocusToMeshes();
+
+
 }
 
-void ModuleRenderer3D::ClearSceneMeshes(){
+void ModuleRenderer3D::ClearSceneMeshes() {
 
-	OWN_LOG("Clearing meshes in scene")
-	for (int i = meshes.size()-1; i >=0 ; i--) {
-		meshes[i].CleanUp();
-	}
+	/*OWN_LOG("Clearing meshes in scene")
+		for (int i = meshes.size() - 1; i >= 0; i--) {
+			meshes[i].CleanUp();
+		}
 	meshes.clear();
 	for (int i = textures.size() - 1; i >= 0; i--) {
 		textures[i].CleanUp();
 	}
-	textures.clear();
-}
+	textures.clear();*/
 
-ComponentMesh* ModuleRenderer3D::CreateComponentMesh() {
-	ComponentMesh* ret;
-
-	return ret;
 }
 
 void ModuleRenderer3D::ShowAxis() {
@@ -434,7 +450,7 @@ void ModuleRenderer3D::ShowGrid() {
 	glEnd();
 
 }
-
+/*
 void Mesh::Draw()
 {
 
@@ -566,4 +582,4 @@ float3 Mesh::getMiddlePoint()const {
 
 	return ret;
 }
-
+*/

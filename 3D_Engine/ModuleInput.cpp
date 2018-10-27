@@ -141,17 +141,17 @@ update_status ModuleInput::PreUpdate(float dt)
 					break;
 				case PNG:
 					OWN_LOG("Dropped .png file");
-					App->renderer3D->importer->ChangeMeshTexture(dropped_filedir);
+					//App->renderer3D->importer->ChangeMeshTexture(dropped_filedir);
 					
 					break;
 				case JPG:
 					OWN_LOG("Dropped .jpg file");
-					App->renderer3D->importer->ChangeMeshTexture(dropped_filedir);
+					//App->renderer3D->importer->ChangeMeshTexture(dropped_filedir);
 
 					break;
 				case DDS:
 					OWN_LOG("Dropped .dds file");
-					App->renderer3D->importer->ChangeMeshTexture(dropped_filedir);
+					//App->renderer3D->importer->ChangeMeshTexture(dropped_filedir);
 					
 					break;
 				default:

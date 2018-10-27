@@ -14,6 +14,11 @@ UIPanelInspector::~UIPanelInspector()
 {
 }
 
+
+void UIPanelInspector::Draw() {
+	
+	/*
+
 void UIPanelInspector::Draw() {
 	ImGui::Begin(name.c_str(), &active);
 
@@ -26,8 +31,7 @@ void UIPanelInspector::Draw() {
 			(*childsIt)->ToggleSelected();
 			SetChildsTreeNode((*childsIt));			
 		}
-	}*/
-	//----
+	}
 	std::vector<Mesh>* meshRecover = App->renderer3D->GetMeshesList(); int i = 0;
 	for (std::vector<Mesh>::iterator meshIterator = (*meshRecover).begin(); meshIterator != (*meshRecover).end(); i++, meshIterator++) {
 		char meshNumber[30];
@@ -64,7 +68,7 @@ void UIPanelInspector::Draw() {
 			ImGui::PopID();
 		}
 	}
-	ImGui::End();
+	ImGui::End();*/
 }
 //
 //void UIPanelInspector::SetChildsTreeNode(GameObject* parent)
