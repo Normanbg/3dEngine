@@ -76,8 +76,7 @@ void ComponentMesh::Draw()
 {
 	
 	glEnableClientState(GL_VERTEX_ARRAY);
-	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-	
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);	
 
 	//glColor3f(colors.x, colors.y, colors.z);
 	
@@ -90,20 +89,16 @@ void ComponentMesh::Draw()
 	else {
 		glEnable(GL_TEXTURE_2D);
 
+		glBindTexture(GL_TEXTURE_2D, 0);
+		glBindTexture(GL_ELEMENT_ARRAY_BUFFER, 0);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_index);
-		glBindBuffer(GL_ARRAY_BUFFER, id_vertex);
-
 		glBindTexture(GL_TEXTURE_2D, texID);
-		
-		glVertexPointer(3, GL_FLOAT, 0, NULL);
-		glTexCoordPointer(2, GL_FLOAT, 0,&texturesCoords[0]);
+		glTexCoordPointer(2, GL_FLOAT, 0, &(texturesCoords[0]));		
 
-		float2 sdsd = texturesCoords[10];
-		float2 sddsd = texturesCoords[30];
-		float2 sddssd = texturesCoords[num_vertex-1];
-		
+		glBindBuffer(GL_ARRAY_BUFFER, id_vertex);
+		glVertexPointer(3, GL_FLOAT, 0, NULL);		
+
 		glDrawElements(GL_TRIANGLES, num_index, GL_UNSIGNED_INT, NULL);
-
 		
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
