@@ -4,7 +4,7 @@
 #include "ModuleAudio.h"
 #include "ModuleWindow.h"
 #include "ModuleRenderer3D.h"
-#include "ModuleCamera3D.h"
+#include "ModuleEditorCamera.h"
 #include "ModuleGui.h"
 #include "Brofiler/Brofiler.h"
 

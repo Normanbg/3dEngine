@@ -7,7 +7,7 @@
 ModuleScene::ModuleScene(bool start_enabled) : Module(start_enabled){
 
 	name = "scene";
-	root = new GameObject;
+	root = new GameObject("root");
 }
 
 ModuleScene::~ModuleScene()
@@ -28,7 +28,7 @@ update_status ModuleScene::PreUpdate(float dt)
 	bool ret = true;
 	 
 	if (root->childrens.empty() == false) {
-		for (int i = 0; i < root->childrens.size() - 1; i++) {
+		for (int i = 0; i < root->childrens.size(); i++) {
 			ret &= root->childrens[i]->PreUpdate();
 		}
 	}
@@ -38,8 +38,8 @@ update_status ModuleScene::PreUpdate(float dt)
 	return retUS;
 }
 
-GameObject* ModuleScene::AddGameObject(){
-	GameObject* ret = new GameObject();
+GameObject* ModuleScene::AddGameObject(const char* name){
+	GameObject* ret = new GameObject(name);
 	ret->parent = root;
 	root->childrens.push_back(ret);
 	
@@ -49,9 +49,13 @@ GameObject* ModuleScene::AddGameObject(){
 update_status ModuleScene::Update(float dt){
 
 	bool ret = true;
+	root->CalculateAllGlobalMatrix();
+
+
 	if (root->childrens.empty() == false) {
-		for (int i = 0; i < root->childrens.size() ; i++) {
-			ret = root->childrens[i]->Update();
+
+		for (int i = 0; i < root->childrens.size(); i++) {
+			ret &= root->childrens[i]->Update();
 		}
 	}
 	update_status retUS;
@@ -63,7 +67,7 @@ update_status ModuleScene::PostUpdate(float dt){
 
 	bool ret = true;
 	if (root->childrens.empty() == false) {
-		for (int i = 0; i < root->childrens.size() - 1; i++) {
+		for (int i = 0; i < root->childrens.size(); i++) {
 			ret &= root->childrens[i]->PostUpdate();
 		}
 	}

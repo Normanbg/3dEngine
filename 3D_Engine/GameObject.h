@@ -6,12 +6,15 @@
 #include "ModuleTextures.h"
 #include "Component.h"
 #include "ComponentTransformation.h"
+#include "ComponentCamera.h"
 #include "ComponentMesh.h"
 #include "ComponentMaterial.h"
 
 
-#include <string>
-#include <vector>
+
+class string;
+class vector;
+
 
 using namespace std;
 
@@ -20,30 +23,41 @@ using namespace std;
 class GameObject
 {
 public:
-	GameObject();
+	GameObject(const char * name);
 	~GameObject();
 	bool PreUpdate();
 	bool Update();
 	bool PostUpdate();
 	void CleanUp();
+
 	
 	Component* AddComponent(ComponentType type);
 	void GetComponents(ComponentType type, std::vector<Component*>& components);
 
+	ComponentTransformation* GetTransformComponent();
+	ComponentCamera* GetComponentCamera();
 
 	void DrawMeshes();
+	void CalculateAllGlobalMatrix();
 
-private:
+private:	
 	
+	
+	
+	bool isSelected();
+	void setName(char* _name);
+	void ToggleSelected();
+
 
 public:
 	std::string					name;
 	std::vector <Component*>	components;
-	GameObject*					parent;
+	GameObject*					parent = nullptr;
 	std::vector <GameObject*>	childrens;
+	ComponentTransformation*	transformComp;
 
-
-
+private:
+	bool selected = false;
 };
 
 

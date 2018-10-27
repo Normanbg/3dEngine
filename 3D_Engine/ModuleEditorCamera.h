@@ -1,15 +1,16 @@
-#ifndef __MODULE_CAMERA_3D_H__
-#define __MODULE_CAMERA_3D_H__
+#ifndef __MODULE_EDITOR_CAM_H__
+#define __MODULE_EDITOR_CAM_H__
 
 #include "Module.h"
 #include "Globals.h"
 
+class GameObject;
 
-class ModuleCamera3D : public Module
+class ModuleEditorCamera : public Module
 {
 public:
-	ModuleCamera3D(bool start_enabled = true);
-	~ModuleCamera3D();
+	ModuleEditorCamera(bool start_enabled = true);
+	~ModuleEditorCamera();
 
 	bool Start();
 	update_status Update(float dt);
@@ -31,6 +32,9 @@ public:
 	float scroolWheelSensitivity = 10.0f;
 	float zoomDistance = 20.0f;
 
+	//---------
+	GameObject* editorCam_G0;
+
 private:
 
 	void CalculateViewMatrix();
@@ -42,4 +46,4 @@ private:
 
 };
 
-#endif 
+#endif //__MODULE_EDITOR_CAM_H__

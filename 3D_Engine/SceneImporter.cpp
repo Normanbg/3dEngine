@@ -265,7 +265,7 @@ void SceneImporter::LoadPEI(const char * fileName)
 {
 	
 
-	GameObject* gameObject = App->scene->AddGameObject();
+	GameObject* gameObject = App->scene->AddGameObject((char*)fileName);
 	gameObject->name = fileName;
 	
 	ComponentTransformation* compTrans = (ComponentTransformation*)gameObject->AddComponent(TRANSFORM);

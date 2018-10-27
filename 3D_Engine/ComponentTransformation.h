@@ -2,8 +2,16 @@
 #define __COMPONENTTRANS_H__
 
 #include "Component.h"
-#include "MathGeoLib/Geometry/GeometryAll.h"
-#include "MathGeoLib/Math/Quat.h"
+#include "Math.h"
+struct Transform
+{
+	float3 position = float3::zero;
+	float3 rotEuler = float3::zero;
+	float3 scale = float3::one;
+	Quat rotationQuat = Quat::identity;
+};
+
+
 class ComponentTransformation :	public Component
 {
 public:
@@ -16,7 +24,25 @@ public:
 
 	bool Update() override;
 
+
 	void CleanUp() override;
+	void setGlobalMatrix(float4x4 newGlobalMat);
+	void setLocalMatrix(float4x4 newLocalMat);
+	void setPos(float3 _newpos);
+	void setScale(float3 _newscale);
+	void setRotQuat(Quat qNewRot);
+	void setRotEuler(float3 _newrot);
+	float3 getPos();
+
+	void UpdateLocalMatrix();
+
+public:
+	Transform transform;
+	float4x4 localMatrix	= float4x4::identity;
+	float4x4 globalMatrix	= float4x4::identity;
+	
+
+	
 };
 
 #endif // !__COMPONENTTRANS_H__

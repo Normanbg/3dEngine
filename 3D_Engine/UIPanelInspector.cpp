@@ -1,23 +1,38 @@
-#include "UIPanelProperties.h"
+#include "UIPanelInspector.h"
 #include "Application.h"
 #include "ModuleGui.h"
 #include "ImGui/imgui.h"
 #include "ModuleRenderer3D.h"
+#include "GameObject.h"
+#include "ModuleScene.h"
 
-UIPanelProperties::UIPanelProperties(const char * name, float positionX, float positionY, float width, float height, bool active) : UIPanel(name, positionX, positionY, width, height, active)
+UIPanelInspector::UIPanelInspector(const char * name, float positionX, float positionY, float width, float height, bool active) : UIPanel(name, positionX, positionY, width, height, active)
 {
 }
 
-UIPanelProperties::~UIPanelProperties()
+UIPanelInspector::~UIPanelInspector()
 {
 }
 
-void UIPanelProperties::Draw() {
+
+void UIPanelInspector::Draw() {
 	
 	/*
-	ImGui::Begin(name.c_str(), &active);
-	std::vector<Mesh>* meshRecover = App->renderer3D->GetMeshesList(); int i = 0;
 
+void UIPanelInspector::Draw() {
+	ImGui::Begin(name.c_str(), &active);
+
+	std::vector<GameObject*> rootChildsRecover = App->scene->root->childrens;
+	//NEEDS RECURSIVITY FOR ALL GAME OBJECTS, IF IT IS SELECTED = SHOW COMPONENTS
+	/*for (std::vector<GameObject*>::iterator childsIt = rootChildsRecover.begin(); childsIt != rootChildsRecover.end(); childsIt++)
+	{
+		std::string GOname = (*childsIt)->name;
+		if (ImGui::CollapsingHeader(GOname.c_str())) {
+			(*childsIt)->ToggleSelected();
+			SetChildsTreeNode((*childsIt));			
+		}
+	}
+	std::vector<Mesh>* meshRecover = App->renderer3D->GetMeshesList(); int i = 0;
 	for (std::vector<Mesh>::iterator meshIterator = (*meshRecover).begin(); meshIterator != (*meshRecover).end(); i++, meshIterator++) {
 		char meshNumber[30];
 		sprintf_s(meshNumber, 30, "%d.%s mesh " , i + 1, meshIterator._Ptr->name.c_str());
@@ -26,7 +41,7 @@ void UIPanelProperties::Draw() {
 			if (ImGui::TreeNode("Transformation")) {
 				ImGui::Text("Position:\n X: %0.1f \n Y: %0.1f \n Z: %0.1f", meshIterator._Ptr->position.x, meshIterator._Ptr->position.y, meshIterator._Ptr->position.z);
 				
-				vec eulerRot = meshIterator._Ptr->rotation.ToEulerXYZ();//to transform quaternion to Euler angle
+				float3 eulerRot = meshIterator._Ptr->rotation.ToEulerXYZ();//to transform quaternion to Euler angle
 				eulerRot *= 180/ pi; // radians to degrees
 				ImGui::Text("Rotation:\n X: %0.1f \n Y: %0.1f \n Z: %0.1f", eulerRot.x, eulerRot.y, eulerRot.z);
 				ImGui::Text("Scale:\n X: %0.1f \n Y: %0.1f \n Z: %0.1f", meshIterator._Ptr->scale.x, meshIterator._Ptr->scale.y, meshIterator._Ptr->scale.z);
@@ -55,3 +70,20 @@ void UIPanelProperties::Draw() {
 	}
 	ImGui::End();*/
 }
+//
+//void UIPanelInspector::SetChildsTreeNode(GameObject* parent)
+//{
+//	if (!parent->childrens.empty() && parent->isSelected())
+//	{
+//		for (int i = 0; i < parent->childrens.size(); i++)
+//		{
+//			parent->childrens[i].
+//		}
+//	}
+//
+//	else if (parent->isSelected())
+//		ImGui::Spacing();
+//
+//	else
+//		
+//}

@@ -3,7 +3,8 @@
 #include "ModuleRenderer3D.h"
 #include "ModuleWindow.h"
 #include "ModuleInput.h"
-#include "ModuleCamera3D.h"
+#include "ModuleEditorCamera.h"
+#include "GameObject.h"
 #include "ModuleGui.h"
 #include "ModuleScene.h"
 #include "Brofiler/Brofiler.h"
@@ -164,6 +165,11 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 	glLoadIdentity();
 
 	glMatrixMode(GL_MODELVIEW);
+
+	///NEEDS TO BE CHANGED FOR BEING THE CAM AT THE FRUSTUM POS!!!!
+	/*ComponentCamera* cam = (ComponentCamera*)App->camera->editorCam_G0->GetComponent(ComponentType::CAMERA);
+	glLoadMatrixf(cam->GetViewMatrix());*/
+
 	glLoadMatrixf(App->camera->GetViewMatrix());
 
 	// light 0 on cam pos
@@ -186,8 +192,13 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0); ///THIS LINE MAKES ALL DRAW BY RESETING THE BUFFER, NEEDED???????
 
+
 	//DrawMeshes();
 	App->scene->DrawMeshes();
+
+
+	ComponentCamera* cam = App->camera->editorCam_G0->GetComponentCamera();
+	cam->DebugDraw();
 
 	App->gui->Draw();
 
@@ -316,10 +327,15 @@ void ModuleRenderer3D::SetBoundingBox(bool active){
 
 }
 
+
 /*
 vec ModuleRenderer3D::GetAvgPosFromMeshes() 
+
+
+float3 ModuleRenderer3D::GetAvgPosFromMeshes() 
+
 {
-	vec sumPoints = vec(0,0,0);
+	float3 sumPoints = float3(0,0,0);
 	
 	for (int i = 0; i < meshes.size(); i++) {
 		sumPoints += meshes[i].getMiddlePoint();
@@ -363,9 +379,12 @@ Texture* ModuleRenderer3D::GetTextureFromID(GLuint id)
 */
 void ModuleRenderer3D::LoadDroppedFBX(char * droppedFileDir){
 	ClearSceneMeshes();
+
 	//importer->LoadFBX(droppedFileDir);	
 	//GenBuffFromMeshes();	
 	App->camera->FocusToMeshes();
+
+
 }
 
 void ModuleRenderer3D::ClearSceneMeshes() {
@@ -553,13 +572,13 @@ void Mesh::generateBoundingBox(){
 	AABB aabb;
 
 	aabb.SetNegativeInfinity();
-	aabb.Enclose((vec*)vertex,num_vertex);
+	aabb.Enclose((float3*)vertex,num_vertex);
 	
 	boundingBox = aabb;
 }
 
-vec Mesh::getMiddlePoint()const {
-	vec ret = { (boundingBox.maxPoint.x + boundingBox.minPoint.x) / 2, (boundingBox.maxPoint.y + boundingBox.minPoint.y) / 2, (boundingBox.maxPoint.z + boundingBox.minPoint.z) / 2 };
+float3 Mesh::getMiddlePoint()const {
+	float3 ret = { (boundingBox.maxPoint.x + boundingBox.minPoint.x) / 2, (boundingBox.maxPoint.y + boundingBox.minPoint.y) / 2, (boundingBox.maxPoint.z + boundingBox.minPoint.z) / 2 };
 
 	return ret;
 }

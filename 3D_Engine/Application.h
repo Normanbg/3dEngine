@@ -4,7 +4,7 @@
 #include <list>
 #include <vector>
 
-#include"./ImGui/imgui.h"
+#include "ImGui/imgui.h"
 #include "SDL\include\SDL.h"
 #include "Globals.h"
 #include "PerfTimer.h"
@@ -25,7 +25,7 @@ class ModuleWindow;
 class ModuleInput;
 class ModuleAudio;
 class ModuleRenderer3D;
-class ModuleCamera3D;
+class ModuleEditorCamera;
 class ModuleGui;
 class ModuleScene;
 class ModuleTextures;
@@ -38,7 +38,7 @@ public:
 	ModuleInput* input;
 	ModuleAudio* audio;	
 	ModuleRenderer3D* renderer3D;
-	ModuleCamera3D* camera;
+	ModuleEditorCamera* camera;
 	ModuleScene* scene;
 	ModuleTextures* textures;
 	ModuleFileSystem* fileSys;
