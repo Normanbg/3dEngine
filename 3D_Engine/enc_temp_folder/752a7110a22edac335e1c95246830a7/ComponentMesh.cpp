@@ -97,10 +97,6 @@ void ComponentMesh::Draw()
 		
 		glVertexPointer(3, GL_FLOAT, 0, NULL);
 		glTexCoordPointer(2, GL_FLOAT, 0,&texturesCoords[0]);
-
-		float2 sdsd = texturesCoords[10];
-		float2 sddsd = texturesCoords[30];
-		float2 sddssd = texturesCoords[num_vertex-1];
 		
 		glDrawElements(GL_TRIANGLES, num_index, GL_UNSIGNED_INT, NULL);
 
