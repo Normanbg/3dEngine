@@ -21,10 +21,12 @@ void UIPanelInspector::Draw() {
 	//NEEDS RECURSIVITY FOR ALL GAME OBJECTS, IF IT IS SELECTED = SHOW COMPONENTS
 	/*for (std::vector<GameObject*>::iterator childsIt = rootChildsRecover.begin(); childsIt != rootChildsRecover.end(); childsIt++)
 	{
-		char meshNumber[30];
-		sprintf_s(meshNumber, 30, "%d.%s ", i + 1, meshIterator._Ptr->name.c_str());
-	}
-*/
+		std::string GOname = (*childsIt)->name;
+		if (ImGui::CollapsingHeader(GOname.c_str())) {
+			(*childsIt)->ToggleSelected();
+			SetChildsTreeNode((*childsIt));			
+		}
+	}*/
 	//----
 	std::vector<Mesh>* meshRecover = App->renderer3D->GetMeshesList(); int i = 0;
 	for (std::vector<Mesh>::iterator meshIterator = (*meshRecover).begin(); meshIterator != (*meshRecover).end(); i++, meshIterator++) {
@@ -64,3 +66,20 @@ void UIPanelInspector::Draw() {
 	}
 	ImGui::End();
 }
+//
+//void UIPanelInspector::SetChildsTreeNode(GameObject* parent)
+//{
+//	if (!parent->childrens.empty() && parent->isSelected())
+//	{
+//		for (int i = 0; i < parent->childrens.size(); i++)
+//		{
+//			parent->childrens[i].
+//		}
+//	}
+//
+//	else if (parent->isSelected())
+//		ImGui::Spacing();
+//
+//	else
+//		
+//}

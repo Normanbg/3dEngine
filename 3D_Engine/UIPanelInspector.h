@@ -3,6 +3,8 @@
 
 #include "UIPanel.h"
 
+class GameObject;
+
 class UIPanelInspector : public UIPanel
 {
 public:
@@ -11,5 +13,6 @@ public:
 
 	void Draw();
 
+	void SetChildsTreeNode(GameObject* parent);
 };
 #endif // !__PANELINSPECTOR_H__

@@ -28,7 +28,9 @@ public:
 	Component* AddComponent(ComponentType type);
 	ComponentTransformation* GetTransformComponent();
 	ComponentCamera* GetComponentCamera();
+	bool isSelected();
 	void setName(char* _name);
+	void ToggleSelected();
 
 public:
 	std::string					name;
@@ -36,6 +38,9 @@ public:
 	GameObject*					parent = nullptr;
 	std::vector <GameObject*>	childrens;
 	ComponentTransformation*	transformComp;
+
+private:
+	bool selected = false;
 };
 
 

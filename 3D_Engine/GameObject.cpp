@@ -139,7 +139,16 @@ ComponentCamera * GameObject::GetComponentCamera()
 	return ret;
 }
 
+bool GameObject::isSelected()
+{
+	return selected;
+}
+
 void GameObject::setName(char * _name)
 {
 	name = _name;
+}
+
+void GameObject::ToggleSelected(){
+	selected = !selected;
 }
