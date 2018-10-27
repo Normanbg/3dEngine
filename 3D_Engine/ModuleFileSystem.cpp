@@ -106,7 +106,7 @@ uint ModuleFileSystem::readFile(const char * fileName, char** data)
 
 void ModuleFileSystem::GetNameFromPath(const char * full_path, std::string * path, std::string * file, std::string * extension) const
 {
-	if (full_path != nullptr)
+	if (full_path != nullptr) 
 	{
 		std::string nwFullPath = full_path;
 		NormalizePath(nwFullPath);
@@ -123,8 +123,11 @@ void ModuleFileSystem::GetNameFromPath(const char * full_path, std::string * pat
 
 		if (file != nullptr)
 		{
-			if (posSlash < nwFullPath.length())
+			if (posSlash < nwFullPath.length()) {
+				nwFullPath = nwFullPath.substr(0, posDot);
+				posSlash = nwFullPath.find_last_of("\\/");
 				*file = nwFullPath.substr(posSlash + 1);
+			}
 			else
 				*file = nwFullPath;
 		}
@@ -132,7 +135,7 @@ void ModuleFileSystem::GetNameFromPath(const char * full_path, std::string * pat
 		if (extension != nullptr)
 		{
 			if (posDot < nwFullPath.length())
-				*extension = nwFullPath.substr(posDot + 1);
+				*extension = nwFullPath.substr(posDot );
 			else
 				extension->clear();
 		}
@@ -140,7 +143,7 @@ void ModuleFileSystem::GetNameFromPath(const char * full_path, std::string * pat
 
 }
 
-void ModuleFileSystem::NormalizePath(char * full_path) const
+void ModuleFileSystem::NormalizePath(char * full_path, bool toLower) const
 {
 	uint len = strlen(full_path);
 	for (int i = 0; i < len; ++i)
@@ -148,16 +151,20 @@ void ModuleFileSystem::NormalizePath(char * full_path) const
 		if (full_path[i] == '\\')
 			full_path[i] = '/';
 		else
-			full_path[i] = tolower(full_path[i]);
+			if (toLower) {
+				full_path[i] = tolower(full_path[i]);
+			}
 	}
 }
-void ModuleFileSystem::NormalizePath(std::string & full_path) const
+void ModuleFileSystem::NormalizePath(std::string & full_path, bool toLower) const
 {
 	for (std::string::iterator charIterator = full_path.begin(); charIterator != full_path.end(); ++charIterator)
 	{
 		if (*charIterator == '\\')
 			*charIterator = '/';
 		else
-			*charIterator = tolower(*charIterator);
+			if (toLower) {
+				*charIterator = tolower(*charIterator);
+			}
 	}
 }

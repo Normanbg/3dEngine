@@ -16,9 +16,11 @@ public:
 	uint writeFile(const char* fileName, const void* data, uint bytes);
 	uint readFile(const char* fileName, char** data);
 
-	void NormalizePath(char * full_path) const;
+	
 
-	void NormalizePath(std::string & full_path) const;
+	void NormalizePath(char * full_path, bool toLower = false) const;
+
+	void NormalizePath(std::string & full_path, bool toLower = false) const;
 
 	void GetNameFromPath(const char * full_path, std::string * path, std::string * file, std::string * extension) const;
 };

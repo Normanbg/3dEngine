@@ -92,20 +92,18 @@ GLuint TextureImporter::LoadTexture(const char * path, Material* texture)
 
 
 
-void TextureImporter::ImportToDDS( const char* path) {
+void TextureImporter::ImportToDDS( const char* texPath, const char* texName) {
 
-	OWN_LOG("Loading Texture from %s", path);
+	OWN_LOG("Importing texture from %s", texPath);
 	ILuint imageID;
 
-	std::string nwPath = TEXTURES_PATH;
-	nwPath += path;
-	nwPath += ".png";
+
 	ilGenImages(1, &imageID); // generates an image
 	ilBindImage(imageID);
 
-	bool ret = ilLoadImage(nwPath.c_str());
+	bool ret = ilLoadImage(texPath);
 	if (!ret) {
-		OWN_LOG("Cannot Load Texture from %s", nwPath.c_str());
+		OWN_LOG("Cannot Load Texture from %s", texPath);
 		ilDeleteImages(1, &imageID);
 		return;
 	}
@@ -128,10 +126,8 @@ void TextureImporter::ImportToDDS( const char* path) {
 			{
 				OWN_LOG("Imported succsfully into DDS");
 				
-				std::string filename = path;				
-				App->fileSys->GetNameFromPath(path, nullptr, &filename, nullptr);
-				
-				std::string libPath = LIB_TEXTURES_PATH + filename+ ".dds";
+				std::string textureName = texName;				
+				std::string libPath = LIB_TEXTURES_PATH + textureName + DDS_FORMAT;
 				App->fileSys ->writeFile(libPath.c_str(), data, size);
 			}
 			delete[]data;

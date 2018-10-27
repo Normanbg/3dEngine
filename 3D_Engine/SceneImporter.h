@@ -8,6 +8,7 @@
 
 #include "ComponentMesh.h"
 #include "ComponentMaterial.h"
+#include "ModuleFileSystem.h"
 
 #include "Assimp/include/cimport.h"
 #include "Assimp/include/scene.h"
@@ -52,7 +53,7 @@ public:
 public:
 
 	void Init();
-	void ImportFBXtoPEI(const char* path, const char* name);
+	void ImportFBXtoPEI(const char* path);
 	void LoadPEI(const char* fileName);
 	void CleanUp();
 

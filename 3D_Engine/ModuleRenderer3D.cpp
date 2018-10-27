@@ -149,8 +149,8 @@ bool ModuleRenderer3D::Start() {
 
 	bool ret = true;
 
-	importer->ImportFBXtoPEI("BakerHouse.fbx","Baker_house");
-	importer->LoadPEI("Baker_house.pei");
+	importer->ImportFBXtoPEI("BakerHouse.fbx");
+	importer->LoadPEI("BakerHouse.pei");
 	
 	//GenBuffFromMeshes();
 

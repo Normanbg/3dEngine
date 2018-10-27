@@ -33,16 +33,18 @@ void SceneImporter::Init()
 
 }
 
-void SceneImporter::ImportFBXtoPEI(const char * FBXpath, const char* name)
+void SceneImporter::ImportFBXtoPEI(const char * FBXpath)
 {
-	//NEED TO LOAD FROM /ASSETS in a file system module
-	
-	// AND EXPORT TO /LIBRARY
-	
-	std::string rootPath = MODELS_PATH;
-	rootPath += FBXpath;
 
-	const aiScene* scene = aiImportFile(rootPath.c_str(), aiProcessPreset_TargetRealtime_MaxQuality); 
+	
+	std::string fullFBXPath = MODELS_PATH;
+	fullFBXPath+= FBXpath;
+		
+	std::string modelName;
+	
+	App->fileSys->GetNameFromPath(fullFBXPath.c_str(),nullptr, &modelName, nullptr);
+
+	const aiScene* scene = aiImportFile(fullFBXPath.c_str(), aiProcessPreset_TargetRealtime_MaxQuality); 
 
 	if (scene == nullptr) {
 		OWN_LOG("Error loading fbx from Assets/3DModels folder.");
@@ -52,8 +54,8 @@ void SceneImporter::ImportFBXtoPEI(const char * FBXpath, const char* name)
 
 	if (scene->HasMaterials()) {
 		//need to load a texture outside the mesh. as a scene
- ///check if material is in the path
-			///if it is, load texture, convert to .dds & added as a component
+		///check if material is in the path
+		///if it is, load texture, convert to .dds & added as a component
 		uint numMaterials = scene->mNumMaterials;
 		for (int i = 0; i < numMaterials; i++) {
 
@@ -67,35 +69,34 @@ void SceneImporter::ImportFBXtoPEI(const char * FBXpath, const char* name)
 			mat->colors[1] = color.g;
 			mat->colors[2] = color.b;
 
-			aiString path;
-			aiReturn ret = material->GetTexture(aiTextureType_DIFFUSE, 0, &path);
+			aiString texturePath;
+			aiReturn ret = material->GetTexture(aiTextureType_DIFFUSE, 0, &texturePath);
 			if (ret == aiReturn_SUCCESS) {
 
+				std::string fullTexPath = TEXTURES_PATH;
+				fullTexPath += texturePath.C_Str();
 
-				std::string localPath = TEXTURES_PATH;
-				localPath += path.C_Str();
-				GLuint check = App->textures->CheckIfImageAlreadyLoaded(localPath.c_str());
+				std::string textureName;
+				std::string extension;
+				App->fileSys->GetNameFromPath(fullTexPath.c_str(), nullptr, &textureName, &extension);
+
+				GLuint check = App->textures->CheckIfImageAlreadyLoaded(textureName.c_str());
 				if (check == -1) {
-					App->renderer3D->texImporter->ImportToDDS("Baker_house");
-					mat->textureID = App->renderer3D->texImporter->LoadTexture("Library/Textures/Baker_house.dds" ,mat);
-					OWN_LOG("Loading texture from Textures folder");
-					if (mat->textureID == -1) { // fisrt check if texture is in local path "Assets/Textures"
-						OWN_LOG("Texture not found. \nLoading texture from HardDisk");
-
-						mat->textureID = App->renderer3D->texImporter->LoadTexture(path.C_Str(), mat);
-						if (mat->textureID == -1) {// second check if texture is in absolute path C:\\...
-
-							OWN_LOG("Texture not found in the HardDrisk.\n Error loading texture from fbx.");
-						}
-
+					if (extension != DDS_FORMAT) {
+						App->renderer3D->texImporter->ImportToDDS(fullTexPath.c_str(), textureName.c_str());
 					}
+					std::string texDDSPath = LIB_TEXTURES_PATH + textureName + DDS_FORMAT;
+					mat->textureID = App->renderer3D->texImporter->LoadTexture(texDDSPath.c_str(),mat);
+					OWN_LOG("Loading texture from Lib/Textures folder");
+					if (mat->textureID == -1) { // first check if texture is in local path "Lib/Textures"
+						OWN_LOG("Error loading texture.");
+					}					
 					if (mat->textureID != -1) { // if texture can be loaded
-						mat->path = localPath;
+						mat->path = fullTexPath;
 						//mesh.texID = _text.textureID;
 						
 						App->textures->AddTexture(mat);
 					}
-
 				}
 				else {
 					//mesh->texID = check;
@@ -111,8 +112,8 @@ void SceneImporter::ImportFBXtoPEI(const char * FBXpath, const char* name)
 		OWN_LOG("Importing FBX mesh to PEI from %s", FBXpath);
 		// Use scene->mNumMeshes to iterate on scene->mMeshes array
 
-		std::string fileName = name;
-		fileName += OWN_FILE_FORMAT;
+		std::string fileName = LIB_MODELS_PATH + modelName + OWN_FILE_FORMAT;
+		
 
 		std::ofstream dataFile(fileName.c_str(), std::fstream::out | std::fstream::binary);
 		OWN_LOG("Creating PEI file");
@@ -270,11 +271,12 @@ void SceneImporter::LoadPEI(const char * fileName)
 	
 	ComponentTransformation* compTrans = (ComponentTransformation*)gameObject->AddComponent(TRANSFORM);
 	
-	
+	std::string filePath = LIB_MODELS_PATH;
+	filePath += fileName;
 	
 	uint size = sizeof(uint) + sizeof(float3) * 2 + sizeof(Quat);
 
-	std::ifstream dataFile(fileName, std::fstream::out | std::fstream::binary );
+	std::ifstream dataFile(filePath.c_str(), std::fstream::out | std::fstream::binary );
 
 	char* scenedata =	new char[size];
 	char* cursor = scenedata;

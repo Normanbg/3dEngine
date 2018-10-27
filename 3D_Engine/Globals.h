@@ -50,3 +50,4 @@ enum update_status
 #define LIB_MODELS_PATH "Library/3DModels/"
 #define SETTINGS_PATH "Settings/"
 #define OWN_FILE_FORMAT ".pei"
+#define DDS_FORMAT ".dds"
