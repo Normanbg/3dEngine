@@ -14,7 +14,7 @@
 #include "Assimp/include/scene.h"
 #include "Assimp/include/postprocess.h"
 #include "Assimp/include/cfileio.h"
-#pragma comment (lib, "Assimp/libx86/assimp.lib")
+
 
 
 
@@ -39,7 +39,7 @@ public:
 	uint num_textureCoords = 0;
 	float2* texturesCoords = nullptr;
 
-	GLuint texID = 0;
+	uint texID = 0;
 
 
 	update_status PreUpdate(float dt);
@@ -50,7 +50,11 @@ public:
 	void CleanUp() override;
 
 	void GenerateBuffer();
+	
 	void Draw();
+
+private:
+	
 
 	bool generated = false;
 

@@ -4,6 +4,7 @@
 
 ComponentTransformation::ComponentTransformation()
 {
+	type = TRANSFORM;
 }
 
 

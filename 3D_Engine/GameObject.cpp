@@ -1,7 +1,6 @@
 #include "GameObject.h"
 
 
-
 GameObject::GameObject()
 {
 }
@@ -94,6 +93,32 @@ Component * GameObject::AddComponent(ComponentType type) {
 	ret->myGO = this;
 	components.push_back(ret);
 	return ret;
+}
+
+void GameObject::GetComponents(ComponentType type, std::vector<Component*>& comp) {
+	Component* iterator;
+	for (int i = 0; i < components.size(); i++) {
+		iterator = components[i];
+		if (iterator->type == type) {
+			comp.push_back(iterator);
+		}
+	}
+	GameObject* gameObject;
+	for(int i = 0; i < childrens.size(); i++) {
+		gameObject = childrens[i];
+		gameObject->GetComponents(type, components);
+	}
+	iterator = nullptr;
+}
+
+void GameObject::DrawMeshes()
+{
+	Component* iterator;
+	for (int i = 0; i < components.size(); i++) {
+		iterator = components[i];
+		
+	}
+	iterator = nullptr;
 }
 
 

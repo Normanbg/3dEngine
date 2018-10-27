@@ -1,20 +1,21 @@
 #ifndef __RENDERERER3D_H__
 #define __RENDERERER3D_H__
 
-#include "Module.h"
-#include "Globals.h"
 
+#include "Module.h"
 #include "Light.h"
 #include "MathGeoLib\Math\MathAll.h"
 #include "SceneImporter.h"
 #include "TextureImporter.h"
 #include "MathGeoLib/Geometry/AABB.h"
 
+#include "Globals.h"
+
 
 #include <array>
 #include <vector>
 #define MAX_LIGHTS 8
-
+/*
 struct Texture {
 
 	uint texWidth = 0;
@@ -24,7 +25,7 @@ struct Texture {
 
 	GLuint textureID = -1;
 
-	void CleanUp();
+	//void CleanUp();
 };
 
 struct Mesh {
@@ -69,7 +70,7 @@ struct Mesh {
 private:
 	void DrawBoundingBox();
 };
-
+*/
 class ModuleRenderer3D : public Module
 {
 public:
@@ -116,16 +117,16 @@ public:
 	inline bool GetAxis() const { return _axis; }
 	inline bool GetGrid() const { return _grid; }
 
-	vec GetAvgPosFromMeshes();
+	/*vec GetAvgPosFromMeshes();*/
 
-	GLuint CheckIfImageAlreadyLoaded(const char*);
+	/*GLuint CheckIfImageAlreadyLoaded(const char*);*/
 
-	inline std::vector<Mesh>* GetMeshesList()  { return &meshes; }
-	inline std::vector<Texture>* GetTexturesList()   { return &textures; }
+	//inline std::vector<Mesh>* GetMeshesList()  { return &meshes; }
+	//inline std::vector<Texture>* GetTexturesList()   { return &textures; }
 
-	void AddMesh(Mesh* mesh);
-	void AddTexture(Texture* tex);
-	Texture* GetTextureFromID(GLuint id);
+	//void AddMesh(Mesh* mesh);
+	//void AddTexture(Texture* tex);
+	//Texture* GetTextureFromID(GLuint id);
 
 	void LoadDroppedFBX(char* droppedFileDir);
 
@@ -149,8 +150,8 @@ private:
 	void ShowAxis();
 	void ShowGrid();
 	void SetDataFromJson(JSON_Object* data);
-	void GenBuffFromMeshes();
-	void DrawMeshes();
+	//void GenBuffFromMeshes();
+	//void DrawMeshes();
 
 private:
 
@@ -167,8 +168,8 @@ private:
 	bool _normals = false;
 	bool _bBox = false;
 
-	std::vector<Mesh> meshes;	
-	std::vector<Texture> textures;
+	//std::vector<Mesh> meshes;	
+	//std::vector<Texture> textures;
 };
 
 #endif // !__RENDERER3D_H__

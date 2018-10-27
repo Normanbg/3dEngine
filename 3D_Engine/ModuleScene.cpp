@@ -1,7 +1,8 @@
+#include "Application.h"
 #include "ModuleScene.h"
 #include "GameObject.h"
 
-#include "SceneImporter.h"
+
 
 ModuleScene::ModuleScene(bool start_enabled) : Module(start_enabled){
 
@@ -81,3 +82,23 @@ bool ModuleScene::CleanUp()
 	return true;
 }
 
+void ModuleScene::DrawMeshes() {
+	GameObject* iterator;
+
+	std::vector<Component*> components;
+
+	for (int i = 0;i< root->childrens.size();i++){
+		iterator = root->childrens[i];
+		iterator->GetComponents(MESH,components);
+		
+	}
+	ComponentMesh* mesh;
+	for (int i = 0; i < components.size(); i++) {
+		mesh = (ComponentMesh *) components[i];
+		mesh->Draw();
+	
+	}
+
+	iterator = nullptr;
+	mesh = nullptr;
+}

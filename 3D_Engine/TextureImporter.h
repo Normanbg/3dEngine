@@ -3,10 +3,9 @@
 
 #include "Application.h"
 #include "Globals.h"
+#include "ComponentMaterial.h"
 
-
-class Mesh;
-
+struct ComponentMaterial;
 class TextureImporter
 {
 public:
@@ -16,7 +15,7 @@ public:
 	void Init();
 	void ImportToDDS(const char * path);
 		
-	GLuint LoadTexture(const char* path, uint& width, uint& height);
+	GLuint LoadTexture(const char* path, Material* texture);
 
 	
 

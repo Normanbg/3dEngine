@@ -13,6 +13,8 @@ UIPanelProperties::~UIPanelProperties()
 }
 
 void UIPanelProperties::Draw() {
+	
+	/*
 	ImGui::Begin(name.c_str(), &active);
 	std::vector<Mesh>* meshRecover = App->renderer3D->GetMeshesList(); int i = 0;
 
@@ -51,5 +53,5 @@ void UIPanelProperties::Draw() {
 			ImGui::PopID();
 		}
 	}
-	ImGui::End();
+	ImGui::End();*/
 }

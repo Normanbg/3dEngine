@@ -1,15 +1,20 @@
 #ifndef __GAMEOBJECT_H__
 #define __GAMEOBJECT_H__
-
 #include "ModuleScene.h"
 #include "ModuleRenderer3D.h"
+
 #include "ModuleTextures.h"
 #include "Component.h"
 #include "ComponentTransformation.h"
 #include "ComponentMesh.h"
 #include "ComponentMaterial.h"
+
+
 #include <string>
 #include <vector>
+
+using namespace std;
+
 
 
 class GameObject
@@ -21,7 +26,12 @@ public:
 	bool Update();
 	bool PostUpdate();
 	void CleanUp();
+	
 	Component* AddComponent(ComponentType type);
+	void GetComponents(ComponentType type, std::vector<Component*>& components);
+
+
+	void DrawMeshes();
 
 private:
 	
@@ -38,3 +48,4 @@ public:
 
 
 #endif // !__GAMEOBJECT_H__
+

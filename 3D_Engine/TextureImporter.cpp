@@ -36,7 +36,7 @@ void TextureImporter::Init(){
 }
 
 
-GLuint TextureImporter::LoadTexture(const char * path, uint& texWidth, uint& texHeight)
+GLuint TextureImporter::LoadTexture(const char * path, Material* texture)
 {
 	OWN_LOG("Loading Texture from %s", path);
 	ILuint imageID;
@@ -60,8 +60,8 @@ GLuint TextureImporter::LoadTexture(const char * path, uint& texWidth, uint& tex
 		}
 
 		GLuint textureID;
-		texHeight = infoImage.Height;
-		texWidth = infoImage.Width;
+		texture->texHeight = infoImage.Height;
+		texture->texWidth = infoImage.Width;
 		
 		glGenTextures(1, &textureID);//generates a texture buffer 
 		glBindTexture(GL_TEXTURE_2D, textureID);

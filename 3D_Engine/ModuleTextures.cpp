@@ -35,4 +35,30 @@ bool ModuleTextures::CleanUp()
 	return true;
 }
 
+void ModuleTextures::AddTexture(Material * tex)
+{
+	materials.push_back(*tex);
+}
+
+Material * ModuleTextures::GetMaterialsFromID(GLuint id)
+{
+	for (int i = 0; i < materials.size(); i++) {
+		if (materials[i].textureID = id) {
+			return &materials[i];
+		}
+	}
+	OWN_LOG("Error getting texture from ID");
+	return nullptr;
+}
+
+GLuint ModuleTextures::CheckIfImageAlreadyLoaded(const char * _path)
+{
+	for (int i = 0; i < materials.size(); i++) {
+		if (strcmp(materials[i].path.c_str(), _path) == 0) {
+			return materials[i].textureID;
+		}
+	}
+	return -1;
+}
+
 

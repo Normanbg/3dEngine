@@ -50,7 +50,7 @@ void MeshImporter::LoadFBX(const char * path){
 		aiMesh * meshIterator = nullptr;
 		for (int i = 0; i < scene->mNumMeshes; i++) {
 			meshIterator = scene->mMeshes[i];
-			LoadFromMesh(scene, meshIterator);
+			//LoadFromMesh(scene, meshIterator);
 		}	
 
 	}
@@ -59,7 +59,7 @@ void MeshImporter::LoadFBX(const char * path){
 	}
 	aiReleaseImport(scene);
 }
-
+/*
 void MeshImporter::LoadFromMesh(const aiScene* currSc, aiMesh * new_mesh){
 	
 	bool error= false;
@@ -189,7 +189,7 @@ void MeshImporter::ChangeMeshTexture(const char * path) {
 	}
 }
 	//App->renderer3D->meshes = meshCopy;
-
+*/
 
 void LogCall(const char* msg, char* userData) {
 	OWN_LOG("%s", msg);

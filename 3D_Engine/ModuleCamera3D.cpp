@@ -221,7 +221,7 @@ float* ModuleCamera3D::GetViewMatrix()
 }
 
 void ModuleCamera3D::FocusToMeshes(){
-	vec v = App->renderer3D->GetAvgPosFromMeshes();
+	vec v;// = App->renderer3D->GetAvgPosFromMeshes();
 	vec3 displacement = { 10, 10, 10 };
 	vec3 moveVec = { v.x*2.5f, v.y*2.0f,v.z*2.5f };
 	MoveTo(displacement + moveVec);

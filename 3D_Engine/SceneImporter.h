@@ -7,6 +7,7 @@
 #include <fstream> 
 
 #include "ComponentMesh.h"
+#include "ComponentMaterial.h"
 
 #include "Assimp/include/cimport.h"
 #include "Assimp/include/scene.h"
@@ -21,11 +22,11 @@ class SceneImporter
 public:
 	struct dataScene {
 	
-		float3 position;
-		float3 scale;
-		Quat rotation;
+		float3 position = { 0,0,0 };
+		float3 scale = { 0,0,0 };
+		Quat rotation = Quat(0,0,0,0);
 		
-		uint numMeshes;
+		uint numMeshes = 0;		
 
 	};
 
@@ -40,6 +41,8 @@ public:
 		float3* vertex = nullptr;
 		float3* normals = nullptr;
 		float2* texturesCoords = nullptr;
+
+		uint texID;
 	};	
 
 public:

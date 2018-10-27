@@ -5,11 +5,14 @@
 #pragma comment (lib, "glu32.lib")
 #pragma comment (lib, "opengl32.lib") 
 #pragma comment (lib, "Glew/libx86/glew32.lib")  
+#pragma comment (lib, "Assimp/libx86/assimp.lib")
 
 
 ComponentMesh::ComponentMesh()
 {
+	type = MESH;
 	texID = 1;
+	//GenerateBuffer();
 }
 
 
@@ -27,35 +30,54 @@ update_status ComponentMesh::PreUpdate(float dt)
 
 bool ComponentMesh::Update()
 {
+	//Draw();
 	
-	Draw();
 	return true	;
 }
 
 void ComponentMesh::CleanUp()
 {
+	if (id_index != -1)
+		glDeleteBuffers(1, &id_index);
+	if (id_vertex != -1)
+		glDeleteBuffers(1, &id_vertex);
+	if (id_normals != -1)
+		glDeleteBuffers(1, &id_normals);
+
+	delete[] index;
+	delete[] vertex;
+	delete[] normals;
+	delete[] texturesCoords;
 }
 
 void ComponentMesh::GenerateBuffer()
 {
 	
-	glGenBuffers(1, (GLuint*) &(id_vertex));  // generates 1 buffer. then it assign a GLuint to its mem adress.
+	glGenBuffers(1, (GLuint*) &(id_vertex));
+	glGenBuffers(1, (GLuint*) &(id_normals));// generates 1 buffer. then it assign a GLuint to its mem adress.
+	
 	glBindBuffer(GL_ARRAY_BUFFER, id_vertex); // set the type of buffer
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float3)*num_vertex, &vertex[0], GL_STATIC_DRAW);
-	glGenBuffers(1, (GLuint*) &(id_normals));
+	
+	
 	glBindBuffer(GL_ARRAY_BUFFER, id_normals);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float3)*num_normals, &normals[0], GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
 	if (num_index > 0) {
 		glGenBuffers(1, (GLuint*) &(id_index));
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_index);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) *num_index, &index[0], GL_STATIC_DRAW);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	}
 }
+
 void ComponentMesh::Draw()
 {
 	
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	
 
 	//glColor3f(colors.x, colors.y, colors.z);
 	
@@ -66,20 +88,24 @@ void ComponentMesh::Draw()
 		glBindBuffer(GL_ARRAY_BUFFER, 0); //resets the buffer
 	}
 	else {
-		glBindTexture(GL_TEXTURE_2D, 0);
-		glBindTexture(GL_ELEMENT_ARRAY_BUFFER, 0);
-		
-		glBindTexture(GL_TEXTURE_2D, texID);
+		glEnable(GL_TEXTURE_2D);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_index);
+		glBindBuffer(GL_ARRAY_BUFFER, id_vertex);
+
+		glBindTexture(GL_TEXTURE_2D, texID);
+		Material* mat = App->textures->GetMaterialsFromID(texID);
+
 		glVertexPointer(3, GL_FLOAT, 0, NULL);
 		glTexCoordPointer(2, GL_FLOAT, 0, &(texturesCoords[0]));
-		GLenum error = glGetError();
-		OWN_LOG("Error initializing OpenGL! %s\n", gluErrorString(error))
+		
 		glDrawElements(GL_TRIANGLES, num_index, GL_UNSIGNED_INT, NULL);
 
+		glDisable(GL_TEXTURE_2D);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
+	
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 

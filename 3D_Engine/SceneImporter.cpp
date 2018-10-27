@@ -50,6 +50,63 @@ void SceneImporter::ImportFBXtoPEI(const char * FBXpath, const char* name)
 		return;
 	}
 
+	if (scene->HasMaterials()) {
+		//need to load a texture outside the mesh. as a scene
+ ///check if material is in the path
+			///if it is, load texture, convert to .dds & added as a component
+		uint numMaterials = scene->mNumMaterials;
+		for (int i = 0; i < numMaterials; i++) {
+
+			aiMaterial* material = scene->mMaterials[i];
+
+			Material* mat = new Material;
+
+			aiColor3D color(0.f, 0.f, 0.f);
+			material->Get(AI_MATKEY_COLOR_DIFFUSE, color);
+			mat->colors[0] = color.r;
+			mat->colors[1] = color.g;
+			mat->colors[2] = color.b;
+
+			aiString path;
+			aiReturn ret = material->GetTexture(aiTextureType_DIFFUSE, 0, &path);
+			if (ret == aiReturn_SUCCESS) {
+
+
+				std::string localPath = TEXTURES_PATH;
+				localPath += path.C_Str();
+				GLuint check = App->textures->CheckIfImageAlreadyLoaded(localPath.c_str());
+				if (check == -1) {
+					App->renderer3D->texImporter->ImportToDDS("Baker_house");
+					mat->textureID = App->renderer3D->texImporter->LoadTexture("Library/Textures/Baker_house.dds" ,mat);
+					OWN_LOG("Loading texture from Textures folder");
+					if (mat->textureID == -1) { // fisrt check if texture is in local path "Assets/Textures"
+						OWN_LOG("Texture not found. \nLoading texture from HardDisk");
+
+						mat->textureID = App->renderer3D->texImporter->LoadTexture(path.C_Str(), mat);
+						if (mat->textureID == -1) {// second check if texture is in absolute path C:\\...
+
+							OWN_LOG("Texture not found in the HardDrisk.\n Error loading texture from fbx.");
+						}
+
+					}
+					if (mat->textureID != -1) { // if texture can be loaded
+						mat->path = localPath;
+						//mesh.texID = _text.textureID;
+						
+						App->textures->AddTexture(mat);
+					}
+
+				}
+				else {
+					//mesh->texID = check;
+				}
+			}
+			else {
+
+				OWN_LOG("Error loading texture from fbx. Error: %s", aiGetErrorString());
+			}
+		}
+	}
 	if (scene->HasMeshes()) {
 		OWN_LOG("Importing FBX mesh to PEI from %s", FBXpath);
 		// Use scene->mNumMeshes to iterate on scene->mMeshes array
@@ -130,8 +187,8 @@ void SceneImporter::ImportFromMesh(const aiScene* currSc, aiMesh * new_mesh,std:
 	newMesh.vertex = new float3[newMesh.num_vertex];
 	memcpy(newMesh.vertex, new_mesh->mVertices, sizeof(float3) * newMesh.num_vertex);
 	OWN_LOG("Importing new mesh with %d vertices", newMesh.num_vertex);
-	float3 dsel42te = newMesh.vertex[34];
-	float3 deld3te = newMesh.vertex[newMesh.num_vertex-1];
+	
+	newMesh.texID = new_mesh->mMaterialIndex;
 
 	if (new_mesh->HasFaces()) { //------------indices
 		newMesh.num_index = new_mesh->mNumFaces * 3;
@@ -162,56 +219,7 @@ void SceneImporter::ImportFromMesh(const aiScene* currSc, aiMesh * new_mesh,std:
 			newMesh.texturesCoords[i].y = new_mesh->mTextureCoords[0][i].y;
 		}
 	}
-	if (currSc->HasMaterials() && !error) {
-		//need to load a texture outside the mesh. as a scene
- ///check if material is in the path
-			///if it is, load texture, convert to .dds & added as a component
-		aiMaterial* material = currSc->mMaterials[new_mesh->mMaterialIndex];
-
-		aiColor3D color(0.f, 0.f, 0.f);
-		material->Get(AI_MATKEY_COLOR_DIFFUSE, color);
-		newMesh.colors[0] = color.r;
-		newMesh.colors[1] = color.g;
-		newMesh.colors[2] = color.b;
-
-		aiString path;
-		aiReturn ret = material->GetTexture(aiTextureType_DIFFUSE, 0, &path);
-		if (ret == aiReturn_SUCCESS) {
-
-
-			std::string localPath = TEXTURES_PATH;
-			localPath += path.C_Str();
-			GLuint check = App->renderer3D->CheckIfImageAlreadyLoaded(localPath.c_str());
-			if (check == -1) {
-				Texture _text;
-				_text.textureID = App->renderer3D->texImporter->LoadTexture(localPath.c_str(), _text.texWidth, _text.texHeight);
-				OWN_LOG("Loading texture from Textures folder");
-				if (_text.textureID == -1) { // fisrt check if texture is in local path "Assets/Textures"
-					OWN_LOG("Texture not found. \nLoading texture from HardDisk");
-
-					_text.textureID = App->renderer3D->texImporter->LoadTexture(path.C_Str(), _text.texWidth, _text.texHeight);
-					if (_text.textureID == -1) {// second check if texture is in absolute path C:\\...
-
-						OWN_LOG("Texture not found in the HardDrisk.\n Error loading texture from fbx.");
-					}
-
-				}
-				if (_text.textureID != -1) { // if texture can be loaded
-					_text.path = localPath;
-					//mesh.texID = _text.textureID;
-					App->renderer3D->AddTexture(&_text);
-				}
-
-			}
-			else {
-				//mesh.texID = check;
-			}
-		}
-		else {
-
-			OWN_LOG("Error loading texture from fbx. Error: %s", aiGetErrorString());
-		}
-	}
+	
 	
 	if (!error) { // writting into file
 	
@@ -355,17 +363,14 @@ void SceneImporter::LoadPEI(const char * fileName)
 
 		totalSize += rangesSize + meshDataSize;
 
-
 		compMesh->GenerateBuffer();
+		
 		delete[] meshdata;
 		meshdata = nullptr;
 		mcursor = nullptr;
 		compMesh = nullptr;
-
-
+		
 	}
-
-
 	
 	gameObject = nullptr;
 

@@ -22,7 +22,7 @@ public:
 	bool CleanUp() override;
 
 	GameObject* AddGameObject();
-
+	void DrawMeshes();
 public:
 	GameObject* root;
 };
