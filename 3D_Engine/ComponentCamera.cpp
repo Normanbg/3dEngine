@@ -277,6 +277,8 @@ void ComponentCamera::DebugDraw()
 	glVertex3fv((GLfloat*)&vertices[5]);
 	glVertex3fv((GLfloat*)&vertices[1]);
 
+	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+
 	glEnd();
 
 }

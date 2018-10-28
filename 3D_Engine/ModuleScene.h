@@ -24,6 +24,7 @@ public:
 	void AddGameObjectToSelectedList(GameObject * newSelected);
 	void DeselectAll();
 
+	void SetBoundingBox(bool active);
 
 
 	void DrawMeshes();
