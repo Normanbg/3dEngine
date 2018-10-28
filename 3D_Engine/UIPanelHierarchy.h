@@ -4,6 +4,9 @@
 
 #include "UIPanel.h"
 
+#include <vector>
+class GameObject;
+
 class UIPanelHierarchy : public UIPanel
 {
 public:
@@ -12,5 +15,6 @@ public:
 
 	void Draw();
 
+	void DrawChilds(std::vector<GameObject*> childs);
 };
 #endif // !__PANELHIERARCHY_H__

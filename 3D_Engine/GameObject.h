@@ -2,8 +2,8 @@
 #define __GAMEOBJECT_H__
 #include "ModuleScene.h"
 #include "ModuleRenderer3D.h"
-
 #include "ModuleTextures.h"
+
 #include "Component.h"
 #include "ComponentTransformation.h"
 #include "ComponentCamera.h"
@@ -14,6 +14,8 @@
 
 class string;
 class vector;
+class ModuleScene;
+class ModuleTextures;
 
 
 using namespace std;
@@ -22,6 +24,7 @@ using namespace std;
 
 class GameObject
 {
+	friend ModuleScene;
 public:
 	GameObject(const char * name);
 	~GameObject();
@@ -32,22 +35,18 @@ public:
 
 	
 	Component* AddComponent(ComponentType type);
+	void AddChildren(GameObject* child);
+
 	void GetComponents(ComponentType type, std::vector<Component*>& components);
+	bool GetSelected();
+	void SetParent(GameObject* parent);
+	
 
 	ComponentTransformation* GetTransformComponent();
 	ComponentCamera* GetComponentCamera();
 
 	void DrawMeshes();
 	void CalculateAllGlobalMatrix();
-
-private:	
-	
-	
-	
-	bool isSelected();
-	void setName(char* _name);
-	void ToggleSelected();
-
 
 public:
 	std::string					name;
@@ -56,7 +55,15 @@ public:
 	std::vector <GameObject*>	childrens;
 	ComponentTransformation*	transformComp;
 
+private:	
+	
+	bool isSelected();
+	void setName(char* _name);
+	void ToggleSelected();
+
+
 private:
+	
 	bool selected = false;
 };
 

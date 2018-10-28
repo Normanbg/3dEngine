@@ -5,7 +5,7 @@
 #include "Application.h"
 #include "Module.h"
 
-
+class vector;
 class GameObject;
 
 class ModuleScene : public Module
@@ -21,6 +21,9 @@ public:
 	update_status PostUpdate(float dt) override;
 	bool CleanUp() override;
 
+	void AddGameObjectToSelectedList(GameObject * newSelected);
+	void DeselectAll();
+
 
 
 	void DrawMeshes();
@@ -28,6 +31,7 @@ public:
 
 public:
 	GameObject* root;
+	std::vector<GameObject*> gObjsSelected;
 };
 
 

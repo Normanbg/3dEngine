@@ -5,6 +5,7 @@
 #include "ModuleRenderer3D.h"
 #include "GameObject.h"
 #include "ModuleScene.h"
+#include "ModuleInput.h"
 
 UIPanelHierarchy::UIPanelHierarchy(const char * name, float positionX, float positionY, float width, float height, bool active) : UIPanel(name, positionX, positionY, width, height, active)
 {
@@ -17,29 +18,43 @@ UIPanelHierarchy::~UIPanelHierarchy()
 void UIPanelHierarchy::Draw()
 {
 	ImGui::Begin(name.c_str(), &active);
-	int i = 0;
-	for (std::vector<GameObject*>::iterator rootIterator = App->scene->root->childrens.begin(); rootIterator != App->scene->root->childrens.end(); i++, rootIterator++)
-	{
-		char gameObjNum[30];
-		sprintf_s(gameObjNum, 30, "%d.%s", i + 1, (*rootIterator)->name.c_str());
-		if (ImGui::CollapsingHeader(gameObjNum)) {
-			if ((*rootIterator)->childrens.size() > 0)
-			{
-				if (ImGui::CollapsingHeader(gameObjNum)) {
-					//ImGui::PushID("Transformation" + i); //USED FOR RECURSIVITY ON IMGUI
-					for (std::vector<GameObject*>::iterator GOChildsIterator = App->scene->root->childrens.begin(); rootIterator != App->scene->root->childrens.end(); i++, rootIterator++)
-					{
-						//DO RECURSIVITY, BETTER IN A FUNCTION APART. ISN'T IT?
-					}
-				}
-				else
-				{
-					ImGui::Spacing();
-				}
-				//ImGui::PopID(); //USED FOR RECURSIVITY ON IMGUI
-			}
-		}
-	}
+	DrawChilds(App->scene->root->childrens);
 	ImGui::End();
 }
+
+void UIPanelHierarchy::DrawChilds(std::vector<GameObject*> childs){
+	for (std::vector<GameObject*>::iterator goIterator = childs.begin(); goIterator != childs.end(); goIterator++)
+	{
+		uint flags = ImGuiTreeNodeFlags_OpenOnArrow;
+		if ((*goIterator)->GetSelected())
+			flags |= ImGuiTreeNodeFlags_Selected;
+		if ((*goIterator)->childrens.empty())
+			flags |= ImGuiTreeNodeFlags_Leaf;
+		//TODO::COLOR IF IS ACTIVE--------------
+		if (ImGui::IsItemClicked(0) || ImGui::IsItemClicked(1))
+		{
+			//CTRL pressed = addselectedG0
+			if ((App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_RCTRL) == KEY_REPEAT))
+			{
+				App->scene->AddGameObjectToSelectedList((*goIterator));
+			}
+			else
+			{
+				if (!ImGui::IsItemClicked(1) || !(*goIterator)->GetSelected())
+				{
+					App->scene->DeselectAll();
+					App->scene->AddGameObjectToSelectedList((*goIterator));
+				}
+			}
+		}
+
+		bool treeNodeOpened = ImGui::TreeNodeEx((*goIterator)->name.c_str(), flags);
+		if (treeNodeOpened)
+		{
+			DrawChilds((*goIterator)->childrens);
+		}
+		ImGui::TreePop();
+	}
+}
+
 

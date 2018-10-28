@@ -1,5 +1,4 @@
 #include "GameObject.h"
-
 #include <vector>
 #include <string>
 
@@ -149,6 +148,25 @@ void GameObject::GetComponents(ComponentType type, std::vector<Component*>& comp
 		gameObject->GetComponents(type, components);
 	}
 	iterator = nullptr;
+}
+
+bool GameObject::GetSelected()
+{
+	return selected;
+}
+
+void GameObject::SetParent(GameObject * parent)
+{
+	if (this->parent != parent) {
+		this->parent = parent;
+		parent->AddChildren(this);
+	}
+}
+
+void GameObject::AddChildren(GameObject * child)
+{
+	this->childrens.push_back(child);
+	child->SetParent(this);
 }
 
 void GameObject::DrawMeshes()

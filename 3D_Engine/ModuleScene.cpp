@@ -2,7 +2,7 @@
 #include "ModuleScene.h"
 #include "GameObject.h"
 
-
+#include <vector>
 
 ModuleScene::ModuleScene(bool start_enabled) : Module(start_enabled){
 
@@ -84,6 +84,31 @@ bool ModuleScene::CleanUp()
 	root = nullptr;
 
 	return true;
+}
+
+
+void ModuleScene::AddGameObjectToSelectedList(GameObject* newSelected)
+{
+	if (!newSelected->GetSelected())
+	{
+		for (std::vector<GameObject*>::iterator it = gObjsSelected.begin(); it != gObjsSelected.end(); ++it)
+		{
+			if ((*it) == newSelected)
+				return;
+		}
+
+		gObjsSelected.push_back(newSelected);
+		newSelected->selected = true;
+	}
+}
+
+void ModuleScene::DeselectAll()
+{
+		for (std::vector<GameObject*>::iterator it = gObjsSelected.begin(); it != gObjsSelected.end();)
+		{
+			(*it)->selected = false;
+			it = gObjsSelected.erase(it);
+		}
 }
 
 void ModuleScene::DrawMeshes() {
