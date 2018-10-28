@@ -28,6 +28,7 @@ public:
 
 	void DrawMeshes();
 	GameObject* AddGameObject(const char* name);
+	GameObject* AddGameObject(const char* name, GameObject* parent);
 
 public:
 	GameObject* root;

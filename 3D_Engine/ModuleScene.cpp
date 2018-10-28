@@ -46,6 +46,15 @@ GameObject* ModuleScene::AddGameObject(const char* name){
 	return ret;
 }
 
+GameObject * ModuleScene::AddGameObject(const char * name, GameObject * parent)
+{
+	GameObject* ret = new GameObject(name);
+	ret->parent = parent;
+	parent->childrens.push_back(ret);
+
+	return ret;
+}
+
 update_status ModuleScene::Update(float dt){
 
 	bool ret = true;

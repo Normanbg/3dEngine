@@ -13,9 +13,9 @@ UIPanelConsole::~UIPanelConsole()
 
 void UIPanelConsole::Draw() {
 
-	/*ImGui::Begin(name.c_str(), &active, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoFocusOnAppearing);
+	ImGui::Begin(name.c_str(), &active, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoFocusOnAppearing);
 	for (std::vector<std::string>::iterator it = App->gui->logsBuffer.begin(); it != App->gui->logsBuffer.end(); it++) {
 		ImGui::Text((*it).c_str());
 	}
-	ImGui::End();*/
+	ImGui::End();
 }

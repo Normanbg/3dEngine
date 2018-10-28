@@ -155,10 +155,16 @@ bool GameObject::GetSelected()
 	return selected;
 }
 
-void GameObject::SetParent(GameObject * parent)
+void GameObject::SetParent(GameObject * _parent)//TO CHECK!!!----------------------------------------------------------
 {
-	if (this->parent != parent) {
-		this->parent = parent;
+	if (parent != _parent && _parent != nullptr) {
+		for (std::vector<GameObject*>::iterator it = parent->childrens.begin(); it != parent->childrens.end(); it++){
+			if (this == (*it)){
+				parent->childrens.erase(it);
+				break;
+			}
+		}
+		this->parent = _parent;
 		parent->AddChildren(this);
 	}
 }

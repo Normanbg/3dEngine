@@ -52,8 +52,8 @@ void UIPanelHierarchy::DrawChilds(std::vector<GameObject*> childs){
 		if (treeNodeOpened)
 		{
 			DrawChilds((*goIterator)->childrens);
+			ImGui::TreePop();
 		}
-		ImGui::TreePop();
 	}
 }
 

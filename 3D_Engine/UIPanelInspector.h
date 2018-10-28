@@ -4,6 +4,7 @@
 #include "UIPanel.h"
 
 class GameObject;
+enum ComponentType;
 
 class UIPanelInspector : public UIPanel
 {
@@ -13,6 +14,6 @@ public:
 
 	void Draw();
 
-	void SetChildsTreeNode(GameObject* parent);
+	void DrawComponent(ComponentType compDraw);
 };
 #endif // !__PANELINSPECTOR_H__
