@@ -11,8 +11,8 @@
 ComponentMesh::ComponentMesh()
 {
 	type = MESH;
-	texID = 1;
-	//GenerateBuffer();
+	texID = 1; // TO ASSIGN THE TEXTURE, NEEDED TO WORK ON IT
+	
 }
 
 
@@ -82,6 +82,7 @@ void ComponentMesh::Draw()
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);	
 
 	//glColor3f(colors.x, colors.y, colors.z);
+	showWireframe ? glPolygonMode(GL_FRONT_AND_BACK, GL_LINE) : glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); // wireframe
 	
 	if (num_index == 0) {// if the mesh has no index
 		glBindBuffer(GL_ARRAY_BUFFER, id_vertex);
@@ -120,7 +121,7 @@ void ComponentMesh::Draw()
 			glEnd();
 		}
 	}
-	if (ShowBBox) {
+	if (showBBox) {
 		DrawBoundingBox();
 	}
 }

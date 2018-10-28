@@ -252,33 +252,6 @@ void ModuleRenderer3D::SetDataFromJson(JSON_Object* data) {
 	_vSync = json_object_dotget_boolean(data, "VSync");
 
 }
-//
-//void ModuleRenderer3D::GenBuffFromMeshes(){
-//	Mesh* meshIterator;
-//	for (int i = 0; i < meshes.size(); i++) {
-//		meshIterator = &meshes[i];
-//		if (!meshIterator->generated) {
-//			glGenBuffers(1, (GLuint*) &(meshIterator->id_vertex));  // generates 1 buffer. then it assign a GLuint to its mem adress.
-//			glBindBuffer(GL_ARRAY_BUFFER, meshIterator->id_vertex); // set the type of buffer
-//			glBufferData(GL_ARRAY_BUFFER, sizeof(float3)*meshIterator->num_vertex, &meshIterator->vertex[0], GL_STATIC_DRAW);
-//			glGenBuffers(1, (GLuint*) &(meshIterator->id_normals));
-//			glBindBuffer(GL_ARRAY_BUFFER, meshIterator->id_normals);
-//			glBufferData(GL_ARRAY_BUFFER, sizeof(float3)*meshIterator->num_normals, &meshIterator->normals[0], GL_STATIC_DRAW);
-//			if (meshIterator->num_index > 0) {
-//				glGenBuffers(1, (GLuint*) &(meshIterator->id_index));
-//				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, meshIterator->id_index);
-//				glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * meshIterator->num_index, &meshIterator->index[0], GL_STATIC_DRAW);
-//			}
-//			meshIterator->generated = true;
-//		}
-//	}
-//}
-//
-//void ModuleRenderer3D::DrawMeshes(){
-//	for (int i = 0; i < meshes.size(); i++) {
-//		meshes[i].Draw();
-//	}		
-//}
 
 bool ModuleRenderer3D::Load(JSON_Object* data) {
 
@@ -315,7 +288,7 @@ void ModuleRenderer3D::SetTexture2D(bool active) {
 	_texture2D = active;
 }
 void ModuleRenderer3D::SetWireframe(bool active) {
-	active ? glPolygonMode(GL_FRONT_AND_BACK, GL_LINE) : glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	App->scene->SetWireframe(active);
 	_wireframe = active;
 }
 
@@ -326,9 +299,6 @@ void ModuleRenderer3D::SetBoundingBox(bool active){
 
 
 /*
-vec ModuleRenderer3D::GetAvgPosFromMeshes() 
-
-
 float3 ModuleRenderer3D::GetAvgPosFromMeshes() 
 
 {
@@ -346,44 +316,17 @@ void ModuleRenderer3D::AddMesh(Mesh*  mesh)
 
 */
 
-/*
-GLuint ModuleRenderer3D::CheckIfImageAlreadyLoaded(const char * _path)
-{
-	for (int i = 0; i < App->renderer3D->textures.size();i++) {
-		if (strcmp(textures[i].path.c_str() ,_path)==0) {
-			return textures[i].textureID;
-		}
-	}
-	return -1;
-}
 
-
-void ModuleRenderer3D::AddTexture(Texture*  tex)
-{
-	textures.push_back(*tex);
-}
-
-Texture* ModuleRenderer3D::GetTextureFromID(GLuint id) 
-{
-	for (int i = 0; i < textures.size(); i++) {
-		if (textures[i].textureID = id) {
-			return &textures[i];
-		}
-	}
-	OWN_LOG("Error getting texture from ID");
-	return nullptr;
-}
-*/
 void ModuleRenderer3D::LoadDroppedFBX(char * droppedFileDir){
-	ClearSceneMeshes();
+	//ClearSceneMeshes();
 
 	importer->ImportFBXandLoad(droppedFileDir);	
-	//GenBuffFromMeshes();	
+	
 	//App->camera->FocusToMeshes();
 
 
 }
-
+/*
 void ModuleRenderer3D::ClearSceneMeshes() {
 
 	/*OWN_LOG("Clearing meshes in scene")
@@ -394,9 +337,9 @@ void ModuleRenderer3D::ClearSceneMeshes() {
 	for (int i = textures.size() - 1; i >= 0; i--) {
 		textures[i].CleanUp();
 	}
-	textures.clear();*/
+	textures.clear();
+}*/
 
-}
 
 void ModuleRenderer3D::ShowAxis() {
 
@@ -450,131 +393,7 @@ void ModuleRenderer3D::ShowGrid() {
 
 }
 /*
-void Mesh::Draw()
-{
 
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-
-	glColor3f(colors.x, colors.y, colors.z);
-
-	if (num_index == 0) {// if the mesh has no index
-		glBindBuffer(GL_ARRAY_BUFFER, id_vertex);
-		glVertexPointer(3, GL_FLOAT, 0, NULL);
-		glDrawArrays(GL_TRIANGLES, 0, num_vertex);
-		glBindBuffer(GL_ARRAY_BUFFER, 0); //resets the buffer
-	}
-	else {
-		glBindTexture(GL_TEXTURE_2D, 0);
-		glBindTexture(GL_ELEMENT_ARRAY_BUFFER, 0);
-		
-		glBindTexture(GL_TEXTURE_2D, texID);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_index);
-		glVertexPointer(3, GL_FLOAT, 0, &(vertex[0]));		
-		glTexCoordPointer(2, GL_FLOAT, 0, &(texturesCoords[0]));
-		glDrawElements(GL_TRIANGLES, num_index, GL_UNSIGNED_INT, NULL);
-
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-		glBindTexture(GL_TEXTURE_2D, 0);
-	}
-	glDisableClientState(GL_VERTEX_ARRAY);
-	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-
-	if (App->renderer3D->GetNormals()) {
-		for (int j = 0; j < num_normals; j++) {
-			glBegin(GL_LINES);
-			glVertex3f(vertex[j].x, vertex[j].y, vertex[j].z);
-			glVertex3f(vertex[j].x - normals[j].x, vertex[j].y - normals[j].y, vertex[j].z - normals[j].z);
-			glLineWidth(1.0f);
-			glEnd();
-		}
-	}
-	if (bBox) {
-		DrawBoundingBox();
-	}
-}
-
-void Mesh::DrawBoundingBox(){
-
-	
-	glLineWidth(2.0f);
-
-	glBegin(GL_LINES);
-	glColor4f(0.0f, 1.0f, 0.0f, 1.0f); //green
-	
-	glVertex3f(boundingBox.CornerPoint(0).x, boundingBox.CornerPoint(0).y, boundingBox.CornerPoint(0).z);
-	glVertex3f(boundingBox.CornerPoint(1).x, boundingBox.CornerPoint(1).y, boundingBox.CornerPoint(1).z);
-
-	glVertex3f(boundingBox.CornerPoint(0).x, boundingBox.CornerPoint(0).y, boundingBox.CornerPoint(0).z);
-	glVertex3f(boundingBox.CornerPoint(2).x, boundingBox.CornerPoint(2).y, boundingBox.CornerPoint(2).z);
-
-	glVertex3f(boundingBox.CornerPoint(1).x, boundingBox.CornerPoint(1).y, boundingBox.CornerPoint(1).z);
-	glVertex3f(boundingBox.CornerPoint(3).x, boundingBox.CornerPoint(3).y, boundingBox.CornerPoint(3).z);
-	
-	glVertex3f(boundingBox.CornerPoint(2).x, boundingBox.CornerPoint(2).y, boundingBox.CornerPoint(2).z);
-	glVertex3f(boundingBox.CornerPoint(3).x, boundingBox.CornerPoint(3).y, boundingBox.CornerPoint(3).z);
-	
-	glVertex3f(boundingBox.CornerPoint(0).x, boundingBox.CornerPoint(0).y, boundingBox.CornerPoint(0).z);
-	glVertex3f(boundingBox.CornerPoint(4).x, boundingBox.CornerPoint(4).y, boundingBox.CornerPoint(4).z);
-
-	glVertex3f(boundingBox.CornerPoint(5).x, boundingBox.CornerPoint(5).y, boundingBox.CornerPoint(5).z);
-	glVertex3f(boundingBox.CornerPoint(1).x, boundingBox.CornerPoint(1).y, boundingBox.CornerPoint(1).z);
-
-
-	glVertex3f(boundingBox.CornerPoint(4).x, boundingBox.CornerPoint(4).y, boundingBox.CornerPoint(4).z);
-	glVertex3f(boundingBox.CornerPoint(5).x, boundingBox.CornerPoint(5).y, boundingBox.CornerPoint(5).z);
-
-	glVertex3f(boundingBox.CornerPoint(5).x, boundingBox.CornerPoint(5).y, boundingBox.CornerPoint(5).z);
-	glVertex3f(boundingBox.CornerPoint(7).x, boundingBox.CornerPoint(7).y, boundingBox.CornerPoint(7).z);
-	
-	glVertex3f(boundingBox.CornerPoint(6).x, boundingBox.CornerPoint(6).y, boundingBox.CornerPoint(6).z);
-	glVertex3f(boundingBox.CornerPoint(7).x, boundingBox.CornerPoint(7).y, boundingBox.CornerPoint(7).z);
-
-	glVertex3f(boundingBox.CornerPoint(3).x, boundingBox.CornerPoint(3).y, boundingBox.CornerPoint(3).z);
-	glVertex3f(boundingBox.CornerPoint(7).x, boundingBox.CornerPoint(7).y, boundingBox.CornerPoint(7).z);
-	
-	glVertex3f(boundingBox.CornerPoint(6).x, boundingBox.CornerPoint(6).y, boundingBox.CornerPoint(6).z);
-	glVertex3f(boundingBox.CornerPoint(4).x, boundingBox.CornerPoint(4).y, boundingBox.CornerPoint(4).z);
-
-	glVertex3f(boundingBox.CornerPoint(6).x, boundingBox.CornerPoint(6).y, boundingBox.CornerPoint(6).z);
-	glVertex3f(boundingBox.CornerPoint(2).x, boundingBox.CornerPoint(2).y, boundingBox.CornerPoint(2).z);
-
-	
-	glEnd();
-	glLineWidth(1.0f);
-	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-}
-
-void Mesh::CleanUp(){
-
-	if(id_index!=-1)
-		glDeleteBuffers(1, &id_index);
-	if (id_vertex != -1)
-		glDeleteBuffers(1, &id_vertex);
-	if (id_normals != -1)
-		glDeleteBuffers(1, &id_normals);
-
-	delete[] index;
-	delete[] vertex;
-	delete[] normals;
-	delete[] texturesCoords;
-
-}
-
-void Texture::CleanUp() {
-	if (textureID != -1)
-		glDeleteBuffers(1, &textureID);
-}
-
-void Mesh::generateBoundingBox(){
-
-	AABB aabb;
-
-	aabb.SetNegativeInfinity();
-	aabb.Enclose((float3*)vertex,num_vertex);
-	
-	boundingBox = aabb;
-}
 
 float3 Mesh::getMiddlePoint()const {
 	float3 ret = { (boundingBox.maxPoint.x + boundingBox.minPoint.x) / 2, (boundingBox.maxPoint.y + boundingBox.minPoint.y) / 2, (boundingBox.maxPoint.z + boundingBox.minPoint.z) / 2 };

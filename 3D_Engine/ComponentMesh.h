@@ -42,12 +42,17 @@ public:
 	uint texID = 0;
 
 	AABB boundingBox;
-	bool ShowBBox = false;
+	bool showBBox = false;
+
+	void GenerateBoundingBox();
+	void DrawBoundingBox();
+
+	bool showWireframe = false;
+	
 	
 	update_status PreUpdate(float dt);
 	
-	void GenerateBoundingBox();
-	void DrawBoundingBox();
+	
 	bool Update() override;
 
 	void CleanUp() override;
@@ -58,9 +63,6 @@ public:
 
 private:
 	
-
-	bool generated = false;
-
 };
 
 #endif // !__COMPONENTMESH_H__

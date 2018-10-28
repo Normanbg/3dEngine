@@ -11,69 +11,10 @@
 #include "MathGeoLib/MathGeoLib.h"
 #include "Globals.h"
 
-
-//#include "ComponentMesh.h"
-
-
 #include <array>
 #include <vector>
 #define MAX_LIGHTS 8
-/*
-struct Texture {
 
-	uint texWidth = 0;
-	uint texHeight = 0;
-
-	std::string path;
-
-	GLuint textureID = -1;
-
-	//void CleanUp();
-};
-
-struct Mesh {
-
-	float3 position;
-	float3 scale;
-	Quat rotation;
-
-	uint id_index = -1;
-	uint num_index = 0;
-	uint* index = nullptr;
-
-	uint id_vertex = -1;
-	uint num_vertex = 0;
-	float3* vertex = nullptr;
-
-	uint id_normals = -1;
-	uint num_normals = 0;
-	float3* normals = nullptr;
-
-	uint num_faces = 0; // assume each face is a triangle
-	std::string name;
-	vec3 colors = { 0,0,0 };
-
-	
-	uint num_textureCoords = 0;
-	float2* texturesCoords = nullptr;
-
-	GLuint texID = 0;
-
-	AABB boundingBox;
-
-	bool bBox = false;
-	bool generated = false;
-
-	void Draw();	
-	void CleanUp();	
-		
-	void generateBoundingBox();
-	float3 getMiddlePoint()const ;
-
-private:
-	void DrawBoundingBox();
-};
-*/
 class ModuleRenderer3D : public Module
 {
 public:
@@ -122,20 +63,10 @@ public:
 
 
 	/*vec GetAvgPosFromMeshes();*/
-
-
-	/*GLuint CheckIfImageAlreadyLoaded(const char*);*/
-
-	//inline std::vector<Mesh>* GetMeshesList()  { return &meshes; }
-	//inline std::vector<Texture>* GetTexturesList()   { return &textures; }
-
-	//void AddMesh(Mesh* mesh);
-	//void AddTexture(Texture* tex);
-	//Texture* GetTextureFromID(GLuint id);
-
+	   
 	void LoadDroppedFBX(char* droppedFileDir);
 
-	void ClearSceneMeshes();
+	//void ClearSceneMeshes();
 
 	
 	
@@ -155,8 +86,6 @@ private:
 	void ShowAxis();
 	void ShowGrid();
 	void SetDataFromJson(JSON_Object* data);
-	//void GenBuffFromMeshes();
-	//void DrawMeshes();
 
 private:
 
@@ -173,8 +102,6 @@ private:
 	bool _normals = false;
 	bool _bBox = false;
 
-	//std::vector<Mesh> meshes;	
-	//std::vector<Texture> textures;
 };
 
 #endif // !__RENDERER3D_H__

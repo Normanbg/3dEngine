@@ -25,7 +25,7 @@ public:
 	void DeselectAll();
 
 	void SetBoundingBox(bool active);
-
+	void SetWireframe(bool active);
 
 	void DrawMeshes();
 	GameObject* AddGameObject(const char* name);

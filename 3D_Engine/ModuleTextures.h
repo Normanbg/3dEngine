@@ -17,7 +17,7 @@ struct Material {
 	GLuint textureID = -1;
 	float3 colors = { 0,0,0 };
 
-	//void CleanUp();
+	void CleanUp();
 };
 
 class ModuleTextures :	public Module {

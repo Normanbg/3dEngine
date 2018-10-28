@@ -32,6 +32,9 @@ update_status ModuleTextures::PostUpdate(float dt)
 
 bool ModuleTextures::CleanUp()
 {
+	for (int i = materials.size() - 1; i >= 0; i--) {
+		materials[i].CleanUp();
+	}
 	return true;
 }
 
@@ -61,4 +64,8 @@ GLuint ModuleTextures::CheckIfImageAlreadyLoaded(const char * _path)
 	return -1;
 }
 
-
+void Material::CleanUp()
+{
+	if (textureID != -1)
+		glDeleteBuffers(1, &textureID);
+}

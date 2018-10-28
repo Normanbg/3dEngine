@@ -132,7 +132,24 @@ void ModuleScene::SetBoundingBox(bool active)
 	ComponentMesh* mesh;
 	for (int i = 0; i < comp.size(); i++) {
 		mesh = (ComponentMesh *)comp[i];
-		mesh->ShowBBox = active;
+		mesh->showBBox = active;
+
+	}
+}
+
+void ModuleScene::SetWireframe(bool active)
+{
+	GameObject* iterator;
+	std::vector<Component*> comp;
+
+	for (int i = 0; i < root->childrens.size(); i++) {
+		iterator = root->childrens[i];
+		iterator->GetComponents(MESH, comp);
+	}
+	ComponentMesh* mesh;
+	for (int i = 0; i < comp.size(); i++) {
+		mesh = (ComponentMesh *)comp[i];
+		mesh->showWireframe = active;
 
 	}
 }

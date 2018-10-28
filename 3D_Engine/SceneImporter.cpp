@@ -351,7 +351,7 @@ void SceneImporter::LoadPEI(const char * fileName)
 		//---
 
 		compMesh->num_index = ranges[0];
-		compMesh->num_vertex = ranges[1];//= mesh.num_textureCoords = compMesh->num_normals 
+		compMesh->num_vertex = compMesh->num_textureCoords = compMesh->num_normals = ranges[1];
 	
 		compMesh->index = new uint[compMesh->num_index];
 		compMesh->vertex = new float3[compMesh->num_vertex];
