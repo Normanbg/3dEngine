@@ -5,6 +5,7 @@
 
 #include "Globals.h"
 #include "SceneImporter.h"
+#include "Timer.h"
 
 #include <string>
 
@@ -15,6 +16,7 @@ using namespace std;
 
 SceneImporter::SceneImporter()
 {
+	
 }
 
 
@@ -278,6 +280,7 @@ void SceneImporter::ImportFromMesh(const aiScene* currSc, aiMesh * new_mesh,std:
 
 void SceneImporter::LoadPEI(const char * fileName)
 {
+	Timer loadingTimer;
 	std::string modelName;
 
 	App->fileSys->GetNameFromPath(fileName, nullptr, &modelName, nullptr);
@@ -393,7 +396,7 @@ void SceneImporter::LoadPEI(const char * fileName)
 		compMesh = nullptr;
 		
 	}
-	
+	OWN_LOG("Succesfully loaded PEI: %s. Loading time: %i ms", modelName.c_str(), loadingTimer.Read());
 	gameObject = nullptr;
 
 	dataFile.close();

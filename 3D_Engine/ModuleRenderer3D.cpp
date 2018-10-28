@@ -217,7 +217,7 @@ bool ModuleRenderer3D::CleanUp()
 	importer->CleanUp();
 	
 
-	ClearSceneMeshes();
+	//ClearSceneMeshes();
 		
 	SDL_GL_DeleteContext(context); 
 	return true;
@@ -291,7 +291,6 @@ void ModuleRenderer3D::SetWireframe(bool active) {
 	App->scene->SetWireframe(active);
 	_wireframe = active;
 }
-
 void ModuleRenderer3D::SetBoundingBox(bool active){
 	_bBox = active;
 	App->scene->SetBoundingBox(active);
