@@ -20,3 +20,8 @@ bool ComponentMaterial::Update()
 void ComponentMaterial::CleanUp()
 {
 }
+
+void ComponentMaterial::DrawInspector()
+{
+	//DOSOMETHING
+}

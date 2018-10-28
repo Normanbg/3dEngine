@@ -16,9 +16,10 @@ public:
 	ComponentCamera();
 	~ComponentCamera();
 
-	bool Start();
+	//bool Start();
 	bool Update() override;
 	void CleanUp()override;
+	void DrawInspector()override;
 
 	void LookAt(const float3 &Spot);
 	void Move(const float3 &Movement);

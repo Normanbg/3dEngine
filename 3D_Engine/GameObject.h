@@ -41,9 +41,10 @@ public:
 	bool GetSelected();
 	void SetParent(GameObject* parent);
 	
-
 	ComponentTransformation* GetTransformComponent();
 	ComponentCamera* GetComponentCamera();
+	ComponentMaterial * GetComponentMaterial();
+	ComponentMesh * GetComponentMesh();
 
 	void DrawMeshes();
 	void CalculateAllGlobalMatrix();
@@ -55,15 +56,17 @@ public:
 	std::vector <GameObject*>	childrens;
 	ComponentTransformation*	transformComp;
 
+	bool active = true;
+	bool staticGO = false;
+
 private:	
-	
+
 	bool isSelected();
 	void setName(char* _name);
 	void ToggleSelected();
 
 
 private:
-	
 	bool selected = false;
 };
 

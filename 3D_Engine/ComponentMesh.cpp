@@ -52,6 +52,14 @@ void ComponentMesh::CleanUp()
 	delete[] texturesCoords;
 }
 
+void ComponentMesh::DrawInspector() {
+	ImGui::Text("Vertices: %d", num_index);
+	//ImGui::Text("Triangles: %d",num_faces);
+	ImGui::Text("Indices: %d", num_index);
+	ImGui::Text("Normals: %d", num_normals);
+	ImGui::TreePop();
+}
+
 void ComponentMesh::GenerateBuffer()
 {
 	

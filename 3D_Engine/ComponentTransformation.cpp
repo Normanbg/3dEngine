@@ -28,6 +28,28 @@ void ComponentTransformation::CleanUp()
 
 }
 
+void ComponentTransformation::DrawInspector()
+{
+	float3 _pos = getPos();
+	float3 _rot = getEulerRot();
+	float3 _scale = getScale();
+
+	if (ImGui::DragFloat3("Position", (float*)&_pos, 0.1f))
+		setPos(_pos);
+
+	if (ImGui::DragFloat3("Rotation", (float*)&_rot, 0.1f))
+		setRotEuler(_rot);
+
+	if (ImGui::DragFloat3("Scale", (float*)&_scale, 0.1f, 0.0f))
+		setScale(_scale);
+	if (ImGui::SmallButton("Reset"))
+	{
+			setPos(float3::zero);
+			setRotEuler(float3::zero);
+			setScale(float3::one);
+	}
+}
+
 void ComponentTransformation::setGlobalMatrix(float4x4 newGlobalMat)
 {
 	globalMatrix = newGlobalMat;
@@ -85,4 +107,19 @@ void ComponentTransformation::setRotEuler(float3 _newrot)
 float3 ComponentTransformation::getPos()
 {
 	return transform.position;
+}
+
+float3 ComponentTransformation::getScale()
+{
+	return transform.scale;
+}
+
+float3 ComponentTransformation::getEulerRot()
+{
+	return transform.rotEuler;
+}
+
+Quat ComponentTransformation::getQuatRot()
+{
+	return transform.rotationQuat;
 }

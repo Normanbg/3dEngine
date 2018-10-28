@@ -4,7 +4,7 @@
 #include "UIPanel.h"
 
 class GameObject;
-enum ComponentType;
+class Component;
 
 class UIPanelInspector : public UIPanel
 {
@@ -14,6 +14,6 @@ public:
 
 	void Draw();
 
-	void DrawComponent(ComponentType compDraw);
+	void DrawComponent(Component* compDraw);
 };
 #endif // !__PANELINSPECTOR_H__

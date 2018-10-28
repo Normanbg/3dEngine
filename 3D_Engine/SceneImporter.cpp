@@ -311,15 +311,15 @@ void SceneImporter::LoadPEI(const char * fileName)
 
 	cursor += bytes;	
 	bytes = sizeof(float3);
-	memcpy(&compTrans->scale, cursor, bytes);
+	memcpy(&compTrans->getScale(), cursor, bytes);
 
 	cursor += bytes;
 	
-	memcpy(&compTrans->position, cursor, bytes);
+	memcpy(&compTrans->getPos(), cursor, bytes);
 
 	cursor += bytes;
 	bytes = sizeof(Quat);//sizeof quat
-	memcpy(&compTrans->rotation, cursor, bytes);
+	memcpy(&compTrans->getQuatRot(), cursor, bytes);
 	
 	delete[] scenedata;
 	scenedata = nullptr;

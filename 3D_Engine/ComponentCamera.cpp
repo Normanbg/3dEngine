@@ -144,6 +144,11 @@ void ComponentCamera::CleanUp()
 {
 }
 
+void ComponentCamera::DrawInspector()
+{
+	//ADD NEAR-FAR-FOV-ASPECT RATIO...
+}
+
 void ComponentCamera::LookAt(const float3 & Spot){
 	float3 dir = Spot - camFrustum.pos;
 
