@@ -196,7 +196,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	//DrawMeshes();
 	App->scene->DrawMeshes();
 
-
+	
 	ComponentCamera* cam = App->camera->editorCam_G0->GetComponentCamera();
 	cam->DebugDraw();
 
@@ -320,11 +320,8 @@ void ModuleRenderer3D::SetWireframe(bool active) {
 }
 
 void ModuleRenderer3D::SetBoundingBox(bool active){
-	//_bBox = active;
-	//for (int i =  0; i < meshes.size(); i++) {
-	//	meshes[i].bBox = active;
-	//}
-
+	_bBox = active;
+	App->scene->SetBoundingBox(active);
 }
 
 
@@ -425,6 +422,8 @@ void ModuleRenderer3D::ShowAxis() {
 	glVertex3f(-0.05f, 0.1f, 1.05f); glVertex3f(0.05f, 0.1f, 1.05f);
 	glVertex3f(0.05f, 0.1f, 1.05f); glVertex3f(-0.05f, -0.1f, 1.05f);
 	glVertex3f(-0.05f, -0.1f, 1.05f); glVertex3f(0.05f, -0.1f, 1.05f);
+
+	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
 	glEnd();
 	glLineWidth(1.0f);

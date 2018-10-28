@@ -41,10 +41,13 @@ public:
 
 	uint texID = 0;
 
-
-	update_status PreUpdate(float dt);
 	AABB boundingBox;
-
+	bool ShowBBox = false;
+	
+	update_status PreUpdate(float dt);
+	
+	void GenerateBoundingBox();
+	void DrawBoundingBox();
 	bool Update() override;
 
 	void CleanUp() override;
