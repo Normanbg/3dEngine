@@ -122,11 +122,18 @@ void ModuleScene::DeselectAll()
 
 void ModuleScene::SetBoundingBox(bool active)
 {
+	GameObject* iterator;
 	std::vector<Component*> comp;
-	root->GetComponents(MESH, comp);
+	
+	for (int i = 0; i < root->childrens.size(); i++) {
+		iterator = root->childrens[i];
+		iterator->GetComponents(MESH, comp);
+	}
+	ComponentMesh* mesh;
 	for (int i = 0; i < comp.size(); i++) {
-		ComponentMesh* mesh = (ComponentMesh*) comp[i];
+		mesh = (ComponentMesh *)comp[i];
 		mesh->ShowBBox = active;
+
 	}
 }
 
