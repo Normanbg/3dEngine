@@ -31,6 +31,7 @@ void UIPanelHierarchy::DrawChilds(std::vector<GameObject*> childs){
 		if ((*goIterator)->childrens.empty())
 			flags |= ImGuiTreeNodeFlags_Leaf;
 		//TODO::COLOR IF IS ACTIVE--------------
+		bool treeNodeOpened = ImGui::TreeNodeEx((*goIterator)->name.c_str(), flags);
 		if (ImGui::IsItemClicked(0) || ImGui::IsItemClicked(1))
 		{
 			//CTRL pressed = addselectedG0
@@ -48,7 +49,6 @@ void UIPanelHierarchy::DrawChilds(std::vector<GameObject*> childs){
 			}
 		}
 
-		bool treeNodeOpened = ImGui::TreeNodeEx((*goIterator)->name.c_str(), flags);
 		if (treeNodeOpened)
 		{
 			DrawChilds((*goIterator)->childrens);
