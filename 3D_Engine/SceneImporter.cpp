@@ -46,10 +46,13 @@ void SceneImporter::ImportFBXtoPEI(const char * FBXpath)
 
 	const aiScene* scene = aiImportFile(fullFBXPath.c_str(), aiProcessPreset_TargetRealtime_MaxQuality); 
 
-	if (scene == nullptr) {
-		OWN_LOG("Error loading fbx from Assets/3DModels folder.");
-		aiReleaseImport(scene);
-		return;
+	if (scene == nullptr) {		
+		 scene = aiImportFile(FBXpath, aiProcessPreset_TargetRealtime_MaxQuality);
+		 if (scene == nullptr) {
+			 OWN_LOG("Error loading fbx from Assets/3DModels folder.");
+			 aiReleaseImport(scene);
+			 return;
+		 }	
 	}
 
 	if (scene->HasMaterials()) {
@@ -165,10 +168,10 @@ void SceneImporter::ImportFBXtoPEI(const char * FBXpath)
 			ImportFromMesh(scene, meshIterator, &dataFile);
 		}
 		
-		aiReleaseImport(scene);
+		aiReleaseImport(scene);		
+		dataFile.close();
 
 		
-		dataFile.close();
 	}
 	else {
 		OWN_LOG("Error loading FBX, scene has no meshes");
@@ -176,6 +179,17 @@ void SceneImporter::ImportFBXtoPEI(const char * FBXpath)
 	
 	
 
+}
+
+void SceneImporter::ImportFBXandLoad(const char * fbxPath)  
+{
+	ImportFBXtoPEI(fbxPath);
+
+	std::string PEIPath;
+	App->fileSys->GetNameFromPath(fbxPath, nullptr, &PEIPath, nullptr);
+	PEIPath += OWN_FILE_FORMAT;
+	
+	LoadPEI(PEIPath.c_str());
 }
 
 
@@ -264,10 +278,12 @@ void SceneImporter::ImportFromMesh(const aiScene* currSc, aiMesh * new_mesh,std:
 
 void SceneImporter::LoadPEI(const char * fileName)
 {
-	
+	std::string modelName;
 
-	GameObject* gameObject = App->scene->AddGameObject((char*)fileName);
-	gameObject->name = fileName;
+	App->fileSys->GetNameFromPath(fileName, nullptr, &modelName, nullptr);
+
+	GameObject* gameObject = App->scene->AddGameObject(modelName.c_str());
+	
 	
 	ComponentTransformation* compTrans = (ComponentTransformation*)gameObject->AddComponent(TRANSFORM);
 	
@@ -277,6 +293,10 @@ void SceneImporter::LoadPEI(const char * fileName)
 	uint size = sizeof(uint) + sizeof(float3) * 2 + sizeof(Quat);
 
 	std::ifstream dataFile(filePath.c_str(), std::fstream::out | std::fstream::binary );
+	if (dataFile.fail()) {
+		OWN_LOG("Error loading PEI. Cannot find PEI file %s", fileName);
+		return;
+	}
 
 	char* scenedata =	new char[size];
 	char* cursor = scenedata;

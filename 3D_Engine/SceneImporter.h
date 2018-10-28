@@ -54,6 +54,7 @@ public:
 
 	void Init();
 	void ImportFBXtoPEI(const char* path);
+	void ImportFBXandLoad(const char* fbxPath);
 	void LoadPEI(const char* fileName);
 	void CleanUp();
 
