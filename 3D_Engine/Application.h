@@ -5,13 +5,13 @@
 #include <vector>
 
 #include "ImGui/imgui.h"
-#include "SDL\include\SDL.h"
+#include "SDL/include/SDL.h"
 #include "Globals.h"
 #include "PerfTimer.h"
 #include "Timer.h"
 #include "./JSON/parson.h"
 #include "./Glew/include/glew.h"
-#include "SDL\include\SDL_opengl.h"
+#include "SDL/include/SDL_opengl.h"
 #include <gl/GL.h>
 #include <gl/GLU.h>
 

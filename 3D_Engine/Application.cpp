@@ -1,6 +1,6 @@
 #include "Application.h"
 #include "SDL/include/SDL_cpuinfo.h"
-#include "DeviceId\DeviceId.h"
+#include "DeviceId/DeviceId.h"
 #include "ModuleWindow.h"
 #include "ModuleInput.h"
 #include "ModuleAudio.h"
@@ -10,7 +10,7 @@
 #include "ModuleFileSystem.h"
 #include "ModuleEditorCamera.h"
 #include "ModuleGui.h"
-#include "Brofiler\Brofiler.h"
+#include "Brofiler/Brofiler.h"
 
 #include "./JSON/parson.h"
 
