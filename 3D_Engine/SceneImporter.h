@@ -40,7 +40,9 @@ public:
 
 		uint num_vertex = 0;
 		float3* vertex = nullptr;
+		uint num_normals = 0;
 		float3* normals = nullptr;
+		uint num_texCoords = 0;
 		float2* texturesCoords = nullptr;
 
 		uint texID;

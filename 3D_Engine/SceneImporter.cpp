@@ -24,7 +24,7 @@ SceneImporter::~SceneImporter()
 {
 }
 
-void LogCall(const char* msg, char* userData);
+void LogCall(const char* msg, char* userData) {};
 
 void SceneImporter::Init()
 {
@@ -224,14 +224,15 @@ void SceneImporter::ImportFromMesh(const aiScene* currSc, aiMesh * new_mesh,std:
 	}
 	
 	if (new_mesh->HasNormals() && !error) { //------------normals
-
-		newMesh.normals = new float3[newMesh.num_vertex];
-		memcpy(newMesh.normals, new_mesh->mNormals, sizeof(float3) * newMesh.num_vertex);
+		newMesh.num_normals = newMesh.num_vertex;
+		newMesh.normals = new float3[newMesh.num_normals];
+		memcpy(newMesh.normals, new_mesh->mNormals, sizeof(float3) * newMesh.num_normals);
 	}
 	if (new_mesh->GetNumUVChannels() > 0 && !error) { //------------textureCoords
-		newMesh.texturesCoords = new float2[newMesh.num_vertex];
+		newMesh.num_texCoords = newMesh.num_vertex;
+		newMesh.texturesCoords = new float2[newMesh.num_texCoords];
 
-		for (int i = 0; i < (newMesh.num_vertex); i++) {
+		for (int i = 0; i < (newMesh.num_texCoords); i++) {
 			newMesh.texturesCoords[i].x = new_mesh->mTextureCoords[0][i].x;
 			newMesh.texturesCoords[i].y = new_mesh->mTextureCoords[0][i].y;
 		}
@@ -239,11 +240,11 @@ void SceneImporter::ImportFromMesh(const aiScene* currSc, aiMesh * new_mesh,std:
 	
 	
 	if (!error) { // writting into file
-	
-		uint ranges[2] = { newMesh.num_index, newMesh.num_vertex };
 
-		uint size = sizeof(ranges) + sizeof(uint)*newMesh.num_index + sizeof(float3)*newMesh.num_vertex*2+ sizeof(float2) * newMesh.num_vertex; // numIndex + numVertex + index + vertex + normals + textureCoords
-		
+		uint ranges[4] = { newMesh.num_index, newMesh.num_vertex, newMesh.num_normals, newMesh.num_texCoords };
+
+		uint size = sizeof(ranges) + sizeof(uint)*newMesh.num_index + sizeof(float3)*newMesh.num_vertex + sizeof(float3)*newMesh.num_normals + sizeof(float2) * newMesh.num_texCoords; // numIndex + numVertex + index + vertex + normals + textureCoords
+
 		char* data = new char[size];
 		char* cursor = data;
 
@@ -251,18 +252,19 @@ void SceneImporter::ImportFromMesh(const aiScene* currSc, aiMesh * new_mesh,std:
 		memcpy(cursor, ranges, bytes);
 
 		cursor += bytes;
-		bytes = sizeof(uint)* newMesh.num_index;		
+		bytes = sizeof(uint)* newMesh.num_index;
 		memcpy(cursor, newMesh.index, bytes);
-		
+
 		cursor += bytes;
 		bytes = sizeof(float3)* newMesh.num_vertex;
 		memcpy(cursor, newMesh.vertex, bytes);
-
-		cursor += bytes;
-		memcpy(cursor, newMesh.normals, bytes);
 		
 		cursor += bytes;
-		bytes = sizeof(float2)* newMesh.num_vertex;		
+		bytes = sizeof(float3)* newMesh.num_normals;
+		memcpy(cursor, newMesh.normals, bytes);
+		
+		cursor += bytes;		
+		bytes = sizeof(float2)* newMesh.num_texCoords;
 		memcpy(cursor, newMesh.texturesCoords, bytes);
 		
 		dataFile->write(data, size);
@@ -296,7 +298,7 @@ void SceneImporter::LoadPEI(const char * fileName)
 	GameObject* gameObject = App->scene->AddGameObject(modelName.c_str());
 	
 	
-	ComponentTransformation* compTrans = (ComponentTransformation*)gameObject->AddComponent(TRANSFORM);
+	ComponentTransformation* compTrans = gameObject->GetTransformComponent();
 	
 	std::string filePath = LIB_MODELS_PATH;
 	filePath += fileName;
@@ -344,9 +346,11 @@ void SceneImporter::LoadPEI(const char * fileName)
 
 				
 		//---read ranges
-		uint ranges[2]; // [numIndex , numVertex]
+		uint ranges[4]; // [numIndex , numVertex, numNormals, numTexCoords]
 
 		uint rangesSize = sizeof(ranges); 
+
+		
 
 		char* headerdata = new char[rangesSize];		
 
@@ -357,19 +361,21 @@ void SceneImporter::LoadPEI(const char * fileName)
 		uint mbytes = sizeof(ranges);
 		memcpy(ranges, headerdata, mbytes); 
 
-		delete[] headerdata;
-		headerdata = nullptr;
+		
+		
 		//---
 
 		compMesh->num_index = ranges[0];
-		compMesh->num_vertex = compMesh->num_textureCoords = compMesh->num_normals = ranges[1];
+		compMesh->num_vertex = ranges[1];
+		compMesh->num_normals = ranges[2];
+		compMesh->num_textureCoords = ranges[3];
 	
 		compMesh->index = new uint[compMesh->num_index];
 		compMesh->vertex = new float3[compMesh->num_vertex];
-		compMesh->normals = new float3[compMesh->num_vertex];
-		compMesh->texturesCoords = new float2[compMesh->num_vertex];
+		compMesh->normals = new float3[compMesh->num_normals];
+		compMesh->texturesCoords = new float2[compMesh->num_textureCoords];
 
-		uint meshDataSize = sizeof(uint)* compMesh->num_index + sizeof(float3)*compMesh->num_vertex* 2 + sizeof(float2) * compMesh->num_vertex;
+		uint meshDataSize = sizeof(uint)* compMesh->num_index + sizeof(float3)*compMesh->num_vertex+ sizeof(float3)*compMesh->num_normals + sizeof(float2) * compMesh->num_textureCoords;
 
 		char* meshdata = new char[meshDataSize];
 		char* mcursor = meshdata;
@@ -388,16 +394,19 @@ void SceneImporter::LoadPEI(const char * fileName)
 		memcpy(compMesh->vertex,mcursor , mbytes);
 		
 		mcursor += mbytes;
+		mbytes = sizeof(float3)*compMesh->num_normals;//normals	
 		memcpy(compMesh->normals, mcursor, mbytes);
 
 		mcursor += mbytes;
-		mbytes = sizeof(float2)*compMesh->num_vertex;
+		mbytes = sizeof(float2)*compMesh->num_textureCoords; //texCoords
 		memcpy(compMesh->texturesCoords,mcursor, mbytes);
 
 		totalSize += rangesSize + meshDataSize;
 
 		compMesh->GenerateBuffer();
 		
+		delete[] headerdata;
+		headerdata = nullptr;
 		delete[] meshdata;
 		meshdata = nullptr;
 		mcursor = nullptr;
