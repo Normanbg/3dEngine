@@ -112,9 +112,9 @@ void MeshImporter::LoadFBX(const char * path){
 		aiQuaternion _rotation;
 		aiVector3D _position;
 		node->mTransformation.Decompose(_scale, _rotation, _position);
-		compTrans->scale = { _scale.x, _scale.y, _scale.z };
-		compTrans->position = { _position.x, _position.y, _position.z };
-		compTrans->rotation = { _rotation.x, _rotation.y, _rotation.z, _rotation.w };
+		compTrans->setScale({ _scale.x, _scale.y, _scale.z });
+		compTrans->setPos({ _position.x, _position.y, _position.z });
+		compTrans->setRotQuat({ _rotation.x, _rotation.y, _rotation.z, _rotation.w });
 		
 		aiMesh * meshIterator = nullptr;
 		for (int i = 0; i < scene->mNumMeshes; i++) {
