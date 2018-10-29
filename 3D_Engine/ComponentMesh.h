@@ -38,9 +38,7 @@ public:
 
 	uint num_textureCoords = 0;
 	float2* texturesCoords = nullptr;
-
-	uint texID = -1;
-
+	
 	AABB boundingBox;
 	bool showBBox = false;
 

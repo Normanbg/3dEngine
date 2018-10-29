@@ -55,6 +55,39 @@ GameObject * ModuleScene::AddGameObject(const char * name, GameObject * parent)
 	return ret;
 }
 
+GameObject * ModuleScene::CreateCube()
+{
+	GameObject* ret = nullptr;
+	if (numCubes == 0)
+	{
+		ret = App->scene->AddGameObject("Cube");
+	}
+	else
+	{
+		char cubeNumb[30];
+		sprintf_s(cubeNumb, 30, "Cube_%d", App->scene->numCubes);
+		ret = App->scene->AddGameObject(cubeNumb);
+	}
+	App->scene->numCubes++;
+	ret->AddComponent(MESH);
+
+	std::vector<float3> cubeVertex = { float3{.0f,.0f,.0f},  {1.0f,.0f,.0f} ,{.0f,1.0f,.0f} , {1.0f,1.0f,.0f} , {.0f,.0f,1.0f} , {1.0f,.0f,1.0f} , {.0f,1.0f,1.0f}  ,  {1.0f,1.0f,1.0f} };
+	std::vector<uint> cubeIndices = { 0,1,2 , 1,3,2 , 3,1,5 , 5,7,3 , 7,5,4 , 6,7,4 , 6,4,0, 0,2,6  , 6,2,3 , 6,3,7 , 0,4,5 , 0,5,1 };
+	
+	ComponentMesh* mesh = ret->GetComponentMesh();
+	
+	mesh->vertex = new float3[8];
+	mesh->index = new uint[36];
+
+	memcpy(mesh->vertex, &cubeVertex[0], sizeof(float3) * 8);
+	memcpy(mesh->index, &cubeIndices[0], sizeof(uint) * 36);
+		
+	ret->GetComponentMesh()->num_vertex = cubeVertex.size();
+	ret->GetComponentMesh()->num_index = cubeIndices.size();
+	ret->GetComponentMesh()->GenerateBuffer();
+	return ret;
+}
+
 update_status ModuleScene::Update(float dt){
 
 	bool ret = true;

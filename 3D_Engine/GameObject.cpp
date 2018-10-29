@@ -1,4 +1,6 @@
 #include "GameObject.h"
+
+#include <array>
 #include <vector>
 #include <string>
 
@@ -176,16 +178,16 @@ void GameObject::AddChildren(GameObject * child)
 	this->childrens.push_back(child);
 	child->SetParent(this);
 }
-
-void GameObject::DrawMeshes()
-{
-	Component* iterator;
-	for (int i = 0; i < components.size(); i++) {
-		iterator = components[i];
-		
-	}
-	iterator = nullptr;
-}
+//
+//void GameObject::DrawMeshes()
+//{
+//	Component* iterator;
+//	for (int i = 0; i < components.size(); i++) {
+//		iterator = components[i];
+//		
+//	}
+//	iterator = nullptr;
+//}
 
 
 
@@ -269,4 +271,34 @@ void GameObject::ToggleSelected(){
 //{
 //	staticGO = !staticGO;
 //}
-
+//
+//void GameObject::CreateCube(GameObject* &toConvert)
+//{
+//	if (App->scene->numCubes == 0)
+//	{
+//		toConvert = App->scene->AddGameObject("Cube");
+//	}
+//	else
+//	{
+//		App->scene->numCubes++;
+//		std::string strCube = "Cube" + App->scene->numCubes;
+//		toConvert = App->scene->AddGameObject(strCube.c_str());
+//	}
+//	toConvert->AddComponent(MESH);
+//
+//	std::vector<float3> cubeVertex = { float3{.0f,.0f,.0f},  {1.0f,.0f,.0f} ,{.0f,1.0f,.0f} , {1.0f,1.0f,.0f} , {.0f,.0f,1.0f} , {1.0f,.0f,1.0f} , {.0f,1.0f,1.0f}  ,  {1.0f,1.0f,1.0f} };
+//	std::vector<uint> cubeIndices = { 0,1,2 , 1,3,2 , 3,1,5 , 5,7,3 , 7,5,4 , 6,7,4 , 6,4,0, 0,2,6  , 6,2,3 , 6,3,7 , 0,4,5 , 0,5,1 };
+//	/*memcpy(&ret->GetComponentMesh()->vertex[0], &cubeVertex[0], sizeof(float3) * 8);
+//	memcpy(&ret->GetComponentMesh()->index[0], &cubei[0], sizeof(uint) * 36);*/
+//	for (int i = 0; i < cubeVertex.size(); i++)
+//	{
+//		toConvert->GetComponentMesh()->vertex[i] = cubeVertex[i];
+//	}
+//	for (int j = 0; j < cubeIndices.size(); j++)
+//	{
+//		toConvert->GetComponentMesh()->index[j] = cubeIndices[j];
+//	}
+//	toConvert->GetComponentMesh()->num_vertex = cubeVertex.size();
+//	toConvert->GetComponentMesh()->num_index = cubeIndices.size();
+//	toConvert->GetComponentMesh()->GenerateBuffer();
+//}

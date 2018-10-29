@@ -1,8 +1,10 @@
 #ifndef __GAMEOBJECT_H__
 #define __GAMEOBJECT_H__
+#include "Globals.h"
 #include "ModuleScene.h"
-#include "ModuleRenderer3D.h"
 #include "ModuleTextures.h"
+#include "ModuleRenderer3D.h"
+
 
 #include "Component.h"
 #include "ComponentTransformation.h"
@@ -14,12 +16,19 @@
 
 class string;
 class vector;
-class ModuleScene;
-class ModuleTextures;
+//class ModuleScene;
+//class ModuleTextures;
 
 
 using namespace std;
 
+class Primitives
+{
+
+public:
+
+	GameObject* CreateSphere();
+};
 
 
 class GameObject
@@ -37,6 +46,7 @@ public:
 	Component* AddComponent(ComponentType type);
 	void AddChildren(GameObject* child);
 
+
 	void GetComponents(ComponentType type, std::vector<Component*>& components);
 	bool GetSelected();
 	void SetParent(GameObject* parent);
@@ -46,7 +56,6 @@ public:
 	ComponentMaterial * GetComponentMaterial();
 	ComponentMesh * GetComponentMesh();
 
-	void DrawMeshes();
 	void CalculateAllGlobalMatrix();
 
 public:

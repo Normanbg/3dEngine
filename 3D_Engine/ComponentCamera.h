@@ -5,11 +5,6 @@
 #include "Application.h"
 #include "Component.h"
 #include "Math.h"
-enum FrustumContained {
-	IS_OUT = 0,
-	IS_IN, 
-	INTERSECT
-};
 
 class ComponentCamera : public Component
 {
@@ -45,7 +40,7 @@ public:
 
 private:
 	void CalculateViewMatrix();
-	//void FrustumContains(const AaBox& refBox);
+
 private:
 	float mouseSensitivity = 0.25f;
 	float scroolWheelSensitivity = 10.0f;
