@@ -64,21 +64,12 @@ GameObject * ModuleScene::CreateCube()
 	}
 	else
 	{
-		App->scene->numCubes++;
-		std::string strCube = "Cube" + App->scene->numCubes;
-		ret = App->scene->AddGameObject(strCube.c_str());
+		char cubeNumb[30];
+		sprintf_s(cubeNumb, 30, "Cube_%d", App->scene->numCubes);
+		ret = App->scene->AddGameObject(cubeNumb);
 	}
+	App->scene->numCubes++;
 	ret->AddComponent(MESH);
-	/*
-	float3* cubeVertex = new float3[8];
-	cubeVertex[i++] = { .0f,.0f,.0f };
-	cubeVertex[i++] = { 1.0f, .0f, .0f };
-	cubeVertex[i++] = { .0f, 1.0f, .0f };
-	cubeVertex[i++] = { 1.0f, 1.0f, .0f };
-	cubeVertex[i++] = { .0f, .0f, 1.0f };
-	cubeVertex[i++] = { 1.0f, .0f, 1.0f };
-	cubeVertex[i++] = { .0f,1.0f,1.0f };
-	cubeVertex[i++] = { 1.0f, 1.0f, 1.0f };*/
 
 	std::vector<float3> cubeVertex = { float3{.0f,.0f,.0f},  {1.0f,.0f,.0f} ,{.0f,1.0f,.0f} , {1.0f,1.0f,.0f} , {.0f,.0f,1.0f} , {1.0f,.0f,1.0f} , {.0f,1.0f,1.0f}  ,  {1.0f,1.0f,1.0f} };
 	std::vector<uint> cubeIndices = { 0,1,2 , 1,3,2 , 3,1,5 , 5,7,3 , 7,5,4 , 6,7,4 , 6,4,0, 0,2,6  , 6,2,3 , 6,3,7 , 0,4,5 , 0,5,1 };

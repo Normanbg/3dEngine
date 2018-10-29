@@ -37,9 +37,6 @@ bool ModuleEditorCamera::Start()
 	bool ret = true;
 	editorCam_G0 = App->scene->AddGameObject("editorCam");
 	editorCam_G0->AddComponent(ComponentType::CAMERA);
-	GameObject* PREPUCIOOO = App->scene->AddGameObject("TRY");
-	PREPUCIOOO->SetParent(editorCam_G0);
-	GameObject* PREPUCIOOO2 = App->scene->AddGameObject("JAMELGOSSSSS", PREPUCIOOO);
 	return ret;
 }
 
