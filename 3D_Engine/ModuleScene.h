@@ -30,10 +30,12 @@ public:
 	void DrawMeshes();
 	GameObject* AddGameObject(const char* name);
 	GameObject* AddGameObject(const char* name, GameObject* parent);
+	GameObject* CreateCube();
 
 public:
 	GameObject* root;
 	std::vector<GameObject*> gObjsSelected;
+	int numCubes = 0;
 };
 
 
