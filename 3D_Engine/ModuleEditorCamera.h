@@ -2,6 +2,7 @@
 #define __MODULE_EDITOR_CAM_H__
 
 #include "Module.h"
+#include "Math.h"
 #include "Globals.h"
 
 class GameObject;
