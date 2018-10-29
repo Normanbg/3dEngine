@@ -9,11 +9,7 @@
 
 
 ComponentMesh::ComponentMesh()
-{
-	//type = MESH;
-	//texID = 1; // TO ASSIGN THE TEXTURE, NEEDED TO WORK ON IT
-	
-}
+{}
 
 
 ComponentMesh::~ComponentMesh()
@@ -32,8 +28,6 @@ update_status ComponentMesh::PreUpdate(float dt)
 
 bool ComponentMesh::Update()
 {
-	//Draw();
-	
 	return true	;
 }
 
@@ -45,6 +39,8 @@ void ComponentMesh::CleanUp()
 		glDeleteBuffers(1, &id_vertex);
 	if (id_normals != -1)
 		glDeleteBuffers(1, &id_normals);
+
+	texture = nullptr;
 
 	delete[] index;
 	delete[] vertex;
@@ -100,8 +96,8 @@ void ComponentMesh::Draw()
 	}
 	else {
 			
-		if (texID != -1) {			
-			glBindTexture(GL_TEXTURE_2D, texID);
+		if (texture != nullptr) {			
+			glBindTexture(GL_TEXTURE_2D, texture->texture->textureID);
 			glTexCoordPointer(2, GL_FLOAT, 0, &(texturesCoords[0]));
 		}
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_index); // test: before it was 2 lines upper
@@ -193,4 +189,9 @@ void ComponentMesh::DrawBoundingBox()
 	glEnd();
 	glLineWidth(1.0f);
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+}
+
+void ComponentMesh::SetTexture(ComponentMaterial * tex)
+{
+	texture = tex;
 }

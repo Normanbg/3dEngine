@@ -38,7 +38,7 @@ bool ModuleTextures::CleanUp()
 	return true;
 }
 
-void ModuleTextures::AddTexture(Material * tex)
+void ModuleTextures::AddMaterial(Material * tex)
 {
 	materials.push_back(*tex);
 }

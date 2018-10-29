@@ -31,7 +31,7 @@ public:
 	update_status PostUpdate(float dt) override;
 	bool CleanUp() override;
 
-	void AddTexture(Material* tex);
+	void AddMaterial(Material* tex);
 	Material* GetMaterialsFromID(GLuint id);
 	GLuint CheckIfImageAlreadyLoaded(const char * _path);
 
