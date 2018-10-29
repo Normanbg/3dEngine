@@ -54,8 +54,8 @@ public:
 	
 	
 	bool Update() override;
-
 	void CleanUp() override;
+	void DrawInspector() override;
 
 	void GenerateBuffer();
 	

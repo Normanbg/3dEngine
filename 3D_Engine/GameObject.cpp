@@ -6,8 +6,11 @@
 GameObject::GameObject(const char * Name)
 {
 	name = Name;
+
+	//For the transform comp the Addcomp is useless
 	transformComp = new ComponentTransformation();
 	transformComp->type = TRANSFORM;
+	transformComp->myGO = this;
 	components.push_back(transformComp);
 }
 
@@ -103,7 +106,6 @@ Component * GameObject::AddComponent(ComponentType type) {
 	switch (type) {
 	case ComponentType::MESH:
 		ret = new ComponentMesh();
-
 		ret->type = MESH;
 
 		break;
@@ -211,10 +213,43 @@ ComponentCamera * GameObject::GetComponentCamera()
 	return ret;
 }
 
+ComponentMesh * GameObject::GetComponentMesh()
+{
+	ComponentMesh* ret = nullptr;
+	//WILL ONLY FIND THE FIRST COMPONENT EQUAL TO TYPE OF EACH G0
+	for (std::vector<Component*>::iterator it = components.begin(); it != components.end(); it++)
+	{
+		if ((*it)->type == MESH)
+			return (ComponentMesh*)(*it);
+	}
+	return ret;
+}
+
+ComponentMaterial * GameObject::GetComponentMaterial()
+{
+	ComponentMaterial* ret = nullptr;
+	//WILL ONLY FIND THE FIRST COMPONENT EQUAL TO TYPE OF EACH G0
+	for (std::vector<Component*>::iterator it = components.begin(); it != components.end(); it++)
+	{
+		if ((*it)->type == MATERIAL)
+			return (ComponentMaterial*)(*it);
+	}
+	return ret;
+}
 bool GameObject::isSelected()
 {
 	return selected;
 }
+//
+//bool GameObject::isActive()
+//{
+//	return active;
+//}
+//
+//bool GameObject::isStatic()
+//{
+//	return staticGO;
+//}
 
 void GameObject::setName(char * _name)
 {
@@ -224,4 +259,14 @@ void GameObject::setName(char * _name)
 void GameObject::ToggleSelected(){
 	selected = !selected;
 }
+//
+//void GameObject::ToggleActive()
+//{
+//	active = !active;
+//}
+//
+//void GameObject::ToggleStatic()
+//{
+//	staticGO = !staticGO;
+//}
 

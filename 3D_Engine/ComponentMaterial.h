@@ -16,13 +16,10 @@ public:
 
 	Material* texture;
 
-	
-
 
 	bool Update() override;
-
-
 	void CleanUp()override;
+	void DrawInspector()override;
 };
 
 #endif // !__COMPONENTMATERIAL_H__

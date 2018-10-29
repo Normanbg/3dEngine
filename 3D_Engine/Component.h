@@ -26,6 +26,7 @@ public:
 	virtual void CleanUp() {return; }
 	virtual void Disable() { active = false; }
 	
+	virtual void DrawInspector() { return; };
 
 public:
 	bool active = false;
