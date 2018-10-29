@@ -10,7 +10,7 @@
 
 ComponentMesh::ComponentMesh()
 {
-	type = MESH;
+	//type = MESH;
 	texID = 1; // TO ASSIGN THE TEXTURE, NEEDED TO WORK ON IT
 	
 }

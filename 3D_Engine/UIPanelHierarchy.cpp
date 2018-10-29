@@ -17,7 +17,19 @@ UIPanelHierarchy::~UIPanelHierarchy()
 
 void UIPanelHierarchy::Draw()
 {
-	ImGui::Begin(name.c_str(), &active);
+	ImGui::Begin(name.c_str(), &active, ImGuiWindowFlags_MenuBar);
+	if (ImGui::BeginMenuBar())
+	{
+		if (ImGui::BeginMenu("Create"))
+		{
+			if (ImGui::MenuItem("Cube")) {
+				App->scene->CreateCube();
+			}
+			//if (ImGui::MenuItem("Load")) { App->LoadGame(); }
+			ImGui::EndMenu();
+		}
+		ImGui::EndMenuBar();
+	}
 	DrawChilds(App->scene->root->childrens);
 	ImGui::End();
 }
