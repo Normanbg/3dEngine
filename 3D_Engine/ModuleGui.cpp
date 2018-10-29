@@ -136,13 +136,13 @@ update_status ModuleGui::Update(float dt)
 					App->audio->PlayFx(openFX);
 				panelInspector->ChangeActive();
 			}
-			if (ImGui::MenuItem("Hierarchy", NULL, panelInspector->isEnabled())) {
+			if (ImGui::MenuItem("Hierarchy", NULL, panelHierarchy->isEnabled())) {
 				if (panelHierarchy->isEnabled()) {
 					App->audio->PlayFx(closeFX);
 				}
 				else
 					App->audio->PlayFx(openFX);
-				panelInspector->ChangeActive();
+				panelHierarchy->ChangeActive();
 			}
 			ImGui::EndMenu();
 		}

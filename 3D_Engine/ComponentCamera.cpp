@@ -26,6 +26,7 @@ ComponentCamera::~ComponentCamera()
 bool ComponentCamera::Update()
 {
 	camFrustum.pos = myGO->transformComp->getPos();
+
 	//float3 newPos(0, 0, 0);
 	//float speed = CAMERA_SPEED;
 

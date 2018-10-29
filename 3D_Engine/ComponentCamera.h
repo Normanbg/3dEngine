@@ -10,6 +10,7 @@ enum FrustumContained {
 	IS_IN, 
 	INTERSECT
 };
+
 class ComponentCamera : public Component
 {
 public:
