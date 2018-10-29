@@ -69,19 +69,28 @@ GameObject * ModuleScene::CreateCube()
 		ret = App->scene->AddGameObject(strCube.c_str());
 	}
 	ret->AddComponent(MESH);
+	/*
+	float3* cubeVertex = new float3[8];
+	cubeVertex[i++] = { .0f,.0f,.0f };
+	cubeVertex[i++] = { 1.0f, .0f, .0f };
+	cubeVertex[i++] = { .0f, 1.0f, .0f };
+	cubeVertex[i++] = { 1.0f, 1.0f, .0f };
+	cubeVertex[i++] = { .0f, .0f, 1.0f };
+	cubeVertex[i++] = { 1.0f, .0f, 1.0f };
+	cubeVertex[i++] = { .0f,1.0f,1.0f };
+	cubeVertex[i++] = { 1.0f, 1.0f, 1.0f };*/
 
 	std::vector<float3> cubeVertex = { float3{.0f,.0f,.0f},  {1.0f,.0f,.0f} ,{.0f,1.0f,.0f} , {1.0f,1.0f,.0f} , {.0f,.0f,1.0f} , {1.0f,.0f,1.0f} , {.0f,1.0f,1.0f}  ,  {1.0f,1.0f,1.0f} };
 	std::vector<uint> cubeIndices = { 0,1,2 , 1,3,2 , 3,1,5 , 5,7,3 , 7,5,4 , 6,7,4 , 6,4,0, 0,2,6  , 6,2,3 , 6,3,7 , 0,4,5 , 0,5,1 };
-	/*memcpy(&ret->GetComponentMesh()->vertex[0], &cubeVertex[0], sizeof(float3) * 8);
-	memcpy(&ret->GetComponentMesh()->index[0], &cubei[0], sizeof(uint) * 36);*/
-	for (int i = 0; i < cubeVertex.size(); i++)
-	{
-		ret->GetComponentMesh()->vertex[i] = cubeVertex[i];
-	}
-	for (int j = 0; j < cubeIndices.size(); j++)
-	{
-		ret->GetComponentMesh()->index[j] = cubeIndices[j];
-	}
+	
+	ComponentMesh* mesh = ret->GetComponentMesh();
+	
+	mesh->vertex = new float3[8];
+	mesh->index = new uint[36];
+
+	memcpy(mesh->vertex, &cubeVertex[0], sizeof(float3) * 8);
+	memcpy(mesh->index, &cubeIndices[0], sizeof(uint) * 36);
+		
 	ret->GetComponentMesh()->num_vertex = cubeVertex.size();
 	ret->GetComponentMesh()->num_index = cubeIndices.size();
 	ret->GetComponentMesh()->GenerateBuffer();
