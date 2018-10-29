@@ -5,6 +5,11 @@
 #include "Globals.h"
 
 class GameObject;
+enum FrustumContained {
+	IS_OUT = 0,
+	IS_IN,
+	INTERSECT
+};
 
 class ModuleEditorCamera : public Module
 {
@@ -15,6 +20,8 @@ public:
 	bool Start();
 	update_status Update(float dt);
 	bool CleanUp();
+
+	FrustumContained ContainsAaBox(const AABB & refBox) const;
 
 	void Look(const vec3 &Position, const vec3 &Reference, bool RotateAroundReference = false);
 	void LookAt(const vec3 &Spot);
