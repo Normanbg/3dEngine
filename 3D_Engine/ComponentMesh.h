@@ -5,7 +5,7 @@
 #include "Globals.h"
 #include "MathGeoLib/Math/MathAll.h"
 #include "MathGeoLib/Geometry/AABB.h"
-
+#include "ComponentMaterial.h"
 
 #include <array>
 #include <vector>
@@ -16,7 +16,7 @@
 #include "Assimp/include/cfileio.h"
 
 
-
+struct ComponentMaterial;
 
 class ComponentMesh : public Component
 {
@@ -39,7 +39,7 @@ public:
 	uint num_textureCoords = 0;
 	float2* texturesCoords = nullptr;
 
-	uint texID = 0;
+	uint texID = -1;
 
 	AABB boundingBox;
 	bool showBBox = false;
@@ -49,10 +49,9 @@ public:
 
 	bool showWireframe = false;
 	
+	void SetTexture(ComponentMaterial* texture);
 	
-	update_status PreUpdate(float dt);
-	
-	
+	update_status PreUpdate(float dt);	
 	bool Update() override;
 	void CleanUp() override;
 	void DrawInspector() override;
@@ -62,7 +61,7 @@ public:
 	void Draw();
 
 private:
-	
+	ComponentMaterial* texture;
 };
 
 #endif // !__COMPONENTMESH_H__

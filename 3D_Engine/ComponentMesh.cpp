@@ -11,7 +11,7 @@
 ComponentMesh::ComponentMesh()
 {
 	type = MESH;
-	texID = 1; // TO ASSIGN THE TEXTURE, NEEDED TO WORK ON IT
+	//texID = 1; // TO ASSIGN THE TEXTURE, NEEDED TO WORK ON IT
 	
 }
 
@@ -45,6 +45,8 @@ void ComponentMesh::CleanUp()
 		glDeleteBuffers(1, &id_vertex);
 	if (id_normals != -1)
 		glDeleteBuffers(1, &id_normals);
+
+	texture = nullptr;
 
 	delete[] index;
 	delete[] vertex;
@@ -194,4 +196,9 @@ void ComponentMesh::DrawBoundingBox()
 	glEnd();
 	glLineWidth(1.0f);
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+}
+
+void ComponentMesh::SetTexture(ComponentMaterial * tex)
+{
+	texture = tex;
 }
