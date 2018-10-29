@@ -148,9 +148,9 @@ bool ModuleRenderer3D::Start() {
 	BROFILER_CATEGORY("Renderer3D_Start", Profiler::Color::HotPink);
 
 	bool ret = true;
-
+	/*importer->LoadFBX("BakerHouse.fbx");
 	importer->ImportFBXtoPEI("BakerHouse.fbx");
-	importer->LoadPEI("BakerHouse.pei");
+	importer->LoadPEI("BakerHouse.pei");*/
 	
 	//GenBuffFromMeshes();
 

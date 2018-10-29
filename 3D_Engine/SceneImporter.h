@@ -58,6 +58,8 @@ public:
 	void LoadPEI(const char* fileName);
 	void CleanUp();
 
+	void LoadFBX(const char * path);
+
 	
 
 private:

@@ -280,10 +280,18 @@ void SceneImporter::ImportFromMesh(const aiScene* currSc, aiMesh * new_mesh,std:
 
 void SceneImporter::LoadPEI(const char * fileName)
 {
-	Timer loadingTimer;
+	
+	
 	std::string modelName;
 
 	App->fileSys->GetNameFromPath(fileName, nullptr, &modelName, nullptr);
+
+	if (App->renderer3D->GetLoadFBXTest()) { // loads .fbx to test the ms compared to loading .pei
+		std::string fbxName = modelName.substr(0, modelName.size() - 4);
+			fbxName+= FBX_FORMAT;
+		LoadFBX(fbxName.c_str());
+	}
+	Timer loadingTimer;
 
 	GameObject* gameObject = App->scene->AddGameObject(modelName.c_str());
 	
@@ -396,7 +404,7 @@ void SceneImporter::LoadPEI(const char * fileName)
 		compMesh = nullptr;
 		
 	}
-	OWN_LOG("Succesfully loaded PEI: %s. Loading time: %i ms", modelName.c_str(), loadingTimer.Read());
+	OWN_LOG("\n\nSuccesfully loaded PEI: %s. Loading time: %i ms", modelName.c_str(), loadingTimer.Read());
 	gameObject = nullptr;
 
 	dataFile.close();
@@ -407,3 +415,149 @@ void SceneImporter::CleanUp()
 	aiDetachAllLogStreams();
 }
 
+void SceneImporter::LoadFBX(const char * path) {
+
+	Timer timerLoader;
+	std::string fbxName = MODELS_PATH;
+	fbxName += path;
+	const aiScene* scene = aiImportFile(fbxName.c_str(), aiProcessPreset_TargetRealtime_MaxQuality);
+	//---checks if fbx path exist
+	if (scene == nullptr) {
+		OWN_LOG("Error loading scene %s", aiGetErrorString());
+		aiReleaseImport(scene);
+		return;
+
+	}//------
+
+	std::string modelName;
+
+	GameObject* gameObject = App->scene->AddGameObject(modelName.c_str());
+
+	App->fileSys->GetNameFromPath(path, nullptr, &modelName, nullptr);
+	ComponentTransformation* compTrans = (ComponentTransformation*)gameObject->AddComponent(TRANSFORM);
+
+	if (scene->HasMaterials()) {
+		//need to load a texture outside the mesh. as a scene
+		///check if material is in the path
+		///if it is, load texture, convert to .dds & added as a component
+		uint numMaterials = scene->mNumMaterials;
+		for (int i = 0; i < numMaterials; i++) {
+
+			aiMaterial* material = scene->mMaterials[i];
+
+			Material* mat = new Material;
+
+			aiColor3D color(0.f, 0.f, 0.f);
+			material->Get(AI_MATKEY_COLOR_DIFFUSE, color);
+			mat->colors[0] = color.r;
+			mat->colors[1] = color.g;
+			mat->colors[2] = color.b;
+
+			aiString texturePath;
+			aiReturn ret = material->GetTexture(aiTextureType_DIFFUSE, 0, &texturePath);
+			if (ret == aiReturn_SUCCESS) {
+
+				std::string fullTexPath = TEXTURES_PATH;
+				fullTexPath += texturePath.C_Str();
+
+				std::string textureName;
+				std::string extension;
+				App->fileSys->GetNameFromPath(fullTexPath.c_str(), nullptr, &textureName, &extension);
+
+				GLuint check = App->textures->CheckIfImageAlreadyLoaded(textureName.c_str());
+				if (check == -1) {
+					if (extension != DDS_FORMAT) {
+						App->renderer3D->texImporter->ImportToDDS(fullTexPath.c_str(), textureName.c_str());
+					}
+					std::string texDDSPath = LIB_TEXTURES_PATH + textureName + DDS_FORMAT;
+					mat->textureID = App->renderer3D->texImporter->LoadTexture(texDDSPath.c_str(), mat);
+					OWN_LOG("Loading texture from Lib/Textures folder");
+					if (mat->textureID == -1) { // first check if texture is in local path "Lib/Textures"
+						OWN_LOG("Error loading texture.");
+					}
+					if (mat->textureID != -1) { // if texture can be loaded
+						mat->path = fullTexPath;
+						//mesh.texID = _text.textureID;
+
+						App->textures->AddTexture(mat);
+					}
+				}
+				else {
+					//mesh->texID = check;
+				}
+			}
+			else {
+
+				OWN_LOG("Error loading texture from fbx. Error: %s", aiGetErrorString());
+			}
+		}
+	}
+
+	if (scene->HasMeshes()) {
+		OWN_LOG("Loading FBX mesh from %s", path);
+		bool error = false;
+
+		const aiNode* node = scene->mRootNode; // NEEDTO delete pointer?
+
+		aiVector3D _scale;
+		aiQuaternion _rotation;
+		aiVector3D _position;
+		node->mTransformation.Decompose(_scale, _rotation, _position);
+		compTrans->scale = { _scale.x, _scale.y, _scale.z };
+		compTrans->position = { _position.x, _position.y, _position.z };
+		compTrans->rotation = { _rotation.x, _rotation.y, _rotation.z, _rotation.w };
+
+		aiMesh * meshIterator = nullptr;
+		for (int i = 0; i < scene->mNumMeshes; i++) {
+			meshIterator = scene->mMeshes[i];
+
+			ComponentMesh* compMesh = (ComponentMesh*)gameObject->AddComponent(MESH);
+
+
+			compMesh->num_vertex = meshIterator->mNumVertices;
+			compMesh->vertex = new float3[compMesh->num_vertex];
+			memcpy(compMesh->vertex, meshIterator->mVertices, sizeof(float3) * compMesh->num_vertex);
+			OWN_LOG("New mesh with %d vertices", compMesh->num_vertex);
+
+			if (meshIterator->HasFaces()) {
+				compMesh->num_index = meshIterator->mNumFaces * 3;
+				compMesh->index = new uint[compMesh->num_index]; // assume each face is a triangle
+				for (uint i = 0; i < meshIterator->mNumFaces; ++i) {
+					if (meshIterator->mFaces[i].mNumIndices != 3) {
+						OWN_LOG("WARNING, geometry face with != 3 indices!");
+						error = true;
+
+					}
+					else {
+						memcpy(&compMesh->index[i * 3], meshIterator->mFaces[i].mIndices, 3 * sizeof(uint));
+					}
+				}
+			}
+			if (meshIterator->HasNormals() && !error) {
+				compMesh->num_normals = meshIterator->mNumVertices;
+				compMesh->normals = new float3[compMesh->num_normals];
+				memcpy(compMesh->normals, meshIterator->mNormals, sizeof(float3) * compMesh->num_normals);
+				OWN_LOG("New mesh with %d normals", compMesh->num_normals);
+			}
+			if (meshIterator->GetNumUVChannels() > 0 && !error) {
+				compMesh->num_textureCoords = compMesh->num_vertex;
+				compMesh->texturesCoords = new float2[compMesh->num_textureCoords];
+
+				for (int i = 0; i < (compMesh->num_textureCoords); i++) {
+					compMesh->texturesCoords[i].x = meshIterator->mTextureCoords[0][i].x;
+					compMesh->texturesCoords[i].y = meshIterator->mTextureCoords[0][i].y;
+				}
+				OWN_LOG("New mesh with %d UVs", compMesh->num_textureCoords);
+			}
+			else {
+				OWN_LOG("Error loading mesh");
+			}
+		}
+		node = nullptr;
+		OWN_LOG("\n\nSuccesfully loaded FBX: %s. Loading time: %i ms ", modelName.c_str(), timerLoader.Read());
+	}
+	else {
+		OWN_LOG("Error loading FBX, scene has no meshes");
+	}
+	aiReleaseImport(scene);
+}

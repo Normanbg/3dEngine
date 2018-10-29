@@ -51,3 +51,4 @@ enum update_status
 #define SETTINGS_PATH "Settings/"
 #define OWN_FILE_FORMAT ".pei"
 #define DDS_FORMAT ".dds"
+#define FBX_FORMAT ".fbx"

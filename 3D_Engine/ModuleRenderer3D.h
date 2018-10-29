@@ -46,7 +46,7 @@ public:
 	void SetNormals(bool active) { _normals = active; }
 	void SetAxis(bool active) { _axis = active; }
 	void SetGrid(bool active) { _grid = active; }
-
+	void SetLoadFBXTest(bool active) { _loadFBXTest = active; }
 	void SetBoundingBox(bool active);
 
 	inline bool GetDepthTest() const { return _depthTest; }
@@ -57,7 +57,7 @@ public:
 	inline bool GetWireframe()const { return _wireframe; }
 	inline bool GetNormals()const { return _normals; }
 	inline bool GetBoundingBox()const { return _bBox; }
-
+	inline bool GetLoadFBXTest()const { return _loadFBXTest; }
 	inline bool GetAxis() const { return _axis; }
 	inline bool GetGrid() const { return _grid; }
 
@@ -101,6 +101,7 @@ private:
 	bool _grid = true;
 	bool _normals = false;
 	bool _bBox = false;
+	bool _loadFBXTest = false;
 
 };
 
