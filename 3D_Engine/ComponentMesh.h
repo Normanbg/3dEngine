@@ -59,7 +59,7 @@ public:
 	void Draw();
 
 private:
-	ComponentMaterial* texture;
+	ComponentMaterial* texture = nullptr;
 };
 
 #endif // !__COMPONENTMESH_H__

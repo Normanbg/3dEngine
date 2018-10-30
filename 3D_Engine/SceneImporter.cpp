@@ -160,7 +160,7 @@ void SceneImporter::ImportFBXtoPEI(const char * FBXpath)
 
 		aiMesh * meshIterator = nullptr; // NEEDTO delete pointer?
 
-		for (int i = 0; i < newScene.numMeshes; i++) {
+		for (int i = 0; i < scene->mNumMeshes; i++) {
 			meshIterator = scene->mMeshes[i];
 			ImportFromMesh(scene, meshIterator, &dataFile);
 		}
@@ -209,7 +209,7 @@ void SceneImporter::ImportFromMesh(const aiScene* currSc, aiMesh * new_mesh,std:
 			if (new_mesh->mFaces[i].mNumIndices != 3) {
 				OWN_LOG("WARNING, geometry face with != 3 indices!");
 				error = true;
-
+				
 			}
 			else {
 				memcpy(&newMesh.index[i * 3], new_mesh->mFaces[i].mIndices, 3 * sizeof(uint));
@@ -232,8 +232,7 @@ void SceneImporter::ImportFromMesh(const aiScene* currSc, aiMesh * new_mesh,std:
 			newMesh.texturesCoords[i].y = new_mesh->mTextureCoords[0][i].y;
 		}
 	}
-	
-	
+			
 	if (!error) { // writting into file
 
 		uint ranges[4] = { newMesh.num_index, newMesh.num_vertex, newMesh.num_normals, newMesh.num_texCoords };
@@ -273,6 +272,19 @@ void SceneImporter::ImportFromMesh(const aiScene* currSc, aiMesh * new_mesh,std:
 		data = nullptr;
 		cursor = nullptr;
 	}
+
+	if (error) {
+		newMesh.num_index = newMesh.num_vertex = newMesh.num_normals = newMesh.num_texCoords = 0;
+		uint ranges[4] = { newMesh.num_index, newMesh.num_vertex, newMesh.num_normals, newMesh.num_texCoords };
+		uint size = sizeof(ranges) + sizeof(uint)*newMesh.num_index + sizeof(float3)*newMesh.num_vertex + sizeof(float3)*newMesh.num_normals + sizeof(float2) * newMesh.num_texCoords; // numIndex + numVertex + index + vertex + normals + textureCoords
+		char* data = new char[size];
+		uint bytes = sizeof(ranges);
+		memcpy(data, ranges, bytes);
+		dataFile->write(data, size);
+		delete[] data;
+		data = nullptr;
+	}
+	
 }
 
 void SceneImporter::LoadPEI(const char * fileName)
