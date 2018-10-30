@@ -7,6 +7,7 @@
 #include "SceneImporter.h"
 #include "Timer.h"
 
+
 #include <string>
 
 
@@ -44,7 +45,7 @@ void SceneImporter::ImportFBXtoPEI(const char * FBXpath)
 		
 	std::string modelName;
 	
-	App->fileSys->GetNameFromPath(fullFBXPath.c_str(),nullptr, &modelName, nullptr);
+	App->fileSys->GetNameFromPath(fullFBXPath.c_str(),nullptr, &modelName, nullptr,nullptr);
 
 	const aiScene* scene = aiImportFile(fullFBXPath.c_str(), aiProcessPreset_TargetRealtime_MaxQuality); 
 
@@ -83,7 +84,7 @@ void SceneImporter::ImportFBXtoPEI(const char * FBXpath)
 
 				std::string textureName;
 				std::string extension;
-				App->fileSys->GetNameFromPath(fullTexPath.c_str(), nullptr, &textureName, &extension);
+				App->fileSys->GetNameFromPath(fullTexPath.c_str(), nullptr, &textureName, nullptr, &extension);
 
 				GLuint check = App->textures->CheckIfImageAlreadyLoaded(textureName.c_str());
 				if (check == -1) {
@@ -183,7 +184,7 @@ void SceneImporter::ImportFBXandLoad(const char * fbxPath)
 	ImportFBXtoPEI(fbxPath);
 
 	std::string PEIPath;
-	App->fileSys->GetNameFromPath(fbxPath, nullptr, &PEIPath, nullptr);
+	App->fileSys->GetNameFromPath(fbxPath, nullptr, &PEIPath, nullptr,nullptr);
 	PEIPath += OWN_FILE_FORMAT;
 	
 	LoadPEI(PEIPath.c_str());
@@ -293,11 +294,11 @@ void SceneImporter::LoadPEI(const char * fileName)
 	
 	std::string modelName;
 
-	App->fileSys->GetNameFromPath(fileName, nullptr, &modelName, nullptr);
+	App->fileSys->GetNameFromPath(fileName, nullptr, &modelName, nullptr, nullptr);
 
 	if (App->renderer3D->GetLoadFBXTest()) { // loads .fbx to test the ms compared to loading .pei
-		std::string fbxName = modelName.substr(0, modelName.size() - 4);
-			fbxName+= FBX_FORMAT;
+		std::string fbxName = modelName;
+		fbxName+= FBX_FORMAT;
 		LoadFBX(fbxName.c_str());
 	}
 	Timer loadingTimer;
@@ -348,8 +349,12 @@ void SceneImporter::LoadPEI(const char * fileName)
 	totalSize = size;
 
 	for (int i = 0; i < numMeshes; i++) {
+		std::string childName = modelName + "_mesh"+std::to_string(i);
 		
-		ComponentMesh* compMesh = (ComponentMesh*)gameObject->AddComponent(MESH);
+		GameObject* childGO = new GameObject(childName.c_str());
+		gameObject->AddChildren(childGO);
+
+		ComponentMesh* compMesh = (ComponentMesh*)childGO->AddComponent(MESH);
 
 				
 		//---read ranges
@@ -446,10 +451,11 @@ void SceneImporter::LoadFBX(const char * path) {
 	}//------
 
 	std::string modelName;
+	App->fileSys->GetNameFromPath(path, nullptr, &modelName,nullptr ,nullptr);
 
 	GameObject* gameObject = App->scene->AddGameObject(modelName.c_str());
 
-	App->fileSys->GetNameFromPath(path, nullptr, &modelName, nullptr);
+	
 	ComponentTransformation* compTrans = (ComponentTransformation*)gameObject->AddComponent(TRANSFORM);
 
 	if (scene->HasMaterials()) {
@@ -478,7 +484,7 @@ void SceneImporter::LoadFBX(const char * path) {
 
 				std::string textureName;
 				std::string extension;
-				App->fileSys->GetNameFromPath(fullTexPath.c_str(), nullptr, &textureName, &extension);
+				App->fileSys->GetNameFromPath(fullTexPath.c_str(), nullptr, &textureName, nullptr, &extension);
 
 				GLuint check = App->textures->CheckIfImageAlreadyLoaded(textureName.c_str());
 				if (check == -1) {

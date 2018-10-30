@@ -22,7 +22,7 @@ public:
 
 	void NormalizePath(std::string & full_path, bool toLower = false) const;
 
-	void GetNameFromPath(const char * full_path, std::string * path, std::string * file, std::string * extension) const;
+	void GetNameFromPath(const char * full_path, std::string * path, std::string * file, std::string * fileWithExtension, std::string * extension) const;
 };
 
 #endif // __MODULE_FS_H__

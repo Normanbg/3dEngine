@@ -104,7 +104,7 @@ uint ModuleFileSystem::readFile(const char * fileName, char** data)
 	return ret;
 }
 
-void ModuleFileSystem::GetNameFromPath(const char * full_path, std::string * path, std::string * file, std::string * extension) const
+void ModuleFileSystem::GetNameFromPath(const char * full_path, std::string * path, std::string * file, std::string * fileWithExtension, std::string * extension) const
 {
 	if (full_path != nullptr) 
 	{
@@ -122,14 +122,19 @@ void ModuleFileSystem::GetNameFromPath(const char * full_path, std::string * pat
 		}
 
 		if (file != nullptr)
-		{
-			if (posSlash < nwFullPath.length()) {
-				nwFullPath = nwFullPath.substr(0, posDot);
-				posSlash = nwFullPath.find_last_of("\\/");
-				*file = nwFullPath.substr(posSlash + 1);
+		{	
+			nwFullPath = nwFullPath.substr(0, posDot);
+			posSlash = nwFullPath.find_last_of("\\/");
+			*file = nwFullPath.substr(posSlash + 1);
+			
+		}
+		if (fileWithExtension != nullptr) {
+			if (posSlash < nwFullPath.length()) {								
+				*fileWithExtension = nwFullPath.substr(posSlash + 1);
 			}
 			else
-				*file = nwFullPath;
+				*fileWithExtension = nwFullPath;
+		
 		}
 
 		if (extension != nullptr)

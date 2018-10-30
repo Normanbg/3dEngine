@@ -29,7 +29,7 @@ bool GameObject::PreUpdate(){
 	}
 	for (int i = 0; i < childrens.size() ; i++) {
 
-		ret &= components[i]->PreUpdate();
+		ret &= childrens[i]->PreUpdate();
 	}
 	   
 	return ret;
@@ -149,7 +149,7 @@ void GameObject::GetComponents(ComponentType type, std::vector<Component*>& comp
 	GameObject* gameObject;
 	for(int i = 0; i < childrens.size(); i++) {
 		gameObject = childrens[i];
-		gameObject->GetComponents(type, components);
+		gameObject->GetComponents(type, comp);
 	}
 	iterator = nullptr;
 }
@@ -161,20 +161,29 @@ bool GameObject::GetSelected()
 
 void GameObject::SetParent(GameObject * _parent)//TO CHECK!!!----------------------------------------------------------
 {
-	if (parent != _parent && _parent != nullptr) {
-		for (std::vector<GameObject*>::iterator it = parent->childrens.begin(); it != parent->childrens.end(); it++){
-			if (this == (*it)){
-				parent->childrens.erase(it);
+		
+	if (parent != nullptr ) {
+		if (parent = _parent) {
+			return;
+		}		
+		for (std::vector<GameObject*>::iterator iterator = parent->childrens.begin(); iterator != parent->childrens.end(); iterator++) {
+			if (this == (*iterator)) {
+				parent->childrens.erase(iterator);
 				break;
 			}
-		}
-		this->parent = _parent;
-		parent->AddChildren(this);
+		}		
 	}
+	parent = _parent;
+	parent->AddChildren(this);
 }
 
 void GameObject::AddChildren(GameObject * child)
 {
+	for (int i = 0; i < childrens.size(); i++) {
+		if (childrens[i] == child) {
+			return;
+		}
+	}
 	this->childrens.push_back(child);
 	child->SetParent(this);
 }
