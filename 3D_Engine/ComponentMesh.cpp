@@ -1,6 +1,7 @@
 #include "Application.h"
 #include "ComponentMesh.h"
 #include "ModuleRenderer3D.h"
+#include "GameObject.h"
 
 #pragma comment (lib, "glu32.lib")
 #pragma comment (lib, "opengl32.lib") 
@@ -81,7 +82,8 @@ void ComponentMesh::GenerateBuffer()
 
 void ComponentMesh::Draw()
 {
-	
+	glPushMatrix();
+	glMultMatrixf(myGO->transformComp->globalMatrix.Transposed().ptr());
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);	
 
@@ -124,6 +126,7 @@ void ComponentMesh::Draw()
 			glEnd();
 		}
 	}
+	glPopMatrix();
 	if (showBBox) {
 		DrawBoundingBox();
 	}
