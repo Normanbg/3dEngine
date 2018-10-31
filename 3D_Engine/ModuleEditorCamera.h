@@ -6,6 +6,8 @@
 #include "Globals.h"
 
 class GameObject;
+class ComponentCamera;
+
 enum FrustumContained {
 	IS_OUT = 0,
 	IS_IN,
@@ -41,7 +43,8 @@ public:
 	float zoomDistance = 20.0f;
 
 	//---------
-	GameObject* editorCam_G0;
+	//GameObject* editorCam_G0;
+	ComponentCamera* edCamera;
 
 private:
 
