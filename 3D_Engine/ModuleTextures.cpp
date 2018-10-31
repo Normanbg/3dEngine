@@ -54,6 +54,17 @@ Material * ModuleTextures::GetMaterialsFromID(GLuint id)
 	return nullptr;
 }
 
+Material * ModuleTextures::GetMaterialsFromName(const char * name)
+{
+	for (int i = 0; i < materials.size(); i++) {
+		if (strcmp(materials[i].name.c_str(), name) == 0) {
+			return &materials[i];
+		}
+	}
+	OWN_LOG("Error getting texture from ID");
+	return nullptr;
+}
+
 GLuint ModuleTextures::CheckIfImageAlreadyLoaded(const char * _path)
 {
 	for (int i = 0; i < materials.size(); i++) {

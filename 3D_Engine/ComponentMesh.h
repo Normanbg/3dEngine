@@ -47,7 +47,7 @@ public:
 
 	bool showWireframe = false;
 	
-	void SetTexture(ComponentMaterial* texture);
+	void SetMaterial(ComponentMaterial* texture);
 	
 	update_status PreUpdate(float dt);	
 	bool Update() override;
@@ -59,7 +59,7 @@ public:
 	void Draw();
 
 private:
-	ComponentMaterial* texture = nullptr;
+	ComponentMaterial* material = nullptr;
 };
 
 #endif // !__COMPONENTMESH_H__

@@ -34,6 +34,7 @@ public:
 
 	void AddMaterial(Material* tex);
 	Material* GetMaterialsFromID(GLuint id);
+	Material* GetMaterialsFromName(const char* name);
 	GLuint CheckIfImageAlreadyLoaded(const char * _path);
 
 	std::vector<Material> materials;

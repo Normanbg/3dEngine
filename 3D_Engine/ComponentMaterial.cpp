@@ -1,7 +1,6 @@
 #include "ComponentMaterial.h"
 
 
-
 ComponentMaterial::ComponentMaterial()
 {
 	type = MATERIAL;
@@ -23,5 +22,8 @@ void ComponentMaterial::CleanUp()
 
 void ComponentMaterial::DrawInspector()
 {
-	//DOSOMETHING
+	ImGui::Separator();
+	ImGui::Text(texture->name.c_str());
+	
+	ImGui::Separator();
 }

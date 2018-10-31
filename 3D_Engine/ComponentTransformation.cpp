@@ -28,6 +28,7 @@ void ComponentTransformation::CleanUp()
 
 void ComponentTransformation::DrawInspector()
 {
+	ImGui::Separator();
 	float3 _pos = getPos();
 	float3 _rot = getEulerRot();
 	float3 _scale = getScale();
@@ -46,6 +47,7 @@ void ComponentTransformation::DrawInspector()
 			setRotEuler(float3::zero);
 			setScale(float3::one);
 	}
+	ImGui::Separator();
 }
 
 void ComponentTransformation::setGlobalMatrix(float4x4 newGlobalMat)

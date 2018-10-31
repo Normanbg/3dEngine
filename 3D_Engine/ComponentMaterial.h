@@ -4,9 +4,10 @@
 #include "Component.h"
 #include "Globals.h"
 #include "ModuleTextures.h"
-#include "SceneImporter.h"//
-#include "TextureImporter.h"//
 
+#include <string>
+
+struct Material;
 
 class ComponentMaterial : public Component
 {

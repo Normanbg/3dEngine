@@ -1,6 +1,7 @@
 #include "Application.h"
 #include "ComponentMesh.h"
 #include "ModuleRenderer3D.h"
+#include "GameObject.h"
 
 #pragma comment (lib, "glu32.lib")
 #pragma comment (lib, "opengl32.lib") 
@@ -40,7 +41,7 @@ void ComponentMesh::CleanUp()
 	if (id_normals != -1)
 		glDeleteBuffers(1, &id_normals);
 
-	texture = nullptr;
+	material = nullptr;
 
 	delete[] index;
 	delete[] vertex;
@@ -49,11 +50,48 @@ void ComponentMesh::CleanUp()
 }
 
 void ComponentMesh::DrawInspector() {
+	ImGui::Separator();
 	ImGui::Text("Vertices: %d", num_index);
 	//ImGui::Text("Triangles: %d",num_faces);
 	ImGui::Text("Indices: %d", num_index);
-	ImGui::Text("Normals: %d", num_normals);
-	ImGui::TreePop();
+	ImGui::Text("Normals: %d \n", num_normals);
+	
+	const char* currentMaterial = NULL;
+	if (material != nullptr) {
+		currentMaterial = material->texture->name.c_str();
+	
+	}
+	
+	
+
+	if (ImGui::BeginCombo("Material", currentMaterial)) 
+	{
+		std::vector<Material> mat = App->textures->materials; // change by GetMaterials List to initiate it with label NO TEXTURE
+		for (int i = 0; i < mat.size(); i++)
+		{
+			bool is_selected = false;
+			if (currentMaterial != nullptr) {
+				bool is_selected = (strcmp(currentMaterial, mat[i].name.c_str()) == 0);
+			}
+			if (ImGui::Selectable(mat[i].name.c_str(), is_selected)) {
+				currentMaterial = mat[i].name.c_str();
+
+				ComponentMaterial* compMat = myGO->GetComponentMaterial();
+				if ( compMat == nullptr) { //if the GO has a component Material
+					compMat = (ComponentMaterial*)myGO->AddComponent(MATERIAL);
+				}
+				
+				compMat->texture = App->textures->GetMaterialsFromName(currentMaterial);
+				SetMaterial(compMat);
+				compMat = nullptr;
+				if (is_selected) {
+					ImGui::SetItemDefaultFocus();
+				}
+			}			
+		}
+		ImGui::EndCombo();
+	}
+	ImGui::Separator();
 }
 
 void ComponentMesh::GenerateBuffer()
@@ -96,8 +134,8 @@ void ComponentMesh::Draw()
 	}
 	else {
 			
-		if (texture != nullptr) {			
-			glBindTexture(GL_TEXTURE_2D, texture->texture->textureID);
+		if (material != nullptr) {			
+			glBindTexture(GL_TEXTURE_2D, material->texture->textureID);
 			glTexCoordPointer(2, GL_FLOAT, 0, &(texturesCoords[0]));
 		}
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_index); // test: before it was 2 lines upper
@@ -191,7 +229,7 @@ void ComponentMesh::DrawBoundingBox()
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
-void ComponentMesh::SetTexture(ComponentMaterial * tex)
+void ComponentMesh::SetMaterial(ComponentMaterial * tex)
 {
-	texture = tex;
+	material = tex;
 }
