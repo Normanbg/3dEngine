@@ -12,7 +12,8 @@ struct Material {
 	uint texWidth = 0;
 	uint texHeight = 0;
 
-	std::string path;
+	//std::string path;
+	std::string name;
 
 	GLuint textureID = -1;
 	float3 colors = { 0,0,0 };

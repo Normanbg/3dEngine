@@ -98,7 +98,8 @@ void SceneImporter::ImportFBXtoPEI(const char * FBXpath)
 						OWN_LOG("Error loading texture.");
 					}
 					if (mat->textureID != -1) { // if texture can be loaded
-						mat->path = fullTexPath;						
+						//mat->path = fullTexPath;	
+						mat->name = textureName;
 						App->textures->AddMaterial(mat);
 					}
 				}				
@@ -498,7 +499,7 @@ void SceneImporter::LoadFBX(const char * path) {
 						OWN_LOG("Error loading texture.");
 					}
 					if (mat->textureID != -1) { // if texture can be loaded
-						mat->path = fullTexPath;
+						mat->name = textureName;
 						//mesh.texID = _text.textureID;
 
 						App->textures->AddMaterial(mat);

@@ -57,7 +57,7 @@ Material * ModuleTextures::GetMaterialsFromID(GLuint id)
 GLuint ModuleTextures::CheckIfImageAlreadyLoaded(const char * _path)
 {
 	for (int i = 0; i < materials.size(); i++) {
-		if (strcmp(materials[i].path.c_str(), _path) == 0) {
+		if (strcmp(materials[i].name.c_str(), _path) == 0) {
 			return materials[i].textureID;
 		}
 	}
