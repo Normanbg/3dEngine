@@ -179,6 +179,7 @@
     <ClInclude Include="UIPanelHierarchy.h" />
     <ClInclude Include="UIPanelInspector.h" />
     <ClInclude Include="UIPanelScene.h" />
+    <ClInclude Include="UIPanelMaterials.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
@@ -250,6 +251,7 @@
     <ClCompile Include="UIPanelHierarchy.cpp" />
     <ClCompile Include="UIPanelInspector.cpp" />
     <ClCompile Include="UIPanelScene.cpp" />
+    <ClCompile Include="UIPanelMaterials.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="MathGeoLib\Geometry\KDTree.inl" />

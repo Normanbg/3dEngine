@@ -357,6 +357,9 @@
     <ClInclude Include="UIPanelScene.h">
       <Filter>Sources\Modules\GuiPanels</Filter>
     </ClInclude>
+    <ClInclude Include="UIPanelMaterials.h">
+      <Filter>Sources\Modules\GuiPanels</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleInput.cpp">
@@ -564,6 +567,9 @@
       <Filter>Sources\Modules\GuiPanels</Filter>
     </ClCompile>
     <ClCompile Include="UIPanelScene.cpp">
+      <Filter>Sources\Modules\GuiPanels</Filter>
+    </ClCompile>
+    <ClCompile Include="UIPanelMaterials.cpp">
       <Filter>Sources\Modules\GuiPanels</Filter>
     </ClCompile>
   </ItemGroup>

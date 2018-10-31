@@ -19,6 +19,7 @@ class UIPanelConsole;
 class UIPanelInspector;
 class UIPanelHierarchy;
 class UIPanelScene;
+class UIPanelMaterials;
 
 class ModuleGui : public Module
 {
@@ -51,6 +52,7 @@ public:
 	UIPanelInspector*	panelInspector	= nullptr;
 	UIPanelHierarchy*	panelHierarchy	= nullptr;
 	UIPanelScene*		panelScene		= nullptr;
+	UIPanelMaterials*	panelMaterial	= nullptr;
 	std::vector<std::string> logsBuffer;
 	uint ilVersion = 0;
 

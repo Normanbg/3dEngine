@@ -10,6 +10,7 @@
 #include "UIPanelConsole.h"
 #include "UIPanelInspector.h"
 #include "UIPanelHierarchy.h"
+#include "UIPanelMaterials.h"
 #include "ModuleWindow.h"
 #include "ModuleInput.h"
 #include "ModuleAudio.h"
@@ -48,6 +49,7 @@ bool ModuleGui::Start()
 	uiPanels.push_back(panelConsole = new UIPanelConsole("Console", 50, 650, 1165, 350, true));
 	uiPanels.push_back(panelInspector = new UIPanelInspector("Inspector", 775, 15, 250, 550, true));
 	uiPanels.push_back(panelHierarchy = new UIPanelHierarchy("Hierarchy", 0, 15, 250, 550, true));
+	uiPanels.push_back(panelMaterial = new UIPanelMaterials("Materials", 0, 399, 240, 406, true));
 	ImGui::CreateContext();
 	demoShowcase = false;
 	ImGui_ImplSDL2_InitForOpenGL(App->window->window, App->renderer3D->context);
