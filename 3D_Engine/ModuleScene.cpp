@@ -200,14 +200,14 @@ void ModuleScene::DrawMeshes() {
 
 	ComponentMesh* mesh;
 	for (int i = 0; i < components.size(); i++) {
-		mesh = (ComponentMesh *) components[i];
-		if (App->camera->ContainsAaBox(mesh->boundingBox) == IS_IN || App->camera->ContainsAaBox(mesh->boundingBox) == INTERSECT)//MISSING IF FRUSTUM CULLING ACTIVE!!!!!!---------------------------------------------------------
+		mesh = (ComponentMesh *)components[i];
+		if (App->camera->ContainsAaBox(mesh->boundingBox) == IS_IN || App->camera->ContainsAaBox(mesh->boundingBox) == INTERSECT) {//MISSING IF FRUSTUM CULLING ACTIVE!!!!!!---------------------------------------------------------
 			mesh->Draw();
-		else if (App->camera->ContainsAaBox(mesh->boundingBox) == IS_OUT)
-			OWN_LOG("out motherfucker");
-
+		}
+		else if (App->camera->ContainsAaBox(mesh->boundingBox) == IS_OUT) {
+		//OWN_LOG("out motherfucker");
+		}
 	}
-
 	iterator = nullptr;
 	mesh = nullptr;
 }

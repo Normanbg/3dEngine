@@ -425,7 +425,7 @@ void SceneImporter::LoadPEI(const char * fileName)
 		compMesh = nullptr;
 		
 	}
-	OWN_LOG("\n\nSuccesfully loaded PEI: %s. Loading time: %i ms", modelName.c_str(), loadingTimer.Read());
+	OWN_LOG("Succesfully loaded PEI: %s. Loading time: %i ms \n", modelName.c_str(), loadingTimer.Read());
 	gameObject = nullptr;
 
 	dataFile.close();
@@ -456,7 +456,7 @@ void SceneImporter::LoadFBX(const char * path) {
 	GameObject* gameObject = App->scene->AddGameObject(modelName.c_str());
 
 	
-	ComponentTransformation* compTrans = (ComponentTransformation*)gameObject->AddComponent(TRANSFORM);
+	ComponentTransformation* compTrans = gameObject->GetTransformComponent();
 
 	if (scene->HasMaterials()) {
 		//need to load a texture outside the mesh. as a scene
@@ -533,8 +533,12 @@ void SceneImporter::LoadFBX(const char * path) {
 		for (int i = 0; i < scene->mNumMeshes; i++) {
 			meshIterator = scene->mMeshes[i];
 
-			ComponentMesh* compMesh = (ComponentMesh*)gameObject->AddComponent(MESH);
+			std::string childName = modelName + "_mesh" + std::to_string(i);
 
+			GameObject* childGO = new GameObject(childName.c_str());
+			gameObject->AddChildren(childGO);
+
+			ComponentMesh* compMesh = (ComponentMesh*)childGO->AddComponent(MESH);
 
 			compMesh->num_vertex = meshIterator->mNumVertices;
 			compMesh->vertex = new float3[compMesh->num_vertex];
@@ -576,7 +580,7 @@ void SceneImporter::LoadFBX(const char * path) {
 			}
 		}
 		node = nullptr;
-		OWN_LOG("\n\nSuccesfully loaded FBX: %s. Loading time: %i ms ", modelName.c_str(), timerLoader.Read());
+		OWN_LOG("Succesfully loaded FBX: %s. Loading time: %i ms \n", modelName.c_str(), timerLoader.Read());
 	}
 	else {
 		OWN_LOG("Error loading FBX, scene has no meshes");
