@@ -32,8 +32,10 @@ public:
 
 	float GetNearPlaneDistance() const { return camFrustum.nearPlaneDistance; }
 	float GetFarPlaneDistance() const { return camFrustum.farPlaneDistance; }
-	float* GetViewMatrix();
+	float* getViewMatrix();
 	float* GetProjMatrix();
+
+	void WSADmove();
 
 public: 
 	Frustum camFrustum;

@@ -25,6 +25,7 @@ ModuleEditorCamera::ModuleEditorCamera(bool start_enabled) : Module(start_enable
 	Reference = vec3(0.0f, 0.0f, 0.0f);
 	
 	//LookAt(Reference);
+	edCamera = new ComponentCamera();
 }
 
 ModuleEditorCamera::~ModuleEditorCamera()
@@ -35,8 +36,7 @@ bool ModuleEditorCamera::Start()
 {
 	OWN_LOG("Setting up the camera");
 	bool ret = true;
-	editorCam_G0 = App->scene->AddGameObject("editorCam");
-	editorCam_G0->AddComponent(ComponentType::CAMERA);
+
 	return ret;
 }
 
@@ -54,16 +54,6 @@ update_status ModuleEditorCamera::Update(float dt)
 	BROFILER_CATEGORY("Camera3D_Update", Profiler::Color::Chartreuse);
 	vec3 newPos(0, 0, 0);
 	float speed = CAMERA_SPEED * dt;
-
-	
-	if (App->input->GetKey(SDL_SCANCODE_0) == KEY_DOWN)
-	{
-		float3 test = editorCam_G0->transformComp->getPos();
-		test.x += 10.0f;
-		editorCam_G0->transformComp->setPos(test);
-		/*ComponentCamera * eee = editorCam_G0->GetComponentCamera();
-		eee->camFrustum.pos = test;*/
-	}
 
 	//Alt+Left click should orbit the object
 	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_LALT)) {
@@ -193,7 +183,7 @@ FrustumContained ModuleEditorCamera::ContainsAaBox(const AABB& refBox) const
 		int iPtIn = 1;
 		for (int i = 0; i < 8; ++i) {
 			// test this point against the planes
-			if (editorCam_G0->GetComponentCamera()->camFrustum.GetPlane(p).IsOnPositiveSide(vCorner[i]))
+			if (edCamera->camFrustum.GetPlane(p).IsOnPositiveSide(vCorner[i]))
 			{
 				iPtIn = 0;
 				--iInCount;

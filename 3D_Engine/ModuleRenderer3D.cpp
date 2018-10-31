@@ -132,7 +132,7 @@ bool ModuleRenderer3D::Init(JSON_Object* obj)
 		SetTexture2D(true);
 	}
 	// Projection matrix for
-	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
+	//OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);//-----------------------------------------------------------------------------
 
 	importer = new SceneImporter();
 	texImporter = new TextureImporter();	
@@ -148,6 +148,7 @@ bool ModuleRenderer3D::Start() {
 	BROFILER_CATEGORY("Renderer3D_Start", Profiler::Color::HotPink);
 
 	bool ret = true;
+	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
 	/*importer->LoadFBX("BakerHouse.fbx");
 	importer->ImportFBXtoPEI("BakerHouse.fbx");
 	importer->LoadPEI("BakerHouse.pei");*/
@@ -170,6 +171,7 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 	/*ComponentCamera* cam = (ComponentCamera*)App->camera->editorCam_G0->GetComponent(ComponentType::CAMERA);
 	glLoadMatrixf(cam->GetViewMatrix());*/
 
+	//glLoadMatrixf(App->camera->edCamera->getViewMatrix());
 	glLoadMatrixf(App->camera->GetViewMatrix());
 
 	// light 0 on cam pos
@@ -197,8 +199,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	App->scene->DrawMeshes();
 
 	
-	ComponentCamera* cam = App->camera->editorCam_G0->GetComponentCamera();
-	cam->DebugDraw();
+	App->camera->edCamera->DebugDraw();
 
 	App->gui->Draw();
 
@@ -230,6 +231,8 @@ void ModuleRenderer3D::OnResize(const int width, const int height)
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
+
+	//glLoadMatrixf(App->camera->edCamera->GetProjMatrix());
 	ProjectionMatrix = perspective(60.0f, (float)width / (float)height, 0.125f, 512.0f);
 	glLoadMatrixf(&ProjectionMatrix);
 

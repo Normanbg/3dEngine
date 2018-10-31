@@ -7,15 +7,16 @@
 
 ComponentCamera::ComponentCamera()
 {
-	camFrustum.type = FrustumType::PerspectiveFrustum;
-	camFrustum.pos = float3::zero;
+	camFrustum.pos = { -150, 50, 0 };
 	camFrustum.front = float3::unitZ;
 	camFrustum.up = float3::unitY;
-
+	SetFov(60.0f);
 	camFrustum.nearPlaneDistance = 1.0f;
-	camFrustum.farPlaneDistance = 40.0f;
-	camFrustum.verticalFov = DEGTORAD * 60.0f;
-	SetAspectRatio(1.3f);
+	camFrustum.farPlaneDistance = 400.0f;
+
+	camFrustum.type = FrustumType::PerspectiveFrustum;
+	
+	LookAt({ 10,-20, 0 });
 }
 
 ComponentCamera::~ComponentCamera()
@@ -25,8 +26,8 @@ ComponentCamera::~ComponentCamera()
 
 bool ComponentCamera::Update()
 {
-	camFrustum.pos = myGO->transformComp->getPos();
-
+	//camFrustum.pos = myGO->transformComp->getPos();
+	//WSADmove();
 	//float3 newPos(0, 0, 0);
 	//float speed = CAMERA_SPEED;
 
@@ -209,7 +210,7 @@ void ComponentCamera::SetDistToReduceZoomVel(float newZoomDistance)
 	zoomDistance = newZoomDistance;
 }
 
-float * ComponentCamera::GetViewMatrix()
+float * ComponentCamera::getViewMatrix()
 {
 	static float4x4 matrix = camFrustum.ViewMatrix();
 	matrix.Transpose();
@@ -223,6 +224,18 @@ float * ComponentCamera::GetProjMatrix()
 	matrix.Transpose();
 
 	return (float*)matrix.v;
+}
+
+void ComponentCamera::WSADmove() {
+	float3 _pos(0, 0, 0);
+	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) _pos += camFrustum.front * 0.5f;
+	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) _pos -= camFrustum.front * 0.5f;
+
+	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) _pos -= camFrustum.WorldRight() * 0.5f;
+	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) _pos += camFrustum.WorldRight() * 0.5f;
+
+	if (!_pos.IsZero())
+		camFrustum.Translate(_pos);
 }
 
 //void ComponentCamera::FrustumCulling(){

@@ -119,7 +119,8 @@ void ComponentMesh::GenerateBuffer()
 
 void ComponentMesh::Draw()
 {
-	
+	glPushMatrix();
+	glMultMatrixf(myGO->transformComp->globalMatrix.Transposed().ptr());
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);	
 
@@ -162,6 +163,7 @@ void ComponentMesh::Draw()
 			glEnd();
 		}
 	}
+	glPopMatrix();
 	if (showBBox) {
 		DrawBoundingBox();
 	}

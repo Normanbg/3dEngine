@@ -1,5 +1,8 @@
 #include "ComponentTransformation.h"
 #include "GameObject.h"
+#include "ModuleScene.h"
+
+#include <vector>
 
 
 
@@ -11,10 +14,10 @@ ComponentTransformation::ComponentTransformation()
 
 ComponentTransformation::~ComponentTransformation()
 {
-	
+
 }
 
-bool ComponentTransformation::Update(){
+bool ComponentTransformation::Update() {
 
 
 
@@ -33,19 +36,37 @@ void ComponentTransformation::DrawInspector()
 	float3 _rot = getEulerRot();
 	float3 _scale = getScale();
 
-	if (ImGui::DragFloat3("Position", (float*)&_pos, 0.1f))
-		setPos(_pos);
-
-	if (ImGui::DragFloat3("Rotation", (float*)&_rot, 0.1f))
-		setRotEuler(_rot);
-
-	if (ImGui::DragFloat3("Scale", (float*)&_scale, 0.1f, 0.0f))
-		setScale(_scale);
-	if (ImGui::SmallButton("Reset"))
+	std::vector<GameObject*> selectedRecover = App->scene->gObjsSelected;
+	if (selectedRecover.size() == 1)//SETTING THIS BECAUSE WE ONLY ALLOW TO MOVE ONE GAMEOBJECT (ONLY 1 COMP. TRANSFORM DRAWED)-------
 	{
-			setPos(float3::zero);
-			setRotEuler(float3::zero);
-			setScale(float3::one);
+		if (ImGui::DragFloat3("Position", (float*)&_pos, 0.1f))
+		{
+			for (std::vector<GameObject*>::iterator selectedIt = selectedRecover.begin(); selectedIt < selectedRecover.end(); selectedIt++)
+			{
+				(*selectedIt)->transformComp->setPos(_pos);
+			}
+		}
+		if (ImGui::DragFloat3("Rotation", (float*)&_rot, 0.1f)) {
+			for (std::vector<GameObject*>::iterator selectedIt = selectedRecover.begin(); selectedIt < selectedRecover.end(); selectedIt++)
+			{
+				(*selectedIt)->transformComp->setRotEuler(_rot);
+			}
+		}
+		if (ImGui::DragFloat3("Scale", (float*)&_scale, 0.1f, 0.0f)) {
+			for (std::vector<GameObject*>::iterator selectedIt = selectedRecover.begin(); selectedIt < selectedRecover.end(); selectedIt++)
+			{
+				(*selectedIt)->transformComp->setScale(_scale);
+			}
+		}
+		if (ImGui::SmallButton("Reset"))
+		{
+			for (std::vector<GameObject*>::iterator selectedIt = selectedRecover.begin(); selectedIt < selectedRecover.end(); selectedIt++)
+			{
+				(*selectedIt)->transformComp->setPos(float3::zero);
+				(*selectedIt)->transformComp->setRotEuler(float3::zero);
+				(*selectedIt)->transformComp->setScale(float3::one);
+			}
+		}
 	}
 	ImGui::Separator();
 }
@@ -53,7 +74,7 @@ void ComponentTransformation::DrawInspector()
 void ComponentTransformation::setGlobalMatrix(float4x4 newGlobalMat)
 {
 	globalMatrix = newGlobalMat;
-	if (myGO->parent != nullptr)	
+	if (myGO->parent != nullptr)
 	{
 		ComponentTransformation* parentTrans = myGO->GetTransformComponent();
 		float4x4 newlocalMatrix = parentTrans->globalMatrix * globalMatrix;
@@ -61,13 +82,13 @@ void ComponentTransformation::setGlobalMatrix(float4x4 newGlobalMat)
 	}
 }
 
-void ComponentTransformation::setLocalMatrix(float4x4 newLocalMat){
+void ComponentTransformation::setLocalMatrix(float4x4 newLocalMat) {
 	localMatrix = newLocalMat;
 	newLocalMat.Decompose(transform.position, transform.rotationQuat, transform.scale);
 	transform.rotEuler = transform.rotationQuat.ToEulerXYZ() * RADTODEG;
 }
 
-void ComponentTransformation::UpdateLocalMatrix(){
+void ComponentTransformation::UpdateLocalMatrix() {
 	localMatrix = float4x4::FromTRS(transform.position, transform.rotationQuat, transform.scale);
 }
 
