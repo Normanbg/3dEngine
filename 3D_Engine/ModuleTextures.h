@@ -34,10 +34,13 @@ public:
 	update_status PostUpdate(float dt) override;
 	bool CleanUp() override;
 
+	
 	void AddMaterial(Material* tex);
 	Material* GetMaterialsFromID(GLuint id);
 	Material* GetMaterialsFromName(const char* name);
 	GLuint CheckIfImageAlreadyLoaded(const char * _path);
+
+	void LoadDroppedTexture(char*droppedFileDire);
 
 	std::vector<Material*> materials;
 };

@@ -1,5 +1,6 @@
 #include "ModuleTextures.h"
-
+#include "ModuleFileSystem.h"
+#include "ModuleRenderer3D.h"
 
 ModuleTextures::ModuleTextures(bool start_enabled) : Module(start_enabled)
 {
@@ -74,6 +75,34 @@ GLuint ModuleTextures::CheckIfImageAlreadyLoaded(const char * _path)
 	}
 	return -1;
 }
+
+void ModuleTextures::LoadDroppedTexture(char * droppedFileDire)
+{
+	
+	
+	std::string texName;
+	std::string extension;
+	App->fileSys->GetNameFromPath(droppedFileDire, nullptr, &texName, nullptr, nullptr);
+	App->fileSys->GetNameFromPath(droppedFileDire, nullptr, nullptr, nullptr, &extension);
+	
+		App->renderer3D->texImporter->ImportToDDS(droppedFileDire, texName.c_str());
+	
+	
+	if (App->textures->CheckIfImageAlreadyLoaded(texName.c_str()) == -1) {
+		Material* mat = new Material;
+		std::string texPath;
+		texPath = LIB_TEXTURES_PATH + texName + DDS_FORMAT;
+		mat->textureID = App->renderer3D->texImporter->LoadTexture(texPath.c_str(), mat);
+		mat->name = texName;
+		App->textures->AddMaterial(mat);
+	}
+	else {
+		OWN_LOG("Material already loeaded");
+	}
+}
+
+
+
 
 void Material::CleanUp()
 {

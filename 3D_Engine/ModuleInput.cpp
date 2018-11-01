@@ -141,18 +141,23 @@ update_status ModuleInput::PreUpdate(float dt)
 					break;
 				case PNG:
 					OWN_LOG("Dropped .png file");
-					//App->renderer3D->importer->ChangeMeshTexture(dropped_filedir);
+					App->textures->LoadDroppedTexture(dropped_filedir);
 					
 					break;
 				case JPG:
 					OWN_LOG("Dropped .jpg file");
-					//App->renderer3D->importer->ChangeMeshTexture(dropped_filedir);
+					App->textures->LoadDroppedTexture(dropped_filedir);
 
 					break;
 				case DDS:
 					OWN_LOG("Dropped .dds file");
-					//App->renderer3D->importer->ChangeMeshTexture(dropped_filedir);
 					
+					App->textures->LoadDroppedTexture(dropped_filedir);
+					break;
+				case PEI:
+					OWN_LOG("Dropped .pei file");
+					App->renderer3D->importer->LoadPEI(dropped_filedir);
+
 					break;
 				default:
 					break;
@@ -190,6 +195,8 @@ FileType ModuleInput::ObtainDroppedFileType(std::string droppedFileDir){
 			return JPG;
 		else if (formatStr == "dds" || formatStr == "DDS")
 			return DDS;
+		else if (formatStr == "pei" || formatStr == "PEI")
+			return PEI;
 	}
 	else
 		OWN_LOG("Cannot load %s file.  Format not recognized", droppedFileDir)

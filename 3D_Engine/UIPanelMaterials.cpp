@@ -34,10 +34,7 @@ void UIPanelMaterials::DrawChilds(std::vector<Material*> materials)
 		flags |= ImGuiTreeNodeFlags_Leaf;
 		if (ImGui::TreeNodeEx(mat->name.c_str(), flags)) {
 			if (ImGui::IsItemClicked(0) || ImGui::IsItemClicked(1))///need to work on it
-			{/*
-				GameObject* helper = new GameObject((*texIterator).name.c_str());
-				ComponentMaterial* comp = (ComponentMaterial*) helper->AddComponent(MATERIAL);
-				comp->texture = &(*texIterator);*/
+			{
 				App->scene->DeselectAll();
 				App->scene->ShowMaterialInspector(mat);
 			}

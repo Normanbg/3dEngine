@@ -18,7 +18,8 @@ enum FileType {
 	FBX,
 	PNG,
 	JPG,
-	DDS
+	DDS,
+	PEI
 };
 
 class ModuleInput : public Module
