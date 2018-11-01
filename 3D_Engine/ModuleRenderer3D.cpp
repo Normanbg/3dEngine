@@ -5,6 +5,8 @@
 #include "ModuleInput.h"
 #include "ModuleEditorCamera.h"
 #include "GameObject.h"
+#include "ComponentCamera.h"
+#include "Camera.h"
 #include "ModuleGui.h"
 #include "ModuleScene.h"
 #include "Brofiler/Brofiler.h"
@@ -166,13 +168,10 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 	glLoadIdentity();
 
 	glMatrixMode(GL_MODELVIEW);
+	float4x4 tryy = *(float4x4*)App->camera->cameraComp->GetViewOpenGLViewMatrix();
+	glLoadMatrixf(&tryy[0][0]);
 
-	///NEEDS TO BE CHANGED FOR BEING THE CAM AT THE FRUSTUM POS!!!!
-	/*ComponentCamera* cam = (ComponentCamera*)App->camera->editorCam_G0->GetComponent(ComponentType::CAMERA);
-	glLoadMatrixf(cam->GetViewMatrix());*/
-
-	//glLoadMatrixf(App->camera->edCamera->getViewMatrix());
-	glLoadMatrixf(App->camera->GetViewMatrix());
+	//glLoadMatrixf(App->camera->GetViewMatrix());
 
 	// light 0 on cam pos
 	lights[0].SetPos(App->camera->Position.x, App->camera->Position.y, App->camera->Position.z);
@@ -197,9 +196,6 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 
 	//DrawMeshes();
 	App->scene->DrawMeshes();
-
-	
-	App->camera->edCamera->DebugDraw();
 
 	App->gui->Draw();
 
@@ -230,12 +226,16 @@ void ModuleRenderer3D::OnResize(const int width, const int height)
 	glViewport(0, 0, width, height);
 
 	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
+	//glLoadIdentity();
 
-	//glLoadMatrixf(App->camera->edCamera->GetProjMatrix());
-	ProjectionMatrix = perspective(60.0f, (float)width / (float)height, 0.125f, 512.0f);
+	/*ProjectionMatrix = perspective(60.0f, (float)width / (float)height, 0.125f, 512.0f);
 	glLoadMatrixf(&ProjectionMatrix);
-
+*//*
+	Frustum cFrustum = App->camera->cameraComp->frustum;
+	ProjectionMatrix = cFrustum.ProjectionMatrix();*/
+	//glLoadMatrixf(&ProjectionMatrix[0][0]);
+	glLoadMatrixf(App->camera->cameraComp->camRes->GetProjMatrix());
+	/*glLoadMatrixf(App->camera->camera->cam->GetProjMatrix());*/
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 }

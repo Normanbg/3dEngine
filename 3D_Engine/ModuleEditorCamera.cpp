@@ -6,13 +6,15 @@
 #include "ModuleRenderer3D.h"
 #include "ModuleEditorCamera.h"
 #include "GameObject.h"
+#include "Camera.h"
+#include "ComponentCamera.h"
 #include "ModuleGui.h"
 #include "Brofiler/Brofiler.h"
 
 
 ModuleEditorCamera::ModuleEditorCamera(bool start_enabled) : Module(start_enabled)
 {
-	//CalculateViewMatrix();
+	CalculateViewMatrix();
 
 	X = vec3(1.0f, 0.0f, 0.0f);
 	Y = vec3(0.0f, 1.0f, 0.0f);
@@ -23,9 +25,9 @@ ModuleEditorCamera::ModuleEditorCamera(bool start_enabled) : Module(start_enable
 
 	Position = vec3(0.0f, 40.0f, 60.0f);
 	Reference = vec3(0.0f, 0.0f, 0.0f);
+	cameraComp = new ComponentCamera();
 	
-	//LookAt(Reference);
-	edCamera = new ComponentCamera();
+	LookAt(Reference);
 }
 
 ModuleEditorCamera::~ModuleEditorCamera()
@@ -37,6 +39,8 @@ bool ModuleEditorCamera::Start()
 	OWN_LOG("Setting up the camera");
 	bool ret = true;
 
+	cameraComp->LookAt({ 0,0,0 });
+	cameraComp->camRes->frustum.pos = { -10, 44, -10 };
 	return ret;
 }
 
@@ -51,156 +55,171 @@ bool ModuleEditorCamera::CleanUp()
 // -----------------------------------------------------------------
 update_status ModuleEditorCamera::Update(float dt)
 {
-	BROFILER_CATEGORY("Camera3D_Update", Profiler::Color::Chartreuse);
-	vec3 newPos(0, 0, 0);
+	float3 _pos(0, 0, 0);
 	float speed = CAMERA_SPEED * dt;
+	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) _pos += cameraComp->frustum.front * speed;
+	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) _pos -= cameraComp->frustum.front * speed;
 
-	//Alt+Left click should orbit the object
-	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_LALT)) {
-		int dx = -App->input->GetMouseXMotion();
-		int dy = -App->input->GetMouseYMotion();
+	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
+		_pos -= cameraComp->frustum.WorldRight() * speed;
+	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) _pos += cameraComp->frustum.WorldRight() * speed;
 
-		mouseSensitivity = 0.25f;
-		Reference = { 0,0,0 };//WILL BE THE POSITION WHEN WE HAVE IT!!! 
-		if (dx != 0)
-		{
-			float DeltaX = (float)dx * mouseSensitivity;
+	if (!_pos.IsZero())
+		cameraComp->frustum.Translate(_pos);
 
-			X = rotate(X, DeltaX, vec3(0.0f, 1.0f, 0.0f));
-			Y = rotate(Y, DeltaX, vec3(0.0f, 1.0f, 0.0f));
-			Z = rotate(Z, DeltaX, vec3(0.0f, 1.0f, 0.0f));
-		}
+	BROFILER_CATEGORY("Camera3D_Update", Profiler::Color::Chartreuse);
+	//vec3 newPos(0, 0, 0);
+	//float speed = CAMERA_SPEED * dt;
 
-		if (dy != 0)
-		{
-			float DeltaY = (float)dy * mouseSensitivity;
+	////Alt+Left click should orbit the object
+	//if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_LALT)) {
+	//	int dx = -App->input->GetMouseXMotion();
+	//	int dy = -App->input->GetMouseYMotion();
 
-			Y = rotate(Y, DeltaY, X);
-			Z = rotate(Z, DeltaY, X);
+	//	mouseSensitivity = 0.25f;
+	//	Reference = { 0,0,0 };//WILL BE THE POSITION WHEN WE HAVE IT!!! 
+	//	if (dx != 0)
+	//	{
+	//		float DeltaX = (float)dx * mouseSensitivity;
 
-			if (Y.y < 0.0f)
-			{
-				Z = vec3(0.0f, Z.y > 0.0f ? 1.0f : -1.0f, 0.0f);
-				Y = cross(Z, X);
-			}
-		}
+	//		X = rotate(X, DeltaX, vec3(0.0f, 1.0f, 0.0f));
+	//		Y = rotate(Y, DeltaX, vec3(0.0f, 1.0f, 0.0f));
+	//		Z = rotate(Z, DeltaX, vec3(0.0f, 1.0f, 0.0f));
+	//	}
 
-		Position = Reference + Z * length(Position);
-	}
-	//While Right clicking, “WASD” fps-like movement While Right clicking, “WASD” fps-like movement and free look enabled
-	if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT)
-	{
-		speed = CAMERA_SPEED * dt;
+	//	if (dy != 0)
+	//	{
+	//		float DeltaY = (float)dy * mouseSensitivity;
 
-		if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT)
-			speed *= 2.0f;
+	//		Y = rotate(Y, DeltaY, X);
+	//		Z = rotate(Z, DeltaY, X);
 
-		if (App->input->GetKey(SDL_SCANCODE_R) == KEY_REPEAT) newPos.y += speed;
-		if (App->input->GetKey(SDL_SCANCODE_T) == KEY_REPEAT) newPos.y -= speed;
+	//		if (Y.y < 0.0f)
+	//		{
+	//			Z = vec3(0.0f, Z.y > 0.0f ? 1.0f : -1.0f, 0.0f);
+	//			Y = cross(Z, X);
+	//		}
+	//	}
 
-		if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) newPos -= Z * speed;
-		if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) newPos += Z * speed;
+	//	Position = Reference + Z * length(Position);
+	//}
+	////While Right clicking, “WASD” fps-like movement While Right clicking, “WASD” fps-like movement and free look enabled
+	//if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT)
+	//{
+	//	speed = CAMERA_SPEED * dt;
+
+	//	if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT)
+	//		speed *= 2.0f;
+
+	//	if (App->input->GetKey(SDL_SCANCODE_R) == KEY_REPEAT) newPos.y += speed;
+	//	if (App->input->GetKey(SDL_SCANCODE_T) == KEY_REPEAT) newPos.y -= speed;
+
+	//	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) newPos -= Z * speed;
+	//	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) newPos += Z * speed;
 
 
-		if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) newPos -= X * speed;
-		if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) newPos += X * speed;
+	//	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) newPos -= X * speed;
+	//	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) newPos += X * speed;
 
-		Position += newPos;
-		Reference += newPos;
+	//	Position += newPos;
+	//	Reference += newPos;
 
-		int dx = -App->input->GetMouseXMotion();
-		int dy = -App->input->GetMouseYMotion();
+	//	int dx = -App->input->GetMouseXMotion();
+	//	int dy = -App->input->GetMouseYMotion();
 
-		mouseSensitivity = 0.25f;
+	//	mouseSensitivity = 0.25f;
 
-		vec3 newPosition = Position - Reference;
+	//	vec3 newPosition = Position - Reference;
 
-		if (dx != 0)
-		{
-			const float DeltaX = (float)dx * mouseSensitivity;
+	//	if (dx != 0)
+	//	{
+	//		const float DeltaX = (float)dx * mouseSensitivity;
 
-			X = rotate(X, DeltaX, vec3(0.0f, 1.0f, 0.0f));
-			Y = rotate(Y, DeltaX, vec3(0.0f, 1.0f, 0.0f));
-			Z = rotate(Z, DeltaX, vec3(0.0f, 1.0f, 0.0f));
-		}
+	//		X = rotate(X, DeltaX, vec3(0.0f, 1.0f, 0.0f));
+	//		Y = rotate(Y, DeltaX, vec3(0.0f, 1.0f, 0.0f));
+	//		Z = rotate(Z, DeltaX, vec3(0.0f, 1.0f, 0.0f));
+	//	}
 
-		if (dy != 0)
-		{
-			const float DeltaY = (float)dy * mouseSensitivity;
+	//	if (dy != 0)
+	//	{
+	//		const float DeltaY = (float)dy * mouseSensitivity;
 
-			Y = rotate(Y, DeltaY, X);
-			Z = rotate(Z, DeltaY, X);
+	//		Y = rotate(Y, DeltaY, X);
+	//		Z = rotate(Z, DeltaY, X);
 
-			if (Y.y < 0.0f)
-			{
-				Z = vec3(0.0f, Z.y > 0.0f ? 1.0f : -1.0f, 0.0f);
-				Y = cross(Z, X);
-			}
-		}
+	//		if (Y.y < 0.0f)
+	//		{
+	//			Z = vec3(0.0f, Z.y > 0.0f ? 1.0f : -1.0f, 0.0f);
+	//			Y = cross(Z, X);
+	//		}
+	//	}
 
-		Reference = Position - Z * length(newPosition);
-	}
+	//	Reference = Position - Z * length(newPosition);
+	//}
 
-	if (App->input->GetKey(SDL_SCANCODE_F)== KEY_REPEAT){		
-		FocusToMeshes();		
-	}
+	//if (App->input->GetKey(SDL_SCANCODE_F)== KEY_REPEAT){		
+	//	FocusToMeshes();		
+	//}
 
-	//-----Zoom
-	if (App->input->GetMouseZ() != 0) {
-		newPos = (0, 0, 0);
-		float wheelSensitivity = scroolWheelSensitivity;
-		vec3 distance = Reference - Position;
+	////-----Zoom
+	//if (App->input->GetMouseZ() != 0) {
+	//	newPos = (0, 0, 0);
+	//	float wheelSensitivity = scroolWheelSensitivity;
+	//	vec3 distance = Reference - Position;
 
-		if (length(distance) < zoomDistance)
-			wheelSensitivity = length(distance) / zoomDistance;
-		if (App->input->GetMouseZ() > 0)
-			newPos -= Z * wheelSensitivity;
-		else
-			newPos += Z * wheelSensitivity;
+	//	if (length(distance) < zoomDistance)
+	//		wheelSensitivity = length(distance) / zoomDistance;
+	//	if (App->input->GetMouseZ() > 0)
+	//		newPos -= Z * wheelSensitivity;
+	//	else
+	//		newPos += Z * wheelSensitivity;
 
-		Position += newPos;
-	}
+	//	Position += newPos;
+	//}
 
+	//
+	//// Recalculate matrix -------------
+	//CalculateViewMatrix();
+
+	cameraComp->CalculateViewMatrix();
 	
-	// Recalculate matrix -------------
-	CalculateViewMatrix();
 
 	return UPDATE_CONTINUE;
 }
 
-// tests if a AaBox is within the frustrum
-FrustumContained ModuleEditorCamera::ContainsAaBox(const AABB& refBox) const
-{
-	float3 vCorner[8];
-	int iTotalIn = 0;
-	refBox.GetCornerPoints(vCorner); // get the corners of the box into the vCorner array
-
-	// test all 8 corners against the 6 sides
-	// if all points are behind 1 specific plane, we are out
-	// if we are in with all points, then we are fully in
-	for (int p = 0; p < 6; ++p) {
-		int iInCount = 8;
-		int iPtIn = 1;
-		for (int i = 0; i < 8; ++i) {
-			// test this point against the planes
-			if (edCamera->camFrustum.GetPlane(p).IsOnPositiveSide(vCorner[i]))
-			{
-				iPtIn = 0;
-				--iInCount;
-			}
-		}
-		// were all the points outside of plane p?
-		if(iInCount == 0)
-			return(IS_OUT);
-		// check if they were all on the right side of the plane
-		iTotalIn += iPtIn;
-	}
-	// so if iTotalIn is 6, then all are inside the view
-	if (iTotalIn == 6)
-		return(IS_IN);
-	// we must be partly in then otherwise
-	return(INTERSECT);
-}
+//// tests if a AaBox is within the frustrum
+//FrustumContained ModuleEditorCamera::ContainsAaBox(const AABB& refBox) const
+//{
+//	float3 vCorner[8];
+//	int iTotalIn = 0;
+//	refBox.GetCornerPoints(vCorner); // get the corners of the box into the vCorner array
+//
+//	// test all 8 corners against the 6 sides
+//	// if all points are behind 1 specific plane, we are out
+//	// if we are in with all points, then we are fully in
+//	for (int p = 0; p < 6; ++p) {
+//		int iInCount = 8;
+//		int iPtIn = 1;
+//		for (int i = 0; i < 8; ++i) {
+//			// test this point against the planes
+//			if (edCamera->camFrustum.GetPlane(p).IsOnPositiveSide(vCorner[i]))
+//			{
+//				iPtIn = 0;
+//				--iInCount;
+//			}
+//		}
+//		// were all the points outside of plane p?
+//		if(iInCount == 0)
+//			return(IS_OUT);
+//		// check if they were all on the right side of the plane
+//		iTotalIn += iPtIn;
+//	}
+//	// so if iTotalIn is 6, then all are inside the view
+//	if (iTotalIn == 6)
+//		return(IS_IN);
+//	// we must be partly in then otherwise
+//	return(INTERSECT);
+//}
 // -----------------------------------------------------------------
 void ModuleEditorCamera::Look(const vec3 &Position, const vec3 &Reference, bool RotateAroundReference)
 {

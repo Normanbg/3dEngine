@@ -1,10 +1,11 @@
 #ifndef __COMPONENTCAMERA_H__
 #define __COMPONENTCAMERA_H__
 
-#include "Globals.h"
-#include "Application.h"
 #include "Component.h"
 #include "Math.h"
+
+class GameObject;
+class Camera;
 
 class ComponentCamera : public Component
 {
@@ -12,42 +13,30 @@ public:
 	ComponentCamera();
 	~ComponentCamera();
 
-	//bool Start();
 	bool Update() override;
-	void CleanUp()override;
-	void DrawInspector()override;
+	void CleanUp() override;
+	void DrawInspector() override;
 
-	void LookAt(const float3 &Spot);
-	void Move(const float3 &Movement);
-	void MoveTo(const float3 Movement);
-	void DebugDraw();
+	void Look(const float3 & Position, const float3 & Reference, bool RotateAroundReference);
+	void LookAt(const float3 & Spot);
 
-	void SetNearPlaneDistance(float nearPlaneDist);
-	void SetFarPlaneDistance(float farPlaneDist);
-	void SetFov(float fov);
-	void SetAspectRatio(float aspectRatio);
-	void SetMouseSensitivity(float newMouseSens);
-	void SetScroolWheelSensitivity(float newScroolSensitivity);
-	void SetDistToReduceZoomVel(float newZoomDistance);
-
-	float GetNearPlaneDistance() const { return camFrustum.nearPlaneDistance; }
-	float GetFarPlaneDistance() const { return camFrustum.farPlaneDistance; }
-	float* getViewMatrix();
-	float* GetProjMatrix();
-
-	void WSADmove();
-
-public: 
-	Frustum camFrustum;
-
-private:
 	void CalculateViewMatrix();
+	float* GetViewMatrix();
+	float * GetViewOpenGLViewMatrix();
+
+public:
+	GameObject* myGo;
+	Camera* camRes;
+	Frustum frustum;
+	/*float nearPlane = 1.0f;
+	float farPlane = 400.f;*/
+	float3 X, Y, Z, Position, Reference;
 
 private:
-	float mouseSensitivity = 0.25f;
-	float scroolWheelSensitivity = 10.0f;
-	float zoomDistance = 20.0f;
 
+private:
+	float4x4 ViewMatrix, ViewMatrixInverse;
+	
 };
 
 #endif // !__COMPONENTCAMERA_H__

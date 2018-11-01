@@ -7,10 +7,11 @@ enum ComponentType {
 	NO_TYPE = 0,
 
 	TRANSFORM,
+	CAMERA,
 	MESH,
-	MATERIAL,
-	CAMERA
+	MATERIAL
 };
+
 class Component {
 public:
 	Component() {}
