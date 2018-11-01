@@ -38,7 +38,7 @@ void UIPanelHierarchy::DrawChilds(std::vector<GameObject*> childs){
 	for (std::vector<GameObject*>::iterator goIterator = childs.begin(); goIterator != childs.end(); goIterator++)
 	{
 		uint flags = ImGuiTreeNodeFlags_OpenOnArrow;
-		if ((*goIterator)->GetSelected())
+		if ((*goIterator) == App->scene->gObjSelected)
 			flags |= ImGuiTreeNodeFlags_Selected;
 		if ((*goIterator)->childrens.empty())
 			flags |= ImGuiTreeNodeFlags_Leaf;
@@ -49,14 +49,14 @@ void UIPanelHierarchy::DrawChilds(std::vector<GameObject*> childs){
 			//CTRL pressed = addselectedG0
 			if ((App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_RCTRL) == KEY_REPEAT))
 			{
-				App->scene->AddGameObjectToSelectedList((*goIterator));
+				App->scene->ShowGameObjectInspector((*goIterator));
 			}
 			else
 			{
-				if (!ImGui::IsItemClicked(1) || !(*goIterator)->GetSelected())
+				if (!ImGui::IsItemClicked(1) || (*goIterator)!= App->scene->gObjSelected)
 				{
 					App->scene->DeselectAll();
-					App->scene->AddGameObjectToSelectedList((*goIterator));
+					App->scene->ShowGameObjectInspector((*goIterator));
 				}
 			}
 		}

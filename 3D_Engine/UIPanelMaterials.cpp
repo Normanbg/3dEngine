@@ -25,22 +25,24 @@ void UIPanelMaterials::Draw()
 	
 }
 
-void UIPanelMaterials::DrawChilds(std::vector<Material> materials)
+void UIPanelMaterials::DrawChilds(std::vector<Material*> materials)
 {
 	uint flags = 0;
-	for (std::vector<Material>::iterator texIterator = materials.begin(); texIterator != materials.end(); texIterator++)
+	for (std::vector<Material*>::iterator goIterator = materials.begin(); goIterator != materials.end(); goIterator++)
 	{
+		Material* mat = *goIterator;
 		flags |= ImGuiTreeNodeFlags_Leaf;
-		if (ImGui::TreeNodeEx((*texIterator).name.c_str(), flags)) {
+		if (ImGui::TreeNodeEx(mat->name.c_str(), flags)) {
 			if (ImGui::IsItemClicked(0) || ImGui::IsItemClicked(1))///need to work on it
-			{/* 
-				GameObject* helper = new GameObject((*texIterator).name.c_str()); 
+			{/*
+				GameObject* helper = new GameObject((*texIterator).name.c_str());
 				ComponentMaterial* comp = (ComponentMaterial*) helper->AddComponent(MATERIAL);
-				comp->texture = &(*texIterator);
+				comp->texture = &(*texIterator);*/
 				App->scene->DeselectAll();
-				App->scene->AddGameObjectToSelectedList(helper);*/
+				App->scene->ShowMaterialInspector(mat);
 			}
 			ImGui::TreePop();
 		}
+		mat = nullptr;
 	}
 }

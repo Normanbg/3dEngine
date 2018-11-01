@@ -33,21 +33,21 @@ update_status ModuleTextures::PostUpdate(float dt)
 bool ModuleTextures::CleanUp()
 {
 	for (int i = materials.size() - 1; i >= 0; i--) {
-		materials[i].CleanUp();
+		materials[i]->CleanUp();
 	}
 	return true;
 }
 
 void ModuleTextures::AddMaterial(Material * tex)
 {
-	materials.push_back(*tex);
+	materials.push_back(tex);
 }
 
 Material * ModuleTextures::GetMaterialsFromID(GLuint id)
 {
 	for (int i = 0; i < materials.size(); i++) {
-		if (materials[i].textureID = id) {
-			return &materials[i];
+		if (materials[i]->textureID = id) {
+			return materials[i];
 		}
 	}
 	OWN_LOG("Error getting texture from ID");
@@ -57,8 +57,8 @@ Material * ModuleTextures::GetMaterialsFromID(GLuint id)
 Material * ModuleTextures::GetMaterialsFromName(const char * name)
 {
 	for (int i = 0; i < materials.size(); i++) {
-		if (strcmp(materials[i].name.c_str(), name) == 0) {
-			return &materials[i];
+		if (strcmp(materials[i]->name.c_str(), name) == 0) {
+			return materials[i];
 		}
 	}
 	OWN_LOG("Error getting texture from ID");
@@ -68,8 +68,8 @@ Material * ModuleTextures::GetMaterialsFromName(const char * name)
 GLuint ModuleTextures::CheckIfImageAlreadyLoaded(const char * _path)
 {
 	for (int i = 0; i < materials.size(); i++) {
-		if (strcmp(materials[i].name.c_str(), _path) == 0) {
-			return materials[i].textureID;
+		if (strcmp(materials[i]->name.c_str(), _path) == 0) {
+			return materials[i]->textureID;
 		}
 	}
 	return -1;

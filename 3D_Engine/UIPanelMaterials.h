@@ -12,6 +12,6 @@ public:
 	~UIPanelMaterials();
 
 	void Draw();
-	void DrawChilds(std::vector<Material> childs);
+	void DrawChilds(std::vector<Material*> childs);
 };
 #endif //__PANELTEXTURES_H__

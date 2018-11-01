@@ -418,6 +418,7 @@ void SceneImporter::LoadPEI(const char * fileName)
 
 		compMesh->GenerateBuffer();
 		
+		
 		delete[] headerdata;
 		headerdata = nullptr;
 		delete[] meshdata;

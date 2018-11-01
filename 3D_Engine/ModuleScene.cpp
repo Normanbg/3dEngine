@@ -2,6 +2,7 @@
 #include "ModuleScene.h"
 #include "GameObject.h"
 #include "ModuleEditorCamera.h"
+#include "ModuleTextures.h"
 
 #include <vector>
 
@@ -130,28 +131,28 @@ bool ModuleScene::CleanUp()
 }
 
 
-void ModuleScene::AddGameObjectToSelectedList(GameObject* newSelected)
+void ModuleScene::ShowGameObjectInspector(GameObject* newSelected)
 {
-	if (!newSelected->GetSelected())
-	{
-		for (std::vector<GameObject*>::iterator it = gObjsSelected.begin(); it != gObjsSelected.end(); ++it)
-		{
-			if ((*it) == newSelected)
-				return;
-		}
+	if (gObjSelected == newSelected)
+		return;
+	DeselectAll();
+	gObjSelected = newSelected;
 
-		gObjsSelected.push_back(newSelected);
-		newSelected->selected = true;
-	}
+}
+
+void ModuleScene::ShowMaterialInspector(Material * newSelected)
+{
+	if (materialSelected == newSelected)
+		return;
+	DeselectAll();
+	materialSelected = newSelected;
+
 }
 
 void ModuleScene::DeselectAll()
-{
-		for (std::vector<GameObject*>::iterator it = gObjsSelected.begin(); it != gObjsSelected.end();)
-		{
-			(*it)->selected = false;
-			it = gObjsSelected.erase(it);
-		}
+{	
+	gObjSelected = nullptr;	
+	materialSelected = nullptr;
 }
 
 void ModuleScene::SetBoundingBox(bool active)

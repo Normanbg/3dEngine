@@ -61,23 +61,20 @@ void ComponentMesh::DrawInspector() {
 		currentMaterial = material->texture->name.c_str();
 	
 	}
-	
-	
-
 	if (ImGui::BeginCombo("Material", currentMaterial)) 
 	{
-		std::vector<Material> mat = App->textures->materials; // change by GetMaterials List to initiate it with label NO TEXTURE
+		std::vector<Material*> mat = App->textures->materials; // change by GetMaterials List to initiate it with label NO TEXTURE
 		for (int i = 0; i < mat.size(); i++)
 		{
 			bool is_selected = false;
 			if (currentMaterial != nullptr) {
-				bool is_selected = (strcmp(currentMaterial, mat[i].name.c_str()) == 0);
+				bool is_selected = (strcmp(currentMaterial, mat[i]->name.c_str()) == 0);
 			}
-			if (ImGui::Selectable(mat[i].name.c_str(), is_selected)) {
-				currentMaterial = mat[i].name.c_str();
+			if (ImGui::Selectable(mat[i]->name.c_str(), is_selected)) {
+				currentMaterial = mat[i]->name.c_str();
 
 				ComponentMaterial* compMat = myGO->GetComponentMaterial();
-				if ( compMat == nullptr) { //if the GO has a component Material
+				if ( compMat == nullptr) { //if the GO has already a component Material
 					compMat = (ComponentMaterial*)myGO->AddComponent(MATERIAL);
 				}
 				
@@ -142,7 +139,8 @@ void ComponentMesh::Draw()
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_index); // test: before it was 2 lines upper
 		glBindBuffer(GL_ARRAY_BUFFER, id_vertex);
 		glVertexPointer(3, GL_FLOAT, 0, NULL);		
-
+		GLenum error = glGetError();
+		
 		glDrawElements(GL_TRIANGLES, num_index, GL_UNSIGNED_INT, NULL);
 		
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);

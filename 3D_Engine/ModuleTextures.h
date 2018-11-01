@@ -19,6 +19,8 @@ struct Material {
 	float3 colors = { 0,0,0 };
 
 	void CleanUp();
+
+
 };
 
 class ModuleTextures :	public Module {
@@ -37,7 +39,7 @@ public:
 	Material* GetMaterialsFromName(const char* name);
 	GLuint CheckIfImageAlreadyLoaded(const char * _path);
 
-	std::vector<Material> materials;
+	std::vector<Material*> materials;
 };
 
 #endif __MODULETEXTURES_H__
