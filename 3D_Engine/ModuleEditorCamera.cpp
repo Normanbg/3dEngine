@@ -23,7 +23,7 @@ ModuleEditorCamera::ModuleEditorCamera(bool start_enabled) : Module(start_enable
 	name = "Camera";
 	
 
-	Position = vec3(0.0f, 40.0f, 60.0f);
+	Position = vec3(0.0f, 0.0f, 0.0f);
 	Reference = vec3(0.0f, 0.0f, 0.0f);
 	cameraComp = new ComponentCamera();
 	
@@ -40,7 +40,7 @@ bool ModuleEditorCamera::Start()
 	bool ret = true;
 
 	cameraComp->LookAt({ 0,0,0 });
-	cameraComp->camRes->frustum.pos = { -10, 44, -10 };
+	cameraComp->camRes->frustum.pos = { 0, 4, 20 };
 	return ret;
 }
 
