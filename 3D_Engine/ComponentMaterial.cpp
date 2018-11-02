@@ -18,6 +18,7 @@ bool ComponentMaterial::Update()
 
 void ComponentMaterial::CleanUp()
 {
+	texture = nullptr;
 }
 
 void ComponentMaterial::DrawInspector()

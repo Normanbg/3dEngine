@@ -52,7 +52,7 @@ void ComponentMesh::CleanUp()
 void ComponentMesh::DrawInspector() {
 	ImGui::Separator();
 	ImGui::Text("Vertices: %d", num_index);
-	//ImGui::Text("Triangles: %d",num_faces);
+	ImGui::Text("Triangles: %d",num_faces);
 	ImGui::Text("Indices: %d", num_index);
 	ImGui::Text("Normals: %d \n", num_normals);
 	
@@ -63,7 +63,9 @@ void ComponentMesh::DrawInspector() {
 	}
 	if (ImGui::BeginCombo("Material", currentMaterial)) 
 	{
-		std::vector<Material*> mat = App->textures->materials; // change by GetMaterials List to initiate it with label NO TEXTURE
+		std::vector<Material*> mat = App->textures->materials;
+			
+		// change by GetMaterials List to initiate it with label NO TEXTURE
 		for (int i = 0; i < mat.size(); i++)
 		{
 			bool is_selected = false;
@@ -72,22 +74,26 @@ void ComponentMesh::DrawInspector() {
 			}
 			if (ImGui::Selectable(mat[i]->name.c_str(), is_selected)) {
 				currentMaterial = mat[i]->name.c_str();
-
 				ComponentMaterial* compMat = myGO->GetComponentMaterial();
-				if ( compMat == nullptr) { //if the GO has already a component Material
+
+				if (compMat == nullptr) { //if the GO has already a component Material
 					compMat = (ComponentMaterial*)myGO->AddComponent(MATERIAL);
 				}
-				
+
 				compMat->texture = App->textures->GetMaterialsFromName(currentMaterial);
 				SetMaterial(compMat);
 				compMat = nullptr;
 				if (is_selected) {
 					ImGui::SetItemDefaultFocus();
 				}
-			}			
+
+			}
+		
+			
 		}
 		ImGui::EndCombo();
 	}
+	currentMaterial = nullptr;
 	ImGui::Separator();
 }
 

@@ -39,6 +39,8 @@ public:
 	uint num_textureCoords = 0;
 	float2* texturesCoords = nullptr;
 	
+	uint num_faces = 0;
+
 	AABB boundingBox;
 	bool showBBox = false;
 
