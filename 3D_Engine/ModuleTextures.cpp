@@ -82,17 +82,24 @@ void ModuleTextures::LoadDroppedTexture(char * droppedFileDire)
 	
 	std::string texName;
 	std::string extension;
+	
 	App->fileSys->GetNameFromPath(droppedFileDire, nullptr, &texName, nullptr, nullptr);
 	App->fileSys->GetNameFromPath(droppedFileDire, nullptr, nullptr, nullptr, &extension);
-	
+	if (extension != DDS_FORMAT) {
 		App->renderer3D->texImporter->ImportToDDS(droppedFileDire, texName.c_str());
-	
+	}
 	
 	if (App->textures->CheckIfImageAlreadyLoaded(texName.c_str()) == -1) {
 		Material* mat = new Material;
-		std::string texPath;
-		texPath = LIB_TEXTURES_PATH + texName + DDS_FORMAT;
-		mat->textureID = App->renderer3D->texImporter->LoadTexture(texPath.c_str(), mat);
+		if (extension == DDS_FORMAT) {
+			mat->textureID = App->renderer3D->texImporter->LoadTexture(droppedFileDire, mat);
+		}
+		else {
+			std::string texPath;
+
+			texPath = LIB_TEXTURES_PATH + texName + DDS_FORMAT;
+			mat->textureID = App->renderer3D->texImporter->LoadTexture(texPath.c_str(), mat);
+		}
 		mat->name = texName;
 		App->textures->AddMaterial(mat);
 	}
@@ -100,6 +107,7 @@ void ModuleTextures::LoadDroppedTexture(char * droppedFileDire)
 		OWN_LOG("Material already loeaded");
 	}
 }
+
 
 
 

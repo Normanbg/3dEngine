@@ -74,6 +74,7 @@ uint ModuleFileSystem::writeFile(const char * fileName, const void * data, uint 
 
 uint ModuleFileSystem::readFile(const char * fileName, char** data)
 {
+	NormalizePath((char*)fileName);
 	PHYSFS_file* file = PHYSFS_openRead(fileName);
 	uint ret = 0;
 
@@ -102,6 +103,21 @@ uint ModuleFileSystem::readFile(const char * fileName, char** data)
 		OWN_LOG("File System error while opening file %s: %s\n", file, PHYSFS_getLastError());
 
 	return ret;
+}
+
+void ModuleFileSystem::CopyFileTo(const char * dest, const char * origin)
+{
+	char *data;
+	uint size = readFile(origin, &data);
+	writeFile(origin, data, size);
+}
+
+void ModuleFileSystem::CopyDDStoLib(const char * path) 
+{
+	std::string ddsName;
+	GetNameFromPath(path, nullptr, &ddsName, nullptr, nullptr);
+	std::string libpath = LIB_TEXTURES_PATH + ddsName + DDS_FORMAT;
+	CopyFileTo(libpath.c_str(), path);
 }
 
 void ModuleFileSystem::GetNameFromPath(const char * full_path, std::string * path, std::string * file, std::string * fileWithExtension, std::string * extension) const
