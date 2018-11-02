@@ -193,21 +193,18 @@ void ModuleScene::DrawMeshes() {
 
 	std::vector<Component*> components;
 
-	for (int i = 0;i< root->childrens.size();i++){
+	for (int i = 0; i < root->childrens.size(); i++) {
 		iterator = root->childrens[i];
-		iterator->GetComponents(MESH,components);		
+		iterator->GetComponents(MESH, components);
 	}
 
 	ComponentMesh* mesh;
 	for (int i = 0; i < components.size(); i++) {
 		mesh = (ComponentMesh *)components[i];
-		//if (App->camera->ContainsAaBox(mesh->boundingBox) == IS_IN || App->camera->ContainsAaBox(mesh->boundingBox) == INTERSECT) {//MISSING IF FRUSTUM CULLING ACTIVE!!!!!!---------------------------------------------------------
+		if (App->camera->ContainsAaBox(mesh->boundingBox) == IS_IN || App->camera->ContainsAaBox(mesh->boundingBox) == INTERSECT) {//MISSING IF FRUSTUM CULLING ACTIVE!!!!!!---------------------------------------------------------
 			mesh->Draw();
 		}
-	//	else if (App->camera->ContainsAaBox(mesh->boundingBox) == IS_OUT) {
-	//	//OWN_LOG("out motherfucker");
-	//	}
-	//}
-	iterator = nullptr;
-	mesh = nullptr;
+		iterator = nullptr;
+		mesh = nullptr;
+	}
 }

@@ -24,7 +24,7 @@ public:
 	update_status Update(float dt);
 	bool CleanUp();
 
-	//FrustumContained ContainsAaBox(const AABB & refBox) const;
+	FrustumContained ContainsAaBox(const AABB & refBox) const;
 
 	void Look(const vec3 &Position, const vec3 &Reference, bool RotateAroundReference = false);
 	void LookAt(const vec3 &Spot);
