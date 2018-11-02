@@ -94,6 +94,13 @@ update_status ModuleEditorCamera::Update(float dt)
 			cameraComp->camRes->frustum.Translate(_pos);
 	}
 
+	//focus -------------------------------------MISSING FOR GAMEOBJECTS!!!!!!!!!!!!!!
+	if (App->input->GetKey(SDL_SCANCODE_F) == KEY_REPEAT) {
+		float3 dir = cameraComp->camRes->frustum.pos;
+		cameraComp->camRes->frustum.pos = (dir.Normalized() * 10.f);
+
+		cameraComp->LookAt(float3(0, 0, 0));
+	}
 	cameraComp->CalculateViewMatrix();
 
 	return UPDATE_CONTINUE;
