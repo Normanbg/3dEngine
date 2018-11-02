@@ -93,7 +93,12 @@ uint* SceneImporter::ImportFBXtoPEI(const char * FBXpath)
 				if (check == -1) {
 					std::string texDDSPath;
 					if (extension != DDS_FORMAT) {
+						
 						error = App->renderer3D->texImporter->ImportToDDS(texturePath.C_Str(), textureName.c_str());
+						if (error) {
+							std::string texAssetsPath = TEXTURES_PATH + textureName + extension;
+							error = App->renderer3D->texImporter->ImportToDDS(texAssetsPath.c_str(), textureName.c_str()); // texture is 
+						}
 						texDDSPath = LIB_TEXTURES_PATH + textureName + DDS_FORMAT;
 						
 					}
@@ -102,7 +107,7 @@ uint* SceneImporter::ImportFBXtoPEI(const char * FBXpath)
 					}
 					if (!error) {
 						mat->textureID = App->renderer3D->texImporter->LoadTexture(texDDSPath.c_str(), mat);
-						OWN_LOG("Loading texture from Lib/Textures folder");
+						OWN_LOG("Loading imported DDS texture from Lib/Textures folder");
 						if (mat->textureID == -1) { // first check if texture is in local path "Lib/Textures"
 							OWN_LOG("Error loading texture.");
 						}
