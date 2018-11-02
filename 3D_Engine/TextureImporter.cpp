@@ -92,7 +92,7 @@ GLuint TextureImporter::LoadTexture(const char * path, Material* texture)
 
 
 
-void TextureImporter::ImportToDDS( const char* texPath, const char* texName) {
+bool TextureImporter::ImportToDDS( const char* texPath, const char* texName) { //returns error
 
 	OWN_LOG("Importing texture from %s", texPath);
 	ILuint imageID;
@@ -107,7 +107,7 @@ void TextureImporter::ImportToDDS( const char* texPath, const char* texName) {
 	if (!ret) {
 		OWN_LOG("Cannot Load Texture from %s", texPath);
 		ilDeleteImages(1, &imageID);
-		return;
+		return true;
 	}
 	else{
 		ILinfo infoImage;
@@ -157,5 +157,6 @@ void TextureImporter::ImportToDDS( const char* texPath, const char* texName) {
 		}
 		data = nullptr;
 		ilDeleteImages(1, &imageID);
+		return false;
 	}
 }

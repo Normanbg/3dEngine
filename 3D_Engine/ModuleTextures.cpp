@@ -47,7 +47,7 @@ void ModuleTextures::AddMaterial(Material * tex)
 Material * ModuleTextures::GetMaterialsFromID(GLuint id)
 {
 	for (int i = 0; i < materials.size(); i++) {
-		if (materials[i]->textureID = id) {
+		if (materials[i]->textureID == id) {
 			return materials[i];
 		}
 	}

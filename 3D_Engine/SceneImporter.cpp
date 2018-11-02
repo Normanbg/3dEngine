@@ -78,32 +78,39 @@ uint* SceneImporter::ImportFBXtoPEI(const char * FBXpath)
 			mat->colors[1] = color.g;
 			mat->colors[2] = color.b;
 
+			materialIDs[i] = -1; // set initially to -1 to avoid errors;
+
 			aiString texturePath;
 			aiReturn ret = material->GetTexture(aiTextureType_DIFFUSE, 0, &texturePath);
 			if (ret == aiReturn_SUCCESS) {
-
-				std::string fullTexPath = TEXTURES_PATH;
-				fullTexPath += texturePath.C_Str();
-
+				bool error= false;
 				std::string textureName;
 				std::string extension;
-				App->fileSys->GetNameFromPath(fullTexPath.c_str(), nullptr, &textureName, nullptr, &extension);
-
+				App->fileSys->GetNameFromPath(texturePath.C_Str(), nullptr, &textureName, nullptr, nullptr);
+				App->fileSys->GetNameFromPath(texturePath.C_Str(), nullptr, nullptr, nullptr, &extension);
+				
 				GLuint check = App->textures->CheckIfImageAlreadyLoaded(textureName.c_str());
 				if (check == -1) {
+					std::string texDDSPath;
 					if (extension != DDS_FORMAT) {
-						App->renderer3D->texImporter->ImportToDDS(fullTexPath.c_str(), textureName.c_str());
+						error = App->renderer3D->texImporter->ImportToDDS(texturePath.C_Str(), textureName.c_str());
+						texDDSPath = LIB_TEXTURES_PATH + textureName + DDS_FORMAT;
+						
 					}
-					std::string texDDSPath = LIB_TEXTURES_PATH + textureName + DDS_FORMAT;
-					mat->textureID = App->renderer3D->texImporter->LoadTexture(texDDSPath.c_str(),mat);
-					OWN_LOG("Loading texture from Lib/Textures folder");
-					if (mat->textureID == -1) { // first check if texture is in local path "Lib/Textures"
-						OWN_LOG("Error loading texture.");
+					else {
+						texDDSPath = TEXTURES_PATH + textureName + DDS_FORMAT;
 					}
-					if (mat->textureID != -1) { // if texture can be loaded
-						materialIDs[i] = mat->textureID;
-						mat->name = textureName;
-						App->textures->AddMaterial(mat);
+					if (!error) {
+						mat->textureID = App->renderer3D->texImporter->LoadTexture(texDDSPath.c_str(), mat);
+						OWN_LOG("Loading texture from Lib/Textures folder");
+						if (mat->textureID == -1) { // first check if texture is in local path "Lib/Textures"
+							OWN_LOG("Error loading texture.");
+						}
+						if (mat->textureID != -1) { // if texture can be loaded
+							materialIDs[i] = mat->textureID;
+							mat->name = textureName;
+							App->textures->AddMaterial(mat);
+						}
 					}
 				}	
 				else {
@@ -181,7 +188,7 @@ uint* SceneImporter::ImportFBXtoPEI(const char * FBXpath)
 			texMeshIDs[i] = materialIDs[meshIDs[i]];
 
 		}
-		uint sd = meshIDs[1];
+		
 		
 		delete[] materialIDs;
 		materialIDs = nullptr;
@@ -203,8 +210,6 @@ uint* SceneImporter::ImportFBXtoPEI(const char * FBXpath)
 void SceneImporter::ImportFBXandLoad(const char * fbxPath)  
 {
 	uint* texMeshLinker = ImportFBXtoPEI(fbxPath);
-
-	texMeshLinker[1];
 
 	std::string PEIPath;
 	App->fileSys->GetNameFromPath(fbxPath, nullptr, &PEIPath, nullptr,nullptr);
@@ -382,7 +387,7 @@ void SceneImporter::LoadPEI(const char * fileName, uint* meshTexLinker)
 
 		ComponentMesh* compMesh = (ComponentMesh*)childGO->AddComponent(MESH);
 
-		if (meshTexLinker != nullptr) {
+		if (meshTexLinker[i] != -1) {
 			
 			ComponentMaterial* compMat = (ComponentMaterial*)childGO->AddComponent(MATERIAL);
 			compMat->texture = App->textures->GetMaterialsFromID(meshTexLinker[i]);

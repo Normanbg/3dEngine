@@ -138,15 +138,13 @@ void ComponentMesh::Draw()
 	}
 	else {
 			
-		if (material != nullptr) {			
+		if (material != NULL) {			
 			glBindTexture(GL_TEXTURE_2D, material->texture->textureID);
 			glTexCoordPointer(2, GL_FLOAT, 0, &(texturesCoords[0]));
 		}
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_index); // test: before it was 2 lines upper
 		glBindBuffer(GL_ARRAY_BUFFER, id_vertex);
 		glVertexPointer(3, GL_FLOAT, 0, NULL);		
-		GLenum error = glGetError();
-		
 		glDrawElements(GL_TRIANGLES, num_index, GL_UNSIGNED_INT, NULL);
 		
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
