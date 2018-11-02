@@ -151,12 +151,6 @@ bool ModuleRenderer3D::Start() {
 
 	bool ret = true;
 	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
-	/*importer->LoadFBX("BakerHouse.fbx");
-	importer->ImportFBXtoPEI("BakerHouse.fbx");
-	importer->LoadPEI("BakerHouse.pei");*/
-	
-	//GenBuffFromMeshes();
-
 	return ret;
 }
 
@@ -168,10 +162,7 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 	glLoadIdentity();
 
 	glMatrixMode(GL_MODELVIEW);
-	float4x4 tryy = *(float4x4*)App->camera->cameraComp->GetViewOpenGLViewMatrix();
-	glLoadMatrixf(&tryy[0][0]);
-
-	//glLoadMatrixf(App->camera->GetViewMatrix());
+	glLoadMatrixf(App->camera->cameraComp->GetViewMatrix());
 
 	// light 0 on cam pos
 	lights[0].SetPos(App->camera->Position.x, App->camera->Position.y, App->camera->Position.z);
@@ -191,15 +182,13 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 {
 	BROFILER_CATEGORY("Renderer3D_PostUpdate", Profiler::Color::HotPink);
 
-	glBindBuffer(GL_ARRAY_BUFFER, 0); ///THIS LINE MAKES ALL DRAW BY RESETING THE BUFFER, NEEDED???????
+	glBindBuffer(GL_ARRAY_BUFFER, 0); ///
 
 
 	//DrawMeshes();
 	App->scene->DrawMeshes();
 
-	App->gui->Draw();
-
-	
+	App->gui->Draw();	
 
 	SDL_GL_SwapWindow(App->window->window); 
 	return UPDATE_CONTINUE;
@@ -212,9 +201,6 @@ bool ModuleRenderer3D::CleanUp()
 	OWN_LOG("Destroying 3D Renderer");
 
 	importer->CleanUp();
-	
-
-	//ClearSceneMeshes();
 		
 	SDL_GL_DeleteContext(context); 
 	return true;
@@ -224,18 +210,8 @@ bool ModuleRenderer3D::CleanUp()
 void ModuleRenderer3D::OnResize(const int width, const int height)
 {
 	glViewport(0, 0, width, height);
-
 	glMatrixMode(GL_PROJECTION);
-	//glLoadIdentity();
-
-	/*ProjectionMatrix = perspective(60.0f, (float)width / (float)height, 0.125f, 512.0f);
-	glLoadMatrixf(&ProjectionMatrix);
-*//*
-	Frustum cFrustum = App->camera->cameraComp->frustum;
-	ProjectionMatrix = cFrustum.ProjectionMatrix();*/
-	//glLoadMatrixf(&ProjectionMatrix[0][0]);
-	glLoadMatrixf(App->camera->cameraComp->camRes->GetProjMatrix());
-	/*glLoadMatrixf(App->camera->camera->cam->GetProjMatrix());*/
+	glLoadMatrixf(App->camera->cameraComp->GetProjectionMatrix());
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 }

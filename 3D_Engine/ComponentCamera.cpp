@@ -4,11 +4,6 @@
 
 ComponentCamera::ComponentCamera()
 {
-	/*frustum.type = PerspectiveFrustum;
-	frustum.pos = float3::zero;
-	frustum.front = float3::unitY;
-	frustum.up = float3::unitZ;
-*/
 	CalculateViewMatrix();
 
 	X = float3(1.0f, 0.0f, 0.0f);
@@ -18,9 +13,7 @@ ComponentCamera::ComponentCamera()
 	Reference = float3(0.0f, 0.0f, 0.0f);
 
 	camRes = new Camera();
-	//LookAt(Reference);
 }
-
 
 ComponentCamera::~ComponentCamera()
 {
@@ -60,13 +53,12 @@ void ComponentCamera::Look(const float3 &Position, const float3 &Reference, bool
 // -----------------------------------------------------------------
 void ComponentCamera::LookAt(const float3 &Spot)
 {
-	Reference = Spot;
+	float3 direction = Spot - camRes->frustum.pos;
 
-	Z = (Position-Reference).Normalized();
-	X = (Cross(float3(0.0f, 1.0f, 0.0f), Z)).Normalized();
-	Y = Cross(Z, X);
+	float3x3 matrix = float3x3::LookAt(camRes->frustum.front, direction.Normalized(), camRes->frustum.up, float3::unitY);
 
-	CalculateViewMatrix();
+	camRes->frustum.front = matrix.MulDir(camRes->frustum.front).Normalized();
+	camRes->frustum.up = matrix.MulDir(camRes->frustum.up).Normalized();
 }
 
 void ComponentCamera::CalculateViewMatrix()
@@ -77,15 +69,29 @@ void ComponentCamera::CalculateViewMatrix()
 
 float * ComponentCamera::GetViewMatrix()
 {
-	return &ViewMatrix[0][0];
-}
-
-float * ComponentCamera::GetViewOpenGLViewMatrix()
-{
-	float4x4 m;
+	static float4x4 m;
 
 	m = camRes->frustum.ViewMatrix();
 	m.Transpose();
 
-	return &m[0][0];
+	return (float*)m.v;
+}
+
+float * ComponentCamera::GetProjectionMatrix()
+{
+	static float4x4 m;
+
+	m = camRes->frustum.ProjectionMatrix().Transposed();
+	return (float*)m.v;
+
+}
+
+float ComponentCamera::GetMouseSensit()
+{
+	return mouseSensitivity;
+}
+
+float ComponentCamera::GetScroolSensit()
+{
+	return scroolWheelSensitivity;
 }

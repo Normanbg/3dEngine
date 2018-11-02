@@ -21,21 +21,25 @@ public:
 	void LookAt(const float3 & Spot);
 
 	void CalculateViewMatrix();
-	float* GetViewMatrix();
-	float * GetViewOpenGLViewMatrix();
+	float * GetViewMatrix();
+	float * GetProjectionMatrix();
+	float GetMouseSensit();
+	float GetScroolSensit();
 
 public:
 	GameObject* myGo;
 	Camera* camRes;
 	Frustum frustum;
-	/*float nearPlane = 1.0f;
-	float farPlane = 400.f;*/
+
 	float3 X, Y, Z, Position, Reference;
 
 private:
 
 private:
 	float4x4 ViewMatrix, ViewMatrixInverse;
+	float mouseSensitivity = 0.25f;
+	float scroolWheelSensitivity = 10.0f;
+
 	
 };
 

@@ -27,7 +27,7 @@ ModuleEditorCamera::ModuleEditorCamera(bool start_enabled) : Module(start_enable
 	Reference = vec3(0.0f, 0.0f, 0.0f);
 	cameraComp = new ComponentCamera();
 	
-	LookAt(Reference);
+	//LookAt(Reference);
 }
 
 ModuleEditorCamera::~ModuleEditorCamera()
@@ -39,8 +39,8 @@ bool ModuleEditorCamera::Start()
 	OWN_LOG("Setting up the camera");
 	bool ret = true;
 
-	cameraComp->LookAt({ 0,0,0 });
-	cameraComp->camRes->frustum.pos = { 0, 4, 20 };
+	cameraComp->LookAt(float3(0,0,0));
+	cameraComp->camRes->frustum.pos = { -35, 8, 0 };
 	return ret;
 }
 
@@ -55,134 +55,46 @@ bool ModuleEditorCamera::CleanUp()
 // -----------------------------------------------------------------
 update_status ModuleEditorCamera::Update(float dt)
 {
-	float3 _pos(0, 0, 0);
-	float speed = CAMERA_SPEED * dt;
-	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) _pos += cameraComp->frustum.front * speed;
-	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) _pos -= cameraComp->frustum.front * speed;
-
-	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
-		_pos -= cameraComp->frustum.WorldRight() * speed;
-	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) _pos += cameraComp->frustum.WorldRight() * speed;
-
-	if (!_pos.IsZero())
-		cameraComp->frustum.Translate(_pos);
-
 	BROFILER_CATEGORY("Camera3D_Update", Profiler::Color::Chartreuse);
-	//vec3 newPos(0, 0, 0);
-	//float speed = CAMERA_SPEED * dt;
 
 	////Alt+Left click should orbit the object
-	//if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_LALT)) {
-	//	int dx = -App->input->GetMouseXMotion();
-	//	int dy = -App->input->GetMouseYMotion();
+	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_LALT)) {
+		Orbit(dt);
+	}
+	
+	////While Right clicking, WASDRT fps-like movement & free look enabled
+	if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT) {
+		float3 _pos(0, 0, 0);
+		float speed = CAMERA_SPEED * dt;
+		if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT)
+			speed *= 5.0f;
+		if (App->input->GetKey(SDL_SCANCODE_R) == KEY_REPEAT) _pos.y += speed;
+		if (App->input->GetKey(SDL_SCANCODE_T) == KEY_REPEAT) _pos.y -= speed;
+		if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) _pos += cameraComp->camRes->frustum.front * speed;
+		if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) _pos -= cameraComp->camRes->frustum.front * speed;
+		if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) _pos -= cameraComp->camRes->frustum.WorldRight() * speed;
+		if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) _pos += cameraComp->camRes->frustum.WorldRight() * speed;
 
-	//	mouseSensitivity = 0.25f;
-	//	Reference = { 0,0,0 };//WILL BE THE POSITION WHEN WE HAVE IT!!! 
-	//	if (dx != 0)
-	//	{
-	//		float DeltaX = (float)dx * mouseSensitivity;
+		if (!_pos.IsZero())
+			cameraComp->camRes->frustum.Translate(_pos);	
 
-	//		X = rotate(X, DeltaX, vec3(0.0f, 1.0f, 0.0f));
-	//		Y = rotate(Y, DeltaX, vec3(0.0f, 1.0f, 0.0f));
-	//		Z = rotate(Z, DeltaX, vec3(0.0f, 1.0f, 0.0f));
-	//	}
+		MouseMovement(dt);
+	}
 
-	//	if (dy != 0)
-	//	{
-	//		float DeltaY = (float)dy * mouseSensitivity;
+	//Zoom
+	if (App->input->GetMouseZ() != 0) {
+		float3 _pos(0, 0, 0);
+		float mSpeed = cameraComp->GetScroolSensit();
+		if (App->input->GetMouseZ() < 0)
+			_pos -= cameraComp->camRes->frustum.front * mSpeed;
+		else
+			_pos += cameraComp->camRes->frustum.front * mSpeed;
 
-	//		Y = rotate(Y, DeltaY, X);
-	//		Z = rotate(Z, DeltaY, X);
-
-	//		if (Y.y < 0.0f)
-	//		{
-	//			Z = vec3(0.0f, Z.y > 0.0f ? 1.0f : -1.0f, 0.0f);
-	//			Y = cross(Z, X);
-	//		}
-	//	}
-
-	//	Position = Reference + Z * length(Position);
-	//}
-	////While Right clicking, “WASD” fps-like movement While Right clicking, “WASD” fps-like movement and free look enabled
-	//if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT)
-	//{
-	//	speed = CAMERA_SPEED * dt;
-
-	//	if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT)
-	//		speed *= 2.0f;
-
-	//	if (App->input->GetKey(SDL_SCANCODE_R) == KEY_REPEAT) newPos.y += speed;
-	//	if (App->input->GetKey(SDL_SCANCODE_T) == KEY_REPEAT) newPos.y -= speed;
-
-	//	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) newPos -= Z * speed;
-	//	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) newPos += Z * speed;
-
-
-	//	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) newPos -= X * speed;
-	//	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) newPos += X * speed;
-
-	//	Position += newPos;
-	//	Reference += newPos;
-
-	//	int dx = -App->input->GetMouseXMotion();
-	//	int dy = -App->input->GetMouseYMotion();
-
-	//	mouseSensitivity = 0.25f;
-
-	//	vec3 newPosition = Position - Reference;
-
-	//	if (dx != 0)
-	//	{
-	//		const float DeltaX = (float)dx * mouseSensitivity;
-
-	//		X = rotate(X, DeltaX, vec3(0.0f, 1.0f, 0.0f));
-	//		Y = rotate(Y, DeltaX, vec3(0.0f, 1.0f, 0.0f));
-	//		Z = rotate(Z, DeltaX, vec3(0.0f, 1.0f, 0.0f));
-	//	}
-
-	//	if (dy != 0)
-	//	{
-	//		const float DeltaY = (float)dy * mouseSensitivity;
-
-	//		Y = rotate(Y, DeltaY, X);
-	//		Z = rotate(Z, DeltaY, X);
-
-	//		if (Y.y < 0.0f)
-	//		{
-	//			Z = vec3(0.0f, Z.y > 0.0f ? 1.0f : -1.0f, 0.0f);
-	//			Y = cross(Z, X);
-	//		}
-	//	}
-
-	//	Reference = Position - Z * length(newPosition);
-	//}
-
-	//if (App->input->GetKey(SDL_SCANCODE_F)== KEY_REPEAT){		
-	//	FocusToMeshes();		
-	//}
-
-	////-----Zoom
-	//if (App->input->GetMouseZ() != 0) {
-	//	newPos = (0, 0, 0);
-	//	float wheelSensitivity = scroolWheelSensitivity;
-	//	vec3 distance = Reference - Position;
-
-	//	if (length(distance) < zoomDistance)
-	//		wheelSensitivity = length(distance) / zoomDistance;
-	//	if (App->input->GetMouseZ() > 0)
-	//		newPos -= Z * wheelSensitivity;
-	//	else
-	//		newPos += Z * wheelSensitivity;
-
-	//	Position += newPos;
-	//}
-
-	//
-	//// Recalculate matrix -------------
-	//CalculateViewMatrix();
+		if (!_pos.IsZero())
+			cameraComp->camRes->frustum.Translate(_pos);
+	}
 
 	cameraComp->CalculateViewMatrix();
-	
 
 	return UPDATE_CONTINUE;
 }
@@ -220,6 +132,52 @@ update_status ModuleEditorCamera::Update(float dt)
 //	// we must be partly in then otherwise
 //	return(INTERSECT);
 //}
+
+void ModuleEditorCamera::MouseMovement(float dt)
+{
+	float dx = -App->input->GetMouseXMotion() * cameraComp->GetMouseSensit() * dt;
+	float dy = -App->input->GetMouseYMotion() *cameraComp->GetMouseSensit() * dt;
+	if (dx != 0)
+	{
+		Quat rotationX = Quat::RotateY(dx);
+		cameraComp->camRes->frustum.front = rotationX.Mul(cameraComp->camRes->frustum.front).Normalized();
+		cameraComp->camRes->frustum.up = rotationX.Mul(cameraComp->camRes->frustum.up).Normalized();
+	}
+	if (dy != 0)
+	{
+		Quat rotationY = Quat::RotateAxisAngle(cameraComp->camRes->frustum.WorldRight(), dy);
+		float3 _up = rotationY.Mul(cameraComp->camRes->frustum.up).Normalized();
+		if (_up.y > 0.0f)
+		{
+			cameraComp->camRes->frustum.up = _up;
+			cameraComp->camRes->frustum.front = rotationY.Mul(cameraComp->camRes->frustum.front).Normalized();
+		}
+	}
+}
+
+void ModuleEditorCamera::Orbit(float dt)
+{
+	float dx = -App->input->GetMouseXMotion() * cameraComp->GetMouseSensit() * dt;
+	float dy = -App->input->GetMouseYMotion() *cameraComp->GetMouseSensit() * dt;
+	float3 distance = cameraComp->camRes->frustum.pos;
+	Quat X(cameraComp->camRes->frustum.WorldRight(), dy);
+	Quat Y(cameraComp->camRes->frustum.up, dx);
+
+	distance = X.Transform(distance);
+	distance = Y.Transform(distance);
+
+	cameraComp->camRes->frustum.pos = distance;
+
+	cameraComp->LookAt(float3(0, 0, 0));
+}
+
+
+
+
+
+
+
+
 // -----------------------------------------------------------------
 void ModuleEditorCamera::Look(const vec3 &Position, const vec3 &Reference, bool RotateAroundReference)
 {
@@ -285,6 +243,7 @@ void ModuleEditorCamera::FocusToMeshes(){
 	
 	LookAt({ 0,0,0 });
 }
+
 
 // -----------------------------------------------------------------
 void ModuleEditorCamera::CalculateViewMatrix()

@@ -38,14 +38,12 @@ public:
 	bool free_camera = false;
 
 	vec3 X, Y, Z, Position, Reference;
-	float mouseSensitivity = 0.25f;
-	float scroolWheelSensitivity = 10.0f;
-	float zoomDistance = 20.0f;
 
 	//---------
 	ComponentCamera* cameraComp;
 private:
-
+	void MouseMovement(float dt);
+	void Orbit(float dt);
 	void CalculateViewMatrix();
 
 private:
