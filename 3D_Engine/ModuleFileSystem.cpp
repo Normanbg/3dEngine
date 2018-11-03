@@ -74,6 +74,7 @@ uint ModuleFileSystem::writeFile(const char * fileName, const void * data, uint 
 
 uint ModuleFileSystem::readFile(const char * fileName, char** data)
 {
+	NormalizePath((char*)fileName);
 	PHYSFS_file* file = PHYSFS_openRead(fileName);
 	uint ret = 0;
 
@@ -104,6 +105,21 @@ uint ModuleFileSystem::readFile(const char * fileName, char** data)
 	return ret;
 }
 
+void ModuleFileSystem::CopyFileTo(const char * dest, const char * origin)
+{
+	char *data;
+	uint size = readFile(origin, &data);
+	writeFile(origin, data, size);
+}
+
+void ModuleFileSystem::CopyDDStoLib(const char * path) 
+{
+	std::string ddsName;
+	GetNameFromPath(path, nullptr, &ddsName, nullptr, nullptr);
+	std::string libpath = LIB_TEXTURES_PATH + ddsName + DDS_FORMAT;
+	CopyFileTo(libpath.c_str(), path);
+}
+
 void ModuleFileSystem::GetNameFromPath(const char * full_path, std::string * path, std::string * file, std::string * fileWithExtension, std::string * extension) const
 {
 	if (full_path != nullptr) 
@@ -120,6 +136,13 @@ void ModuleFileSystem::GetNameFromPath(const char * full_path, std::string * pat
 			else
 				path->clear();
 		}
+		if (fileWithExtension != nullptr) {
+			if (posSlash < nwFullPath.length()) {
+				*fileWithExtension = nwFullPath.substr(posSlash + 1);
+			}
+			else
+				*fileWithExtension = nwFullPath;
+		}
 
 		if (file != nullptr)
 		{	
@@ -127,15 +150,7 @@ void ModuleFileSystem::GetNameFromPath(const char * full_path, std::string * pat
 			posSlash = nwFullPath.find_last_of("\\/");
 			*file = nwFullPath.substr(posSlash + 1);
 			
-		}
-		if (fileWithExtension != nullptr) {
-			if (posSlash < nwFullPath.length()) {								
-				*fileWithExtension = nwFullPath.substr(posSlash + 1);
-			}
-			else
-				*fileWithExtension = nwFullPath;
-		
-		}
+		}		
 
 		if (extension != nullptr)
 		{

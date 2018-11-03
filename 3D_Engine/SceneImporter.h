@@ -21,6 +21,8 @@ class ComponentMesh;
 class SceneImporter
 {
 public:
+	
+
 	struct dataScene {
 	
 		float3 position = { 0,0,0 };
@@ -55,17 +57,17 @@ public:
 public:
 
 	void Init();
-	void ImportFBXtoPEI(const char* path);
+	uint* ImportFBXtoPEI(const char* path);
 	void ImportFBXandLoad(const char* fbxPath);
-	void LoadPEI(const char* fileName);
+	void LoadPEI(const char* fileName, uint* texMeshLinker = nullptr);
 	void CleanUp();
 
 	void LoadFBX(const char * path);
 
-	
+	//uint* texIDs; //to store the id textures of the meshes
 
 private:
-	void ImportFromMesh(const aiScene* currSc, aiMesh * new_mesh, std::ofstream* dataFile);
+	void ImportFromMesh(const aiScene* currSc, aiMesh * new_mesh, std::ofstream* dataFile, uint meshNum, uint* texIDs = nullptr, uint* texMeshIDs = nullptr);
 };
 
 #endif //__SCENEIMPORTER_H__

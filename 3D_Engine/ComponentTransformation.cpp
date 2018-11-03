@@ -36,36 +36,29 @@ void ComponentTransformation::DrawInspector()
 	float3 _rot = getEulerRot();
 	float3 _scale = getScale();
 
-	std::vector<GameObject*> selectedRecover = App->scene->gObjsSelected;
-	if (selectedRecover.size() == 1)//SETTING THIS BECAUSE WE ONLY ALLOW TO MOVE ONE GAMEOBJECT (ONLY 1 COMP. TRANSFORM DRAWED)-------
+	GameObject* selectedRecover = App->scene->gObjSelected;
+	if (selectedRecover != nullptr)//SETTING THIS BECAUSE WE ONLY ALLOW TO MOVE ONE GAMEOBJECT (ONLY 1 COMP. TRANSFORM DRAWED)-------
 	{
 		if (ImGui::DragFloat3("Position", (float*)&_pos, 0.1f))
 		{
-			for (std::vector<GameObject*>::iterator selectedIt = selectedRecover.begin(); selectedIt < selectedRecover.end(); selectedIt++)
-			{
-				(*selectedIt)->transformComp->setPos(_pos);
-			}
+			selectedRecover->transformComp->setPos(_pos);
+			
 		}
 		if (ImGui::DragFloat3("Rotation", (float*)&_rot, 0.1f)) {
-			for (std::vector<GameObject*>::iterator selectedIt = selectedRecover.begin(); selectedIt < selectedRecover.end(); selectedIt++)
-			{
-				(*selectedIt)->transformComp->setRotEuler(_rot);
-			}
+
+			selectedRecover->transformComp->setRotEuler(_rot);
+
 		}
 		if (ImGui::DragFloat3("Scale", (float*)&_scale, 0.1f, 0.0f)) {
-			for (std::vector<GameObject*>::iterator selectedIt = selectedRecover.begin(); selectedIt < selectedRecover.end(); selectedIt++)
-			{
-				(*selectedIt)->transformComp->setScale(_scale);
-			}
+			
+			selectedRecover->transformComp->setScale(_scale);
+			
 		}
 		if (ImGui::SmallButton("Reset"))
-		{
-			for (std::vector<GameObject*>::iterator selectedIt = selectedRecover.begin(); selectedIt < selectedRecover.end(); selectedIt++)
-			{
-				(*selectedIt)->transformComp->setPos(float3::zero);
-				(*selectedIt)->transformComp->setRotEuler(float3::zero);
-				(*selectedIt)->transformComp->setScale(float3::one);
-			}
+		{			
+			selectedRecover->transformComp->setPos(float3::zero);
+			selectedRecover->transformComp->setRotEuler(float3::zero);
+			selectedRecover->transformComp->setScale(float3::one);			
 		}
 	}
 	ImGui::Separator();

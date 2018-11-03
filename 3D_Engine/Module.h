@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __MODULE_H__
+#define __MODULE_H__
 
 #include "./JSON/parson.h"
 #include <string>
@@ -8,7 +9,7 @@ class Application;
 
 class Module
 {
-private :
+private:
 	bool enabled;
 
 public:
@@ -23,7 +24,7 @@ public:
 
 	virtual bool Init(JSON_Object* obj)
 	{
-		return true; 
+		return true;
 	}
 
 	virtual bool Start()
@@ -46,9 +47,9 @@ public:
 		return UPDATE_CONTINUE;
 	}
 
-	virtual bool CleanUp() 
-	{ 
-		return true; 
+	virtual bool CleanUp()
+	{
+		return true;
 	}
 
 	virtual bool Load(JSON_Object* data)
@@ -61,3 +62,5 @@ public:
 		return true;
 	}
 };
+
+#endif // !__MODULE_H__

@@ -36,10 +36,8 @@ void SceneImporter::Init()
 
 }
 
-void SceneImporter::ImportFBXtoPEI(const char * FBXpath)
+uint* SceneImporter::ImportFBXtoPEI(const char * FBXpath)
 {
-
-	
 	std::string fullFBXPath = MODELS_PATH;
 	fullFBXPath+= FBXpath;
 		
@@ -54,15 +52,20 @@ void SceneImporter::ImportFBXtoPEI(const char * FBXpath)
 		 if (scene == nullptr) {
 			 OWN_LOG("Error loading fbx from Assets/3DModels folder.");
 			 aiReleaseImport(scene);
-			 return;
+			 
+			 return nullptr;
 		 }	
 	}
+	uint numMaterials = scene->mNumMaterials;
+	uint* materialIDs = new uint[scene->mNumMaterials];
 
 	if (scene->HasMaterials()) {
 		//need to load a texture outside the mesh. as a scene
 		///check if material is in the path
 		///if it is, load texture, convert to .dds & added as a component
-		uint numMaterials = scene->mNumMaterials;
+		
+		
+
 		for (int i = 0; i < numMaterials; i++) {
 
 			aiMaterial* material = scene->mMaterials[i];
@@ -75,34 +78,49 @@ void SceneImporter::ImportFBXtoPEI(const char * FBXpath)
 			mat->colors[1] = color.g;
 			mat->colors[2] = color.b;
 
+			materialIDs[i] = -1; // set initially to -1 to avoid errors;
+
 			aiString texturePath;
 			aiReturn ret = material->GetTexture(aiTextureType_DIFFUSE, 0, &texturePath);
 			if (ret == aiReturn_SUCCESS) {
-
-				std::string fullTexPath = TEXTURES_PATH;
-				fullTexPath += texturePath.C_Str();
-
+				bool error= false;
 				std::string textureName;
 				std::string extension;
-				App->fileSys->GetNameFromPath(fullTexPath.c_str(), nullptr, &textureName, nullptr, &extension);
-
+				App->fileSys->GetNameFromPath(texturePath.C_Str(), nullptr, &textureName, nullptr, nullptr);
+				App->fileSys->GetNameFromPath(texturePath.C_Str(), nullptr, nullptr, nullptr, &extension);
+				
 				GLuint check = App->textures->CheckIfImageAlreadyLoaded(textureName.c_str());
 				if (check == -1) {
+					std::string texDDSPath;
 					if (extension != DDS_FORMAT) {
-						App->renderer3D->texImporter->ImportToDDS(fullTexPath.c_str(), textureName.c_str());
+						
+						error = App->renderer3D->texImporter->ImportToDDS(texturePath.C_Str(), textureName.c_str());
+						if (error) {
+							std::string texAssetsPath = TEXTURES_PATH + textureName + extension;
+							error = App->renderer3D->texImporter->ImportToDDS(texAssetsPath.c_str(), textureName.c_str()); // texture is 
+						}
+						texDDSPath = LIB_TEXTURES_PATH + textureName + DDS_FORMAT;
+						
 					}
-					std::string texDDSPath = LIB_TEXTURES_PATH + textureName + DDS_FORMAT;
-					mat->textureID = App->renderer3D->texImporter->LoadTexture(texDDSPath.c_str(),mat);
-					OWN_LOG("Loading texture from Lib/Textures folder");
-					if (mat->textureID == -1) { // first check if texture is in local path "Lib/Textures"
-						OWN_LOG("Error loading texture.");
+					else {
+						texDDSPath = TEXTURES_PATH + textureName + DDS_FORMAT;
 					}
-					if (mat->textureID != -1) { // if texture can be loaded
-						//mat->path = fullTexPath;	
-						mat->name = textureName;
-						App->textures->AddMaterial(mat);
+					if (!error) {
+						mat->textureID = App->renderer3D->texImporter->LoadTexture(texDDSPath.c_str(), mat);
+						OWN_LOG("Loading imported DDS texture from Lib/Textures folder");
+						if (mat->textureID == -1) { // first check if texture is in local path "Lib/Textures"
+							OWN_LOG("Error loading texture.");
+						}
+						if (mat->textureID != -1) { // if texture can be loaded
+							materialIDs[i] = mat->textureID;
+							mat->name = textureName;
+							App->textures->AddMaterial(mat);
+						}
 					}
-				}				
+				}	
+				else {
+					materialIDs[i] = check;
+				}
 			}
 			else {
 
@@ -116,11 +134,14 @@ void SceneImporter::ImportFBXtoPEI(const char * FBXpath)
 
 		std::string fileName = LIB_MODELS_PATH + modelName + OWN_FILE_FORMAT;
 		
-
+		
 		std::ofstream dataFile(fileName.c_str(), std::fstream::out | std::fstream::binary);
 		OWN_LOG("Creating PEI file");
 
 		SceneImporter::dataScene newScene;
+
+		newScene.numMeshes = scene->mNumMeshes;
+		uint* meshIDs = new uint[newScene.numMeshes];
 
 		const aiNode* node = scene->mRootNode; // NEEDTO delete pointer?
 
@@ -132,8 +153,8 @@ void SceneImporter::ImportFBXtoPEI(const char * FBXpath)
 		newScene.position = { _position.x, _position.y, _position.z };
 		newScene.rotation = { _rotation.x, _rotation.y, _rotation.z, _rotation.w };
 
-		newScene.numMeshes = scene->mNumMeshes;
-
+		
+		
 
 		uint size = sizeof(uint) +sizeof(float3) * 2 + sizeof(Quat); // numMeshes+(scale+pos) + rotation in bytes
 		char* data = new char[size];
@@ -164,37 +185,51 @@ void SceneImporter::ImportFBXtoPEI(const char * FBXpath)
 
 		for (int i = 0; i < scene->mNumMeshes; i++) {
 			meshIterator = scene->mMeshes[i];
-			ImportFromMesh(scene, meshIterator, &dataFile);
+			ImportFromMesh(scene, meshIterator, &dataFile,i, materialIDs, meshIDs);
+		}
+
+		uint* texMeshIDs = new uint[scene->mNumMeshes];
+		for (int i = 0; i < scene->mNumMeshes; i++) {
+			texMeshIDs[i] = materialIDs[meshIDs[i]];
+
 		}
 		
+		
+		delete[] materialIDs;
+		materialIDs = nullptr;
+		delete[] meshIDs;
+		meshIDs = nullptr;
 		aiReleaseImport(scene);		
 		dataFile.close();
 
-		
+		return texMeshIDs;
 	}
 	else {
 		OWN_LOG("Error loading FBX, scene has no meshes");
 	}
 	
-	
+	return nullptr;
 
 }
 
 void SceneImporter::ImportFBXandLoad(const char * fbxPath)  
 {
-	ImportFBXtoPEI(fbxPath);
+	uint* texMeshLinker = ImportFBXtoPEI(fbxPath);
 
 	std::string PEIPath;
 	App->fileSys->GetNameFromPath(fbxPath, nullptr, &PEIPath, nullptr,nullptr);
 	PEIPath += OWN_FILE_FORMAT;
 	
-	LoadPEI(PEIPath.c_str());
+	LoadPEI(PEIPath.c_str(),texMeshLinker);
+	delete[] texMeshLinker;
+	texMeshLinker = nullptr;
 }
 
 
-void SceneImporter::ImportFromMesh(const aiScene* currSc, aiMesh * new_mesh,std::ofstream* dataFile)
+void SceneImporter::ImportFromMesh(const aiScene* currSc, aiMesh * new_mesh,std::ofstream* dataFile, uint meshNum,  uint* texIDs, uint* texMeshIDs)
 {
 	bool error = false;
+	
 
 	SceneImporter::dataMesh newMesh;
 	newMesh.num_vertex = new_mesh->mNumVertices; //-----------vertex
@@ -202,8 +237,8 @@ void SceneImporter::ImportFromMesh(const aiScene* currSc, aiMesh * new_mesh,std:
 	memcpy(newMesh.vertex, new_mesh->mVertices, sizeof(float3) * newMesh.num_vertex);
 	OWN_LOG("Importing new mesh with %d vertices", newMesh.num_vertex);
 	
-	newMesh.texID = new_mesh->mMaterialIndex;
-
+	texMeshIDs[meshNum] = new_mesh->mMaterialIndex;
+	
 	if (new_mesh->HasFaces()) { //------------indices
 		newMesh.num_index = new_mesh->mNumFaces * 3;
 		newMesh.index = new uint[newMesh.num_index]; // assume each face is a triangle
@@ -289,7 +324,7 @@ void SceneImporter::ImportFromMesh(const aiScene* currSc, aiMesh * new_mesh,std:
 	
 }
 
-void SceneImporter::LoadPEI(const char * fileName)
+void SceneImporter::LoadPEI(const char * fileName, uint* meshTexLinker)
 {
 	
 	
@@ -357,6 +392,12 @@ void SceneImporter::LoadPEI(const char * fileName)
 
 		ComponentMesh* compMesh = (ComponentMesh*)childGO->AddComponent(MESH);
 
+		if (meshTexLinker[i] != -1) {
+			
+			ComponentMaterial* compMat = (ComponentMaterial*)childGO->AddComponent(MATERIAL);
+			compMat->texture = App->textures->GetMaterialsFromID(meshTexLinker[i]);
+			compMesh->SetMaterial(compMat);
+		}
 				
 		//---read ranges
 		uint ranges[4]; // [numIndex , numVertex, numNormals, numTexCoords]
@@ -417,6 +458,7 @@ void SceneImporter::LoadPEI(const char * fileName)
 		totalSize += rangesSize + meshDataSize;
 
 		compMesh->GenerateBuffer();
+		
 		
 		delete[] headerdata;
 		headerdata = nullptr;
@@ -547,6 +589,7 @@ void SceneImporter::LoadFBX(const char * path) {
 			OWN_LOG("New mesh with %d vertices", compMesh->num_vertex);
 
 			if (meshIterator->HasFaces()) {
+				compMesh->num_faces = meshIterator->mNumFaces ;
 				compMesh->num_index = meshIterator->mNumFaces * 3;
 				compMesh->index = new uint[compMesh->num_index]; // assume each face is a triangle
 				for (uint i = 0; i < meshIterator->mNumFaces; ++i) {

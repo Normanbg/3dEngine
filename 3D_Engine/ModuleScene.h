@@ -7,6 +7,7 @@
 
 class vector;
 class GameObject;
+class Material;
 
 class ModuleScene : public Module
 {
@@ -21,7 +22,8 @@ public:
 	update_status PostUpdate(float dt) override;
 	bool CleanUp() override;
 
-	void AddGameObjectToSelectedList(GameObject * newSelected);
+	void ShowGameObjectInspector(GameObject * newSelected);
+	void ShowMaterialInspector(Material * newSelected);
 	void DeselectAll();
 
 	void SetBoundingBox(bool active);
@@ -34,7 +36,9 @@ public:
 
 public:
 	GameObject* root;
-	std::vector<GameObject*> gObjsSelected;
+	GameObject* gObjSelected = nullptr;
+	Material* materialSelected = nullptr;
+	
 	int numCubes = 0;
 };
 

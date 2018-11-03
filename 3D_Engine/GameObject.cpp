@@ -154,10 +154,8 @@ void GameObject::GetComponents(ComponentType type, std::vector<Component*>& comp
 	iterator = nullptr;
 }
 
-bool GameObject::GetSelected()
-{
-	return selected;
-}
+
+
 
 void GameObject::SetParent(GameObject * _parent)//TO CHECK!!!----------------------------------------------------------
 {
@@ -187,7 +185,19 @@ void GameObject::AddChildren(GameObject * child)
 	this->childrens.push_back(child);
 	child->SetParent(this);
 }
-//
+
+void GameObject::RemoveComponent(Component * comp)
+{
+	for (int i = 0; i < components.size(); i++) {
+		if (components[i] == comp ) {
+			components[i]->CleanUp();
+			components.erase(components.begin()+i);
+			return;
+		}
+	}
+}
+
+
 //void GameObject::DrawMeshes()
 //{
 //	Component* iterator;
@@ -247,10 +257,7 @@ ComponentMaterial * GameObject::GetComponentMaterial()
 	}
 	return ret;
 }
-bool GameObject::isSelected()
-{
-	return selected;
-}
+
 //
 //bool GameObject::isActive()
 //{
@@ -268,7 +275,7 @@ void GameObject::setName(char * _name)
 }
 
 void GameObject::ToggleSelected(){
-	selected = !selected;
+	inspectorSelected = !inspectorSelected;
 }
 //
 //void GameObject::ToggleActive()

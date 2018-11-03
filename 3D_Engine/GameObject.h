@@ -46,9 +46,9 @@ public:
 	Component* AddComponent(ComponentType type);
 	void AddChildren(GameObject* child);
 
+	void RemoveComponent(Component* comp);
 
-	void GetComponents(ComponentType type, std::vector<Component*>& components);
-	bool GetSelected();
+	void GetComponents(ComponentType type, std::vector<Component*>& components);	
 	void SetParent(GameObject* parent);
 	
 	ComponentTransformation* GetTransformComponent();
@@ -69,14 +69,13 @@ public:
 	bool staticGO = false;
 
 private:	
-
-	bool isSelected();
+		
 	void setName(char* _name);
 	void ToggleSelected();
 
 
 private:
-	bool selected = false;
+	bool inspectorSelected = false;
 };
 
 

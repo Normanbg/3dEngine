@@ -297,13 +297,12 @@ void ModuleRenderer3D::AddMesh(Mesh*  mesh)
 
 void ModuleRenderer3D::LoadDroppedFBX(char * droppedFileDir){
 	//ClearSceneMeshes();
-
 	importer->ImportFBXandLoad(droppedFileDir);	
-	
 	//App->camera->FocusToMeshes();
-
-
 }
+
+
+
 /*
 void ModuleRenderer3D::ClearSceneMeshes() {
 
@@ -353,10 +352,12 @@ void ModuleRenderer3D::ShowAxis() {
 void ModuleRenderer3D::ShowGrid() {
 
 	glLineWidth(1.0f);
-
-	glBegin(GL_LINES);
+	bool recordedTex = GetTexture2D();
+	SetTexture2D(false);
 
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+	glBegin(GL_LINES);
+
 	const float d = 100.0f;
 
 	for (float i = -d; i <= d; i += 1.0f)
@@ -369,6 +370,7 @@ void ModuleRenderer3D::ShowGrid() {
 
 	glEnd();
 
+	SetTexture2D(recordedTex);
 }
 /*
 
