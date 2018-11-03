@@ -14,20 +14,7 @@
 
 ModuleEditorCamera::ModuleEditorCamera(bool start_enabled) : Module(start_enabled)
 {
-	CalculateViewMatrix();
-
-	X = vec3(1.0f, 0.0f, 0.0f);
-	Y = vec3(0.0f, 1.0f, 0.0f);
-	Z = vec3(0.0f, 0.0f, 1.0f);
-
-	name = "Camera";
-	
-
-	Position = vec3(0.0f, 0.0f, 0.0f);
-	Reference = vec3(0.0f, 0.0f, 0.0f);
 	cameraComp = new ComponentCamera();
-	
-	//LookAt(Reference);
 }
 
 ModuleEditorCamera::~ModuleEditorCamera()
@@ -39,8 +26,8 @@ bool ModuleEditorCamera::Start()
 	OWN_LOG("Setting up the camera");
 	bool ret = true;
 
-	cameraComp->LookAt(float3(0,0,0));
 	cameraComp->camRes->frustum.pos = { -35, 8, 0 };
+	cameraComp->LookAt(float3(0,0,0));	
 	return ret;
 }
 
@@ -101,7 +88,6 @@ update_status ModuleEditorCamera::Update(float dt)
 
 		cameraComp->LookAt(float3(0, 0, 0));
 	}
-	cameraComp->CalculateViewMatrix();
 
 	return UPDATE_CONTINUE;
 }
@@ -176,85 +162,4 @@ void ModuleEditorCamera::Orbit(float dt)
 	cameraComp->camRes->frustum.pos = distance;
 
 	cameraComp->LookAt(float3(0, 0, 0));
-}
-
-
-
-
-
-
-
-
-// -----------------------------------------------------------------
-void ModuleEditorCamera::Look(const vec3 &Position, const vec3 &Reference, bool RotateAroundReference)
-{
-	this->Position = Position;
-	this->Reference = Reference;
-
-	Z = normalize(Position - Reference);
-	X = normalize(cross(vec3(0.0f, 1.0f, 0.0f), Z));
-	Y = cross(Z, X);
-
-	if (!RotateAroundReference)
-	{
-		this->Reference = this->Position;
-		this->Position += Z * 0.05f;
-	}
-
-	CalculateViewMatrix();
-}
-
-// -----------------------------------------------------------------
-void ModuleEditorCamera::LookAt(const vec3 &Spot)
-{
-	Reference = Spot;
-
-	Z = normalize(Position - Reference);
-	X = normalize(cross(vec3(0.0f, 1.0f, 0.0f), Z));
-	Y = cross(Z, X);
-
-	CalculateViewMatrix();
-}
-
-
-// -----------------------------------------------------------------
-void ModuleEditorCamera::Move(const vec3 &Movement)
-{
-	Position += Movement;
-	Reference += Movement;
-
-	CalculateViewMatrix();
-}
-
-void ModuleEditorCamera::MoveTo(const vec3 Movement)
-{
-	Position = Movement;
-	Reference = Movement;
-
-	CalculateViewMatrix();
-}
-
-// -----------------------------------------------------------------
-float* ModuleEditorCamera::GetViewMatrix() 
-{
-	return &ViewMatrix;
-}
-
-
-void ModuleEditorCamera::FocusToMeshes(){
-	vec3 v;// = App->renderer3D->GetAvgPosFromMeshes();
-
-	vec3 displacement = { 10, 10, 10 };
-	vec3 moveVec = { v.x*2.5f, v.y*2.0f,v.z*2.5f };
-	MoveTo(displacement + moveVec);
-	
-	LookAt({ 0,0,0 });
-}
-
-
-// -----------------------------------------------------------------
-void ModuleEditorCamera::CalculateViewMatrix()
-{
-	ViewMatrix = mat4x4(X.x, Y.x, Z.x, 0.0f, X.y, Y.y, Z.y, 0.0f, X.z, Y.z, Z.z, 0.0f, -dot(X, Position), -dot(Y, Position), -dot(Z, Position), 1.0f);
-	ViewMatrixInverse = inverse(ViewMatrix);
 }

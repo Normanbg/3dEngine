@@ -1,4 +1,7 @@
 #include "Quadtree.h"
+#include "GameObject.h"
+
+#include <vector>
 
 
 

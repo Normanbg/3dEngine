@@ -4,14 +4,6 @@
 
 ComponentCamera::ComponentCamera()
 {
-	CalculateViewMatrix();
-
-	X = float3(1.0f, 0.0f, 0.0f);
-	Y = float3(0.0f, 1.0f, 0.0f);
-	Z = float3(0.0f, 0.0f, 1.0f);
-	Position = float3(0.0f, 40.0f, 60.0f);
-	Reference = float3(0.0f, 0.0f, 0.0f);
-
 	camRes = new Camera();
 }
 
@@ -32,24 +24,6 @@ void ComponentCamera::DrawInspector()
 {
 }
 
-void ComponentCamera::Look(const float3 &Position, const float3 &Reference, bool RotateAroundReference)
-{
-	this->Position = Position;
-	this->Reference = Reference;
-
-	Z = (Position - Reference).Normalized();
-	X = (Cross(float3(0.0f, 1.0f, 0.0f), Z)).Normalized();
-	Y = Cross(Z, X);
-
-	if (!RotateAroundReference)
-	{
-		this->Reference = this->Position;
-		this->Position += Z * 0.05f;
-	}
-
-	CalculateViewMatrix();
-}
-
 // -----------------------------------------------------------------
 void ComponentCamera::LookAt(const float3 &Spot)
 {
@@ -59,12 +33,6 @@ void ComponentCamera::LookAt(const float3 &Spot)
 
 	camRes->frustum.front = matrix.MulDir(camRes->frustum.front).Normalized();
 	camRes->frustum.up = matrix.MulDir(camRes->frustum.up).Normalized();
-}
-
-void ComponentCamera::CalculateViewMatrix()
-{
-	ViewMatrix = float4x4(X.x, Y.x, Z.x, 0.0f, X.y, Y.y, Z.y, 0.0f, X.z, Y.z, Z.z, 0.0f, -X.Dot(Position), -Y.Dot(Position), -Z.Dot(Position), 1.0f);
-	ViewMatrixInverse = ViewMatrix.Inverted();
 }
 
 float * ComponentCamera::GetViewMatrix()

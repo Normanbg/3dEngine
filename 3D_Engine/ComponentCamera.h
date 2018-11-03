@@ -17,10 +17,9 @@ public:
 	void CleanUp() override;
 	void DrawInspector() override;
 
-	void Look(const float3 & Position, const float3 & Reference, bool RotateAroundReference);
 	void LookAt(const float3 & Spot);
 
-	void CalculateViewMatrix();
+	//void CalculateViewMatrix();
 	float * GetViewMatrix();
 	float * GetProjectionMatrix();
 	float GetMouseSensit();
@@ -31,12 +30,9 @@ public:
 	Camera* camRes;
 	Frustum frustum;
 
-	float3 X, Y, Z, Position, Reference;
-
 private:
 
 private:
-	float4x4 ViewMatrix, ViewMatrixInverse;
 	float mouseSensitivity = 0.25f;
 	float scroolWheelSensitivity = 10.0f;
 

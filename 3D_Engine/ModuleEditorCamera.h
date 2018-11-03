@@ -26,30 +26,15 @@ public:
 
 	FrustumContained ContainsAaBox(const AABB & refBox) const;
 
-	void Look(const vec3 &Position, const vec3 &Reference, bool RotateAroundReference = false);
-	void LookAt(const vec3 &Spot);
-	void Move(const vec3 &Movement);
-	void MoveTo(const vec3 Movement);
-	float* GetViewMatrix() ;
-	void FocusToMeshes();
+	//float* GetViewMatrix() ;
+	//void FocusToMeshes();
 
 public:
-
-	bool free_camera = false;
-
-	vec3 X, Y, Z, Position, Reference;
-
-	//---------
 	ComponentCamera* cameraComp;
 private:
 	void MouseMovement(float dt);
 	void Orbit(float dt);
-	void CalculateViewMatrix();
-
 private:
-	bool debug = false;
-	vec3 offset_to_player;
-	mat4x4 ViewMatrix, ViewMatrixInverse;
 
 };
 
