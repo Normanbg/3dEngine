@@ -215,7 +215,12 @@ void UIPanelConfig::Draw() {
 		if (ImGui::Checkbox("Bounding Box", &bBox)) {
 			App->renderer3D->SetBoundingBox(bBox);
 		}
+		bool FBXtest = App->renderer3D->GetLoadFBXTest();
+		if (ImGui::Checkbox("Test Load FBX", &FBXtest)) {
+			App->renderer3D->SetLoadFBXTest(FBXtest);
+		}
 	}
+	/*
 	if (ImGui::CollapsingHeader("Textures")) {
 		std::vector<Texture>* tex = App->renderer3D->GetTexturesList(); int j = 0;
 		for (std::vector<Texture>::iterator texIterator = (*tex).begin(); texIterator != (*tex).end(); j++, texIterator++) {
@@ -230,7 +235,7 @@ void UIPanelConfig::Draw() {
 			}
 			ImGui::PopID();
 		}
-	}
+	}*/
 	ImGui::End();
 
 }

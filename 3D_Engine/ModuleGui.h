@@ -9,13 +9,17 @@
 
 #include "RandomGenerator/pcg_variants.h"
 
+struct ImGuiIO;
 union SDL_Event;
 
 class UIPanel;
 class UIPanelAbout;
 class UIPanelConfig;
 class UIPanelConsole;
-class UIPanelProperties;
+class UIPanelInspector;
+class UIPanelHierarchy;
+class UIPanelScene;
+class UIPanelMaterials;
 
 class ModuleGui : public Module
 {
@@ -45,8 +49,10 @@ public:
 	UIPanelAbout*		panelAbout		= nullptr;
 	UIPanelConfig*		panelConfig		= nullptr;
 	UIPanelConsole*		panelConsole	= nullptr;
-	UIPanelProperties*	panelProperties	= nullptr;
-
+	UIPanelInspector*	panelInspector	= nullptr;
+	UIPanelHierarchy*	panelHierarchy	= nullptr;
+	UIPanelScene*		panelScene		= nullptr;
+	UIPanelMaterials*	panelMaterial	= nullptr;
 	std::vector<std::string> logsBuffer;
 	uint ilVersion = 0;
 
@@ -54,7 +60,10 @@ public:
 	uint closeFX = 0;
 	uint openFX = 0;
 	uint searchingFX = 0; //Used when open an URL
+	ImGuiIO* io;
 
+private:
+	void SetWinDockInv();
 };
 
 #endif 

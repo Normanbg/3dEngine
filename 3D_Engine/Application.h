@@ -4,14 +4,14 @@
 #include <list>
 #include <vector>
 
-#include"./ImGui/imgui.h"
-#include "SDL\include\SDL.h"
+#include "ImGui/imgui.h"
+#include "SDL/include/SDL.h"
 #include "Globals.h"
 #include "PerfTimer.h"
 #include "Timer.h"
 #include "./JSON/parson.h"
 #include "./Glew/include/glew.h"
-#include "SDL\include\SDL_opengl.h"
+#include "SDL/include/SDL_opengl.h"
 #include <gl/GL.h>
 #include <gl/GLU.h>
 
@@ -25,8 +25,11 @@ class ModuleWindow;
 class ModuleInput;
 class ModuleAudio;
 class ModuleRenderer3D;
-class ModuleCamera3D;
+class ModuleEditorCamera;
 class ModuleGui;
+class ModuleScene;
+class ModuleTextures;
+class ModuleFileSystem;
 
 class Application
 {
@@ -35,8 +38,10 @@ public:
 	ModuleInput* input;
 	ModuleAudio* audio;	
 	ModuleRenderer3D* renderer3D;
-	ModuleCamera3D* camera;
-	
+	ModuleEditorCamera* camera;
+	ModuleScene* scene;
+	ModuleTextures* textures;
+	ModuleFileSystem* fileSys;
 	ModuleGui* gui;
 
 private:

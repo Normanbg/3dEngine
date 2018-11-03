@@ -3,9 +3,14 @@
 #include "ModuleRenderer3D.h"
 #include "ModuleWindow.h"
 #include "ModuleInput.h"
-#include "ModuleCamera3D.h"
+#include "ModuleEditorCamera.h"
+#include "GameObject.h"
+#include "ComponentCamera.h"
+#include "Camera.h"
 #include "ModuleGui.h"
+#include "ModuleScene.h"
 #include "Brofiler/Brofiler.h"
+
 
 
 
@@ -129,12 +134,12 @@ bool ModuleRenderer3D::Init(JSON_Object* obj)
 		SetTexture2D(true);
 	}
 	// Projection matrix for
-	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
+	//OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);//-----------------------------------------------------------------------------
 
-	importer = new MeshImporter();
+	importer = new SceneImporter();
 	texImporter = new TextureImporter();	
 
-	importer->InitDebugLog();
+	importer->Init();
 	texImporter->Init();
 	
 	json_object_clear(obj);//clear obj to free memory
@@ -145,10 +150,7 @@ bool ModuleRenderer3D::Start() {
 	BROFILER_CATEGORY("Renderer3D_Start", Profiler::Color::HotPink);
 
 	bool ret = true;
-
-	importer->LoadFBX("BakerHouse.fbx");
-	GenBuffFromMeshes();
-
+	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
 	return ret;
 }
 
@@ -160,7 +162,7 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 	glLoadIdentity();
 
 	glMatrixMode(GL_MODELVIEW);
-	glLoadMatrixf(App->camera->GetViewMatrix());
+	glLoadMatrixf(App->camera->cameraComp->GetViewMatrix());
 
 	// light 0 on cam pos
 	lights[0].SetPos(App->camera->Position.x, App->camera->Position.y, App->camera->Position.z);
@@ -180,12 +182,13 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 {
 	BROFILER_CATEGORY("Renderer3D_PostUpdate", Profiler::Color::HotPink);
 
-	glBindBuffer(GL_ARRAY_BUFFER, 0); ///THIS LINE MAKES ALL DRAW BY RESETING THE BUFFER, NEEDED???????
+	glBindBuffer(GL_ARRAY_BUFFER, 0); ///
 
-	DrawMeshes();
 
-	App->gui->Draw();
+	//DrawMeshes();
+	App->scene->DrawMeshes();
 
+	App->gui->Draw();	
 
 	SDL_GL_SwapWindow(App->window->window); 
 	return UPDATE_CONTINUE;
@@ -197,10 +200,7 @@ bool ModuleRenderer3D::CleanUp()
 	BROFILER_CATEGORY("Renderer3D_CleanUp", Profiler::Color::HotPink);
 	OWN_LOG("Destroying 3D Renderer");
 
-	importer->EndDebugLog();
-	
-
-	ClearSceneMeshes();
+	importer->CleanUp();
 		
 	SDL_GL_DeleteContext(context); 
 	return true;
@@ -210,12 +210,8 @@ bool ModuleRenderer3D::CleanUp()
 void ModuleRenderer3D::OnResize(const int width, const int height)
 {
 	glViewport(0, 0, width, height);
-
 	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	ProjectionMatrix = perspective(60.0f, (float)width / (float)height, 0.125f, 512.0f);
-	glLoadMatrixf(&ProjectionMatrix);
-
+	glLoadMatrixf(App->camera->cameraComp->GetProjectionMatrix());
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 }
@@ -234,33 +230,6 @@ void ModuleRenderer3D::SetDataFromJson(JSON_Object* data) {
 
 	_vSync = json_object_dotget_boolean(data, "VSync");
 
-}
-
-void ModuleRenderer3D::GenBuffFromMeshes(){
-	Mesh* meshIterator;
-	for (int i = 0; i < meshes.size(); i++) {
-		meshIterator = &meshes[i];
-		if (!meshIterator->generated) {
-			glGenBuffers(1, (GLuint*) &(meshIterator->id_vertex));  // generates 1 buffer. then it assign a GLuint to its mem adress.
-			glBindBuffer(GL_ARRAY_BUFFER, meshIterator->id_vertex); // set the type of buffer
-			glBufferData(GL_ARRAY_BUFFER, sizeof(float3)*meshIterator->num_vertex, &meshIterator->vertex[0], GL_STATIC_DRAW);
-			glGenBuffers(1, (GLuint*) &(meshIterator->id_normals));
-			glBindBuffer(GL_ARRAY_BUFFER, meshIterator->id_normals);
-			glBufferData(GL_ARRAY_BUFFER, sizeof(float3)*meshIterator->num_normals, &meshIterator->normals[0], GL_STATIC_DRAW);
-			if (meshIterator->num_index > 0) {
-				glGenBuffers(1, (GLuint*) &(meshIterator->id_index));
-				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, meshIterator->id_index);
-				glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * meshIterator->num_index, &meshIterator->index[0], GL_STATIC_DRAW);
-			}
-			meshIterator->generated = true;
-		}
-	}
-}
-
-void ModuleRenderer3D::DrawMeshes(){
-	for (int i = 0; i < meshes.size(); i++) {
-		meshes[i].Draw();
-	}		
 }
 
 bool ModuleRenderer3D::Load(JSON_Object* data) {
@@ -298,79 +267,56 @@ void ModuleRenderer3D::SetTexture2D(bool active) {
 	_texture2D = active;
 }
 void ModuleRenderer3D::SetWireframe(bool active) {
-	active ? glPolygonMode(GL_FRONT_AND_BACK, GL_LINE) : glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	App->scene->SetWireframe(active);
 	_wireframe = active;
 }
-
 void ModuleRenderer3D::SetBoundingBox(bool active){
 	_bBox = active;
-	for (int i =  0; i < meshes.size(); i++) {
-		meshes[i].bBox = active;
-	}
-
+	App->scene->SetBoundingBox(active);
 }
 
 
-vec ModuleRenderer3D::GetAvgPosFromMeshes() 
+/*
+float3 ModuleRenderer3D::GetAvgPosFromMeshes() 
+
 {
-	vec sumPoints = vec(0,0,0);
+	float3 sumPoints = float3(0,0,0);
 	
 	for (int i = 0; i < meshes.size(); i++) {
 		sumPoints += meshes[i].getMiddlePoint();
 	}
 	return { sumPoints.x / meshes.size(), sumPoints.y / meshes.size(), sumPoints.z / meshes.size() };
 }
-
-GLuint ModuleRenderer3D::CheckIfImageAlreadyLoaded(const char * _path)
-{
-	for (int i = 0; i < App->renderer3D->textures.size();i++) {
-		if (strcmp(textures[i].path.c_str() ,_path)==0) {
-			return textures[i].textureID;
-		}
-	}
-	return -1;
-}
-
 void ModuleRenderer3D::AddMesh(Mesh*  mesh)
 {
 	meshes.push_back(*mesh);
 }
 
-void ModuleRenderer3D::AddTexture(Texture*  tex)
-{
-	textures.push_back(*tex);
-}
+*/
 
-Texture* ModuleRenderer3D::GetTextureFromID(GLuint id) 
-{
-	for (int i = 0; i < textures.size(); i++) {
-		if (textures[i].textureID = id) {
-			return &textures[i];
-		}
-	}
-	OWN_LOG("Error getting texture from ID");
-	return nullptr;
-}
 
 void ModuleRenderer3D::LoadDroppedFBX(char * droppedFileDir){
-	ClearSceneMeshes();
-	importer->LoadFBX(droppedFileDir);	
-	GenBuffFromMeshes();	
-	App->camera->FocusToMeshes();
+	//ClearSceneMeshes();
+	importer->ImportFBXandLoad(droppedFileDir);	
+	//App->camera->FocusToMeshes();
 }
 
-void ModuleRenderer3D::ClearSceneMeshes(){
 
-	OWN_LOG("Clearing meshes in scene")
-	for (int i = meshes.size()-1; i >=0 ; i--) {
-		meshes[i].CleanUp();
-	}
+
+/*
+void ModuleRenderer3D::ClearSceneMeshes() {
+
+	/*OWN_LOG("Clearing meshes in scene")
+		for (int i = meshes.size() - 1; i >= 0; i--) {
+			meshes[i].CleanUp();
+		}
 	meshes.clear();
 	for (int i = textures.size() - 1; i >= 0; i--) {
 		textures[i].CleanUp();
 	}
 	textures.clear();
-}
+}*/
+
 
 void ModuleRenderer3D::ShowAxis() {
 
@@ -397,6 +343,8 @@ void ModuleRenderer3D::ShowAxis() {
 	glVertex3f(0.05f, 0.1f, 1.05f); glVertex3f(-0.05f, -0.1f, 1.05f);
 	glVertex3f(-0.05f, -0.1f, 1.05f); glVertex3f(0.05f, -0.1f, 1.05f);
 
+	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+
 	glEnd();
 	glLineWidth(1.0f);
 }
@@ -404,10 +352,12 @@ void ModuleRenderer3D::ShowAxis() {
 void ModuleRenderer3D::ShowGrid() {
 
 	glLineWidth(1.0f);
-
-	glBegin(GL_LINES);
+	bool recordedTex = GetTexture2D();
+	SetTexture2D(false);
 
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+	glBegin(GL_LINES);
+
 	const float d = 100.0f;
 
 	for (float i = -d; i <= d; i += 1.0f)
@@ -420,137 +370,14 @@ void ModuleRenderer3D::ShowGrid() {
 
 	glEnd();
 
+	SetTexture2D(recordedTex);
 }
-
-void Mesh::Draw()
-{
-
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-
-	glColor3f(colors.x, colors.y, colors.z);
-
-	if (num_index == 0) {// if the mesh has no index
-		glBindBuffer(GL_ARRAY_BUFFER, id_vertex);
-		glVertexPointer(3, GL_FLOAT, 0, NULL);
-		glDrawArrays(GL_TRIANGLES, 0, num_vertex);
-		glBindBuffer(GL_ARRAY_BUFFER, 0); //resets the buffer
-	}
-	else {
-		glBindTexture(GL_TEXTURE_2D, 0);
-		glBindTexture(GL_ELEMENT_ARRAY_BUFFER, 0);
-		
-		glBindTexture(GL_TEXTURE_2D, texID);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_index);
-		glVertexPointer(3, GL_FLOAT, 0, &(vertex[0]));		
-		glTexCoordPointer(2, GL_FLOAT, 0, &(texturesCoords[0]));
-		glDrawElements(GL_TRIANGLES, num_index, GL_UNSIGNED_INT, NULL);
-
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-		glBindTexture(GL_TEXTURE_2D, 0);
-	}
-	glDisableClientState(GL_VERTEX_ARRAY);
-	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-
-	if (App->renderer3D->GetNormals()) {
-		for (int j = 0; j < num_normals; j++) {
-			glBegin(GL_LINES);
-			glVertex3f(vertex[j].x, vertex[j].y, vertex[j].z);
-			glVertex3f(vertex[j].x - normals[j].x, vertex[j].y - normals[j].y, vertex[j].z - normals[j].z);
-			glLineWidth(1.0f);
-			glEnd();
-		}
-	}
-	if (bBox) {
-		DrawBoundingBox();
-	}
-}
-
-void Mesh::DrawBoundingBox(){
-
-	
-	glLineWidth(2.0f);
-
-	glBegin(GL_LINES);
-	glColor4f(0.0f, 1.0f, 0.0f, 1.0f); //green
-	
-	glVertex3f(boundingBox.CornerPoint(0).x, boundingBox.CornerPoint(0).y, boundingBox.CornerPoint(0).z);
-	glVertex3f(boundingBox.CornerPoint(1).x, boundingBox.CornerPoint(1).y, boundingBox.CornerPoint(1).z);
-
-	glVertex3f(boundingBox.CornerPoint(0).x, boundingBox.CornerPoint(0).y, boundingBox.CornerPoint(0).z);
-	glVertex3f(boundingBox.CornerPoint(2).x, boundingBox.CornerPoint(2).y, boundingBox.CornerPoint(2).z);
-
-	glVertex3f(boundingBox.CornerPoint(1).x, boundingBox.CornerPoint(1).y, boundingBox.CornerPoint(1).z);
-	glVertex3f(boundingBox.CornerPoint(3).x, boundingBox.CornerPoint(3).y, boundingBox.CornerPoint(3).z);
-	
-	glVertex3f(boundingBox.CornerPoint(2).x, boundingBox.CornerPoint(2).y, boundingBox.CornerPoint(2).z);
-	glVertex3f(boundingBox.CornerPoint(3).x, boundingBox.CornerPoint(3).y, boundingBox.CornerPoint(3).z);
-	
-	glVertex3f(boundingBox.CornerPoint(0).x, boundingBox.CornerPoint(0).y, boundingBox.CornerPoint(0).z);
-	glVertex3f(boundingBox.CornerPoint(4).x, boundingBox.CornerPoint(4).y, boundingBox.CornerPoint(4).z);
-
-	glVertex3f(boundingBox.CornerPoint(5).x, boundingBox.CornerPoint(5).y, boundingBox.CornerPoint(5).z);
-	glVertex3f(boundingBox.CornerPoint(1).x, boundingBox.CornerPoint(1).y, boundingBox.CornerPoint(1).z);
+/*
 
 
-	glVertex3f(boundingBox.CornerPoint(4).x, boundingBox.CornerPoint(4).y, boundingBox.CornerPoint(4).z);
-	glVertex3f(boundingBox.CornerPoint(5).x, boundingBox.CornerPoint(5).y, boundingBox.CornerPoint(5).z);
-
-	glVertex3f(boundingBox.CornerPoint(5).x, boundingBox.CornerPoint(5).y, boundingBox.CornerPoint(5).z);
-	glVertex3f(boundingBox.CornerPoint(7).x, boundingBox.CornerPoint(7).y, boundingBox.CornerPoint(7).z);
-	
-	glVertex3f(boundingBox.CornerPoint(6).x, boundingBox.CornerPoint(6).y, boundingBox.CornerPoint(6).z);
-	glVertex3f(boundingBox.CornerPoint(7).x, boundingBox.CornerPoint(7).y, boundingBox.CornerPoint(7).z);
-
-	glVertex3f(boundingBox.CornerPoint(3).x, boundingBox.CornerPoint(3).y, boundingBox.CornerPoint(3).z);
-	glVertex3f(boundingBox.CornerPoint(7).x, boundingBox.CornerPoint(7).y, boundingBox.CornerPoint(7).z);
-	
-	glVertex3f(boundingBox.CornerPoint(6).x, boundingBox.CornerPoint(6).y, boundingBox.CornerPoint(6).z);
-	glVertex3f(boundingBox.CornerPoint(4).x, boundingBox.CornerPoint(4).y, boundingBox.CornerPoint(4).z);
-
-	glVertex3f(boundingBox.CornerPoint(6).x, boundingBox.CornerPoint(6).y, boundingBox.CornerPoint(6).z);
-	glVertex3f(boundingBox.CornerPoint(2).x, boundingBox.CornerPoint(2).y, boundingBox.CornerPoint(2).z);
-
-	
-	glEnd();
-	glLineWidth(1.0f);
-	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-}
-
-void Mesh::CleanUp(){
-
-	if(id_index!=-1)
-		glDeleteBuffers(1, &id_index);
-	if (id_vertex != -1)
-		glDeleteBuffers(1, &id_vertex);
-	if (id_normals != -1)
-		glDeleteBuffers(1, &id_normals);
-
-	delete[] index;
-	delete[] vertex;
-	delete[] normals;
-	delete[] texturesCoords;
-
-}
-
-void Texture::CleanUp() {
-	if (textureID != -1)
-		glDeleteBuffers(1, &textureID);
-}
-
-void Mesh::generateBoundingBox(){
-
-	AABB aabb;
-
-	aabb.SetNegativeInfinity();
-	aabb.Enclose((vec*)vertex,num_vertex);
-	
-	boundingBox = aabb;
-}
-
-vec Mesh::getMiddlePoint()const {
-	vec ret = { (boundingBox.maxPoint.x + boundingBox.minPoint.x) / 2, (boundingBox.maxPoint.y + boundingBox.minPoint.y) / 2, (boundingBox.maxPoint.z + boundingBox.minPoint.z) / 2 };
+float3 Mesh::getMiddlePoint()const {
+	float3 ret = { (boundingBox.maxPoint.x + boundingBox.minPoint.x) / 2, (boundingBox.maxPoint.y + boundingBox.minPoint.y) / 2, (boundingBox.maxPoint.z + boundingBox.minPoint.z) / 2 };
 
 	return ret;
 }
-
+*/

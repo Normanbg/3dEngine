@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __GLOBALS_H__
+#define __GLOBALS_H__
 
 // Warning disabled ---
 #pragma warning( disable : 4577 ) // Warning that exceptions are disabled
@@ -41,6 +42,15 @@ enum update_status
 #define ORGANIZATION "UPC CITM"
 #define CONFIG_FILE "config.JSON"
 #define CAMERA_SPEED 10.0f
+
+#define NUM_PATHS 6
 #define TEXTURES_PATH "Assets/Textures/"
 #define MODELS_PATH "Assets/3DModels/"
 #define AUDIO_PATH "Assets/Audio/"
+#define LIB_TEXTURES_PATH "Library/Textures/"
+#define LIB_MODELS_PATH "Library/3DModels/"
+#define SETTINGS_PATH "Settings/"
+#define OWN_FILE_FORMAT ".pei"
+#define DDS_FORMAT ".dds"
+#define FBX_FORMAT ".fbx"
+#endif // !__GLOBALS_H__

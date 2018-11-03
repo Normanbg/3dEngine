@@ -1,71 +1,17 @@
-#pragma once
-#include "Module.h"
-#include "Globals.h"
-#include "glmath.h"
-#include "Light.h"
-#include "MathGeoLib\Math\MathAll.h"
-#include "MeshImporter.h"
-#include "TextureImporter.h"
-#include <array>
-#include "MathGeoLib/Geometry/AABB.h"
+#ifndef __RENDERERER3D_H__
+#define __RENDERERER3D_H__
 
+
+#include "Module.h"
+#include "Light.h"
+#include "SceneImporter.h"
+#include "TextureImporter.h"
+#include "MathGeoLib/MathGeoLib.h"
+#include "Globals.h"
+
+#include <array>
 #include <vector>
 #define MAX_LIGHTS 8
-
-struct Texture {
-
-	uint texWidth = 0;
-	uint texHeight = 0;
-
-	std::string path;
-
-	GLuint textureID = -1;
-
-	void CleanUp();
-};
-
-struct Mesh {
-
-	vec position;
-	vec scale;
-	Quat rotation;
-
-	uint id_index = -1;
-	uint num_index = 0;
-	uint* index = nullptr;
-
-	uint id_vertex = -1;
-	uint num_vertex = 0;
-	float3* vertex = nullptr;
-
-	uint id_normals = -1;
-	uint num_normals = 0;
-	float3* normals = nullptr;
-
-	uint num_faces = 0; // assume each face is a triangle
-	std::string name;
-	vec3 colors = { 0,0,0 };
-
-	
-	uint num_textureCoords = 0;
-	float2* texturesCoords = nullptr;
-
-	GLuint texID = 0;
-
-	AABB boundingBox;
-
-	bool bBox = false;
-	bool generated = false;
-
-	void Draw();	
-	void CleanUp();	
-		
-	void generateBoundingBox();
-	vec getMiddlePoint()const ;
-
-private:
-	void DrawBoundingBox();
-};
 
 class ModuleRenderer3D : public Module
 {
@@ -98,7 +44,7 @@ public:
 	void SetNormals(bool active) { _normals = active; }
 	void SetAxis(bool active) { _axis = active; }
 	void SetGrid(bool active) { _grid = active; }
-
+	void SetLoadFBXTest(bool active) { _loadFBXTest = active; }
 	void SetBoundingBox(bool active);
 
 	inline bool GetDepthTest() const { return _depthTest; }
@@ -109,33 +55,28 @@ public:
 	inline bool GetWireframe()const { return _wireframe; }
 	inline bool GetNormals()const { return _normals; }
 	inline bool GetBoundingBox()const { return _bBox; }
-
+	inline bool GetLoadFBXTest()const { return _loadFBXTest; }
 	inline bool GetAxis() const { return _axis; }
 	inline bool GetGrid() const { return _grid; }
 
-	vec GetAvgPosFromMeshes();
 
-	GLuint CheckIfImageAlreadyLoaded(const char*);
-
-	inline std::vector<Mesh>* GetMeshesList()  { return &meshes; }
-	inline std::vector<Texture>* GetTexturesList()   { return &textures; }
-
-	void AddMesh(Mesh* mesh);
-	void AddTexture(Texture* tex);
-	Texture* GetTextureFromID(GLuint id);
-
+	/*vec GetAvgPosFromMeshes();*/
+	   
 	void LoadDroppedFBX(char* droppedFileDir);
 
-	void ClearSceneMeshes();
+	//void ClearSceneMeshes();
+
+	
+	
 
 public:
 
 	Light lights[MAX_LIGHTS];
 	SDL_GLContext context;
 	mat3x3 NormalMatrix;
-	mat4x4 ModelMatrix, ViewMatrix, ProjectionMatrix;
+	float4x4 ModelMatrix, ViewMatrix, ProjectionMatrix;
 
-	MeshImporter* importer;
+	SceneImporter* importer;
 	TextureImporter* texImporter;
 	
 private:
@@ -143,8 +84,6 @@ private:
 	void ShowAxis();
 	void ShowGrid();
 	void SetDataFromJson(JSON_Object* data);
-	void GenBuffFromMeshes();
-	void DrawMeshes();
 
 private:
 
@@ -160,7 +99,9 @@ private:
 	bool _grid = true;
 	bool _normals = false;
 	bool _bBox = false;
+	bool _loadFBXTest = false;
 
-	std::vector<Mesh> meshes;	
-	std::vector<Texture> textures;
 };
+
+#endif // !__RENDERER3D_H__
+

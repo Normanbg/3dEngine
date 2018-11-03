@@ -1,18 +1,45 @@
 #ifndef __MODULE_SCENE_H__
 #define __MODULE_SCENE_H__
 
+
 #include "Application.h"
+#include "Module.h"
 
-#include <vector>
-
+class vector;
 class GameObject;
+class Material;
 
-class ModuleScene {
+class ModuleScene : public Module
+{
 public:
-	GameObject* CreateGameObject();
+
+	ModuleScene(bool start_enabled = true);
+	~ModuleScene();
+
+	bool Init(JSON_Object* obj) override;
+	update_status PreUpdate(float dt) override;
+	update_status Update(float dt) override;
+	update_status PostUpdate(float dt) override;
+	bool CleanUp() override;
+
+	void ShowGameObjectInspector(GameObject * newSelected);
+	void ShowMaterialInspector(Material * newSelected);
+	void DeselectAll();
+
+	void SetBoundingBox(bool active);
+	void SetWireframe(bool active);
+
+	void DrawMeshes();
+	GameObject* AddGameObject(const char* name);
+	GameObject* AddGameObject(const char* name, GameObject* parent);
+	GameObject* CreateCube();
 
 public:
 	GameObject* root;
+	GameObject* gObjSelected = nullptr;
+	Material* materialSelected = nullptr;
+	
+	int numCubes = 0;
 };
 
 

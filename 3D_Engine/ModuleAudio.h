@@ -2,7 +2,7 @@
 #define __ModuleAudio_H__
 
 #include "Module.h"
-#include "SDL_mixer\include\SDL_mixer.h"
+#include "SDL_mixer/include/SDL_mixer.h"
 
 #include <vector>
 

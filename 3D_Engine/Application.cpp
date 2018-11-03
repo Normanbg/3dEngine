@@ -1,13 +1,16 @@
 #include "Application.h"
 #include "SDL/include/SDL_cpuinfo.h"
-#include "DeviceId\DeviceId.h"
+#include "DeviceId/DeviceId.h"
 #include "ModuleWindow.h"
 #include "ModuleInput.h"
 #include "ModuleAudio.h"
+#include "ModuleScene.h"
 #include "ModuleRenderer3D.h"
-#include "ModuleCamera3D.h"
+#include "ModuleTextures.h"
+#include "ModuleFileSystem.h"
+#include "ModuleEditorCamera.h"
 #include "ModuleGui.h"
-#include "Brofiler\Brofiler.h"
+#include "Brofiler/Brofiler.h"
 
 #include "./JSON/parson.h"
 
@@ -21,8 +24,11 @@ Application::Application()
 	input = new ModuleInput(this);
 	audio = new ModuleAudio(this);
 	renderer3D = new ModuleRenderer3D(this);
-	camera = new ModuleCamera3D(this);
+	camera = new ModuleEditorCamera(this);
 	gui = new ModuleGui(this);
+	scene = new ModuleScene(this);
+	textures = new ModuleTextures(this);
+	fileSys = new ModuleFileSystem(this);
 	
 	_organization = ORGANIZATION;
 	// The order of calls is very important!
@@ -33,7 +39,11 @@ Application::Application()
 	AddModule(window);
 	AddModule(camera);
 	AddModule(input);
+	AddModule(fileSys);
 	AddModule(audio);
+	AddModule(textures);
+	AddModule(scene);
+	
 
 	AddModule(gui);
 	
