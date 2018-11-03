@@ -8,13 +8,16 @@ class vector;
 class Quadtree
 {
 public:
-	Quadtree();
+	Quadtree(AABB limits);
 	~Quadtree();
-	void Create(AABB limits);
+	
+
 	void Clear();
 	void Insert(GameObject* gameobject);
 	void Remove(GameObject* gameobject);
-	bool Intersect(std::vector<GameObject*>& gameobjects, const AABB& bBox);
+	bool Intersect(std::vector<GameObject*>& gameobjects, const AABB& bBox) const;
+
+	void Subdivide();
 
 private:
 	AABB quadTreeBox;
