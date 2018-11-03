@@ -37,11 +37,15 @@ class GameObject
 public:
 	GameObject(const char * name);
 	~GameObject();
+
+
 	bool PreUpdate();
 	bool Update();
 	bool PostUpdate();
 	void CleanUp();
 
+	void Save(JSON_Object* data)const;
+	void Load(JSON_Object* data);
 	
 	Component* AddComponent(ComponentType type);
 	void AddChildren(GameObject* child);
@@ -55,6 +59,7 @@ public:
 	ComponentCamera* GetComponentCamera();
 	ComponentMaterial * GetComponentMaterial();
 	ComponentMesh * GetComponentMesh();
+	inline const uint GetUUID() { return uuid; }
 
 	void CalculateAllGlobalMatrix();
 
@@ -67,12 +72,13 @@ public:
 
 	bool active = true;
 	bool staticGO = false;
+	
 
 private:	
 		
 	void setName(char* _name);
 	void ToggleSelected();
-
+	uint uuid = 0;
 
 private:
 	bool inspectorSelected = false;

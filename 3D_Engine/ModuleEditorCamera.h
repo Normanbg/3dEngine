@@ -20,6 +20,7 @@ public:
 	ModuleEditorCamera(bool start_enabled = true);
 	~ModuleEditorCamera();
 
+	bool Init(JSON_Object* data) override;
 	bool Start();
 	update_status Update(float dt);
 	bool CleanUp();

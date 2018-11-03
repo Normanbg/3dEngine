@@ -14,6 +14,8 @@ GameObject::GameObject(const char * Name)
 	transformComp->type = TRANSFORM;
 	transformComp->myGO = this;
 	components.push_back(transformComp);
+
+	uuid = App->scene->random->Int();
 }
 
 GameObject::~GameObject()

@@ -4,6 +4,7 @@
 
 #include "Application.h"
 #include "Module.h"
+#include "MathGeoLib/Algorithm/Random/LCG.h"
 
 class vector;
 class GameObject;
@@ -34,12 +35,18 @@ public:
 	GameObject* AddGameObject(const char* name, GameObject* parent);
 	GameObject* CreateCube();
 
+
+	void SaveScene(JSON_Object* data)const;
+	void LoadScene(JSON_Object* data);
+
+
 public:
 	GameObject* root;
 	GameObject* gObjSelected = nullptr;
 	Material* materialSelected = nullptr;
 	
 	int numCubes = 0;
+	LCG* random = nullptr;
 };
 
 

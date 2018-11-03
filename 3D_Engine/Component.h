@@ -1,6 +1,8 @@
 #ifndef __COMPONENT_H__
 #define __COMPONENT_H__
 
+#include "ModuleScene.h"
+
 class GameObject;
 
 enum ComponentType {
@@ -13,10 +15,11 @@ enum ComponentType {
 };
 class Component {
 public:
-	Component() {}
+	Component() { 
+		uuid = App->scene->random->Int(); }
 	~Component() {
 		delete myGO;
-		myGO = nullptr;
+		myGO = nullptr;		
 	}
 
 	virtual void Enable() { active = true; }
@@ -28,10 +31,20 @@ public:
 	
 	virtual void DrawInspector() { return; };
 
+	inline const uint GetUUID() { return uuid; }
+
+
+	virtual void Save(JSON_Object* data)const {};
+	virtual void Load(JSON_Object* data) {};
+
 public:
 	bool active = false;
 	ComponentType type;
 	GameObject* myGO; //Warning! Duplication with childs of components
+
+private:
+
+	uint uuid= 0;
 };
 
 #endif // !__COMPONENT_H__

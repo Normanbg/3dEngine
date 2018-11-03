@@ -25,11 +25,16 @@ ModuleEditorCamera::ModuleEditorCamera(bool start_enabled) : Module(start_enable
 	Reference = vec3(0.0f, 0.0f, 0.0f);
 	
 	//LookAt(Reference);
-	edCamera = new ComponentCamera();
+	
 }
 
 ModuleEditorCamera::~ModuleEditorCamera()
 {}
+
+bool ModuleEditorCamera::Init(JSON_Object* data) {
+	edCamera = new ComponentCamera();
+	return true;
+}
 
 // -----------------------------------------------------------------
 bool ModuleEditorCamera::Start()

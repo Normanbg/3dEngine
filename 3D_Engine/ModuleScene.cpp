@@ -9,7 +9,10 @@
 ModuleScene::ModuleScene(bool start_enabled) : Module(start_enabled){
 
 	name = "scene";
-	root = new GameObject("root");
+	
+
+	random = new math::LCG();
+	
 }
 
 ModuleScene::~ModuleScene()
@@ -18,9 +21,9 @@ ModuleScene::~ModuleScene()
 }
 bool ModuleScene::Init(JSON_Object * obj)
 {
+	root = new GameObject("root");
+
 	
-	//SceneImporter* sc = new SceneImporter;
-	//sc->ImportFBXtoPEI("figure","figure");
 
 	return true;
 }
@@ -90,6 +93,66 @@ GameObject * ModuleScene::CreateCube()
 	return ret;
 }
 
+void ModuleScene::SaveScene(JSON_Object * data) const
+{
+	/*
+	JSON_Value* value = json_value_init_object();
+	JSON_Object* obj = json_value_get_object(value);
+
+	json_object_dotset_string(obj, "App.Name", window->GetWindowTitle().c_str());
+	json_object_dotset_string(obj, "App.Organization", GetOrganization().c_str());
+
+
+	std::list<Module*>::const_iterator item = list_modules.begin();
+
+	while (item != list_modules.end())
+	{
+		ret &= (*item)->Save(obj);
+		item++;
+	}
+
+	json_serialize_to_file(value, CONFIG_FILE);
+	json_object_clear(obj);
+	json_value_free(value);
+
+	*/
+}
+
+void ModuleScene::LoadScene(JSON_Object * data)
+{
+	/*
+	JSON_Value* config;
+
+	if (config = json_parse_file(CONFIG_FILE)) {
+		OWN_LOG("Config.JSON File detected");
+		JSON_Object* obj;
+		JSON_Object* appObj;
+
+
+		obj = json_value_get_object(config);
+		appObj = json_object_get_object(obj, "App");
+
+		SetDataFromJson(appObj);
+
+
+		json_object_clear(appObj);
+
+		std::list<Module*>::iterator item = list_modules.begin();
+
+		while (item != list_modules.end())
+		{
+			ret &= (*item)->Load(json_object_get_object(obj, (*item)->name.c_str()));
+			item++;
+		}
+
+		json_object_clear(obj);
+	}
+
+	json_value_free(config);
+*/
+
+}
+
 update_status ModuleScene::Update(float dt){
 
 	bool ret = true;
@@ -123,6 +186,9 @@ update_status ModuleScene::PostUpdate(float dt){
 bool ModuleScene::CleanUp()
 {	
 	root->CleanUp();
+
+	delete random;
+	random = nullptr;
 
 	delete root;
 	root = nullptr;

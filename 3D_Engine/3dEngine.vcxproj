@@ -83,6 +83,7 @@
     <ClInclude Include="ComponentMaterial.h" />
     <ClInclude Include="ComponentMesh.h" />
     <ClInclude Include="ComponentTransformation.h" />
+    <ClInclude Include="Config.h" />
     <ClInclude Include="DeviceId\DeviceId.h" />
     <ClInclude Include="DeviceId\dxgi1_4.h" />
     <ClInclude Include="ModuleFileSystem.h" />
@@ -188,6 +189,7 @@
     <ClCompile Include="ComponentMaterial.cpp" />
     <ClCompile Include="ComponentMesh.cpp" />
     <ClCompile Include="ComponentTransformation.cpp" />
+    <ClCompile Include="Config.cpp" />
     <ClCompile Include="DeviceId\DeviceId.cpp" />
     <ClCompile Include="ModuleFileSystem.cpp" />
     <ClCompile Include="SceneImporter.cpp" />
