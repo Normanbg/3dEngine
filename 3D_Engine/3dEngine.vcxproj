@@ -86,6 +86,7 @@
     <ClInclude Include="DeviceId\DeviceId.h" />
     <ClInclude Include="DeviceId\dxgi1_4.h" />
     <ClInclude Include="ModuleFileSystem.h" />
+    <ClInclude Include="Quadtree.h" />
     <ClInclude Include="SceneImporter.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="glmath.h" />
@@ -190,6 +191,7 @@
     <ClCompile Include="ComponentTransformation.cpp" />
     <ClCompile Include="DeviceId\DeviceId.cpp" />
     <ClCompile Include="ModuleFileSystem.cpp" />
+    <ClCompile Include="Quadtree.cpp" />
     <ClCompile Include="SceneImporter.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="glmath.cpp" />

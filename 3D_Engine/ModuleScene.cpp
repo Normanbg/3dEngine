@@ -205,9 +205,6 @@ void ModuleScene::DrawMeshes() {
 		if (App->camera->ContainsAaBox(mesh->boundingBox) == IS_IN || App->camera->ContainsAaBox(mesh->boundingBox) == INTERSECT) {//MISSING IF FRUSTUM CULLING ACTIVE!!!!!!---------------------------------------------------------
 			mesh->Draw();
 		}
-		else if (App->camera->ContainsAaBox(mesh->boundingBox) == IS_OUT) {
-		//OWN_LOG("out motherfucker");
-		}
 	}
 	iterator = nullptr;
 	mesh = nullptr;

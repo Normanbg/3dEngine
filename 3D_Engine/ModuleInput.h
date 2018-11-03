@@ -1,4 +1,6 @@
-#pragma once
+#ifndef __MODULEINPUT_H__
+#define __MODULEINPUT_H__
+
 #include "Module.h"
 #include "Globals.h"
 
@@ -25,7 +27,7 @@ enum FileType {
 class ModuleInput : public Module
 {
 public:
-	
+
 	ModuleInput(bool start_enabled = true);
 	~ModuleInput();
 
@@ -83,3 +85,5 @@ private:
 	uint dropFX = 0;
 
 };
+
+#endif // !__MODULEINPUT_H__

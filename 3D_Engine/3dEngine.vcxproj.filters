@@ -360,6 +360,7 @@
     <ClInclude Include="UIPanelMaterials.h">
       <Filter>Sources\Modules\GuiPanels</Filter>
     </ClInclude>
+    <ClInclude Include="Quadtree.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleInput.cpp">
@@ -572,6 +573,7 @@
     <ClCompile Include="UIPanelMaterials.cpp">
       <Filter>Sources\Modules\GuiPanels</Filter>
     </ClCompile>
+    <ClCompile Include="Quadtree.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="MathGeoLib\Geometry\KDTree.inl">

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __GLOBALS_H__
+#define __GLOBALS_H__
 
 // Warning disabled ---
 #pragma warning( disable : 4577 ) // Warning that exceptions are disabled
@@ -52,3 +53,4 @@ enum update_status
 #define OWN_FILE_FORMAT ".pei"
 #define DDS_FORMAT ".dds"
 #define FBX_FORMAT ".fbx"
+#endif // !__GLOBALS_H__
