@@ -18,5 +18,7 @@ public:
 
 private:
 	AABB quadTreeBox;
+	std::vector<GameObject*> gameobjs;
+	std::vector<Quadtree*> quTrChilds;
 };
 #endif // !__QUADTREE_H__
