@@ -17,8 +17,9 @@ void UIPanelMaterials::Draw()
 	uint flags = 0;
 	if (App->textures->materials.empty()) {
 		flags = ImGuiTreeNodeFlags_Leaf;
-	}
-	ImGui::Begin(name.c_str(), &active, flags);
+	}//normanbg: I think that is not needed
+
+	ImGui::Begin(name.c_str(), &active);
 	
 	DrawChilds(App->textures->materials);
 	ImGui::End();
