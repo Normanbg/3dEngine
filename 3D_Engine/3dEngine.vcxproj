@@ -191,6 +191,7 @@
     <ClCompile Include="ComponentMesh.cpp" />
     <ClCompile Include="ComponentTransformation.cpp" />
     <ClCompile Include="DeviceId\DeviceId.cpp" />
+    <ClCompile Include="Math.cpp" />
     <ClCompile Include="ModuleFileSystem.cpp" />
     <ClCompile Include="Quadtree.cpp" />
     <ClCompile Include="SceneImporter.cpp" />

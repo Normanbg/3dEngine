@@ -78,3 +78,9 @@ void Quadtree::Subdivide(){
 	quTrChilds.push_back(new Quadtree(AABB(quadTreeBox.maxPoint - half, quadTreeBox.maxPoint)));
 	
 }
+
+void Quadtree::DebugDraw(){
+	float3 f = float3::zero;
+	quadTreeBox.GetCornerPoints(&f);
+	DebugDrawBox(f, Red);
+}

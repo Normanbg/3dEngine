@@ -22,6 +22,8 @@ public:
 
 	void Subdivide();
 
+	void DebugDraw();
+
 private:
 	AABB quadTreeBox;
 	std::vector<GameObject*> gameobjs;

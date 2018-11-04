@@ -345,9 +345,6 @@
     <ClInclude Include="UIPanelInspector.h">
       <Filter>Sources\Modules\GuiPanels</Filter>
     </ClInclude>
-    <ClInclude Include="Math.h">
-      <Filter>Sources\Tools</Filter>
-    </ClInclude>
     <ClInclude Include="UIPanelScene.h">
       <Filter>Sources\Modules\GuiPanels</Filter>
     </ClInclude>
@@ -362,6 +359,9 @@
     </ClInclude>
     <ClInclude Include="Quadtree.h">
       <Filter>Sources\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="Math.h">
+      <Filter>Sources\Tools</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -574,6 +574,9 @@
     </ClCompile>
     <ClCompile Include="Quadtree.cpp">
       <Filter>Sources\Containers</Filter>
+    </ClCompile>
+    <ClCompile Include="Math.cpp">
+      <Filter>Sources\Tools</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
