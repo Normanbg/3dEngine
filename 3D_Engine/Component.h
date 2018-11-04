@@ -4,6 +4,7 @@
 #include "ModuleScene.h"
 
 class GameObject;
+struct Config;
 
 enum ComponentType {
 	NO_TYPE = 0,
@@ -34,8 +35,8 @@ public:
 	inline const uint GetUUID() { return uuid; }
 
 
-	virtual void Save(JSON_Object* data)const {};
-	virtual void Load(JSON_Object* data) {};
+	virtual void Save(Config& data)const {};
+	virtual void Load(Config* data) {};
 
 public:
 	bool active = false;

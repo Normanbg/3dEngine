@@ -39,7 +39,7 @@ enum update_status
 #define VSYNC true
 #define TITLE "3D_Engine"
 #define ORGANIZATION "UPC CITM"
-#define CONFIG_FILE "config.JSON"
+#define CONFIG_FILE "Settings/config.JSON"
 #define SCENE_FILE "scene.JSON"
 #define CAMERA_SPEED 10.0f
 

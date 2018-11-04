@@ -3,6 +3,9 @@
 #include "GameObject.h"
 #include "ModuleEditorCamera.h"
 #include "ModuleTextures.h"
+#include "Config.h"
+
+#include "ModuleInput.h"////delte me
 
 #include <vector>
 
@@ -31,12 +34,16 @@ bool ModuleScene::Init(JSON_Object * obj)
 update_status ModuleScene::PreUpdate(float dt)
 {
 	bool ret = true;
+	if(App->input->GetKey(SDL_SCANCODE_4)== KEY_DOWN) {
+		SaveScene();
+	}
 	 
 	if (root->childrens.empty() == false) {
 		for (int i = 0; i < root->childrens.size(); i++) {
 			ret &= root->childrens[i]->PreUpdate();
 		}
 	}
+
 
 	update_status retUS;
 	ret ? retUS = UPDATE_CONTINUE : retUS = UPDATE_ERROR;
@@ -93,8 +100,19 @@ GameObject * ModuleScene::CreateCube()
 	return ret;
 }
 
-void ModuleScene::SaveScene(JSON_Object * data) const
+bool ModuleScene::SaveScene() const
 {
+	bool ret = true;
+	Config save;
+
+	save.AddArray("GameObjects");
+	for (int i = 0; i < root->childrens.size(); i++) {
+		root->childrens[i]->Save(save);
+	}
+	char* buffer = nullptr;
+	uint size= 0;
+	size = save.Save(&buffer);
+	App->fileSys->writeFile(SCENE_FILE, buffer, size);
 	/*
 	JSON_Value* value = json_value_init_object();
 	JSON_Object* obj = json_value_get_object(value);
@@ -116,10 +134,12 @@ void ModuleScene::SaveScene(JSON_Object * data) const
 	json_value_free(value);
 
 	*/
+	return ret;
 }
 
-void ModuleScene::LoadScene(JSON_Object * data)
+bool ModuleScene::LoadScene(JSON_Object * data)
 {
+	bool ret = true;
 	/*
 	JSON_Value* config;
 
@@ -150,7 +170,7 @@ void ModuleScene::LoadScene(JSON_Object * data)
 
 	json_value_free(config);
 */
-
+	return ret;
 }
 
 update_status ModuleScene::Update(float dt){

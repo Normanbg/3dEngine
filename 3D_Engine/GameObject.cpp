@@ -1,4 +1,5 @@
 #include "GameObject.h"
+#include "Config.h"
 
 #include <array>
 #include <vector>
@@ -279,6 +280,18 @@ void GameObject::setName(char * _name)
 void GameObject::ToggleSelected(){
 	inspectorSelected = !inspectorSelected;
 }
+
+
+void GameObject::Save(Config& data) const
+{
+	data.AddUInt("UUID", uuid);
+}
+
+void GameObject::Load(Config* data)
+{
+}
+
+
 //
 //void GameObject::ToggleActive()
 //{

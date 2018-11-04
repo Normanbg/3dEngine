@@ -36,8 +36,8 @@ public:
 	GameObject* CreateCube();
 
 
-	void SaveScene(JSON_Object* data)const;
-	void LoadScene(JSON_Object* data);
+	bool SaveScene()const;
+	bool LoadScene(JSON_Object* data);
 
 
 public:

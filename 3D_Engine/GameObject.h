@@ -30,6 +30,7 @@ public:
 	GameObject* CreateSphere();
 };
 
+struct Config;
 
 class GameObject
 {
@@ -44,8 +45,8 @@ public:
 	bool PostUpdate();
 	void CleanUp();
 
-	void Save(JSON_Object* data)const;
-	void Load(JSON_Object* data);
+	void Save(Config& data)const;
+	void Load(Config* data);
 	
 	Component* AddComponent(ComponentType type);
 	void AddChildren(GameObject* child);
