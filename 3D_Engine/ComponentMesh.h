@@ -60,6 +60,10 @@ public:
 	
 	void Draw();
 
+	void Save(Config& data) const;
+	void Load(Config* data);
+
+
 private:
 	ComponentMaterial* material = nullptr;
 };

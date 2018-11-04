@@ -31,16 +31,22 @@ public:
 	void SetWireframe(bool active);
 
 	void DrawMeshes();
+	GameObject* AddGameObject();
 	GameObject* AddGameObject(const char* name);
+	
 	GameObject* AddGameObject(const char* name, GameObject* parent);
 	GameObject* CreateCube();
-
+	GameObject* GetGameObjectByUUID(uint uuid) const;
+	void ChangeRootGO(GameObject* newRoot){ root = newRoot; }
 
 	bool SaveScene()const;
-	bool LoadScene(JSON_Object* data);
+	bool LoadScene(const char* data);
 
 
 public:
+
+	GameObject* GetGameObjectUUIDRecursive(uint uuid, GameObject* go) const;
+
 	GameObject* root;
 	GameObject* gObjSelected = nullptr;
 	Material* materialSelected = nullptr;

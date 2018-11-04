@@ -16,11 +16,14 @@ public:
 	~ComponentMaterial();
 
 	Material* texture;
-
+	
 
 	bool Update() override;
 	void CleanUp()override;
 	void DrawInspector()override;
+
+	void Save(Config& data) const;
+	void Load(Config* data);
 };
 
 #endif // !__COMPONENTMATERIAL_H__

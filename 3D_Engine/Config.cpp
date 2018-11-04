@@ -106,6 +106,16 @@ const char* Config::GetString(const char * field, const char* default, int index
 	return default;
 }
 
+uint Config::GetNumElemsArray(const char * field) const
+{	
+	JSON_Array* array = json_object_get_array(root, field);
+	if (array == nullptr) {
+		return -1;
+	}	
+	int num = json_array_get_count(array);
+	return num;
+}
+
 Config Config::GetArray(const char * field, int index) const
 {
 	JSON_Array* array = json_object_get_array(root, field);
@@ -113,6 +123,23 @@ Config Config::GetArray(const char * field, int index) const
 		return Config(json_array_get_object(array, index));
 	}
 	return Config((JSON_Object*) nullptr);
+}
+
+float3 Config::GetFloat3(const char * field, const float3 & default)
+{
+	return float3(
+		GetFloat(field, default.x, 0),
+		GetFloat(field, default.y, 1),
+		GetFloat(field, default.z, 2));
+}
+
+float4 Config::GetFloat4(const char * field, const float4 & default)
+{
+	return float4(
+		GetFloat(field, default.x, 0),
+		GetFloat(field, default.y, 1),
+		GetFloat(field, default.z, 2),
+		GetFloat(field, default.w, 3));
 }
 
 
@@ -148,3 +175,39 @@ bool Config::AddArray(const char* array_name)
 
 	return json_object_set_value(root, array_name, va) == JSONSuccess;
 }
+
+bool Config::AddArrayChild(const Config & config)
+{
+	if (array != nullptr) {
+		return json_array_append_value(array, json_value_deep_copy(config.valueRoot)) == JSONSuccess;
+	}
+	return false;
+}
+
+bool Config::AddArrayFloat(const char * field, const float * values, int size)
+{
+	if (values != nullptr && size > 0)
+	{
+		JSON_Value* va = json_value_init_array();
+		array = json_value_get_array(va);
+		json_object_set_value(root, field, va);
+
+		for (int i = 0; i < size; ++i) {
+			json_array_append_number(array, values[i]);
+		}
+		return true;
+	}
+	return false;
+}
+
+bool Config::AddFloat3(const char * field, const float3 & value)
+{
+	return AddArrayFloat(field, &value.x, 3);
+}
+
+
+bool Config::AddFloat4(const char * field, const float4 & value)
+{
+	return AddArrayFloat(field, &value.x, 4);
+}
+

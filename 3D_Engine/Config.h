@@ -16,12 +16,15 @@ public:
 
 	uint Save(char ** buffer) const;	
 
-	float GetFloat(const char * field, float default, int index) const;
-	bool GetBool(const char * field, bool default, int index) const;
-	int GetInt(const char * field, int default, int index) const;
-	uint GetUInt(const char * field, uint default, int index) const;
-	const char * GetString(const char * field, const char * default, int index) const;
-	Config GetArray(const char * field, int index) const;
+	float GetFloat(const char * field, float default = 0.0f, int index = -1) const;
+	bool GetBool(const char * field, bool default, int index = -1) const;
+	int GetInt(const char * field, int default = 0, int index = -1) const;
+	uint GetUInt(const char * field, uint default = 0, int index = -1) const;
+	const char * GetString(const char * field, const char * default= nullptr, int index = -1) const;
+	uint GetNumElemsArray(const char * field) const;
+	Config GetArray(const char * field, int index ) const;
+	float3 GetFloat3(const char * field, const float3 & default);
+	float4 GetFloat4(const char * field, const float4 & default);
 
 
 	bool AddFloat(const char * field, float value);
@@ -30,6 +33,11 @@ public:
 	bool AddUInt(const char * field, uint value);
 	bool AddString(const char * field, const char * string);
 	bool AddArray(const char * array_name);
+	bool AddArrayChild(const Config & config);
+	bool AddArrayFloat(const char * field, const float * values, int size);
+	bool AddFloat3(const char * field, const float3 & value);
+	bool AddFloat4(const char * field, const float4 & value);
+
 
 
 	

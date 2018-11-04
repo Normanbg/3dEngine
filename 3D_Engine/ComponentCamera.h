@@ -37,6 +37,9 @@ public:
 
 	void WSADmove();
 
+	void Save(Config& data) const;
+	void Load(Config* data);
+
 public: 
 	Frustum camFrustum;
 

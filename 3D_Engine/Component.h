@@ -2,9 +2,10 @@
 #define __COMPONENT_H__
 
 #include "ModuleScene.h"
+#include "Config.h"
 
 class GameObject;
-struct Config;
+
 
 enum ComponentType {
 	NO_TYPE = 0,
@@ -43,7 +44,7 @@ public:
 	ComponentType type;
 	GameObject* myGO; //Warning! Duplication with childs of components
 
-private:
+protected:
 
 	uint uuid= 0;
 };

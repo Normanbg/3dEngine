@@ -171,6 +171,17 @@ void ComponentMesh::Draw()
 	}
 }
 
+void ComponentMesh::Save(Config & data) const
+{
+	data.AddUInt("UUID", uuid);
+
+}
+
+void ComponentMesh::Load(Config * data)
+{
+	uuid = data->GetUInt("UUID");
+}
+
 void ComponentMesh::GenerateBoundingBox()
 {
 	AABB aabb;

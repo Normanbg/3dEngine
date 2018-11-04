@@ -8,7 +8,7 @@ struct Transform
 	float3 position = float3::zero;
 	float3 rotEuler = float3::zero;
 	float3 scale = float3::one;
-	Quat rotationQuat = Quat::identity;
+	Quat rotationQuat = Quat::identity; // should only be one and have functions to transform it 
 };
 
 
@@ -34,6 +34,8 @@ public:
 	Quat getQuatRot();
 
 	void UpdateLocalMatrix();
+	void Save(Config& data) const;
+	void Load(Config* data);
 
 public:
 	Transform transform;

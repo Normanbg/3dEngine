@@ -36,6 +36,7 @@ class GameObject
 {
 	friend ModuleScene;
 public:
+	GameObject();
 	GameObject(const char * name);
 	~GameObject();
 
