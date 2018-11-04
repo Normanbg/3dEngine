@@ -162,7 +162,8 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 	glLoadIdentity();
 
 	glMatrixMode(GL_MODELVIEW);
-	glLoadMatrixf(App->camera->cameraComp->GetViewMatrix());
+	float* vm = App->camera->cameraComp->GetViewMatrix();
+	glLoadMatrixf(vm);
 
 	// light 0 on cam pos
 	lights[0].SetPos(App->camera->cameraComp->camRes->frustum.pos.x, App->camera->cameraComp->camRes->frustum.pos.y, App->camera->cameraComp->camRes->frustum.pos.z);
@@ -206,14 +207,10 @@ bool ModuleRenderer3D::CleanUp()
 	return true;
 }
 
-
 void ModuleRenderer3D::OnResize(const int width, const int height)
 {
 	glViewport(0, 0, width, height);
-	glMatrixMode(GL_PROJECTION);
-	glLoadMatrixf(App->camera->cameraComp->GetProjectionMatrix());
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
+	App->camera->UpdateProjMatrix();
 }
 
 char* ModuleRenderer3D::GetGraphicsModel() const

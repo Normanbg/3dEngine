@@ -19,11 +19,16 @@ public:
 
 	void LookAt(const float3 & Spot);
 
+	void SetNearPlaneDistance(float nearPlaneDist);
+	void SetFarPlaneDistance(float farPlaneDist);
+	void SetFov(float fov);
+	void SetAspectRatio(float aspectRatio);
+
 	//void CalculateViewMatrix();
 	float * GetViewMatrix();
 	float * GetProjectionMatrix();
 	float GetMouseSensit();
-	float GetScroolSensit();
+	float GetScrollSensit();
 
 public:
 	GameObject* myGo;
@@ -34,7 +39,7 @@ private:
 
 private:
 	float mouseSensitivity = 0.25f;
-	float scroolWheelSensitivity = 10.0f;
+	float scrollWheelSensitivity = 10.0f;
 
 	
 };

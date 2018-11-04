@@ -17,11 +17,9 @@ ModuleScene::~ModuleScene()
 
 }
 bool ModuleScene::Init(JSON_Object * obj)
-{
-	
+{	
 	//SceneImporter* sc = new SceneImporter;
 	//sc->ImportFBXtoPEI("figure","figure");
-
 	return true;
 }
 

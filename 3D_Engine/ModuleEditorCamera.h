@@ -25,6 +25,7 @@ public:
 	bool CleanUp();
 
 	FrustumContained ContainsAaBox(const AABB & refBox) const;
+	void UpdateProjMatrix();
 
 	//float* GetViewMatrix() ;
 	//void FocusToMeshes();

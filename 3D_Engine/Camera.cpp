@@ -1,10 +1,9 @@
 #include "Camera.h"
 
-
-
 Camera::Camera()
 {
-	SetFOV(60);
+	fov = 60;
+	SetFOV(fov);
 
 	frustum.nearPlaneDistance = 1.0f;
 	frustum.farPlaneDistance = 400.f;
@@ -18,25 +17,23 @@ Camera::~Camera()
 {
 }
 
-void Camera::SetFOV(float _fov)
-{
-	float ar = frustum.AspectRatio();
+void Camera::SetFOV(float _fov) {
+	fov = _fov;
+	float newAR = frustum.AspectRatio();
 	frustum.verticalFov = DEGTORAD * _fov;
-	frustum.horizontalFov = math::Atan(ar * math::Tan(frustum.verticalFov / 2)) * 2;
+	SetAspectRatio(newAR);
 }
 
-void Camera::SetAspectRatio(float new_ar)
-{
-	frustum.horizontalFov = math::Atan(new_ar * math::Tan(frustum.verticalFov / 2)) * 2;
+void Camera::SetAspectRatio(float aspectRatio) {
+	frustum.horizontalFov = 2.0f * atanf(tanf(frustum.verticalFov * 0.5f) * aspectRatio);
 }
-//
-//float * Camera::GetProjMatrix()
-//{
-//	static float4x4 m;
-//
-//	m = frustum.ProjectionMatrix().Transposed();
-//	/*m.Transpose();*/
-//
-//	return (float*)m.v;
-//
-//}
+
+float Camera::GetFov()
+{
+	return fov;
+}
+
+float Camera::GetAR()
+{
+	return frustum.horizontalFov;
+}

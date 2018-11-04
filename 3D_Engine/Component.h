@@ -32,7 +32,7 @@ public:
 public:
 	bool active = false;
 	ComponentType type;
-	GameObject* myGO; //Warning! Duplication with childs of components
+	GameObject* myGO = nullptr; //Warning! Duplication with childs of components
 };
 
 #endif // !__COMPONENT_H__

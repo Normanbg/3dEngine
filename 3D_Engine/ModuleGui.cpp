@@ -11,6 +11,7 @@
 #include "UIPanelInspector.h"
 #include "UIPanelHierarchy.h"
 #include "UIPanelMaterials.h"
+#include "UIPanelCamera.h"
 #include "ModuleWindow.h"
 #include "ModuleInput.h"
 #include "ModuleAudio.h"
@@ -50,6 +51,7 @@ bool ModuleGui::Start()
 	uiPanels.push_back(panelInspector = new UIPanelInspector("Inspector", 775, 15, 250, 550, true));
 	uiPanels.push_back(panelHierarchy = new UIPanelHierarchy("Hierarchy", 0, 15, 250, 550, true));
 	uiPanels.push_back(panelMaterial = new UIPanelMaterials("Materials", 0, 399, 240, 406, true));
+	uiPanels.push_back(panelCamera = new UIPanelCamera("Camera", 1025, 565, 250, 350, true));
 
 	ImGui::CreateContext();
 	demoShowcase = false;

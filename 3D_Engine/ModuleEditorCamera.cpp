@@ -71,7 +71,7 @@ update_status ModuleEditorCamera::Update(float dt)
 	//Zoom
 	if (App->input->GetMouseZ() != 0) {
 		float3 _pos(0, 0, 0);
-		float mSpeed = cameraComp->GetScroolSensit();
+		float mSpeed = cameraComp->GetScrollSensit();
 		if (App->input->GetMouseZ() < 0)
 			_pos -= cameraComp->camRes->frustum.front * mSpeed;
 		else
@@ -124,6 +124,14 @@ FrustumContained ModuleEditorCamera::ContainsAaBox(const AABB& refBox) const
 		return(IS_IN);
 	// we must be partly in then otherwise
 	return(INTERSECT);
+}
+
+void ModuleEditorCamera::UpdateProjMatrix()
+{
+	glMatrixMode(GL_PROJECTION);
+	glLoadMatrixf(cameraComp->GetProjectionMatrix());
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
 }
 
 void ModuleEditorCamera::MouseMovement(float dt)

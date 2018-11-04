@@ -80,7 +80,7 @@ void Quadtree::Subdivide(){
 }
 
 void Quadtree::DebugDraw(){
-	float3 f = float3::zero;
-	quadTreeBox.GetCornerPoints(&f);
-	DebugDrawBox(f, Red);
+	float3 corners[8];
+	quadTreeBox.GetCornerPoints(corners);
+	DebugDrawBox(corners, Red);
 }

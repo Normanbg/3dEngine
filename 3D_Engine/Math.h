@@ -6,7 +6,7 @@
 #include <math.h>
 #include "Color.h"
 
-void DebugDrawBox(float3 vertices, Color color = Green);
+void DebugDrawBox(float3* vertices, Color color = Green);
 
 
 #endif // __MATH_H__

@@ -175,6 +175,7 @@
     <ClInclude Include="Timer.h" />
     <ClInclude Include="UIPanel.h" />
     <ClInclude Include="UIPanelAbout.h" />
+    <ClInclude Include="UIPanelCamera.h" />
     <ClInclude Include="UIPanelConfig.h" />
     <ClInclude Include="UIPanelConsole.h" />
     <ClInclude Include="UIPanelHierarchy.h" />
@@ -248,6 +249,7 @@
     <ClCompile Include="TextureImporter.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="UIPanelAbout.cpp" />
+    <ClCompile Include="UIPanelCamera.cpp" />
     <ClCompile Include="UIPanelConfig.cpp" />
     <ClCompile Include="UIPanelConsole.cpp" />
     <ClCompile Include="UIPanelHierarchy.cpp" />

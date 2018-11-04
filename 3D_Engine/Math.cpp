@@ -1,7 +1,7 @@
 #include "Math.h"
 #include "SDL/include/SDL_opengl.h"
 
-void DebugDrawBox(float3 vertices, Color color)
+void DebugDrawBox(float3* vertices, Color color)
 {
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
