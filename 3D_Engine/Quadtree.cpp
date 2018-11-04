@@ -12,22 +12,51 @@ Quadtree::~Quadtree()
 {
 }
 
-void Quadtree::Insert(GameObject * gameobject){
+void Quadtree::Clear(){
+	if (!quTrChilds.empty()) {
+		for (int i = 0; i < quTrChilds.size(); i++)
+		{
+			quTrChilds[i]->Clear();
+			quTrChilds[i] = nullptr;
+		}
+		quTrChilds.clear();
+	}
+	for (int j = 0; j < gameobjs.size(); j++)
+	{
+		RELEASE(gameobjs[j]);
+	}
+	gameobjs.clear();
+}
+
+void Quadtree::Insert(GameObject * gameobject) {
 	if (gameobject->GetComponentMesh() == nullptr)
 	{
 		OWN_LOG("%s require a mesh for the Bounding Box", gameobject->name.c_str());
 		return;
 	}
 	if (quadTreeBox.Intersects(gameobject->GetComponentMesh()->boundingBox)) {
-		if (gameobjs.empty())
+		if (!quTrChilds.empty()) {
+			for (int i = 0; i < quTrChilds.size(); i++){
+				quTrChilds[i]->Insert(gameobject);
+			}
+		}
+		else {
 			gameobjs.push_back(gameobject);
-		else
-			if (quTrChilds.empty()){
-				Subdivide();
-			}
-			else {
+			if (QT_MAX_ELEMS < gameobjs.size())
+			{
+				if (quTrChilds.empty())
+					Subdivide();
 
+				for (auto it : gameobjs)
+				{
+					for (int i = 0; i < quTrChilds.size(); i++)
+						quTrChilds[i]->Insert(it);
+				}
+
+				gameobjs.clear();
 			}
+			
+		}
 	}
 }
 
