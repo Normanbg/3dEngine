@@ -188,21 +188,21 @@ void ModuleFileSystem::NormalizePath(std::string & full_path, bool toLower) cons
 			}
 	}
 }
-
-void ModuleFileSystem::DiscoverFiles(const char* dir, std::vector<std::string> & fileList, std::vector<std::string> & dirList) const
-{
-	char **rc = PHYSFS_enumerateFiles(dir);
-	char **i;
-
-	std::string dirName(dir);
-
-	for (i = rc; *i != nullptr; i++)
-	{
-		if (PHYSFS_isDirectory((dirName + *i).c_str()))
-			dir_list.push_back(*i);
-		else
-			file_list.push_back(*i);
-	}
-
-	PHYSFS_freeList(rc);
-}
+//
+//void ModuleFileSystem::DiscoverFiles(const char* dir, std::vector<std::string> & fileList, std::vector<std::string> & dirList) const
+//{
+//	char **rc = PHYSFS_enumerateFiles(dir);
+//	char **i;
+//
+//	std::string dirName(dir);
+//
+//	for (i = rc; *i != nullptr; i++)
+//	{
+//		if (PHYSFS_isDirectory((dirName + *i).c_str()))
+//			dir_list.push_back(*i);
+//		else
+//			file_list.push_back(*i);
+//	}
+//
+//	PHYSFS_freeList(rc);
+//}

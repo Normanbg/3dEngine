@@ -15,8 +15,7 @@ ModuleWindow::ModuleWindow(bool start_enabled) : Module(start_enabled)
 	_resizable = WIN_RESIZABLE;
 	_fullDesktop = WIN_FULLSCREEN_DESKTOP;
 
-	_w = SCREEN_WIDTH;
-	_h = SCREEN_HEIGHT;
+	
 }
 
 // Destructor
@@ -40,11 +39,15 @@ bool ModuleWindow::Init(JSON_Object* obj)
 		ret = false;
 	}
 	else
-	{
-	
+	{	
 		//Create window
-		int width = _w * SCREEN_SIZE;
-		int height = _h * SCREEN_SIZE;
+		SDL_DisplayMode size;
+		SDL_GetDesktopDisplayMode(0, &size);
+
+		int marginX = size.w / 7;
+		int marginY = size.h / 5;
+		_w = size.w - marginX;
+		_h = size.h - marginY;
 		Uint32 flags = SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN;
 
 		
@@ -77,7 +80,7 @@ bool ModuleWindow::Init(JSON_Object* obj)
 			flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
 		}
 
-		window = SDL_CreateWindow(_title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, flags);
+		window = SDL_CreateWindow(_title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, _w, _h, flags);
 
 		if(window == NULL)
 		{
@@ -138,16 +141,19 @@ void ModuleWindow::SetFullscreenDesktop(bool fulldesktop) {
 	uint x = 0;
 	uint y = 0;
 	const uint margin = 30;
-	
+
+	SDL_DisplayMode dMode;
+	SDL_GetDesktopDisplayMode(0, &dMode);
 	if (fulldesktop) {
-		SDL_DisplayMode dMode;
-		SDL_GetDesktopDisplayMode(0, &dMode);
+		
 		_w = dMode.w;
 		_h = dMode.h;		
 	}
-	else {		
-		_w = SCREEN_WIDTH;
-		_h = SCREEN_HEIGHT;
+	else {	
+		int marginX = dMode.w / 7;
+		int marginY = dMode.h / 5;
+		_w = dMode.w - marginX;
+		_h = dMode.h - marginY;
 		x = y = margin;		
 	}
 	SDL_SetWindowSize(window, SCREEN_SIZE*_w, SCREEN_SIZE*_h);

@@ -133,8 +133,6 @@ bool ModuleRenderer3D::Init(JSON_Object* obj)
 		SetColorMaterial(true);
 		SetTexture2D(true);
 	}
-	// Projection matrix for
-	//OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);//-----------------------------------------------------------------------------
 
 	importer = new SceneImporter();
 	texImporter = new TextureImporter();	
@@ -150,7 +148,10 @@ bool ModuleRenderer3D::Start() {
 	BROFILER_CATEGORY("Renderer3D_Start", Profiler::Color::HotPink);
 
 	bool ret = true;
-	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
+	int width = 0;
+	int height = 0;
+	App->window->GetSize(width, height);
+	OnResize(width, height);
 	return ret;
 }
 
