@@ -33,6 +33,10 @@ public:
 	void CleanUp() override;
 	void DrawInspector() override;
 
+
+	void Save(Config& data) const override;
+	void Load(Config* data) override;
+
 	void GenerateBuffer();
 	
 	void Draw();
@@ -58,6 +62,10 @@ public:
 	AABB boundingBox;
 	bool showBBox = false;
 	bool showWireframe = false;
+
+
+
+
 private:
 	ComponentMaterial* material = nullptr;
 };

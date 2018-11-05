@@ -64,7 +64,7 @@ bool Application::Init(){
 
 	BROFILER_CATEGORY("App_Init", Profiler::Color::DarkOrange);
 	bool ret = true;
-	JSON_Value* config;
+	JSON_Value* config = nullptr;
 	JSON_Object* objModules = nullptr;
 	
 	if (config = json_parse_file(CONFIG_FILE)) {
@@ -75,7 +75,7 @@ bool Application::Init(){
 
 		obj = json_value_get_object(config);
 		appObj = json_object_get_object(obj, "App");
-		
+	
 		SetDataFromJson(appObj);
 
 		objModules = obj;
@@ -94,6 +94,8 @@ bool Application::Init(){
 		ret = (*item)->Init(json_object_get_object(objModules, (*item)->name.c_str()));
 		item++;
 	}
+	json_object_clear(objModules);
+	json_value_free(config);
 
 	// After all Init calls we call Start() in all modules
 	OWN_LOG("Application Start --------------");
@@ -106,8 +108,7 @@ bool Application::Init(){
 	}
 
 	
-	json_object_clear(objModules);
-	json_value_free(config);
+	
 
 	ms_timer.Start();
 	return ret;

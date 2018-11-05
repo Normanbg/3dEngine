@@ -14,11 +14,22 @@
 
 ModuleEditorCamera::ModuleEditorCamera(bool start_enabled) : Module(start_enabled)
 {
-	cameraComp = new ComponentCamera();
+
+	name = "Camera";
+	
+
+	
+
 }
 
 ModuleEditorCamera::~ModuleEditorCamera()
 {}
+
+bool ModuleEditorCamera::Init(JSON_Object* data) {
+	
+	cameraComp = new ComponentCamera();
+	return true;
+}
 
 // -----------------------------------------------------------------
 bool ModuleEditorCamera::Start()

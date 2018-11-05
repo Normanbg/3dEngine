@@ -345,23 +345,26 @@
     <ClInclude Include="UIPanelInspector.h">
       <Filter>Sources\Modules\GuiPanels</Filter>
     </ClInclude>
+    <ClInclude Include="ComponentCamera.h">
+      <Filter>Sources\Objects &amp; Components\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Math.h">
+      <Filter>Sources\Tools</Filter>
+    </ClInclude>
     <ClInclude Include="UIPanelScene.h">
       <Filter>Sources\Modules\GuiPanels</Filter>
     </ClInclude>
     <ClInclude Include="UIPanelMaterials.h">
       <Filter>Sources\Modules\GuiPanels</Filter>
     </ClInclude>
-    <ClInclude Include="ComponentCamera.h">
-      <Filter>Sources\Objects &amp; Components\Components</Filter>
+    <ClInclude Include="Config.h">
+      <Filter>Sources\Tools</Filter>
     </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>Sources\Containers</Filter>
     </ClInclude>
     <ClInclude Include="Quadtree.h">
       <Filter>Sources\Containers</Filter>
-    </ClInclude>
-    <ClInclude Include="Math.h">
-      <Filter>Sources\Tools</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -557,6 +560,12 @@
     <ClCompile Include="UIPanelHierarchy.cpp">
       <Filter>Sources\Modules\GuiPanels</Filter>
     </ClCompile>
+    <ClCompile Include="ComponentCamera.cpp">
+      <Filter>Sources\Objects &amp; Components\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Math.cpp">
+      <Filter>Sources\Tools</Filter>
+    </ClCompile>
     <ClCompile Include="UIPanelInspector.cpp">
       <Filter>Sources\Modules\GuiPanels</Filter>
     </ClCompile>
@@ -566,17 +575,14 @@
     <ClCompile Include="UIPanelMaterials.cpp">
       <Filter>Sources\Modules\GuiPanels</Filter>
     </ClCompile>
-    <ClCompile Include="ComponentCamera.cpp">
-      <Filter>Sources\Objects &amp; Components\Components</Filter>
+    <ClCompile Include="Config.cpp">
+      <Filter>Sources\Tools</Filter>
     </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>Sources\Containers</Filter>
     </ClCompile>
     <ClCompile Include="Quadtree.cpp">
       <Filter>Sources\Containers</Filter>
-    </ClCompile>
-    <ClCompile Include="Math.cpp">
-      <Filter>Sources\Tools</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

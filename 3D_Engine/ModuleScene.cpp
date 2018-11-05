@@ -3,13 +3,19 @@
 #include "GameObject.h"
 #include "ModuleEditorCamera.h"
 #include "ModuleTextures.h"
+#include "Config.h"
+
+#include "ModuleInput.h"////delte me
 
 #include <vector>
 
 ModuleScene::ModuleScene(bool start_enabled) : Module(start_enabled){
 
 	name = "scene";
-	root = new GameObject("root");
+	
+
+	random = new math::LCG();
+	
 }
 
 ModuleScene::~ModuleScene()
@@ -17,15 +23,23 @@ ModuleScene::~ModuleScene()
 
 }
 bool ModuleScene::Init(JSON_Object * obj)
-{	
-	//SceneImporter* sc = new SceneImporter;
-	//sc->ImportFBXtoPEI("figure","figure");
+{
+	root = new GameObject("root");
+
 	return true;
 }
 
 update_status ModuleScene::PreUpdate(float dt)
 {
 	bool ret = true;
+	if(App->input->GetKey(SDL_SCANCODE_4)== KEY_DOWN) { ///// DEBUUG
+
+		SaveScene();
+	}
+	if (App->input->GetKey(SDL_SCANCODE_5) == KEY_DOWN) { ///// DEBUUG
+
+		LoadScene("Scenes/scene.json");
+	}
 	 
 	if (root->childrens.empty() == false) {
 		for (int i = 0; i < root->childrens.size(); i++) {
@@ -33,10 +47,19 @@ update_status ModuleScene::PreUpdate(float dt)
 		}
 	}
 
+
 	update_status retUS;
 	ret ? retUS = UPDATE_CONTINUE : retUS = UPDATE_ERROR;
 	return retUS;
 }
+GameObject * ModuleScene::AddGameObject()
+{
+	GameObject* ret = new GameObject();
+	ret->parent = root;
+	root->childrens.push_back(ret);
+	return ret;
+}
+
 
 GameObject* ModuleScene::AddGameObject(const char* name){
 	GameObject* ret = new GameObject(name);
@@ -45,6 +68,8 @@ GameObject* ModuleScene::AddGameObject(const char* name){
 	
 	return ret;
 }
+
+
 
 GameObject * ModuleScene::AddGameObject(const char * name, GameObject * parent)
 {
@@ -88,6 +113,127 @@ GameObject * ModuleScene::CreateCube()
 	return ret;
 }
 
+GameObject * ModuleScene::GetGameObjectByUUID(uint uuid) const
+{
+	GameObject* ret= nullptr;
+	ret = GetGameObjectUUIDRecursive(uuid, root);	
+	return ret;
+}
+
+GameObject * ModuleScene::GetGameObjectUUIDRecursive(uint uuid, GameObject * go) const
+{
+	GameObject* ret = go;
+	if (ret->uuid == uuid) {
+		return ret;
+	}
+
+	for (int i = 0; i < go->childrens.size(); i++) {
+		ret = go->childrens[i];
+		ret = GetGameObjectUUIDRecursive(uuid, ret);
+	}
+	return nullptr;
+}
+
+bool ModuleScene::SaveScene() const
+{
+	bool ret = true;
+	Config save;
+
+	save.AddArray("GameObjects");
+	root->Save(save);
+	
+	char* buffer = nullptr;
+	uint size = save.Save(&buffer);
+	App->fileSys->writeFile(SCENE_FILE, buffer, size);
+
+	delete buffer;
+	buffer = nullptr;
+	/*
+	JSON_Value* value = json_value_init_object();
+	JSON_Object* obj = json_value_get_object(value);
+
+	json_object_dotset_string(obj, "App.Name", window->GetWindowTitle().c_str());
+	json_object_dotset_string(obj, "App.Organization", GetOrganization().c_str());
+
+
+	std::list<Module*>::const_iterator item = list_modules.begin();
+
+	while (item != list_modules.end())
+	{
+		ret &= (*item)->Save(obj);
+		item++;
+	}
+
+	json_serialize_to_file(value, CONFIG_FILE);
+	json_object_clear(obj);
+	json_value_free(value);
+
+	*/
+	return ret;
+}
+
+bool ModuleScene::LoadScene(const char* data)
+{
+	bool ret = true;
+
+	if (data == nullptr) { return false; }
+
+	char* buffer = nullptr;
+	uint size = App->fileSys->readFile(data, &buffer);
+
+	if (data !=nullptr ){
+		if (size < 0) {
+			OWN_LOG("Error loading file. All data not loaded.")
+				return false;
+		}
+		Config conf(buffer);
+
+		int num = conf.GetNumElemsArray("GameObjects");
+		for (int i = 0; i < num; i++) {
+			Config elem = conf.GetArray("GameObjects", i);
+			GameObject* go = AddGameObject();
+			go->Load(&elem);
+		}
+		delete[] buffer;
+		buffer = nullptr;
+	}
+	else {
+		OWN_LOG("Error loading file.")
+			ret = false;
+	}
+	/*
+	JSON_Value* config;
+
+	if (config = json_parse_file(CONFIG_FILE)) {
+		OWN_LOG("Config.JSON File detected");
+		JSON_Object* obj;
+		JSON_Object* appObj;
+
+
+		obj = json_value_get_object(config);
+		appObj = json_object_get_object(obj, "App");
+
+		SetDataFromJson(appObj);
+
+
+		json_object_clear(appObj);
+
+		std::list<Module*>::iterator item = list_modules.begin();
+
+		while (item != list_modules.end())
+		{
+			ret &= (*item)->Load(json_object_get_object(obj, (*item)->name.c_str()));
+			item++;
+		}
+
+		json_object_clear(obj);
+	}
+
+	json_value_free(config);
+*/
+	return ret;
+}
+
 update_status ModuleScene::Update(float dt){
 
 	bool ret = true;
@@ -121,6 +267,9 @@ update_status ModuleScene::PostUpdate(float dt){
 bool ModuleScene::CleanUp()
 {	
 	root->CleanUp();
+
+	delete random;
+	random = nullptr;
 
 	delete root;
 	root = nullptr;
@@ -207,3 +356,4 @@ void ModuleScene::DrawMeshes() {
 	iterator = nullptr;
 	mesh = nullptr;
 }
+

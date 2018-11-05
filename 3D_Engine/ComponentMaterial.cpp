@@ -33,3 +33,13 @@ void ComponentMaterial::DrawInspector()
 
 	ImGui::Separator();
 }
+
+void ComponentMaterial::Save(Config & data) const
+{
+	data.AddUInt("UUID", uuid);
+}
+
+void ComponentMaterial::Load(Config * data)
+{
+	uuid = data->GetUInt("UUID");
+}

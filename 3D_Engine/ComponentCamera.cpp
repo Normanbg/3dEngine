@@ -96,3 +96,15 @@ float * ComponentCamera::GetProjectionMatrix()
 	return (float*)m.v;
 
 }
+
+void ComponentCamera::Save(Config & data) const
+{
+	data.AddUInt("UUID", uuid);
+	//NEED TO FILL WITH USEFULL INFO
+
+}
+
+void ComponentCamera::Load(Config * data)
+{
+	uuid = data->GetUInt("UUID");
+}

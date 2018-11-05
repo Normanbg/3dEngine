@@ -86,6 +86,17 @@ void ComponentTransformation::UpdateLocalMatrix() {
 	localMatrix = float4x4::FromTRS(transform.position, transform.rotationQuat, transform.scale);
 }
 
+void ComponentTransformation::Save(Config & data) const
+{
+	data.AddUInt("UUID", uuid);
+	
+}
+
+void ComponentTransformation::Load(Config * data)
+{
+	uuid = data->GetUInt("UUID");
+}
+
 void ComponentTransformation::setPos(float3 _newpos)
 {
 	transform.position = _newpos;

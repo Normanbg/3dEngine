@@ -50,16 +50,18 @@ enum update_status
 #define VSYNC true
 #define TITLE "3D_Engine"
 #define ORGANIZATION "UPC CITM"
-#define CONFIG_FILE "config.JSON"
+#define CONFIG_FILE "Settings/config.JSON"
+#define SCENE_FILE "Scenes/scene.JSON"
 #define CAMERA_SPEED 10.0f
 
-#define NUM_PATHS 6
+#define NUM_PATHS 7
 #define TEXTURES_PATH "Assets/Textures/"
 #define MODELS_PATH "Assets/3DModels/"
 #define AUDIO_PATH "Assets/Audio/"
 #define LIB_TEXTURES_PATH "Library/Textures/"
 #define LIB_MODELS_PATH "Library/3DModels/"
 #define SETTINGS_PATH "Settings/"
+#define SCENES_PATH "Scenes/"
 #define OWN_FILE_FORMAT ".pei"
 #define DDS_FORMAT ".dds"
 #define FBX_FORMAT ".fbx"

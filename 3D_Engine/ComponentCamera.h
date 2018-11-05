@@ -22,11 +22,15 @@ public:
 	void SetNearPlaneDistance(float nearPlaneDist);
 	void SetFarPlaneDistance(float farPlaneDist);
 
+
+	void Save(Config& data) const;
+	void Load(Config* data);
+
 	float * GetViewMatrix();
 	float * GetProjectionMatrix();
 
 public:
-	GameObject* myGo;
+
 	Camera* camRes;
 };
 

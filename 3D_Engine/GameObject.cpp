@@ -1,20 +1,34 @@
 #include "GameObject.h"
+#include "Config.h"
 
 #include <array>
 #include <vector>
 #include <string>
 
 
-GameObject::GameObject(const char * Name)
+GameObject::GameObject()
 {
-	name = Name;
-
-	//For the transform comp the Addcomp is useless
 	transformComp = new ComponentTransformation();
 	transformComp->type = TRANSFORM;
 	transformComp->myGO = this;
-	components.push_back(transformComp);
+	components.push_back(transformComp);//For the transform comp the Addcomp is useless
+
+	uuid = App->scene->random->Int();
 }
+
+GameObject::GameObject(const char * Name)
+{
+	name = Name;
+	transformComp = new ComponentTransformation();
+	transformComp->type = TRANSFORM;
+	transformComp->myGO = this;
+	components.push_back(transformComp);//For the transform comp the Addcomp is useless
+
+	uuid = App->scene->random->Int();
+	
+	
+}
+
 
 GameObject::~GameObject()
 {
@@ -277,6 +291,75 @@ void GameObject::setName(char * _name)
 void GameObject::ToggleSelected(){
 	inspectorSelected = !inspectorSelected;
 }
+
+
+void GameObject::Save(Config& data) const
+{
+	Config conf;
+		
+
+	conf.AddUInt("UUID", uuid);
+	if (parent != nullptr) { // in case of root
+		conf.AddUInt("Parent_UUID", parent->uuid);
+	}
+	conf.AddString("Name", name.c_str());
+	conf.AddFloat3("Translation", transformComp->getPos());
+	conf.AddFloat3("Scale", transformComp->getScale());
+	conf.AddFloat3("Rotation", transformComp->getEulerRot()); //save rotation as eulerangle(float3) to save memory.
+
+	conf.AddArray("Components");	
+
+	for (int i = 0; i < components.size(); i++) { //iterate all over the components to save
+		Config comp;
+		comp.AddInt("Type", components[i]->type);
+		components[i]->Save(comp);
+		conf.AddArrayChild(comp);
+	}	
+
+	data.AddArrayChild(conf);
+
+	for (int i = 0; i < childrens.size(); i++) {//iterate all over the childs to save
+		childrens[i]->Save(data);
+	}
+
+}
+
+void GameObject::Load(Config* data)
+{
+	uuid = data->GetUInt("UUID", 0);
+	uint parentUUID = data->GetUInt("Parent_UUID",0);
+
+	GameObject* par = App->scene->GetGameObjectByUUID(parentUUID);
+	if (par != nullptr) {
+		SetParent(par);
+	}
+	par = nullptr;
+	name = data->GetString("Name", "NoName");
+	if (strcmp(name.c_str(), "root")==0) {
+		App->scene->ChangeRootGO( this);
+	}
+	transformComp->setPos(data->GetFloat3("Translation", {0,0,0}));
+	transformComp->setRotEuler(data->GetFloat3("Rotation", { 0,0,0 }));
+	transformComp->setScale(data->GetFloat3("Scale", { 0,0,0 }));
+	//Need to apply the transformation?
+
+	int num = data->GetNumElemsArray("Components");
+	for (int i = 0; i < num; i++) {//iterate all over the childs to save
+		Config elem = data->GetArray("Components", i);
+		ComponentType type = (ComponentType) elem.GetInt("Type", ComponentType::NO_TYPE);
+		if (type != ComponentType::NO_TYPE) {
+			Component* comp = AddComponent(type);
+			comp->Load(&elem);
+		}
+		else {
+			OWN_LOG("Cannot load components correctly. Component type: NOTYPE ")
+		}
+	}
+
+	
+}
+
+
 //
 //void GameObject::ToggleActive()
 //{

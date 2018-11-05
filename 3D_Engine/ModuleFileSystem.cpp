@@ -21,7 +21,7 @@ ModuleFileSystem::ModuleFileSystem(bool start_enabled) : Module(start_enabled)
 
 	//Create main files if they do not exist and add them to the search path
 	const char* mainPaths[] = {
-		MODELS_PATH, TEXTURES_PATH, AUDIO_PATH, LIB_MODELS_PATH, LIB_TEXTURES_PATH, SETTINGS_PATH
+		MODELS_PATH, TEXTURES_PATH, AUDIO_PATH, LIB_MODELS_PATH, LIB_TEXTURES_PATH, SETTINGS_PATH, SCENES_PATH
 	};
 	for (uint i = 0; i < NUM_PATHS; ++i)
 	{
@@ -47,7 +47,7 @@ bool ModuleFileSystem::addPath(const char * path)
 	return ret;
 }
 
-uint ModuleFileSystem::writeFile(const char * fileName, const void * data, uint bytes)
+uint ModuleFileSystem::writeFile(const char * fileName, const void * data, uint bytes	)
 {
 	PHYSFS_file* file = PHYSFS_openWrite(fileName);
 	if (file == nullptr)
@@ -55,8 +55,8 @@ uint ModuleFileSystem::writeFile(const char * fileName, const void * data, uint 
 		OWN_LOG("Error opening file. Error:", PHYSFS_getLastError());
 		return 0;
 	}
-	else{
-		
+	else{	
+
 		uint written = PHYSFS_write(file, (const void*)data, 1, bytes);
 		PHYSFS_close(file);
 
@@ -86,7 +86,7 @@ uint ModuleFileSystem::readFile(const char * fileName, char** data)
 		{
 			*data = new char[size];
 			uint readed = (uint)PHYSFS_read(file, *data, 1, size);
-			delete[] data;
+			
 			if (readed != size)
 			{
 				OWN_LOG("File System error while reading from file %s: %s\n", file, PHYSFS_getLastError());

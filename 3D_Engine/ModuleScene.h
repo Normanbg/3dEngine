@@ -4,6 +4,7 @@
 
 #include "Application.h"
 #include "Module.h"
+#include "MathGeoLib/Algorithm/Random/LCG.h"
 
 class vector;
 class GameObject;
@@ -30,16 +31,28 @@ public:
 	void SetWireframe(bool active);
 
 	void DrawMeshes();
+	GameObject* AddGameObject();
 	GameObject* AddGameObject(const char* name);
+	
 	GameObject* AddGameObject(const char* name, GameObject* parent);
 	GameObject* CreateCube();
+	GameObject* GetGameObjectByUUID(uint uuid) const;
+	void ChangeRootGO(GameObject* newRoot){ root = newRoot; }
+
+	bool SaveScene()const;
+	bool LoadScene(const char* data);
+
 
 public:
+
+	GameObject* GetGameObjectUUIDRecursive(uint uuid, GameObject* go) const;
+
 	GameObject* root;
 	GameObject* gObjSelected = nullptr;
 	Material* materialSelected = nullptr;
 	
 	int numCubes = 0;
+	LCG* random = nullptr;
 };
 
 

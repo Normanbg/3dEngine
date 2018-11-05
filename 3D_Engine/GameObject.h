@@ -30,18 +30,24 @@ public:
 	GameObject* CreateSphere();
 };
 
+struct Config;
 
 class GameObject
 {
 	friend ModuleScene;
 public:
+	GameObject();
 	GameObject(const char * name);
 	~GameObject();
+
+
 	bool PreUpdate();
 	bool Update();
 	bool PostUpdate();
 	void CleanUp();
 
+	void Save(Config& data)const;
+	void Load(Config* data);
 	
 	Component* AddComponent(ComponentType type);
 	void AddChildren(GameObject* child);
@@ -55,6 +61,7 @@ public:
 	ComponentCamera* GetComponentCamera();
 	ComponentMaterial * GetComponentMaterial();
 	ComponentMesh * GetComponentMesh();
+	inline const uint GetUUID() { return uuid; }
 
 	void CalculateAllGlobalMatrix();
 
@@ -67,12 +74,13 @@ public:
 
 	bool active = true;
 	bool staticGO = false;
+	
 
 private:	
 		
 	void setName(char* _name);
 	void ToggleSelected();
-
+	uint uuid = 0;
 
 private:
 	bool inspectorSelected = false;
