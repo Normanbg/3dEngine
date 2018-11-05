@@ -140,6 +140,7 @@ FrustumContained ModuleEditorCamera::ContainsAaBox(const AABB& refBox) const
 void ModuleEditorCamera::UpdateProjMatrix()
 {
 	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
 	glLoadMatrixf(cameraComp->GetProjectionMatrix());
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
