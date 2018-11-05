@@ -26,36 +26,21 @@ public:
 	bool CleanUp();
 
 	FrustumContained ContainsAaBox(const AABB & refBox) const;
+	void UpdateProjMatrix();
+	void ConfigInfo();
 
-	void Look(const vec3 &Position, const vec3 &Reference, bool RotateAroundReference = false);
-	void LookAt(const vec3 &Spot);
-	void Move(const vec3 &Movement);
-	void MoveTo(const vec3 Movement);
-	float* GetViewMatrix() ;
-	void FocusToMeshes();
+	float GetMouseSensit();
+	float GetScrollSensit();
 
 public:
+	ComponentCamera* cameraComp;
+private:
+	void MouseMovement(float dt);
+	void Orbit(float dt);
 
-	bool free_camera = false;
-
-	vec3 X, Y, Z, Position, Reference;
+private:
 	float mouseSensitivity = 0.25f;
-	float scroolWheelSensitivity = 10.0f;
-	float zoomDistance = 20.0f;
-
-	//---------
-	//GameObject* editorCam_G0;
-	ComponentCamera* edCamera;
-
-private:
-
-	void CalculateViewMatrix();
-
-private:
-	bool debug = false;
-	vec3 offset_to_player;
-	mat4x4 ViewMatrix, ViewMatrixInverse;
-
+	float scrollWheelSensitivity = 10.0f;
 };
 
 #endif //__MODULE_EDITOR_CAM_H__

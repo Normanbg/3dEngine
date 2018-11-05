@@ -53,6 +53,7 @@ public:
 	UIPanelHierarchy*	panelHierarchy	= nullptr;
 	UIPanelScene*		panelScene		= nullptr;
 	UIPanelMaterials*	panelMaterial	= nullptr;
+
 	std::vector<std::string> logsBuffer;
 	uint ilVersion = 0;
 

@@ -5,6 +5,8 @@
 #include "ModuleInput.h"
 #include "ModuleEditorCamera.h"
 #include "GameObject.h"
+#include "ComponentCamera.h"
+#include "Camera.h"
 #include "ModuleGui.h"
 #include "ModuleScene.h"
 #include "Brofiler/Brofiler.h"
@@ -149,12 +151,6 @@ bool ModuleRenderer3D::Start() {
 
 	bool ret = true;
 	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
-	/*importer->LoadFBX("BakerHouse.fbx");
-	importer->ImportFBXtoPEI("BakerHouse.fbx");
-	importer->LoadPEI("BakerHouse.pei");*/
-	
-	//GenBuffFromMeshes();
-
 	return ret;
 }
 
@@ -166,16 +162,11 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 	glLoadIdentity();
 
 	glMatrixMode(GL_MODELVIEW);
-
-	///NEEDS TO BE CHANGED FOR BEING THE CAM AT THE FRUSTUM POS!!!!
-	/*ComponentCamera* cam = (ComponentCamera*)App->camera->editorCam_G0->GetComponent(ComponentType::CAMERA);
-	glLoadMatrixf(cam->GetViewMatrix());*/
-
-	//glLoadMatrixf(App->camera->edCamera->getViewMatrix());
-	glLoadMatrixf(App->camera->GetViewMatrix());
+	float* vm = App->camera->cameraComp->GetViewMatrix();
+	glLoadMatrixf(vm);
 
 	// light 0 on cam pos
-	lights[0].SetPos(App->camera->Position.x, App->camera->Position.y, App->camera->Position.z);
+	lights[0].SetPos(App->camera->cameraComp->camRes->frustum.pos.x, App->camera->cameraComp->camRes->frustum.pos.y, App->camera->cameraComp->camRes->frustum.pos.z);
 
 	for(uint i = 0; i < MAX_LIGHTS; ++i)
 		lights[i].Render();
@@ -192,18 +183,13 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 {
 	BROFILER_CATEGORY("Renderer3D_PostUpdate", Profiler::Color::HotPink);
 
-	glBindBuffer(GL_ARRAY_BUFFER, 0); ///THIS LINE MAKES ALL DRAW BY RESETING THE BUFFER, NEEDED???????
+	glBindBuffer(GL_ARRAY_BUFFER, 0); ///
 
 
 	//DrawMeshes();
 	App->scene->DrawMeshes();
 
-	
-	App->camera->edCamera->DebugDraw();
-
-	App->gui->Draw();
-
-	
+	App->gui->Draw();	
 
 	SDL_GL_SwapWindow(App->window->window); 
 	return UPDATE_CONTINUE;
@@ -216,28 +202,15 @@ bool ModuleRenderer3D::CleanUp()
 	OWN_LOG("Destroying 3D Renderer");
 
 	importer->CleanUp();
-	
-
-	//ClearSceneMeshes();
 		
 	SDL_GL_DeleteContext(context); 
 	return true;
 }
 
-
 void ModuleRenderer3D::OnResize(const int width, const int height)
 {
 	glViewport(0, 0, width, height);
-
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-
-	//glLoadMatrixf(App->camera->edCamera->GetProjMatrix());
-	ProjectionMatrix = perspective(60.0f, (float)width / (float)height, 0.125f, 512.0f);
-	glLoadMatrixf(&ProjectionMatrix);
-
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
+	App->camera->UpdateProjMatrix();
 }
 
 char* ModuleRenderer3D::GetGraphicsModel() const

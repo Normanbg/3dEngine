@@ -1,241 +1,100 @@
+#include "Application.h"
+#include "Globals.h"
+#include "ModuleEditorCamera.h"
 #include "ComponentCamera.h"
-#include "ModuleRenderer3D.h"
-#include "ModuleInput.h"
 #include "GameObject.h"
-
-
+#include "Camera.h"
 
 ComponentCamera::ComponentCamera()
 {
-	camFrustum.pos = { -150, 50, 0 };
-	camFrustum.front = float3::unitZ;
-	camFrustum.up = float3::unitY;
-	SetFov(60.0f);
-	camFrustum.nearPlaneDistance = 1.0f;
-	camFrustum.farPlaneDistance = 400.0f;
-
-	camFrustum.type = FrustumType::PerspectiveFrustum;
-	
-	LookAt({ 10,-20, 0 });
+	camRes = new Camera();
 }
 
 ComponentCamera::~ComponentCamera()
 {
 }
 
-
 bool ComponentCamera::Update()
 {
-	//camFrustum.pos = myGO->transformComp->getPos();
-	//WSADmove();
-	//float3 newPos(0, 0, 0);
-	//float speed = CAMERA_SPEED;
-
-	////Alt+Left click should orbit the object
-	//if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_LALT)) {
-	//	int dx = -App->input->GetMouseXMotion();
-	//	int dy = -App->input->GetMouseYMotion();
-
-	//	mouseSensitivity = 0.25f;
-	//	Reference = { 0,0,0 };//WILL BE THE POSITION WHEN WE HAVE IT!!! 
-	//	if (dx != 0)
-	//	{
-	//		float DeltaX = (float)dx * mouseSensitivity;
-	//		
-	//		X = VecFunctions::rotatef3(X, DeltaX, float3(0.0f, 1.0f, 0.0f));
-	//		Y = VecFunctions::rotatef3(Y, DeltaX, float3(0.0f, 1.0f, 0.0f));
-	//		Z = VecFunctions::rotatef3(Z, DeltaX, float3(0.0f, 1.0f, 0.0f));
-	//	}
-
-	//	if (dy != 0)
-	//	{
-	//		float DeltaY = (float)dy * mouseSensitivity;
-
-	//		Y = VecFunctions::rotatef3(Y, DeltaY, X);
-	//		Z = VecFunctions::rotatef3(Z, DeltaY, X);
-
-	//		if (Y.y < 0.0f)
-	//		{
-	//			Z = float3(0.0f, Z.y > 0.0f ? 1.0f : -1.0f, 0.0f);
-	//			Y = Z.Cross(X);
-	//		}
-	//	}
-
-	//	Position = Reference + Z * Position.Length();
-	//}
-	////While Right clicking, “WASD” fps-like movement While Right clicking, “WASD” fps-like movement and free look enabled
-	//if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT)
-	//{
-	//	speed = CAMERA_SPEED;
-
-	//	if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT)
-	//		speed *= 2.0f;
-
-	//	if (App->input->GetKey(SDL_SCANCODE_R) == KEY_REPEAT) newPos.y += speed;
-	//	if (App->input->GetKey(SDL_SCANCODE_T) == KEY_REPEAT) newPos.y -= speed;
-
-	//	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) newPos -= Z * speed;
-	//	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) newPos += Z * speed;
-
-
-	//	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) newPos -= X * speed;
-	//	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) newPos += X * speed;
-
-	//	Position += newPos;
-	//	Reference += newPos;
-
-	//	int dx = -App->input->GetMouseXMotion();
-	//	int dy = -App->input->GetMouseYMotion();
-
-	//	mouseSensitivity = 0.25f;
-
-	//	float3 newPosition = Position - Reference;
-
-	//	if (dx != 0)
-	//	{
-	//		const float DeltaX = (float)dx * mouseSensitivity;
-
-	//		X = VecFunctions::rotatef3(X, DeltaX, float3(0.0f, 1.0f, 0.0f));
-	//		Y = VecFunctions::rotatef3(Y, DeltaX, float3(0.0f, 1.0f, 0.0f));
-	//		Z = VecFunctions::rotatef3(Z, DeltaX, float3(0.0f, 1.0f, 0.0f));
-	//	}
-
-	//	if (dy != 0)
-	//	{
-	//		const float DeltaY = (float)dy * mouseSensitivity;
-
-	//		Y = VecFunctions::rotatef3(Y, DeltaY, X);
-	//		Z = VecFunctions::rotatef3(Z, DeltaY, X);
-
-	//		if (Y.y < 0.0f)
-	//		{
-	//			Z = float3(0.0f, Z.y > 0.0f ? 1.0f : -1.0f, 0.0f);
-	//			Y = Z.Cross(X);
-	//		}
-	//	}
-
-	//	Reference = Position - Z * newPosition.Length();
-	//}
-
- //   //FOCUS TO MESHES--------------------------------------------------MISSING
-
-	////-----Zoom
-	//if (App->input->GetMouseZ() != 0) {
-	//	newPos = float3::zero;
-	//	float wheelSensitivity = scroolWheelSensitivity;
-	//	float3 distance = Reference - Position;
-
-	//	if (distance.Length() < zoomDistance)
-	//		wheelSensitivity = distance.Length() / zoomDistance;
-	//	if (App->input->GetMouseZ() > 0)
-	//		newPos -= Z * wheelSensitivity;
-	//	else
-	//		newPos += Z * wheelSensitivity;
-
-	//	Position += newPos;
-	//}
-
-
-	//// Recalculate matrix -------------
-	//CalculateViewMatrix();
-
-	return UPDATE_CONTINUE;
+	return false;
 }
 
 void ComponentCamera::CleanUp()
 {
 }
 
-void ComponentCamera::DrawInspector()
+void ComponentCamera::DrawInspector() {
+	float fov = camRes->GetFov();
+	float ar = camRes->GetAR();
+	float nearPl = camRes->frustum.nearPlaneDistance;
+	float farPl = camRes->frustum.farPlaneDistance;
+
+	if (ImGui::DragFloat("Near Plane", &nearPl, 0.5f)) {
+		SetNearPlaneDistance(nearPl);
+	}
+	if (ImGui::DragFloat("Far Plane", &farPl, 0.5f)) {
+		SetFarPlaneDistance(farPl);
+	}
+	if (ImGui::SliderFloat("FOV", &fov, 30.f, 175.f)) {
+		camRes->SetFOV(fov);
+	}
+	if (ImGui::SliderFloat("Aspect Ratio", &ar, 0.1f, 3.5f)) {
+		camRes->SetAspectRatio(ar);
+	}
+}
+
+// -----------------------------------------------------------------
+void ComponentCamera::LookAt(const float3 &Spot)
 {
-	//ADD NEAR-FAR-FOV-ASPECT RATIO...
+	float3 direction = Spot - camRes->frustum.pos;
+
+	float3x3 matrix = float3x3::LookAt(camRes->frustum.front, direction.Normalized(), camRes->frustum.up, float3::unitY);
+
+	camRes->frustum.front = matrix.MulDir(camRes->frustum.front).Normalized();
+	camRes->frustum.up = matrix.MulDir(camRes->frustum.up).Normalized();
 }
 
-void ComponentCamera::LookAt(const float3 & Spot){
-	float3 dir = Spot - camFrustum.pos;
-
-	float3x3 matrix = float3x3::LookAt(camFrustum.front, dir.Normalized(), camFrustum.up, float3::unitY);
-
-	camFrustum.front = matrix.MulDir(camFrustum.front).Normalized();
-	camFrustum.up = matrix.MulDir(camFrustum.up).Normalized();
-}
-
-void ComponentCamera::SetNearPlaneDistance(float nearPlaneDist){
-	if (nearPlaneDist > camFrustum.farPlaneDistance) {
+void ComponentCamera::SetNearPlaneDistance(float nearPlaneDist) {
+	if (nearPlaneDist > camRes->frustum.farPlaneDistance) {
 		OWN_LOG("ERROR: Near plane distance cannot be greater than far plane distance");
 	}
 	else if (nearPlaneDist < 0.0f) {
 		OWN_LOG("ERROR: Near plane distance cannot be smaller than 0.0");
 	}
 	else {
-		camFrustum.nearPlaneDistance = nearPlaneDist;
+		camRes->frustum.nearPlaneDistance = nearPlaneDist;
 	}
 }
 
-void ComponentCamera::SetFarPlaneDistance(float farPlaneDist){
-	if (farPlaneDist < camFrustum.nearPlaneDistance) {
+void ComponentCamera::SetFarPlaneDistance(float farPlaneDist) {
+	if (farPlaneDist < camRes->frustum.nearPlaneDistance) {
 		OWN_LOG("ERROR: Far plane distance cannot be smaller than near plane distance");
 	}
 	else if (farPlaneDist < 0.0f) {
 		OWN_LOG("ERROR: Far plane distance cannot be smaller than 0.0");
 	}
 	else {
-		camFrustum.nearPlaneDistance = farPlaneDist;
+		camRes->frustum.farPlaneDistance = farPlaneDist;
 	}
 }
 
-void ComponentCamera::SetFov(float fov){
-	float newAR = camFrustum.AspectRatio();
-	camFrustum.verticalFov = DEGTORAD * fov;
-	SetAspectRatio(newAR);
-}
-
-void ComponentCamera::SetAspectRatio(float aspectRatio){
-	camFrustum.horizontalFov = 2.0f * atanf(tanf(camFrustum.verticalFov * 0.5f) * aspectRatio);
-}
-
-void ComponentCamera::SetMouseSensitivity(float newMouseSens)
+float * ComponentCamera::GetViewMatrix()
 {
-	mouseSensitivity = newMouseSens;
+	static float4x4 m;
+
+	m = camRes->frustum.ViewMatrix();
+	m.Transpose();
+
+	return (float*)m.v;
 }
 
-//Distance used for never arriving to vec 0, + bigger = velocity decreases before
-void ComponentCamera::SetScroolWheelSensitivity(float newScroolSensitivity)
+float * ComponentCamera::GetProjectionMatrix()
 {
-	scroolWheelSensitivity = newScroolSensitivity;
-}
+	static float4x4 m;
 
-void ComponentCamera::SetDistToReduceZoomVel(float newZoomDistance)
-{
-	zoomDistance = newZoomDistance;
-}
+	m = camRes->frustum.ProjectionMatrix().Transposed();
+	return (float*)m.v;
 
-float * ComponentCamera::getViewMatrix()
-{
-	static float4x4 matrix = camFrustum.ViewMatrix();
-	matrix.Transpose();
-
-	return (float*)matrix.v;
-}
-
-float * ComponentCamera::GetProjMatrix()
-{
-	static float4x4 matrix = camFrustum.ProjectionMatrix();
-	matrix.Transpose();
-
-	return (float*)matrix.v;
-}
-
-void ComponentCamera::WSADmove() {
-	float3 _pos(0, 0, 0);
-	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) _pos += camFrustum.front * 0.5f;
-	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) _pos -= camFrustum.front * 0.5f;
-
-	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) _pos -= camFrustum.WorldRight() * 0.5f;
-	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) _pos += camFrustum.WorldRight() * 0.5f;
-
-	if (!_pos.IsZero())
-		camFrustum.Translate(_pos);
 }
 
 void ComponentCamera::Save(Config & data) const
@@ -248,68 +107,4 @@ void ComponentCamera::Save(Config & data) const
 void ComponentCamera::Load(Config * data)
 {
 	uuid = data->GetUInt("UUID");
-}
-
-//void ComponentCamera::FrustumCulling(){
-//
-//}
-
-void ComponentCamera::DebugDraw()
-{
-	float3 vertices[8];
-	camFrustum.GetCornerPoints(vertices);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
-	glColor3f(0, 255, 0);
-
-	glBegin(GL_LINES);
-	glVertex3fv((GLfloat*)&vertices[1]);
-	glVertex3fv((GLfloat*)&vertices[5]);
-	glVertex3fv((GLfloat*)&vertices[7]);
-	glVertex3fv((GLfloat*)&vertices[3]);
-
-	glVertex3fv((GLfloat*)&vertices[3]);
-	glVertex3fv((GLfloat*)&vertices[1]);
-
-	glVertex3fv((GLfloat*)&vertices[4]);
-	glVertex3fv((GLfloat*)&vertices[0]);
-	glVertex3fv((GLfloat*)&vertices[2]);
-	glVertex3fv((GLfloat*)&vertices[6]);
-
-	glVertex3fv((GLfloat*)&vertices[6]);
-	glVertex3fv((GLfloat*)&vertices[4]);
-
-	glVertex3fv((GLfloat*)&vertices[5]);
-	glVertex3fv((GLfloat*)&vertices[4]);
-	glVertex3fv((GLfloat*)&vertices[6]);
-	glVertex3fv((GLfloat*)&vertices[7]);
-
-	glVertex3fv((GLfloat*)&vertices[7]);
-	glVertex3fv((GLfloat*)&vertices[5]);
-
-	glVertex3fv((GLfloat*)&vertices[0]);
-	glVertex3fv((GLfloat*)&vertices[1]);
-	glVertex3fv((GLfloat*)&vertices[3]);
-	glVertex3fv((GLfloat*)&vertices[2]);
-
-	glVertex3fv((GLfloat*)&vertices[2]);
-	glVertex3fv((GLfloat*)&vertices[6]);
-
-	glVertex3fv((GLfloat*)&vertices[3]);
-	glVertex3fv((GLfloat*)&vertices[7]);
-	glVertex3fv((GLfloat*)&vertices[6]);
-	glVertex3fv((GLfloat*)&vertices[2]);
-
-	glVertex3fv((GLfloat*)&vertices[2]);
-	glVertex3fv((GLfloat*)&vertices[0]);
-
-	glVertex3fv((GLfloat*)&vertices[0]);
-	glVertex3fv((GLfloat*)&vertices[4]);
-	glVertex3fv((GLfloat*)&vertices[5]);
-	glVertex3fv((GLfloat*)&vertices[1]);
-
-	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-
-	glEnd();
-
 }

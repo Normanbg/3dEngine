@@ -1,62 +1,59 @@
 #include "Math.h"
+#include "SDL/include/SDL_opengl.h"
 
-const float2 VecFunctions::rotatef2(const float2 &u, float angle)
+void DebugDrawBox(float3* vertices, Color color)
 {
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-	angle = angle / 180.0f * math::pi;
+	glColor3f(color.r, color.g, color.b);
 
-	float c = cos(angle), s = sin(angle);
+	glBegin(GL_LINES);
+	glVertex3fv((GLfloat*)&vertices[1]);
+	glVertex3fv((GLfloat*)&vertices[5]);
+	glVertex3fv((GLfloat*)&vertices[7]);
+	glVertex3fv((GLfloat*)&vertices[3]);
 
-	return float2(u.x * c - u.y * s, u.x * s + u.y * c);
-}
+	glVertex3fv((GLfloat*)&vertices[3]);
+	glVertex3fv((GLfloat*)&vertices[1]);
 
+	glVertex3fv((GLfloat*)&vertices[4]);
+	glVertex3fv((GLfloat*)&vertices[0]);
+	glVertex3fv((GLfloat*)&vertices[2]);
+	glVertex3fv((GLfloat*)&vertices[6]);
 
-const float3 VecFunctions::rotatef3(const float3 &u, float angle, const float3 &v)
-{
-	return *(float3*)&(rotatef4x4(angle, v) * float4(u, 1.0f));
-}
+	glVertex3fv((GLfloat*)&vertices[6]);
+	glVertex3fv((GLfloat*)&vertices[4]);
 
-const float4x4 VecFunctions::rotatef4x4(float angle, const float3 &u)
-{
-	float4x4 Rotate;
+	glVertex3fv((GLfloat*)&vertices[5]);
+	glVertex3fv((GLfloat*)&vertices[4]);
+	glVertex3fv((GLfloat*)&vertices[6]);
+	glVertex3fv((GLfloat*)&vertices[7]);
 
-	angle = angle / 180.0f * math::pi;
+	glVertex3fv((GLfloat*)&vertices[7]);
+	glVertex3fv((GLfloat*)&vertices[5]);
 
-	float3 v = u;
-	v.Normalize();
+	glVertex3fv((GLfloat*)&vertices[0]);
+	glVertex3fv((GLfloat*)&vertices[1]);
+	glVertex3fv((GLfloat*)&vertices[3]);
+	glVertex3fv((GLfloat*)&vertices[2]);
 
-	float c = 1.0f - cos(angle), s = sin(angle);
+	glVertex3fv((GLfloat*)&vertices[2]);
+	glVertex3fv((GLfloat*)&vertices[6]);
 
+	glVertex3fv((GLfloat*)&vertices[3]);
+	glVertex3fv((GLfloat*)&vertices[7]);
+	glVertex3fv((GLfloat*)&vertices[6]);
+	glVertex3fv((GLfloat*)&vertices[2]);
 
-	Rotate.RotateAxisAngle(v, angle);
+	glVertex3fv((GLfloat*)&vertices[2]);
+	glVertex3fv((GLfloat*)&vertices[0]);
 
-	return Rotate;
-}
+	glVertex3fv((GLfloat*)&vertices[0]);
+	glVertex3fv((GLfloat*)&vertices[4]);
+	glVertex3fv((GLfloat*)&vertices[5]);
+	glVertex3fv((GLfloat*)&vertices[1]);
 
-const float4x4 VecFunctions::perspective(float fovy, float aspect, float n, float f)
-{
-	float coty = 1.0f / tan(fovy * (float)math::pi / 360.0f);
-	float4x4 mat;
+	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
-	mat.At(0, 0) = coty / aspect;
-	mat.At(1, 1) = coty;
-	mat.At(2, 2) = (n + f) / (n - f);
-	mat.At(3, 2) = -1.0f;
-	mat.At(2, 3) = 2.0f * n * f / (n - f);
-	mat.At(3, 3) = 0.0f;
-	return mat;
-}
-
-const float4x4 VecFunctions::ortho(float left, float right, float bottom, float top, float n, float f)
-{
-	float4x4 Ortho;
-
-	Ortho.At(0, 0) = 2.0f / (right - left);
-	Ortho.At(1, 1) = 2.0f / (top - bottom);
-	Ortho.At(2, 2) = -2.0f / (f - n);
-	Ortho.At(0, 3) = -(right + left) / (right - left);
-	Ortho.At(1, 3) = -(top + bottom) / (top - bottom);
-	Ortho.At(2, 3) = -(f + n) / (f - n);
-
-	return Ortho;
+	glEnd();
 }

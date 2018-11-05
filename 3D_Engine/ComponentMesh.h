@@ -3,8 +3,7 @@
 
 #include "Component.h"
 #include "Globals.h"
-#include "MathGeoLib/Math/MathAll.h"
-#include "MathGeoLib/Geometry/AABB.h"
+#include "Math.h"
 #include "ComponentMaterial.h"
 
 #include <array>
@@ -24,30 +23,8 @@ public:
 	ComponentMesh();
 	~ComponentMesh();
 
-	uint id_index = -1;
-	uint num_index = 0;
-	uint* index = nullptr;
-
-	uint id_vertex = -1;
-	uint num_vertex = 0;
-	float3* vertex = nullptr;
-	
-	uint id_normals = -1;
-	uint num_normals = 0;
-	float3* normals = nullptr;
-
-	uint num_textureCoords = 0;
-	float2* texturesCoords = nullptr;
-	
-	uint num_faces = 0;
-
-	AABB boundingBox;
-	bool showBBox = false;
-
 	void GenerateBoundingBox();
 	void DrawBoundingBox();
-
-	bool showWireframe = false;
 	
 	void SetMaterial(ComponentMaterial* texture);
 	
@@ -56,12 +33,37 @@ public:
 	void CleanUp() override;
 	void DrawInspector() override;
 
+
+	void Save(Config& data) const override;
+	void Load(Config* data) override;
+
 	void GenerateBuffer();
 	
 	void Draw();
 
-	void Save(Config& data) const;
-	void Load(Config* data);
+public:
+	uint id_index = -1;
+	uint num_index = 0;
+	uint* index = nullptr;
+
+	uint id_vertex = -1;
+	uint num_vertex = 0;
+	float3* vertex = nullptr;
+
+	uint id_normals = -1;
+	uint num_normals = 0;
+	float3* normals = nullptr;
+
+	uint num_textureCoords = 0;
+	float2* texturesCoords = nullptr;
+
+	uint num_faces = 0;
+
+	AABB boundingBox;
+	bool showBBox = false;
+	bool showWireframe = false;
+
+
 
 
 private:

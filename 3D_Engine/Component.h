@@ -11,10 +11,11 @@ enum ComponentType {
 	NO_TYPE = 0,
 
 	TRANSFORM,
+	CAMERA,
 	MESH,
-	MATERIAL,
-	CAMERA
+	MATERIAL
 };
+
 class Component {
 public:
 	Component() { 
@@ -42,11 +43,14 @@ public:
 public:
 	bool active = false;
 	ComponentType type;
-	GameObject* myGO; //Warning! Duplication with childs of components
+	GameObject* myGO = nullptr; //Warning! Duplication with childs of components
+
 
 protected:
 
 	uint uuid= 0;
+
+	
 };
 
 #endif // !__COMPONENT_H__

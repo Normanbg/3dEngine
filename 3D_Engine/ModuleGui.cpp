@@ -158,7 +158,6 @@ update_status ModuleGui::Update(float dt)
 			ImGui::EndMenu();
 		}
 		ImGui::EndMainMenuBar();
-
 	}
 	return UPDATE_CONTINUE;
 }
