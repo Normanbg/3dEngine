@@ -80,6 +80,10 @@ update_status ModuleGui::Update(float dt)
 	BROFILER_CATEGORY("GUI_Update", Profiler::Color::Chartreuse);
 	if (ImGui::BeginMainMenuBar()) {
 		if (ImGui::BeginMenu("File")) {
+			if (ImGui::MenuItem("Save scene", "4"))
+				App->scene->SaveScene();
+			if (ImGui::MenuItem("Load scene", "5"))
+				App->scene->LoadScene(SCENE_FILE);			
 			if (ImGui::MenuItem("Quit", "ESC"))
 				return UPDATE_STOP;
 			ImGui::EndMenu();
@@ -161,6 +165,7 @@ update_status ModuleGui::Update(float dt)
 		}
 		ImGui::EndMainMenuBar();
 	}
+	
 	return UPDATE_CONTINUE;
 }
 

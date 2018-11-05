@@ -16,7 +16,7 @@ ComponentCamera::~ComponentCamera()
 
 bool ComponentCamera::Update()
 {
-	return false;
+	return true;
 }
 
 void ComponentCamera::CleanUp()

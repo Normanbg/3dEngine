@@ -6,8 +6,9 @@
 #include <list>
 #include <vector>
 
-
 #include "RandomGenerator/pcg_variants.h"
+
+
 
 struct ImGuiIO;
 union SDL_Event;
@@ -64,10 +65,14 @@ public:
 	uint searchingFX = 0; //Used when open an URL
 	ImGuiIO* io;
 
+	bool draw_menu = true;
+
 private:
+
 	void SetWinDockInv();
 private:
 	bool mouseOnScene = false;
+
 };
 
 #endif 
