@@ -375,8 +375,7 @@ void SceneImporter::LoadPEI(const char * fileName, uint* meshTexLinker)
 	bytes = sizeof(Quat);//sizeof quat
 	memcpy(&compTrans->getQuatRot(), cursor, bytes);
 	
-	delete[] scenedata;
-	scenedata = nullptr;
+	RELEASE_ARRAY(scenedata);
 	cursor = nullptr;
 
 	
@@ -460,10 +459,8 @@ void SceneImporter::LoadPEI(const char * fileName, uint* meshTexLinker)
 		compMesh->GenerateBuffer();
 		
 		
-		delete[] headerdata;
-		headerdata = nullptr;
-		delete[] meshdata;
-		meshdata = nullptr;
+		RELEASE_ARRAY(headerdata);		
+		RELEASE_ARRAY(meshdata);
 		mcursor = nullptr;
 		compMesh = nullptr;
 		
@@ -472,6 +469,111 @@ void SceneImporter::LoadPEI(const char * fileName, uint* meshTexLinker)
 	gameObject = nullptr;
 
 	dataFile.close();
+}
+
+bool SceneImporter::LoadMeshPEI(ComponentMesh * mesh)
+{
+	
+	std::string meshName;
+	uint numMesh = 0;
+
+	App->fileSys->GetNameFromMesh(mesh->myGO->name.c_str(), &meshName, numMesh);
+	if (numMesh != -1) {
+		uint totalSize = 0;
+		std::string filePath = LIB_MODELS_PATH;
+		filePath += meshName + OWN_FILE_FORMAT;
+
+		
+
+		std::ifstream dataFile(filePath.c_str(), std::fstream::out | std::fstream::binary);
+		if (dataFile.fail()) {
+			OWN_LOG("Error loading PEI. Cannot find PEI file %s in Library", meshName.c_str());
+			return false;
+		}
+
+		uint size = sizeof(uint) + sizeof(float3) * 2 + sizeof(Quat);
+		
+		char* scenedata = new char[sizeof(uint)];
+	
+		dataFile.read(scenedata, sizeof(uint));
+
+		uint numMeshes = 0;
+		uint bytes = sizeof(uint);
+		memcpy(&numMeshes, scenedata, bytes);
+
+		RELEASE_ARRAY(scenedata);
+		uint headerSize = sizeof(uint) + sizeof(float3) * 2 + sizeof(Quat);
+		totalSize += headerSize;
+		for (int i = 0; i < numMeshes; i++) {
+			uint ranges[4]; // [numIndex , numVertex, numNormals, numTexCoords]
+
+			uint rangesSize = sizeof(ranges);
+
+			char* rangesdata = new char[rangesSize];
+			dataFile.seekg(totalSize);
+			dataFile.read(rangesdata, rangesSize);
+
+			uint mbytes = sizeof(ranges);
+			memcpy(ranges, rangesdata, mbytes);
+
+			
+
+			uint meshDataSize = sizeof(uint)* ranges[0] + sizeof(float3)*ranges[1] + sizeof(float3)* ranges[2] + sizeof(float2) *  ranges[3];
+
+			if (i == numMesh) {
+				mesh->num_index = ranges[0];
+				mesh->num_vertex = ranges[1];
+				mesh->num_normals = ranges[2];
+				mesh->num_textureCoords = ranges[3];
+
+				mesh->index = new uint[mesh->num_index];
+				mesh->vertex = new float3[mesh->num_vertex];
+				mesh->normals = new float3[mesh->num_normals];
+				mesh->texturesCoords = new float2[mesh->num_textureCoords];
+
+				
+
+				char* meshdata = new char[meshDataSize];
+				char* mcursor = meshdata;
+
+
+				dataFile.seekg(totalSize + rangesSize);
+
+				dataFile.read(meshdata, meshDataSize);
+
+
+				mbytes = sizeof(uint) *mesh->num_index;//index		
+				memcpy(mesh->index, mcursor, mbytes);
+
+				mcursor += mbytes;
+				mbytes = sizeof(float3)*mesh->num_vertex;//vertex		
+				memcpy(mesh->vertex, mcursor, mbytes);
+
+				mcursor += mbytes;
+				mbytes = sizeof(float3)*mesh->num_normals;//normals	
+				memcpy(mesh->normals, mcursor, mbytes);
+
+				mcursor += mbytes;
+				mbytes = sizeof(float2)*mesh->num_textureCoords; //texCoords
+				memcpy(mesh->texturesCoords, mcursor, mbytes);
+
+				mesh->GenerateBuffer();
+				dataFile.close();
+				RELEASE_ARRAY(rangesdata);
+				RELEASE_ARRAY(meshdata);
+				mcursor = nullptr;
+				return true;
+			}
+			totalSize += rangesSize + meshDataSize;
+			RELEASE_ARRAY(rangesdata);
+
+		}
+
+		dataFile.close();
+
+	}
+
+	return false;
 }
 
 void SceneImporter::CleanUp()

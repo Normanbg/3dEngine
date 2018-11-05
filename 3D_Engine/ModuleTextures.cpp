@@ -66,10 +66,10 @@ Material * ModuleTextures::GetMaterialsFromName(const char * name)
 	return nullptr;
 }
 
-GLuint ModuleTextures::CheckIfImageAlreadyLoaded(const char * _path)
+GLuint ModuleTextures::CheckIfImageAlreadyLoaded(const char * name)
 {
 	for (int i = 0; i < materials.size(); i++) {
-		if (strcmp(materials[i]->name.c_str(), _path) == 0) {
+		if (strcmp(materials[i]->name.c_str(), name) == 0) {
 			return materials[i]->textureID;
 		}
 	}

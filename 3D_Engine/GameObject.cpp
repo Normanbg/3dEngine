@@ -347,9 +347,11 @@ void GameObject::Load(Config* data)
 	for (int i = 0; i < num; i++) {//iterate all over the childs to save (ecept transform comp)
 		Config elem = data->GetArray("Components", i);
 		ComponentType type = (ComponentType) elem.GetInt("Type", ComponentType::NO_TYPE);
-		if (type != ComponentType::NO_TYPE && type != ComponentType::TRANSFORM) {
-			Component* comp = AddComponent(type);
-			comp->Load(&elem);
+		if (type != ComponentType::NO_TYPE ) {
+			if (type != ComponentType::TRANSFORM) {
+				Component* comp = AddComponent(type);
+				comp->Load(&elem);
+			}
 		}
 		else {
 			OWN_LOG("Cannot load components correctly. Component type: NOTYPE ")

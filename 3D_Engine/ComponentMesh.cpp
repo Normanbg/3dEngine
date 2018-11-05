@@ -180,6 +180,9 @@ void ComponentMesh::Save(Config & data) const
 void ComponentMesh::Load(Config * data)
 {
 	uuid = data->GetUInt("UUID");
+	
+
+	App->renderer3D->importer->LoadMeshPEI(this);
 }
 
 void ComponentMesh::GenerateBoundingBox()

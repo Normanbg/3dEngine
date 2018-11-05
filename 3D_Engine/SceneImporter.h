@@ -60,6 +60,7 @@ public:
 	uint* ImportFBXtoPEI(const char* path);
 	void ImportFBXandLoad(const char* fbxPath);
 	void LoadPEI(const char* fileName, uint* texMeshLinker = nullptr);
+	bool LoadMeshPEI(ComponentMesh* mesh);
 	void CleanUp();
 
 	void LoadFBX(const char * path);

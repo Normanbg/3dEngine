@@ -25,8 +25,8 @@ public:
 
 	void NormalizePath(std::string & full_path, bool toLower = false) const;
 
-	void DiscoverFiles(const char * dir, std::vector<std::string>& fileList, std::vector<std::string>& dirList) const;
-
+	
+	void GetNameFromMesh(const char* meshName, std::string * name, uint& num );
 	void GetNameFromPath(const char * full_path, std::string * path, std::string * file, std::string * fileWithExtension, std::string * extension) const;
 };
 

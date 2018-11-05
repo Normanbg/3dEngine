@@ -126,8 +126,8 @@ void ModuleFileSystem::GetNameFromPath(const char * full_path, std::string * pat
 	{
 		std::string nwFullPath = full_path;
 		NormalizePath(nwFullPath);
-		size_t posSlash = nwFullPath.find_last_of("\\/");
-		size_t posDot = nwFullPath.find_last_of(".");
+		uint posSlash = nwFullPath.find_last_of("\\/");
+		uint posDot = nwFullPath.find_last_of(".");
 
 		if (path != nullptr)
 		{
@@ -162,7 +162,30 @@ void ModuleFileSystem::GetNameFromPath(const char * full_path, std::string * pat
 	}
 
 }
-
+void ModuleFileSystem::GetNameFromMesh(const char * meshName, std::string * name,uint& num)
+{
+	if (meshName != nullptr) {
+		std::string mesh = meshName;
+		uint underNum = mesh.find_last_of("_");
+		uint posNum = mesh.find_last_of("h");
+		if (posNum - underNum != 4) {
+			OWN_LOG("Error, name is not a mesh");
+			return;
+		}
+		if (name != nullptr) {
+			*name = mesh.substr(0, underNum);
+		}
+		if (num != -1)
+		{
+			mesh = meshName;
+			if (posNum < mesh.length()) {
+				std::string strNum = mesh.substr(posNum+1);
+				num = std::stoi(strNum);
+			}
+		}
+	
+	}
+}
 void ModuleFileSystem::NormalizePath(char * full_path, bool toLower) const
 {
 	uint len = strlen(full_path);
@@ -189,20 +212,5 @@ void ModuleFileSystem::NormalizePath(std::string & full_path, bool toLower) cons
 	}
 }
 
-void ModuleFileSystem::DiscoverFiles(const char* dir, std::vector<std::string> & fileList, std::vector<std::string> & dirList) const
-{
-	char **rc = PHYSFS_enumerateFiles(dir);
-	char **i;
 
-	std::string dirName(dir);
 
-	for (i = rc; *i != nullptr; i++)
-	{
-		if (PHYSFS_isDirectory((dirName + *i).c_str()))
-			dir_list.push_back(*i);
-		else
-			file_list.push_back(*i);
-	}
-
-	PHYSFS_freeList(rc);
-}
