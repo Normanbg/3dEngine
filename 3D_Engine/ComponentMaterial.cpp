@@ -49,7 +49,7 @@ void ComponentMaterial::Load(Config * data)
 	texture->name =	data->GetString("TexName", "NoName");
 	std::string path = LIB_TEXTURES_PATH + texture->name + DDS_FORMAT;
 	texture->textureID = App->renderer3D->texImporter->LoadTexture(path.c_str(), texture);
-	if (App->textures->CheckIfImageAlreadyLoaded(texture->name.c_str()) == -1) {
+	if (App->textures->CheckIfImageAlreadyLoaded(texture->name.c_str()) == -1 && texture->name!= "NoName") {
 		App->textures->AddMaterial(texture);
 	}
 }
