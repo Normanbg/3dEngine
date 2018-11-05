@@ -11,6 +11,7 @@
 #include "UIPanelInspector.h"
 #include "UIPanelHierarchy.h"
 #include "UIPanelMaterials.h"
+#include "UIPanelScene.h"
 #include "ModuleWindow.h"
 #include "ModuleInput.h"
 #include "ModuleAudio.h"
@@ -50,6 +51,7 @@ bool ModuleGui::Start()
 	uiPanels.push_back(panelInspector = new UIPanelInspector("Inspector", 775, 15, 250, 550, true));
 	uiPanels.push_back(panelHierarchy = new UIPanelHierarchy("Hierarchy", 0, 15, 250, 550, true));
 	uiPanels.push_back(panelMaterial = new UIPanelMaterials("Materials", 0, 399, 240, 406, true));
+	uiPanels.push_back(panelScene = new UIPanelScene("Scene", 0, 399, 240, 406, true));
 
 	ImGui::CreateContext();
 	demoShowcase = false;
@@ -214,8 +216,13 @@ void ModuleGui::ImplGuiInputs(SDL_Event * e) const{
 	ImGui_ImplSDL2_ProcessEvent(e);
 }
 
-bool ModuleGui::MouseOnGui() const {
-	return ImGui::GetIO().WantCaptureMouse;
+bool ModuleGui::isMouseOnScene() const {
+	return mouseOnScene;
+}
+
+void ModuleGui::MouseOnScene(bool mouseScene)
+{
+	mouseOnScene = mouseScene;
 }
 
 void ModuleGui::SetWinDockInv(){	

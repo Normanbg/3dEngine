@@ -133,8 +133,6 @@ bool ModuleRenderer3D::Init(JSON_Object* obj)
 		SetColorMaterial(true);
 		SetTexture2D(true);
 	}
-	// Projection matrix for
-	//OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);//-----------------------------------------------------------------------------
 
 	importer = new SceneImporter();
 	texImporter = new TextureImporter();	
@@ -150,7 +148,10 @@ bool ModuleRenderer3D::Start() {
 	BROFILER_CATEGORY("Renderer3D_Start", Profiler::Color::HotPink);
 
 	bool ret = true;
-	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
+	int width = 0;
+	int height = 0;
+	App->window->GetSize(width, height);
+	OnResize(width, height);
 	return ret;
 }
 
@@ -158,9 +159,11 @@ bool ModuleRenderer3D::Start() {
 update_status ModuleRenderer3D::PreUpdate(float dt)
 {
 	BROFILER_CATEGORY("Renderer3D_PreUpdate", Profiler::Color::HotPink);
+	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 
+	
 	glMatrixMode(GL_MODELVIEW);
 	float* vm = App->camera->cameraComp->GetViewMatrix();
 	glLoadMatrixf(vm);
@@ -182,12 +185,12 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
 	BROFILER_CATEGORY("Renderer3D_PostUpdate", Profiler::Color::HotPink);
-
 	glBindBuffer(GL_ARRAY_BUFFER, 0); ///
-
+	
 
 	//DrawMeshes();
 	App->scene->DrawMeshes();
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	App->gui->Draw();	
 
@@ -209,6 +212,55 @@ bool ModuleRenderer3D::CleanUp()
 
 void ModuleRenderer3D::OnResize(const int width, const int height)
 {
+//---------
+	//uint fbo;
+	//glGenFramebuffers(1, &fbo);
+
+	//glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+	//glGenTextures(1, &texture);
+	//glBindTexture(GL_TEXTURE_2D, texture);
+
+	//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	//glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+
+	//glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	//glDeleteFramebuffers(1, &fbo);
+//---------
+	glDeleteFramebuffers(1, &framebuffer);
+	glDeleteTextures(1, &texture);
+	glDeleteRenderbuffers(1, &rbo);
+
+	glGenFramebuffers(1, &framebuffer);
+	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	
+
+	// attach it to currently bound framebuffer object
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+	
+	glGenRenderbuffers(1, &rbo);
+	glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
+	
+
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rbo);
+
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+		OWN_LOG("ERROR::FRAMEBUFFER:: Framebuffer is not complete!");
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glBindRenderbuffer(GL_RENDERBUFFER, 0);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
 	glViewport(0, 0, width, height);
 	App->camera->UpdateProjMatrix();
 }
@@ -271,26 +323,6 @@ void ModuleRenderer3D::SetBoundingBox(bool active){
 	_bBox = active;
 	App->scene->SetBoundingBox(active);
 }
-
-
-/*
-float3 ModuleRenderer3D::GetAvgPosFromMeshes() 
-
-{
-	float3 sumPoints = float3(0,0,0);
-	
-	for (int i = 0; i < meshes.size(); i++) {
-		sumPoints += meshes[i].getMiddlePoint();
-	}
-	return { sumPoints.x / meshes.size(), sumPoints.y / meshes.size(), sumPoints.z / meshes.size() };
-}
-void ModuleRenderer3D::AddMesh(Mesh*  mesh)
-{
-	meshes.push_back(*mesh);
-}
-
-*/
-
 
 void ModuleRenderer3D::LoadDroppedFBX(char * droppedFileDir){
 	//ClearSceneMeshes();

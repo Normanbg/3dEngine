@@ -212,5 +212,3 @@ void ModuleFileSystem::NormalizePath(std::string & full_path, bool toLower) cons
 	}
 }
 
-
-

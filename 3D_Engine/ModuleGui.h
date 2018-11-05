@@ -40,11 +40,12 @@ public:
 
 	void AddConsoleLogs(const char* log) ;
 	void ImplGuiInputs(SDL_Event* e)const;
-	bool MouseOnGui() const;
-
+	bool isMouseOnScene() const;
+	void MouseOnScene(bool mouseScene);
 
 public:
 	bool demoShowcase = false;
+	
 
 	std::list<UIPanel*> uiPanels;
 	UIPanelAbout*		panelAbout		= nullptr;
@@ -69,7 +70,9 @@ public:
 private:
 
 	void SetWinDockInv();
-	
+private:
+	bool mouseOnScene = false;
+
 };
 
 #endif 

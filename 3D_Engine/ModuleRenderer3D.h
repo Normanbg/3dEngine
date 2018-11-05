@@ -59,15 +59,11 @@ public:
 	inline bool GetAxis() const { return _axis; }
 	inline bool GetGrid() const { return _grid; }
 
-
 	/*vec GetAvgPosFromMeshes();*/
 	   
 	void LoadDroppedFBX(char* droppedFileDir);
 
-	//void ClearSceneMeshes();
-
-	
-	
+	//void ClearSceneMeshes();	
 
 public:
 
@@ -78,6 +74,11 @@ public:
 
 	SceneImporter* importer;
 	TextureImporter* texImporter;
+
+	//-----
+	uint texture;
+	uint framebuffer;
+	uint rbo;
 	
 private:
 
