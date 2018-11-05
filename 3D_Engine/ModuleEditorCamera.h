@@ -26,17 +26,20 @@ public:
 
 	FrustumContained ContainsAaBox(const AABB & refBox) const;
 	void UpdateProjMatrix();
+	void ConfigInfo();
 
-	//float* GetViewMatrix() ;
-	//void FocusToMeshes();
+	float GetMouseSensit();
+	float GetScrollSensit();
 
 public:
 	ComponentCamera* cameraComp;
 private:
 	void MouseMovement(float dt);
 	void Orbit(float dt);
-private:
 
+private:
+	float mouseSensitivity = 0.25f;
+	float scrollWheelSensitivity = 10.0f;
 };
 
 #endif //__MODULE_EDITOR_CAM_H__

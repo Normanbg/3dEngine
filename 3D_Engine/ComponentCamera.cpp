@@ -24,36 +24,23 @@ void ComponentCamera::CleanUp()
 }
 
 void ComponentCamera::DrawInspector() {
-	float mouseS = mouseSensitivity;
-	float scrollS = scrollWheelSensitivity;
 	float fov = camRes->GetFov();
 	float ar = camRes->GetAR();
 	float nearPl = camRes->frustum.nearPlaneDistance;
 	float farPl = camRes->frustum.farPlaneDistance;
-	bool projChanged = false;
 
-	if (ImGui::DragFloat("Mouse Speed", &mouseS, 0.01f))
-		mouseSensitivity = mouseS;
-	if (ImGui::DragFloat("Scroll Speed", &scrollS, 0.1f))
-		scrollWheelSensitivity = scrollS;
 	if (ImGui::DragFloat("Near Plane", &nearPl, 0.5f)) {
 		SetNearPlaneDistance(nearPl);
-		projChanged = true;
 	}
 	if (ImGui::DragFloat("Far Plane", &farPl, 0.5f)) {
 		SetFarPlaneDistance(farPl);
-		projChanged = true;
 	}
-	if (ImGui::DragFloat("FOV", &fov, 0.2f)) {
+	if (ImGui::SliderFloat("FOV", &fov, 30.f, 175.f)) {
 		camRes->SetFOV(fov);
-		projChanged = true;
 	}
-	if (ImGui::DragFloat("Aspect Ratio", &ar, 0.001f)) {
+	if (ImGui::SliderFloat("Aspect Ratio", &ar, 0.1f, 3.5f)) {
 		camRes->SetAspectRatio(ar);
-		projChanged = true;
 	}
-	if (projChanged)
-		App->camera->UpdateProjMatrix();
 }
 
 // -----------------------------------------------------------------
@@ -108,14 +95,4 @@ float * ComponentCamera::GetProjectionMatrix()
 	m = camRes->frustum.ProjectionMatrix().Transposed();
 	return (float*)m.v;
 
-}
-
-float ComponentCamera::GetMouseSensit()
-{
-	return mouseSensitivity;
-}
-
-float ComponentCamera::GetScrollSensit()
-{
-	return scrollWheelSensitivity;
 }

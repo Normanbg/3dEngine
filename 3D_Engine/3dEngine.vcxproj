@@ -14,7 +14,7 @@
     <ProjectGuid>{746CC4C3-787F-4B0E-AA66-E388FE3FF4F6}</ProjectGuid>
     <RootNamespace>SDLGame</RootNamespace>
     <ProjectName>3dEngine</ProjectName>
-    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -175,7 +175,6 @@
     <ClInclude Include="Timer.h" />
     <ClInclude Include="UIPanel.h" />
     <ClInclude Include="UIPanelAbout.h" />
-    <ClInclude Include="UIPanelCamera.h" />
     <ClInclude Include="UIPanelConfig.h" />
     <ClInclude Include="UIPanelConsole.h" />
     <ClInclude Include="UIPanelHierarchy.h" />
@@ -249,7 +248,6 @@
     <ClCompile Include="TextureImporter.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="UIPanelAbout.cpp" />
-    <ClCompile Include="UIPanelCamera.cpp" />
     <ClCompile Include="UIPanelConfig.cpp" />
     <ClCompile Include="UIPanelConsole.cpp" />
     <ClCompile Include="UIPanelHierarchy.cpp" />

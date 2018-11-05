@@ -363,9 +363,6 @@
     <ClInclude Include="Math.h">
       <Filter>Sources\Tools</Filter>
     </ClInclude>
-    <ClInclude Include="UIPanelCamera.h">
-      <Filter>Sources\Modules\GuiPanels</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleInput.cpp">
@@ -580,9 +577,6 @@
     </ClCompile>
     <ClCompile Include="Math.cpp">
       <Filter>Sources\Tools</Filter>
-    </ClCompile>
-    <ClCompile Include="UIPanelCamera.cpp">
-      <Filter>Sources\Modules\GuiPanels</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

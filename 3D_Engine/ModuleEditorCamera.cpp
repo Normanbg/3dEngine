@@ -71,7 +71,7 @@ update_status ModuleEditorCamera::Update(float dt)
 	//Zoom
 	if (App->input->GetMouseZ() != 0) {
 		float3 _pos(0, 0, 0);
-		float mSpeed = cameraComp->GetScrollSensit();
+		float mSpeed = GetScrollSensit();
 		if (App->input->GetMouseZ() < 0)
 			_pos -= cameraComp->camRes->frustum.front * mSpeed;
 		else
@@ -134,10 +134,55 @@ void ModuleEditorCamera::UpdateProjMatrix()
 	glLoadIdentity();
 }
 
+void ModuleEditorCamera::ConfigInfo(){
+	float mouseS = GetMouseSensit();
+	float scrollS = GetScrollSensit();
+	float fov = cameraComp->camRes->GetFov();
+	float ar = cameraComp->camRes->GetAR();
+	float nearPl = cameraComp->camRes->frustum.nearPlaneDistance;
+	float farPl = cameraComp->camRes->frustum.farPlaneDistance;
+	bool projChanged = false;
+
+	if (ImGui::DragFloat("Mouse Speed", &mouseS, 0.01f))
+		mouseSensitivity = mouseS;
+	if (ImGui::DragFloat("Scroll Speed", &scrollS, 0.1f))
+		scrollWheelSensitivity = scrollS;
+	if (ImGui::DragFloat("Near Plane", &nearPl, 0.5f)) {
+		cameraComp->SetNearPlaneDistance(nearPl);
+		projChanged = true;
+	}
+	if (ImGui::DragFloat("Far Plane", &farPl, 0.5f)) {
+		cameraComp->SetFarPlaneDistance(farPl);
+		projChanged = true;
+	}
+	if (ImGui::SliderFloat("FOV", &fov, 30.f, 175.f)) {
+		cameraComp->camRes->SetFOV(fov);
+		projChanged = true;
+	}
+	if (ImGui::SliderFloat("Aspect Ratio", &ar, 0.1f, 3.5f)) {
+		cameraComp->camRes->SetAspectRatio(ar);
+		projChanged = true;
+	}
+	if (projChanged)
+		UpdateProjMatrix();
+}
+
+
+float ModuleEditorCamera::GetMouseSensit()
+{
+	return mouseSensitivity;
+}
+
+float ModuleEditorCamera::GetScrollSensit()
+{
+	return scrollWheelSensitivity;
+}
+
+
 void ModuleEditorCamera::MouseMovement(float dt)
 {
-	float dx = -App->input->GetMouseXMotion() * cameraComp->GetMouseSensit() * dt;
-	float dy = -App->input->GetMouseYMotion() *cameraComp->GetMouseSensit() * dt;
+	float dx = -App->input->GetMouseXMotion() * GetMouseSensit() * dt;
+	float dy = -App->input->GetMouseYMotion() * GetMouseSensit() * dt;
 	if (dx != 0)
 	{
 		Quat rotationX = Quat::RotateY(dx);
@@ -158,8 +203,8 @@ void ModuleEditorCamera::MouseMovement(float dt)
 
 void ModuleEditorCamera::Orbit(float dt)
 {
-	float dx = -App->input->GetMouseXMotion() * cameraComp->GetMouseSensit() * dt;
-	float dy = -App->input->GetMouseYMotion() *cameraComp->GetMouseSensit() * dt;
+	float dx = -App->input->GetMouseXMotion() * GetMouseSensit() * dt;
+	float dy = -App->input->GetMouseYMotion() * GetMouseSensit() * dt;
 	float3 distance = cameraComp->camRes->frustum.pos;
 	Quat X(cameraComp->camRes->frustum.WorldRight(), dy);
 	Quat Y(cameraComp->camRes->frustum.up, dx);

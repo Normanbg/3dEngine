@@ -20,7 +20,7 @@ ComponentMesh::~ComponentMesh()
 
 update_status ComponentMesh::PreUpdate(float dt)
 {
-	glBindBuffer(GL_ARRAY_BUFFER, 0); ///THIS LINE MAKES ALL DRAW BY RESETING THE BUFFER, NEEDED???????
+	glBindBuffer(GL_ARRAY_BUFFER, 0); ///
 
 	return update_status();
 }
