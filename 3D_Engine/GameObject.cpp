@@ -175,7 +175,7 @@ void GameObject::SetParent(GameObject * _parent)//TO CHECK!!!-------------------
 {
 		
 	if (parent != nullptr ) {
-		if (parent = _parent) {
+		if (parent == _parent) {
 			return;
 		}		
 		for (std::vector<GameObject*>::iterator iterator = parent->childrens.begin(); iterator != parent->childrens.end(); iterator++) {
@@ -344,10 +344,10 @@ void GameObject::Load(Config* data)
 	//Need to apply the transformation?
 
 	int num = data->GetNumElemsArray("Components");
-	for (int i = 0; i < num; i++) {//iterate all over the childs to save
+	for (int i = 0; i < num; i++) {//iterate all over the childs to save (ecept transform comp)
 		Config elem = data->GetArray("Components", i);
 		ComponentType type = (ComponentType) elem.GetInt("Type", ComponentType::NO_TYPE);
-		if (type != ComponentType::NO_TYPE) {
+		if (type != ComponentType::NO_TYPE && type != ComponentType::TRANSFORM) {
 			Component* comp = AddComponent(type);
 			comp->Load(&elem);
 		}

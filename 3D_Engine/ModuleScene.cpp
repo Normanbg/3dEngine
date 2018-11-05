@@ -130,8 +130,17 @@ GameObject * ModuleScene::GetGameObjectUUIDRecursive(uint uuid, GameObject * go)
 	for (int i = 0; i < go->childrens.size(); i++) {
 		ret = go->childrens[i];
 		ret = GetGameObjectUUIDRecursive(uuid, ret);
+		if (ret) {
+			return ret;
+		}
 	}
 	return nullptr;
+}
+
+void ModuleScene::ClearScene() const
+{
+	OWN_LOG("Clearing scene")
+		root->CleanUp();
 }
 
 bool ModuleScene::SaveScene() const
@@ -146,8 +155,7 @@ bool ModuleScene::SaveScene() const
 	uint size = save.Save(&buffer);
 	App->fileSys->writeFile(SCENE_FILE, buffer, size);
 
-	delete buffer;
-	buffer = nullptr;
+	RELEASE_ARRAY(buffer);
 	/*
 	JSON_Value* value = json_value_init_object();
 	JSON_Object* obj = json_value_get_object(value);
@@ -178,6 +186,8 @@ bool ModuleScene::LoadScene(const char* data)
 
 	if (data == nullptr) { return false; }
 
+	ClearScene();
+
 	char* buffer = nullptr;
 	uint size = App->fileSys->readFile(data, &buffer);
 
@@ -191,11 +201,10 @@ bool ModuleScene::LoadScene(const char* data)
 		int num = conf.GetNumElemsArray("GameObjects");
 		for (int i = 0; i < num; i++) {
 			Config elem = conf.GetArray("GameObjects", i);
-			GameObject* go = AddGameObject();
+			GameObject* go = new GameObject();
 			go->Load(&elem);
 		}
-		delete[] buffer;
-		buffer = nullptr;
+		RELEASE_ARRAY(buffer);
 	}
 	else {
 		OWN_LOG("Error loading file.")
@@ -266,13 +275,10 @@ update_status ModuleScene::PostUpdate(float dt){
 
 bool ModuleScene::CleanUp()
 {	
-	root->CleanUp();
+	ClearScene();
 
-	delete random;
-	random = nullptr;
-
-	delete root;
-	root = nullptr;
+	RELEASE(random);
+	RELEASE(root);
 
 	return true;
 }

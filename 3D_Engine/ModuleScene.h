@@ -39,6 +39,7 @@ public:
 	GameObject* GetGameObjectByUUID(uint uuid) const;
 	void ChangeRootGO(GameObject* newRoot){ root = newRoot; }
 
+	void ClearScene()const;
 	bool SaveScene()const;
 	bool LoadScene(const char* data);
 

@@ -16,12 +16,16 @@ public:
 	uint writeFile(const char* fileName, const void* data, uint bytes);
 	uint readFile(const char* fileName, char** data);
 
+
+
 	void CopyFileTo(const char* dest, const char* origin);
 	void CopyDDStoLib(const char* path);
 
 	void NormalizePath(char * full_path, bool toLower = false) const;
 
 	void NormalizePath(std::string & full_path, bool toLower = false) const;
+
+	void DiscoverFiles(const char * dir, std::vector<std::string>& fileList, std::vector<std::string>& dirList) const;
 
 	void GetNameFromPath(const char * full_path, std::string * path, std::string * file, std::string * fileWithExtension, std::string * extension) const;
 };
