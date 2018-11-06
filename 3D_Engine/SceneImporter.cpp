@@ -56,6 +56,9 @@ uint* SceneImporter::ImportFBXtoPEI(const char * FBXpath)
 			 return nullptr;
 		 }	
 	}
+
+
+
 	uint numMaterials = scene->mNumMaterials;
 	uint* materialIDs = new uint[scene->mNumMaterials];
 
@@ -151,7 +154,7 @@ uint* SceneImporter::ImportFBXtoPEI(const char * FBXpath)
 		uint* meshIDs = new uint[newScene.numMeshes];
 
 		const aiNode* node = scene->mRootNode; // NEEDTO delete pointer?
-
+		
 		aiVector3D _scale;
 		aiQuaternion _rotation;
 		aiVector3D _position;
@@ -219,7 +222,230 @@ uint* SceneImporter::ImportFBXtoPEI(const char * FBXpath)
 
 }
 
-void SceneImporter::ImportFBXandLoad(const char * fbxPath)  
+uint * SceneImporter::newImportFBXtoPEI(const char * FBXpath)
+{
+	std::string fullFBXPath;// = MODELS_PATH;
+	fullFBXPath += FBXpath;
+
+	std::string modelName;
+
+	App->fileSys->GetNameFromPath(fullFBXPath.c_str(), nullptr, &modelName, nullptr, nullptr);
+
+	const aiScene* scene = aiImportFile(fullFBXPath.c_str(), aiProcessPreset_TargetRealtime_MaxQuality);
+
+	if (scene == nullptr) {
+		scene = aiImportFile(FBXpath, aiProcessPreset_TargetRealtime_MaxQuality);
+		if (scene == nullptr) {
+			OWN_LOG("Error loading fbx from Assets/3DModels folder.");
+			aiReleaseImport(scene);
+
+			return nullptr;
+		}
+	}
+	else {
+		GameObject* GO;
+		GO = App->scene->AddGameObject(modelName.c_str());
+		
+		GameObject* GOchild = ImportNodeRecursive(scene->mRootNode, scene, GO);
+		GOchild = nullptr;
+		GO = nullptr;
+		aiReleaseImport(scene);
+	}
+
+	return nullptr;
+}
+
+GameObject * SceneImporter::ImportNodeRecursive(aiNode * node, const aiScene * scene, GameObject * parent)
+{
+	GameObject* nodeGO = nullptr;
+	
+	/*	std::string fileName = LIB_MODELS_PATH + modelName + OWN_FILE_FORMAT;
+	std::ofstream dataFile(fileName.c_str(), std::fstream::out | std::fstream::binary);
+	OWN_LOG("Creating PEI file");*/
+
+	if (node->mMetaData != nullptr) { // to get the gameobject not a transform matrix
+	
+		nodeGO = new GameObject();
+		nodeGO->name = node->mName.C_Str();
+		nodeGO->SetParent(parent);
+
+		aiVector3D position;
+		aiQuaternion rotation;
+		aiVector3D scaling;
+		node->mTransformation.Decompose(scaling, rotation, position);
+
+		nodeGO->transformComp->setPos(float3(position.x, position.y, position.z));
+		nodeGO->transformComp->setScale(float3(scaling.x, scaling.y, scaling.z));
+		nodeGO->transformComp->setRotQuat(Quat(rotation.x, rotation.y, rotation.z, rotation.w));
+		nodeGO->transformComp->UpdateLocalMatrix();
+		nodeGO->transformComp->localMatrix = nodeGO->transformComp->localMatrix * aiMatrixToFloat4x4(savedMatrix);
+		savedMatrix = aiMatrix4x4();
+		if (node->mNumMeshes > 0)
+		{
+			for (uint i = 0; i < node->mNumMeshes; i++)
+			{
+				aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
+
+				ComponentMesh* compMesh = new ComponentMesh();
+				compMesh = ImportMesh(mesh);
+				if (compMesh != nullptr) {
+					nodeGO->AddComponent(compMesh, MESH);
+				}
+				else {
+					delete compMesh;
+				}
+				
+				aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
+								
+				if (material) {
+					ComponentMaterial* compMat = new ComponentMaterial(); 
+					compMat = ImportMaterial(material);
+					if (compMat!=nullptr) {
+						
+						nodeGO->AddComponent(compMat, MATERIAL);
+						if (compMesh) { compMesh->SetMaterial(compMat); }
+					}
+					else {
+						delete compMat;
+					}
+				}
+			}
+		}
+	}
+	else {
+		savedMatrix = savedMatrix * node->mTransformation;
+	}
+	if (!nodeGO) { nodeGO = parent; }
+	for (uint i = 0; i < node->mNumChildren; i++) // recursivity
+	{
+		GameObject* child = ImportNodeRecursive(node->mChildren[i], scene, nodeGO);
+
+	}
+	return nodeGO;
+}
+
+ComponentMaterial * SceneImporter::ImportMaterial(aiMaterial * material) // imports material to dds
+{
+	ComponentMaterial* mat = nullptr;
+
+	aiString texturePath;
+	aiReturn ret = material->GetTexture(aiTextureType_DIFFUSE, 0, &texturePath);
+	if (ret == aiReturn_SUCCESS) {
+		bool error = false;
+		std::string path;
+		std::string textureName;
+		std::string extension;
+		App->fileSys->GetNameFromPath(texturePath.C_Str(), &path, &textureName, nullptr, nullptr);
+		App->fileSys->GetNameFromPath(texturePath.C_Str(), nullptr, nullptr, nullptr, &extension);
+
+		GLuint check = App->textures->CheckIfImageAlreadyLoaded(textureName.c_str());
+		if (check == -1) {
+			std::string texDDSPath;
+			if (extension != DDS_FORMAT) {
+
+				error = App->renderer3D->texImporter->ImportToDDS(texturePath.C_Str(), textureName.c_str());
+				if (error) {
+					std::string texAssetsPath = TEXTURES_PATH + textureName + extension; //THIS CANNOT LOAD SCENES THAT ARE NOT IN ASSETS/TEXTURE FOLDER
+					error = App->renderer3D->texImporter->ImportToDDS(texAssetsPath.c_str(), textureName.c_str());
+				}
+				texDDSPath = LIB_TEXTURES_PATH + textureName + DDS_FORMAT;
+
+			}
+			else {
+				texDDSPath = LIB_TEXTURES_PATH + textureName + DDS_FORMAT;
+				if (path != LIB_TEXTURES_PATH) {
+					std::string fllPath = TEXTURES_PATH + textureName + extension;
+					App->fileSys->NormalizePath(fllPath);
+					App->fileSys->Copy(fllPath.c_str(), texDDSPath.c_str());
+				}
+
+			}
+			if (!error) {
+				mat = new ComponentMaterial();
+				mat->texture = new Material();
+				
+				mat->texture->textureID = App->renderer3D->texImporter->LoadTexture(texDDSPath.c_str(), mat->texture);
+				OWN_LOG("Loading imported DDS texture from Lib/Textures folder");
+				if (mat->texture->textureID == -1) { // first check if texture is in local path "Lib/Textures"
+					OWN_LOG("Error loading texture.");
+				}
+				if (mat->texture->textureID != -1) { // if texture can be loaded
+					//materialIDs[i] = mat->textureID;
+					mat->texture->name = textureName;
+					App->textures->AddMaterial(mat->texture);
+					 
+				}
+			}
+		}
+		else {
+			mat = new ComponentMaterial();
+			mat->texture = App->textures->GetMaterialsFromID(check);
+		}
+	}
+	else {
+
+		OWN_LOG("Error loading texture from fbx. Error: %s", aiGetErrorString());
+	}
+
+	return mat;
+}
+
+ComponentMesh * SceneImporter::ImportMesh(aiMesh * mesh)
+{
+
+	bool error = false;
+	ComponentMesh* newMesh = new ComponentMesh();;
+	newMesh->num_vertex = mesh->mNumVertices; //-----------vertex
+	newMesh->vertex = new float3[newMesh->num_vertex];
+	memcpy(newMesh->vertex, mesh->mVertices, sizeof(float3) * newMesh->num_vertex);
+	OWN_LOG("Importing new mesh with %d vertices", newMesh->num_vertex);
+
+	//texMeshIDs[meshNum] = new_mesh->mMaterialIndex;
+
+	if (mesh->HasFaces()) { //------------indices
+		newMesh->num_index = mesh->mNumFaces * 3;
+		newMesh->index = new uint[newMesh->num_index]; // assume each face is a triangle
+		for (uint i = 0; i < mesh->mNumFaces; ++i) {
+			if (mesh->mFaces[i].mNumIndices != 3) {
+				OWN_LOG("WARNING, geometry face with != 3 indices!");
+				error = true;
+
+			}
+			else {
+				memcpy(&newMesh->index[i * 3], mesh->mFaces[i].mIndices, 3 * sizeof(uint));
+
+			}
+		}
+	}
+
+	if (mesh->HasNormals() && !error) { //------------normals
+		newMesh->num_normals = newMesh->num_vertex;
+		newMesh->normals = new float3[newMesh->num_normals];
+		memcpy(newMesh->normals, mesh->mNormals, sizeof(float3) * newMesh->num_normals);
+	}
+	if (mesh->GetNumUVChannels() > 0 && !error) { //------------textureCoords
+		newMesh->num_textureCoords = newMesh->num_vertex;
+		newMesh->texturesCoords = new float2[newMesh->num_textureCoords];
+
+		for (int i = 0; i < (newMesh->num_textureCoords); i++) {
+			newMesh->texturesCoords[i].x = mesh->mTextureCoords[0][i].x;
+			newMesh->texturesCoords[i].y = mesh->mTextureCoords[0][i].y;
+		}
+	}
+	
+	if (error) {
+		newMesh->CleanUp();
+		newMesh = nullptr;
+		return nullptr;
+	}
+
+	newMesh->GenerateBuffer();
+	
+
+	return newMesh;
+}
+
+void SceneImporter::ImportFBXandLoad(const char * fbxPath)
 {
 	uint* texMeshLinker = ImportFBXtoPEI(fbxPath);
 
@@ -748,4 +974,20 @@ void SceneImporter::LoadFBX(const char * path) {
 		OWN_LOG("Error loading FBX, scene has no meshes");
 	}
 	aiReleaseImport(scene);
+}
+
+
+float4x4 SceneImporter::aiMatrixToFloat4x4(aiMatrix4x4 matrix)
+{
+	float mat[16] =
+	{
+		matrix.a1, matrix.a2, matrix.a3, matrix.a4,
+		matrix.b1, matrix.b2, matrix.b3, matrix.b4,
+		matrix.c1, matrix.c2, matrix.c3, matrix.c4,
+		matrix.d1, matrix.d2, matrix.d3, matrix.d4
+	};
+
+	float4x4 nwMatrix;
+	nwMatrix.Set(mat);
+	return nwMatrix;
 }

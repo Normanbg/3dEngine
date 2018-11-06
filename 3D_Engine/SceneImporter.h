@@ -58,6 +58,11 @@ public:
 
 	void Init();
 	uint* ImportFBXtoPEI(const char* path);
+	uint* newImportFBXtoPEI(const char* FBXpath);
+	GameObject* ImportNodeRecursive(aiNode* node, const aiScene* scene, GameObject* parent);
+
+	ComponentMaterial* ImportMaterial(aiMaterial* mat);
+	ComponentMesh* ImportMesh(aiMesh* mesh);
 	void ImportFBXandLoad(const char* fbxPath);
 	void LoadPEI(const char* fileName, uint* texMeshLinker = nullptr);
 	bool LoadMeshPEI(ComponentMesh* mesh);
@@ -68,6 +73,8 @@ public:
 	//uint* texIDs; //to store the id textures of the meshes
 
 private:
+	float4x4 aiMatrixToFloat4x4(aiMatrix4x4 matrix);
+	aiMatrix4x4 savedMatrix = aiMatrix4x4();
 	void ImportFromMesh(const aiScene* currSc, aiMesh * new_mesh, std::ofstream* dataFile, uint meshNum, uint* texIDs = nullptr, uint* texMeshIDs = nullptr);
 };
 
