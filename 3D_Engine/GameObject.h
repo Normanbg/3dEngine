@@ -61,6 +61,8 @@ public:
 	ComponentCamera* GetComponentCamera();
 	ComponentMaterial * GetComponentMaterial();
 	ComponentMesh * GetComponentMesh();
+	ComponentMaterial* GetComponentMaterial(const char* name);
+
 	inline const uint GetUUID() { return uuid; }
 
 	void CalculateAllGlobalMatrix();

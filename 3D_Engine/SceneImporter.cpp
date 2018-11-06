@@ -84,9 +84,10 @@ uint* SceneImporter::ImportFBXtoPEI(const char * FBXpath)
 			aiReturn ret = material->GetTexture(aiTextureType_DIFFUSE, 0, &texturePath);
 			if (ret == aiReturn_SUCCESS) {
 				bool error= false;
+				std::string path;
 				std::string textureName;
 				std::string extension;
-				App->fileSys->GetNameFromPath(texturePath.C_Str(), nullptr, &textureName, nullptr, nullptr);
+				App->fileSys->GetNameFromPath(texturePath.C_Str(), &path, &textureName, nullptr, nullptr);
 				App->fileSys->GetNameFromPath(texturePath.C_Str(), nullptr, nullptr, nullptr, &extension);
 				
 				GLuint check = App->textures->CheckIfImageAlreadyLoaded(textureName.c_str());
@@ -96,14 +97,20 @@ uint* SceneImporter::ImportFBXtoPEI(const char * FBXpath)
 						
 						error = App->renderer3D->texImporter->ImportToDDS(texturePath.C_Str(), textureName.c_str());
 						if (error) {
-							std::string texAssetsPath = TEXTURES_PATH + textureName + extension;
-							error = App->renderer3D->texImporter->ImportToDDS(texAssetsPath.c_str(), textureName.c_str()); // texture is 
+							std::string texAssetsPath = TEXTURES_PATH + textureName + extension; //THIS CANNOT LOAD SCENES THAT ARE NOT IN ASSETS/TEXTURE FOLDER
+							error = App->renderer3D->texImporter->ImportToDDS(texAssetsPath.c_str(), textureName.c_str()); 
 						}
 						texDDSPath = LIB_TEXTURES_PATH + textureName + DDS_FORMAT;
 						
 					}
 					else {
-						texDDSPath = TEXTURES_PATH + textureName + DDS_FORMAT;
+						texDDSPath = LIB_TEXTURES_PATH + textureName + DDS_FORMAT;
+						if (path != LIB_TEXTURES_PATH) {
+							std::string fllPath = TEXTURES_PATH + textureName + extension;
+							App->fileSys->NormalizePath(fllPath);
+							App->fileSys->Copy(fllPath.c_str(), texDDSPath.c_str());
+						}
+						
 					}
 					if (!error) {
 						mat->textureID = App->renderer3D->texImporter->LoadTexture(texDDSPath.c_str(), mat);
@@ -389,14 +396,23 @@ void SceneImporter::LoadPEI(const char * fileName, uint* meshTexLinker)
 		GameObject* childGO = new GameObject(childName.c_str());
 		gameObject->AddChildren(childGO);
 
-		ComponentMesh* compMesh = (ComponentMesh*)childGO->AddComponent(MESH);
-
+		bool texture = false;
+		ComponentMaterial* compMat;
 		if (meshTexLinker[i] != -1) {
-			
-			ComponentMaterial* compMat = (ComponentMaterial*)childGO->AddComponent(MATERIAL);
+
+			compMat = (ComponentMaterial*)childGO->AddComponent(MATERIAL);
 			compMat->texture = App->textures->GetMaterialsFromID(meshTexLinker[i]);
+			
+			texture = true;
+		}
+		ComponentMesh* compMesh = (ComponentMesh*)childGO->AddComponent(MESH);
+		if (texture) {
 			compMesh->SetMaterial(compMat);
 		}
+		
+		
+			 
+		
 				
 		//---read ranges
 		uint ranges[4]; // [numIndex , numVertex, numNormals, numTexCoords]

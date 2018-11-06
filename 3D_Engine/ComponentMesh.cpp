@@ -138,7 +138,7 @@ void ComponentMesh::Draw()
 	}
 	else {
 			
-		if (material != NULL) {			
+		if (material != NULL && material->texture!= nullptr) {
 			glBindTexture(GL_TEXTURE_2D, material->texture->textureID);
 			glTexCoordPointer(2, GL_FLOAT, 0, &(texturesCoords[0]));
 		}
@@ -174,13 +174,14 @@ void ComponentMesh::Draw()
 void ComponentMesh::Save(Config & data) const
 {
 	data.AddUInt("UUID", uuid);
-
+	if (material != nullptr && material->texture != nullptr)
+		data.AddString("MeshTex", material->texture->name.c_str());
 }
 
 void ComponentMesh::Load(Config * data)
 {
 	uuid = data->GetUInt("UUID");
-	
+	SetMaterial(myGO->GetComponentMaterial(data->GetString("MeshTex")));
 
 	App->renderer3D->importer->LoadMeshPEI(this);
 }

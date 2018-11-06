@@ -136,29 +136,9 @@ bool ModuleScene::SaveScene() const
 	char* buffer = nullptr;
 	uint size = save.Save(&buffer);
 	App->fileSys->writeFile(SCENE_FILE, buffer, size);
-
+	OWN_LOG("Saving scene.")
 	RELEASE_ARRAY(buffer);
-	/*
-	JSON_Value* value = json_value_init_object();
-	JSON_Object* obj = json_value_get_object(value);
-
-	json_object_dotset_string(obj, "App.Name", window->GetWindowTitle().c_str());
-	json_object_dotset_string(obj, "App.Organization", GetOrganization().c_str());
-
-
-	std::list<Module*>::const_iterator item = list_modules.begin();
-
-	while (item != list_modules.end())
-	{
-		ret &= (*item)->Save(obj);
-		item++;
-	}
-
-	json_serialize_to_file(value, CONFIG_FILE);
-	json_object_clear(obj);
-	json_value_free(value);
-
-	*/
+	
 	return ret;
 }
 
@@ -186,42 +166,14 @@ bool ModuleScene::LoadScene(const char* data)
 			GameObject* go = new GameObject();
 			go->Load(&elem);
 		}
+		OWN_LOG("Loading new scene.")
 		RELEASE_ARRAY(buffer);
 	}
 	else {
 		OWN_LOG("Error loading file.")
 			ret = false;
 	}
-	/*
-	JSON_Value* config;
-
-	if (config = json_parse_file(CONFIG_FILE)) {
-		OWN_LOG("Config.JSON File detected");
-		JSON_Object* obj;
-		JSON_Object* appObj;
-
-
-		obj = json_value_get_object(config);
-		appObj = json_object_get_object(obj, "App");
-
-		SetDataFromJson(appObj);
-
-
-		json_object_clear(appObj);
-
-		std::list<Module*>::iterator item = list_modules.begin();
-
-		while (item != list_modules.end())
-		{
-			ret &= (*item)->Load(json_object_get_object(obj, (*item)->name.c_str()));
-			item++;
-		}
-
-		json_object_clear(obj);
-	}
-
-	json_value_free(config);
-*/
+	
 	return ret;
 }
 
