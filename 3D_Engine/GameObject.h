@@ -22,14 +22,6 @@ class vector;
 
 using namespace std;
 
-class Primitives
-{
-
-public:
-
-	GameObject* CreateSphere();
-};
-
 struct Config;
 
 class GameObject
@@ -75,8 +67,7 @@ public:
 	ComponentTransformation*	transformComp;
 
 	bool active = true;
-	bool staticGO = false;
-	
+	bool staticGO = false;	
 
 private:	
 		

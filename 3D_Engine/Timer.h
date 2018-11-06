@@ -17,6 +17,9 @@ public:
 	Uint32 Read();
 	float ReadSec();
 
+	//bool isPaused();
+	//void SetZero();
+
 private:
 
 	bool	running;

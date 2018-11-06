@@ -37,8 +37,8 @@ void Quadtree::Insert(GameObject * gameobject) {
 	}
 	if (quadTreeBox.Intersects(gameobject->GetComponentMesh()->boundingBox)) {
 		if (!quTrChilds.empty()) {
-			for (int i = 0; i < quTrChilds.size(); i++){
-				quTrChilds[i]->Insert(gameobject);
+			for (auto qtChildIt : quTrChilds){
+				qtChildIt->Insert(gameobject);
 			}
 		}
 		else {
@@ -48,10 +48,10 @@ void Quadtree::Insert(GameObject * gameobject) {
 				if (quTrChilds.empty())
 					Subdivide();
 
-				for (int it = 0; it < gameobjs.size(); it++)
+				for (auto gobjsIt : gameobjs)
 				{
-					for (int i = 0; i < quTrChilds.size(); i++)
-						quTrChilds[i]->Insert(gameobjs[it]);
+					for (auto childsIt : quTrChilds)
+						childsIt->Insert(gobjsIt);
 				}
 
 				gameobjs.clear();
