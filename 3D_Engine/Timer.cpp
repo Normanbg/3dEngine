@@ -17,7 +17,6 @@ void Timer::Start()
 {
 	running = true;
 	started_at = SDL_GetTicks();
-	stopped_at = 0;
 }
 
 // ---------------------------------------------
@@ -50,17 +49,4 @@ float Timer::ReadSec()
 	{
 		return (stopped_at - started_at)/1000;
 	}
-}
-
-bool Timer::isPaused()
-{
-	if (started_at == 0)
-		return true;
-	return false;
-}
-
-void Timer::SetZero()
-{
-	started_at = 0;
-	stopped_at = 0;
 }
