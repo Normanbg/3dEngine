@@ -159,6 +159,11 @@ update_status ModuleInput::PreUpdate(float dt)
 					App->renderer3D->importer->LoadPEI(dropped_filedir);
 
 					break;
+				case TGA:
+					OWN_LOG("Dropped .tga file");
+
+					App->textures->LoadDroppedTexture(dropped_filedir);
+					break;
 				default:
 					break;
 				}

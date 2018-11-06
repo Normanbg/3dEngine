@@ -21,7 +21,8 @@ enum FileType {
 	PNG,
 	JPG,
 	DDS,
-	PEI
+	PEI,
+	TGA
 };
 
 class ModuleInput : public Module
