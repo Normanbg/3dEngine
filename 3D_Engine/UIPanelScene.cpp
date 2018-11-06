@@ -17,11 +17,8 @@ void UIPanelScene::Draw() {
 	uint flags = ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse;
 
 	ImGui::Begin("Scene", &active, flags);
-	int h = 0;
-	int w = 0;
-	App->window->GetSize(w, h);
 	img = (ImTextureID)App->renderer3D->texture;
-	ImGui::Image(img, ImVec2(w / 2,h / 2), ImVec2(0, 1), ImVec2(1, 0));
+	ImGui::Image(img, ImGui::GetWindowSize(), ImVec2(0, 1), ImVec2(1, 0));
 	App->gui->MouseOnScene(ImGui::IsMouseHoveringWindow());
 	ImGui::End();
 
