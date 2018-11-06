@@ -26,7 +26,7 @@ ModuleScene::~ModuleScene()
 bool ModuleScene::Init(JSON_Object * obj)
 {
 	root = new GameObject("root");
-	rootQuadTree = new Quadtree(AABB({ 0.f, 0.f, 0.f }, { 15.f, 15.f ,15.f }));
+	rootQuadTree = new Quadtree(AABB({ 0.f, 0.f, 0.f }, { 15.f, 15.f ,15.f }), 0);
 
 
 	return true;
@@ -290,7 +290,8 @@ void ModuleScene::Draw() {
 	ComponentMesh* mesh;
 	for (int i = 0; i < components.size(); i++) {
 		mesh = (ComponentMesh *)components[i];
-		if (App->camera->ContainsAaBox(mesh->boundingBox) == IS_IN || App->camera->ContainsAaBox(mesh->boundingBox) == INTERSECT) {//MISSING IF FRUSTUM CULLING ACTIVE!!!!!!---------------------------------------------------------
+		
+		if (App->camera->ContainsAaBox(mesh->myGO->globalAABB) == IS_IN || App->camera->ContainsAaBox(mesh->myGO->globalAABB) == INTERSECT) {//MISSING IF FRUSTUM CULLING ACTIVE!!!!!!---------------------------------------------------------
 			mesh->Draw();
 		}
 	}

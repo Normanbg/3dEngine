@@ -193,13 +193,13 @@ void ComponentMesh::GenerateBoundingBox()
 	aabb.SetNegativeInfinity();
 	aabb.Enclose((float3*)vertex, num_vertex);
 
-	boundingBox = aabb;
+	myGO->globalAABB = aabb;
 }
 
 void ComponentMesh::DrawBoundingBox()
 {
 	float3 corners[8];
-	boundingBox.GetCornerPoints(corners);
+	myGO->globalAABB.GetCornerPoints(corners);
 	DebugDrawBox(corners);
 }
 

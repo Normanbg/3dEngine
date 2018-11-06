@@ -4,6 +4,7 @@
 #include "Math.h"
 
 constexpr auto QT_MAX_ELEMS = 1;
+constexpr auto MAX_SUBDIVISIONS = 4;
 
 class GameObject;
 class vector;
@@ -11,7 +12,7 @@ class vector;
 class Quadtree
 {
 public:
-	Quadtree(AABB limits);
+	Quadtree(AABB limits, uint subdivision);
 	~Quadtree();
 	
 
@@ -25,6 +26,7 @@ public:
 	void DebugDraw();
 
 private:
+	uint subdivisions = 0;
 	AABB quadTreeBox;
 	std::vector<GameObject*> gameobjs;
 	std::vector<Quadtree*> quTrChilds;
