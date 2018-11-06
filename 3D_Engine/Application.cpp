@@ -9,6 +9,7 @@
 #include "ModuleTextures.h"
 #include "ModuleFileSystem.h"
 #include "ModuleEditorCamera.h"
+#include "ModuleTime.h"
 #include "ModuleGui.h"
 #include "Brofiler/Brofiler.h"
 
@@ -29,6 +30,7 @@ Application::Application()
 	scene = new ModuleScene(this);
 	textures = new ModuleTextures(this);
 	fileSys = new ModuleFileSystem(this);
+	time = new ModuleTime(this);
 	
 	_organization = ORGANIZATION;
 	// The order of calls is very important!
@@ -36,6 +38,7 @@ Application::Application()
 	// They will CleanUp() in reverse order
 
 	// Main Modules
+	AddModule(time);
 	AddModule(window);
 	AddModule(camera);
 	AddModule(input);
