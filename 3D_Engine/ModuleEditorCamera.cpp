@@ -16,10 +16,6 @@ ModuleEditorCamera::ModuleEditorCamera(bool start_enabled) : Module(start_enable
 {
 
 	name = "Camera";
-	
-
-	
-
 }
 
 ModuleEditorCamera::~ModuleEditorCamera()

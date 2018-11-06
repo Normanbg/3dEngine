@@ -4,11 +4,12 @@
 
 #include "Application.h"
 #include "Module.h"
-#include "MathGeoLib/Algorithm/Random/LCG.h"
+#include "Math.h"
 
 class vector;
 class GameObject;
 class Material;
+class Quadtree;
 
 class ModuleScene : public Module
 {
@@ -30,30 +31,33 @@ public:
 	void SetBoundingBox(bool active);
 	void SetWireframe(bool active);
 
-	void DrawMeshes();
+	void Draw();
+
 	GameObject* AddGameObject();
-	GameObject* AddGameObject(const char* name);
-	
+	GameObject* AddGameObject(const char* name);	
 	GameObject* AddGameObject(const char* name, GameObject* parent);
 	GameObject* CreateCube();
 	GameObject* GetGameObjectByUUID(uint uuid) const;
+	GameObject* GetGameObjectUUIDRecursive(uint uuid, GameObject* go) const;
+
 	void ChangeRootGO(GameObject* newRoot){ root = newRoot; }
 
 	void ClearScene()const;
 	bool SaveScene()const;
 	bool LoadScene(const char* data);
 
+	void AddGOtoQuadtree(GameObject* go);
 
 public:
-
-	GameObject* GetGameObjectUUIDRecursive(uint uuid, GameObject* go) const;
 
 	GameObject* root;
 	GameObject* gObjSelected = nullptr;
 	Material* materialSelected = nullptr;
 	
 	int numCubes = 0;
-	LCG* random = nullptr;
+	LCG* random = nullptr;//MARGELI WHATS THIS? USE PCG RANDOM NOT MATHGEOLIB PLS!!!!!!!!
+
+	Quadtree* rootQuadTree = nullptr;
 };
 
 

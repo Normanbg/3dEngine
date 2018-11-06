@@ -1,6 +1,7 @@
 #include "Application.h"
 #include "ModuleScene.h"
 #include "GameObject.h"
+#include "Quadtree.h"
 #include "ModuleEditorCamera.h"
 #include "ModuleTextures.h"
 #include "Config.h"
@@ -25,6 +26,8 @@ ModuleScene::~ModuleScene()
 bool ModuleScene::Init(JSON_Object * obj)
 {
 	root = new GameObject("root");
+	rootQuadTree = new Quadtree(AABB({ 0.f, 0.f, 0.f }, { 15.f, 15.f ,15.f }));
+
 
 	return true;
 }
@@ -32,8 +35,13 @@ bool ModuleScene::Init(JSON_Object * obj)
 update_status ModuleScene::PreUpdate(float dt)
 {
 	bool ret = true;
+	if (App->input->GetKey(SDL_SCANCODE_7) == KEY_DOWN) {
+		GameObject* pte= CreateCube();
+		if (numCubes == 2)
+			pte->transformComp->setPos(float3(14.f, 0.f, 14.f));
+		AddGOtoQuadtree(pte);
+	}
 	if(App->input->GetKey(SDL_SCANCODE_4)== KEY_DOWN) { ///// DEBUUG
-
 		SaveScene();
 	}
 	if (App->input->GetKey(SDL_SCANCODE_5) == KEY_DOWN) { ///// DEBUUG
@@ -52,33 +60,7 @@ update_status ModuleScene::PreUpdate(float dt)
 	ret ? retUS = UPDATE_CONTINUE : retUS = UPDATE_ERROR;
 	return retUS;
 }
-GameObject * ModuleScene::AddGameObject()
-{
-	GameObject* ret = new GameObject();
-	ret->parent = root;
-	root->childrens.push_back(ret);
-	return ret;
-}
 
-
-GameObject* ModuleScene::AddGameObject(const char* name){
-	GameObject* ret = new GameObject(name);
-	ret->parent = root;
-	root->childrens.push_back(ret);
-	
-	return ret;
-}
-
-
-
-GameObject * ModuleScene::AddGameObject(const char * name, GameObject * parent)
-{
-	GameObject* ret = new GameObject(name);
-	ret->parent = parent;
-	parent->childrens.push_back(ret);
-
-	return ret;
-}
 
 GameObject * ModuleScene::CreateCube()
 {
@@ -279,6 +261,7 @@ bool ModuleScene::CleanUp()
 
 	RELEASE(random);
 	RELEASE(root);
+	RELEASE(rootQuadTree);
 
 	return true;
 }
@@ -342,7 +325,7 @@ void ModuleScene::SetWireframe(bool active)
 	}
 }
 
-void ModuleScene::DrawMeshes() {
+void ModuleScene::Draw() {
 	GameObject* iterator;
 
 	std::vector<Component*> components;
@@ -359,7 +342,45 @@ void ModuleScene::DrawMeshes() {
 			mesh->Draw();
 		}
 	}
+	rootQuadTree->DebugDraw();
 	iterator = nullptr;
 	mesh = nullptr;
 }
 
+GameObject * ModuleScene::AddGameObject()
+{
+	GameObject* ret = new GameObject();
+	ret->parent = root;
+	root->childrens.push_back(ret);
+	return ret;
+}
+
+
+GameObject* ModuleScene::AddGameObject(const char* name) {
+	GameObject* ret = new GameObject(name);
+	ret->parent = root;
+	root->childrens.push_back(ret);
+
+	return ret;
+}
+
+GameObject * ModuleScene::AddGameObject(const char * name, GameObject * parent)
+{
+	GameObject* ret = new GameObject(name);
+	ret->parent = parent;
+	parent->childrens.push_back(ret);
+
+	return ret;
+}
+
+void ModuleScene::AddGOtoQuadtree(GameObject * go)
+{
+	if (go == nullptr)
+		return;
+
+	if (go->GetComponentMesh()) {
+		rootQuadTree->Insert(go);
+	}
+	for (auto it : go->childrens)
+		AddGOtoQuadtree(it);
+}

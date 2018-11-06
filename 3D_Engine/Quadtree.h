@@ -18,7 +18,7 @@ public:
 	void Clear();
 	void Insert(GameObject* gameobject);
 	void Remove(GameObject* gameobject);
-	bool Intersect(std::vector<GameObject*>& gameobjects, const AABB& bBox) const;
+	void Intersect(std::vector<GameObject*>& gameobjects, const AABB& bBox) const;
 
 	void Subdivide();
 

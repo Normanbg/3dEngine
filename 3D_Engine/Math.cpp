@@ -1,10 +1,10 @@
 #include "Math.h"
 #include "SDL/include/SDL_opengl.h"
 
-void DebugDrawBox(float3* vertices, Color color)
+void DebugDrawBox(float3* vertices, Color color, float lineWidth)
 {
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
+	glLineWidth(lineWidth);
 	glColor3f(color.r, color.g, color.b);
 
 	glBegin(GL_LINES);
@@ -54,6 +54,6 @@ void DebugDrawBox(float3* vertices, Color color)
 	glVertex3fv((GLfloat*)&vertices[1]);
 
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-
+	glLineWidth(1.0f);
 	glEnd();
 }

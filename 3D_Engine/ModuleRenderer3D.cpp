@@ -189,7 +189,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	
 
 	//DrawMeshes();
-	App->scene->DrawMeshes();
+	App->scene->Draw();
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	App->gui->Draw();	
