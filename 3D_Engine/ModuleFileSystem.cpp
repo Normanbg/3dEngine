@@ -212,3 +212,29 @@ void ModuleFileSystem::NormalizePath(std::string & full_path, bool toLower) cons
 	}
 }
 
+bool ModuleFileSystem::Copy(const char * source, const char * destination)
+{
+	bool ret = false;
+
+	char buf[8192];
+
+	PHYSFS_file* src = PHYSFS_openRead(source);
+	PHYSFS_file* dst = PHYSFS_openWrite(destination);
+
+	PHYSFS_sint32 size;
+	if (src && dst)
+	{
+		while (size = (PHYSFS_sint32)PHYSFS_read(src, buf, 1, 8192))
+			PHYSFS_write(dst, buf, 1, size);
+
+		PHYSFS_close(src);
+		PHYSFS_close(dst);
+		ret = true;
+
+		OWN_LOG("File System copied file [%s] to [%s]", source, destination);
+	}
+	else
+		OWN_LOG("File System error while copy from [%s] to [%s]", source, destination);
+
+	return ret;
+}

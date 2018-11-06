@@ -25,6 +25,8 @@ public:
 
 	void NormalizePath(std::string & full_path, bool toLower = false) const;
 
+	bool Copy(const char * source, const char * destination);
+
 	
 	void GetNameFromMesh(const char* meshName, std::string * name, uint& num );
 	void GetNameFromPath(const char * full_path, std::string * path, std::string * file, std::string * fileWithExtension, std::string * extension) const;

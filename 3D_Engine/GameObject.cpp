@@ -260,6 +260,21 @@ ComponentMesh * GameObject::GetComponentMesh()
 	return ret;
 }
 
+ComponentMaterial * GameObject::GetComponentMaterial(const char * name)
+{
+	std::vector<Component*> materials;
+
+	GetComponents(MATERIAL, materials);
+	for (int i = 0; i < materials.size(); i++){
+		ComponentMaterial* it = (ComponentMaterial*)materials[i];
+		if (it->texture->name == name) {
+			return it;
+		}
+		it = nullptr;
+	}
+	return nullptr;
+}
+
 ComponentMaterial * GameObject::GetComponentMaterial()
 {
 	ComponentMaterial* ret = nullptr;
