@@ -2,8 +2,7 @@
 
 Camera::Camera()
 {
-	fov = 60;
-	SetFOV(fov);
+	SetFOV(60);
 
 	frustum.nearPlaneDistance = 1.0f;
 	frustum.farPlaneDistance = 400.f;

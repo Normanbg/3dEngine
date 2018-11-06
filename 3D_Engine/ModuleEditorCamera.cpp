@@ -32,8 +32,9 @@ bool ModuleEditorCamera::Start()
 {
 	OWN_LOG("Setting up the camera");
 	bool ret = true;
-
 	cameraComp->camRes->frustum.pos = { -35, 8, 0 };
+	cameraComp->camRes->SetFOV(60);
+	cameraComp->camRes->SetAspectRatio(1.f);
 	cameraComp->LookAt(float3(0,0,0));	
 	return ret;
 }
