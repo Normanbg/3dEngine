@@ -2,6 +2,7 @@
 #define __PANELSCENE_H__
 
 #include "UIPanel.h"
+#include "Math.h"
 
 class ComponentMaterial;
 
@@ -18,5 +19,8 @@ public:
 	ComponentMaterial* playButtonMat;
 	ComponentMaterial* pauseButtonMat;
 	ComponentMaterial* stopButtonMat;
+
+	float2 lastSize;
+	float2 size;
 };
 #endif // !__PANELSCENE_H__

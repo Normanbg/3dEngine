@@ -45,8 +45,17 @@ void UIPanelScene::Draw() {
 	}
 	ImGui::PopStyleColor();
 	ImGui::PopStyleColor();
+
+	size = float2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y);
+	if (lastSize.x != size.x || lastSize.y != size.y)
+	{
+		lastSize.x = size.x;
+		lastSize.y = size.y;
+
+		App->renderer3D->OnResize(size.x, size.y);
+	}
 	img = (ImTextureID)App->renderer3D->texture;
-	ImGui::Image(img, ImGui::GetWindowSize(), ImVec2(0, 1), ImVec2(1, 0));
+	ImGui::Image(img, ImVec2(size.x, size.y), ImVec2(0, 1), ImVec2(1, 0));
 	App->gui->MouseOnScene(ImGui::IsMouseHoveringWindow());
 	ImGui::End();
 	
