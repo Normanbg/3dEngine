@@ -156,16 +156,14 @@ update_status ModuleInput::PreUpdate(float dt)
 					break;
 				case PEI:
 					OWN_LOG("Dropped .pei file");
-					//App->renderer3D->importer->LoadMeshPEI(dropped_filedir);
-
+					App->renderer3D->LoadDroppedPEI(dropped_filedir);
+					
 					break;
 				case TGA:
 					OWN_LOG("Dropped .tga file");
 
 					App->textures->LoadDroppedTexture(dropped_filedir);
-					break;
-				default:
-					break;
+					break;			
 				}
 			break;
 		}

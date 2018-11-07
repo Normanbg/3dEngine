@@ -10,7 +10,10 @@
 
 
 ComponentMesh::ComponentMesh()
-{}
+{
+	type = MESH;
+
+}
 
 
 ComponentMesh::~ComponentMesh()

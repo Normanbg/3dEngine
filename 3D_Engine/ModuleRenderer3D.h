@@ -62,7 +62,7 @@ public:
 	/*vec GetAvgPosFromMeshes();*/
 	   
 	void LoadDroppedFBX(char* droppedFileDir);
-
+	void LoadDroppedPEI(char* droppedFileDir);
 	//void ClearSceneMeshes();	
 
 public:

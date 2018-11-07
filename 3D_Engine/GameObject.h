@@ -68,8 +68,8 @@ public:
 	std::vector <GameObject*>	childrens;
 	ComponentTransformation*	transformComp;
 
-	AABB localAABB;
-	AABB globalAABB;
+	AABB localAABB = AABB();
+	AABB globalAABB = AABB();
 	OBB obb;
 
 	bool active = true;

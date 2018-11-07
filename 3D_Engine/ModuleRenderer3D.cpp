@@ -334,6 +334,19 @@ void ModuleRenderer3D::LoadDroppedFBX(char * droppedFileDir){
 	//App->camera->FocusToMeshes();
 }
 
+void ModuleRenderer3D::LoadDroppedPEI(char * droppedFileDir)
+{
+	std::string name;
+	App->fileSys->GetNameFromPath(droppedFileDir, nullptr, &name, nullptr, nullptr);
+	
+	GameObject* go = App->scene->AddGameObject();
+	go->name = name;
+	ComponentMesh* mesh = (ComponentMesh*)go->AddComponent(MESH);
+	App->renderer3D->importer->LoadMeshPEI(mesh);
+	go = nullptr;
+	mesh = nullptr;
+}
+
 
 
 /*

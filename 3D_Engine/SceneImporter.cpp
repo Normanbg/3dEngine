@@ -118,12 +118,14 @@ GameObject * SceneImporter::ImportNodeRecursive(aiNode * node, const aiScene * s
 				std::string meshName = nodeGO->name;
 				
 				compMesh = ImportMesh(mesh,meshName.c_str());
+				if (compMesh != nullptr) {
+					nodeGO->AddComponent(compMesh, MESH);
+					compMesh->GenerateBuffer();
+				}				
 				if (compMesh&&compMat) {
 					compMesh->SetMaterial(compMat);
 				}
-				if (compMesh != nullptr) {
-					nodeGO->AddComponent(compMesh, MESH);
-				}
+				
 				else {
 					delete compMesh;
 				}
@@ -294,8 +296,6 @@ ComponentMesh * SceneImporter::ImportMesh(aiMesh * mesh, const char* peiName)
 
 		dataFile.write(data, size);
 	
-		newMesh->GenerateBuffer();
-		
 		dataFile.close();
 		RELEASE_ARRAY(data);
 		cursor = nullptr;
