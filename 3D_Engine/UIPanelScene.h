@@ -3,6 +3,8 @@
 
 #include "UIPanel.h"
 
+class ComponentMaterial;
+
 class UIPanelScene : public UIPanel
 {
 public:
@@ -10,8 +12,11 @@ public:
 	~UIPanelScene();
 
 	void Draw();
-public:
 
+public:
 	ImTextureID img;
+	ComponentMaterial* playButtonMat;
+	ComponentMaterial* pauseButtonMat;
+	ComponentMaterial* stopButtonMat;
 };
 #endif // !__PANELSCENE_H__
