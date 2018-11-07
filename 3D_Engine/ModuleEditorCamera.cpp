@@ -138,7 +138,12 @@ void ModuleEditorCamera::UpdateProjMatrix()
 {
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glLoadMatrixf(cameraComp->GetProjectionMatrix());
+	if (App->scene->inGame) {
+		ComponentCamera* mainCam = App->scene->mainCamera->GetComponentCamera();
+		glLoadMatrixf(mainCam->GetProjectionMatrix());
+	}
+	else
+		glLoadMatrixf(cameraComp->GetProjectionMatrix());
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 }

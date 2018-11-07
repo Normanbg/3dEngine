@@ -27,6 +27,15 @@ void Camera::SetAspectRatio(float aspectRatio) {
 	frustum.horizontalFov = 2.0f * atanf(tanf(frustum.verticalFov * 0.5f) * aspectRatio);
 }
 
+void Camera::SetPos(float3 pos){
+	frustum.pos = pos;
+}
+
+float3 Camera::GetPos()
+{
+	return frustum.pos;
+}
+
 float Camera::GetFov()
 {
 	return fov;
@@ -35,4 +44,11 @@ float Camera::GetFov()
 float Camera::GetAR()
 {
 	return frustum.horizontalFov;
+}
+
+void Camera::DebugDraw(){
+	float3 corners[8];
+	frustum.GetCornerPoints(corners);
+	DebugDrawBox(corners, Yellow, 5.f);
+
 }

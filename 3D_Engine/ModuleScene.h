@@ -51,14 +51,15 @@ public:
 public:
 
 	GameObject* root;
+	GameObject* mainCamera = nullptr;
 	GameObject* gObjSelected = nullptr;
 	Material* materialSelected = nullptr;
+
+	bool inGame = false;
 	
 	int numCubes = 0;
 	LCG* random = nullptr;//MARGELI WHATS THIS? USE PCG RANDOM NOT MATHGEOLIB PLS!!!!!!!!
 
 	Quadtree* rootQuadTree = nullptr;
 };
-
-
 #endif __MODULE_SCENE_H__

@@ -6,7 +6,7 @@
 #include "ModuleTextures.h"
 #include "Config.h"
 
-#include "ModuleInput.h"////delte me
+#include "ModuleInput.h"////delete me
 
 #include <vector>
 
@@ -26,8 +26,11 @@ ModuleScene::~ModuleScene()
 bool ModuleScene::Init(JSON_Object * obj)
 {
 	root = new GameObject("root");
+	mainCamera = AddGameObject("Main Camera");
+	mainCamera->AddComponent(CAMERA);
+	mainCamera->GetComponentCamera()->SetFarPlaneDistance(85.f);
+	mainCamera->GetComponentCamera()->LookAt({ 0.f, 0.f, 0.f });
 	rootQuadTree = new Quadtree(AABB({ 0.f, 0.f, 0.f }, { 15.f, 15.f ,15.f }), 0);
-
 
 	return true;
 }
@@ -35,12 +38,14 @@ bool ModuleScene::Init(JSON_Object * obj)
 update_status ModuleScene::PreUpdate(float dt)
 {
 	bool ret = true;
-	if (App->input->GetKey(SDL_SCANCODE_7) == KEY_DOWN) {
+
+	if (App->input->GetKey(SDL_SCANCODE_7) == KEY_DOWN) {///////////////// DEBUUG
 		GameObject* pte= CreateCube();
 		if (numCubes == 2)
 			pte->transformComp->setPos(float3(14.f, 0.f, 14.f));
 		AddGOtoQuadtree(pte);
 	}
+
 	if(App->input->GetKey(SDL_SCANCODE_4)== KEY_DOWN) { ///// DEBUUG
 		SaveScene();
 	}
@@ -290,12 +295,15 @@ void ModuleScene::Draw() {
 	ComponentMesh* mesh;
 	for (int i = 0; i < components.size(); i++) {
 		mesh = (ComponentMesh *)components[i];
-		
+
 		if (App->camera->ContainsAaBox(mesh->myGO->globalAABB) == IS_IN || App->camera->ContainsAaBox(mesh->myGO->globalAABB) == INTERSECT) {//MISSING IF FRUSTUM CULLING ACTIVE!!!!!!---------------------------------------------------------
 			mesh->Draw();
 		}
 	}
-	rootQuadTree->DebugDraw();
+	if (!inGame) {
+		mainCamera->GetComponentCamera()->DebugDraw();
+		rootQuadTree->DebugDraw();
+	}
 	iterator = nullptr;
 	mesh = nullptr;
 }

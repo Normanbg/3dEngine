@@ -150,7 +150,7 @@ bool ModuleRenderer3D::Start() {
 	bool ret = true;
 	int width = 0;
 	int height = 0;
-	App->window->GetSize(width, height);
+	App->window->GetSize(width, height);///TO CHEEEEEEEEECK!!!!!!!!!!!!!!!!!!!!!!!!!
 	OnResize(width, height);
 	return ret;
 }
@@ -165,8 +165,12 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 
 	
 	glMatrixMode(GL_MODELVIEW);
-	float* vm = App->camera->cameraComp->GetViewMatrix();
-	glLoadMatrixf(vm);
+	if (App->scene->inGame) {
+		ComponentCamera* mainCam = App->scene->mainCamera->GetComponentCamera();
+		glLoadMatrixf(mainCam->GetViewMatrix());
+	}
+	else
+		glLoadMatrixf(App->camera->cameraComp->GetViewMatrix());
 
 	// light 0 on cam pos
 	lights[0].SetPos(App->camera->cameraComp->camRes->frustum.pos.x, App->camera->cameraComp->camRes->frustum.pos.y, App->camera->cameraComp->camRes->frustum.pos.z);

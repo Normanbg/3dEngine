@@ -1,6 +1,7 @@
 #include "UIPanelScene.h"
 #include "Application.h"
 #include "ModuleRenderer3D.h"
+#include "ModuleScene.h"
 #include "ModuleWindow.h"
 #include "ModuleGui.h"
 #include "ComponentMaterial.h"
@@ -25,11 +26,13 @@ void UIPanelScene::Draw() {
 	ImGui::SetCursorPosX(region_size.x / 2 - 30);	
 	if (ImGui::Button("Play", { 40, 20 }))
 	{
+		App->scene->inGame = true;
 
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("Pause", { 40, 20 }))
 	{
+		App->scene->inGame = false;
 
 	}
 	ImGui::SameLine();

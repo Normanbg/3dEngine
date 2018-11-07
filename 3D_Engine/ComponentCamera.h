@@ -21,7 +21,9 @@ public:
 
 	void SetNearPlaneDistance(float nearPlaneDist);
 	void SetFarPlaneDistance(float farPlaneDist);
+	void SetPos(float3 pos);
 
+	void DebugDraw();
 
 	void Save(Config& data) const;
 	void Load(Config* data);
