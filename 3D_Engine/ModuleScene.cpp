@@ -265,7 +265,7 @@ void ModuleScene::Draw() {
 			mesh->Draw();
 		}
 	}
-	if (!inGame) {
+	if (!inGame && mainCamera != nullptr && rootQuadTree != nullptr) {
 		mainCamera->GetComponentCamera()->DebugDraw();
 		rootQuadTree->DebugDraw();
 	}

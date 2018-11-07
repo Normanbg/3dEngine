@@ -88,7 +88,8 @@ void ComponentCamera::SetPos(float3 pos)
 }
 
 void ComponentCamera::DebugDraw(){
-	camRes->DebugDraw();
+	if (camRes != nullptr)
+		camRes->DebugDraw();
 }
 
 float * ComponentCamera::GetViewMatrix()
