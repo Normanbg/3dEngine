@@ -325,8 +325,7 @@ void ModuleRenderer3D::SetBoundingBox(bool active){
 }
 
 void ModuleRenderer3D::LoadDroppedFBX(char * droppedFileDir){
-	//ClearSceneMeshes();
-	//importer->ImportFBXandLoad(droppedFileDir);	
+	
 	importer->LoadFBXandImportPEI(droppedFileDir);
 	//App->camera->FocusToMeshes();
 }
