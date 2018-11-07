@@ -99,11 +99,11 @@ GameObject * SceneImporter::ImportNodeRecursive(aiNode * node, const aiScene * s
 			{
 				ComponentMaterial* compMat = nullptr;
 				ComponentMesh* compMesh = new ComponentMesh();
-
+				
 
 				aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
 				aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
-
+				
 				if (material) {
 					compMat = new ComponentMaterial();
 					compMat = ImportMaterial(material);
@@ -191,8 +191,7 @@ ComponentMaterial * SceneImporter::ImportMaterial(aiMaterial * material) // impo
 				if (mat->texture->textureID == -1) { // first check if texture is in local path "Lib/Textures"
 					OWN_LOG("Error loading texture.");
 				}
-				if (mat->texture->textureID != -1) { // if texture can be loaded
-					//materialIDs[i] = mat->textureID;
+				if (mat->texture->textureID != -1) { // if texture can be loaded					
 					mat->texture->name = textureName;
 					App->textures->AddMaterial(mat->texture);
 					 

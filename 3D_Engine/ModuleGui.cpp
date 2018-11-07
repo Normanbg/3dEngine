@@ -85,7 +85,7 @@ update_status ModuleGui::Update(float dt)
 			if (ImGui::MenuItem("Save scene", "4"))
 				App->scene->SaveScene();
 			if (ImGui::MenuItem("Load scene", "5"))
-				App->scene->LoadScene(SCENE_FILE);			
+				App->scene->LoadScene();			
 			if (ImGui::MenuItem("Quit", "ESC"))
 				return UPDATE_STOP;
 			ImGui::EndMenu();

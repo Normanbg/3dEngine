@@ -46,8 +46,8 @@ public:
 	uint GetRandomUUID();
 
 	void ClearScene()const;
-	bool SaveScene()const;
-	bool LoadScene(const char* data);
+	void SaveScene();
+	void LoadScene();
 
 	void AddGOtoQuadtree(GameObject* go);
 
@@ -57,6 +57,11 @@ public:
 	GameObject* mainCamera = nullptr;
 	GameObject* gObjSelected = nullptr;
 	Material* materialSelected = nullptr;
+
+	bool wantToSave = false;
+	bool wantToLoad = false;
+	bool RealSaveScene() const;
+	bool RealLoadScene();
 
 	bool inGame = false;
 	

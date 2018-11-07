@@ -75,4 +75,5 @@ enum update_status
 #define OWN_FILE_FORMAT ".pei"
 #define DDS_FORMAT ".dds"
 #define FBX_FORMAT ".fbx"
+
 #endif // !__GLOBALS_H__
