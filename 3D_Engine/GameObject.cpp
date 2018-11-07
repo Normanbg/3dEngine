@@ -16,7 +16,7 @@ GameObject::GameObject()
 	localAABB.SetNegativeInfinity();
 	globalAABB.SetNegativeInfinity();
 
-	uuid = App->scene->random->Int();
+	uuid = App->scene->GetRandomUUID();
 }
 
 GameObject::GameObject(const char * Name)
@@ -27,8 +27,7 @@ GameObject::GameObject(const char * Name)
 	transformComp->myGO = this;
 	components.push_back(transformComp);
 
-	uuid = App->scene->random->Int();
-	
+	uuid = App->scene->GetRandomUUID();
 	
 }
 

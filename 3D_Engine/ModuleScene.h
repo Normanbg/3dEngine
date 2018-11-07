@@ -5,6 +5,8 @@
 #include "Application.h"
 #include "Module.h"
 #include "Math.h"
+#include "RandomGenerator/pcg_variants.h"
+#include "RandomGenerator/extras/entropy.h"
 
 class vector;
 class GameObject;
@@ -41,6 +43,7 @@ public:
 	GameObject* GetGameObjectUUIDRecursive(uint uuid, GameObject* go) const;
 
 	void ChangeRootGO(GameObject* newRoot){ root = newRoot; }
+	uint GetRandomUUID();
 
 	void ClearScene()const;
 	bool SaveScene()const;
@@ -58,7 +61,7 @@ public:
 	bool inGame = false;
 	
 	int numCubes = 0;
-	LCG* random = nullptr;//MARGELI WHATS THIS? USE PCG RANDOM NOT MATHGEOLIB PLS!!!!!!!!
+	pcg32_random_t rng;
 
 	Quadtree* rootQuadTree = nullptr;
 };

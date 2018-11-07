@@ -15,7 +15,7 @@ ModuleScene::ModuleScene(bool start_enabled) : Module(start_enabled){
 	name = "scene";
 	
 
-	random = new math::LCG();
+	pcg32_srandom_r(&rng, time(0), (intptr_t)&rng);
 	
 }
 
@@ -124,6 +124,11 @@ GameObject * ModuleScene::GetGameObjectUUIDRecursive(uint uuid, GameObject * go)
 	return nullptr;
 }
 
+uint ModuleScene::GetRandomUUID()
+{
+	return pcg32_random_r(&rng);
+}
+
 void ModuleScene::ClearScene() const
 {
 	OWN_LOG("Clearing scene")
@@ -216,7 +221,6 @@ bool ModuleScene::CleanUp()
 {	
 	ClearScene();
 
-	RELEASE(random);
 	RELEASE(root);
 	RELEASE(rootQuadTree);
 

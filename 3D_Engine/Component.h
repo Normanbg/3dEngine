@@ -19,7 +19,8 @@ enum ComponentType {
 class Component {
 public:
 	Component() { 
-		uuid = App->scene->random->Int(); }
+		uuid = App->scene->GetRandomUUID();
+	}
 	~Component() {
 		delete myGO;
 		myGO = nullptr;		
