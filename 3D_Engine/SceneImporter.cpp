@@ -222,7 +222,7 @@ uint* SceneImporter::ImportFBXtoPEI(const char * FBXpath)
 
 }
 
-uint * SceneImporter::newImportFBXtoPEI(const char * FBXpath)
+void SceneImporter::LoadFBXandImportPEI(const char * FBXpath)
 {
 	std::string fullFBXPath;// = MODELS_PATH;
 	fullFBXPath += FBXpath;
@@ -239,47 +239,78 @@ uint * SceneImporter::newImportFBXtoPEI(const char * FBXpath)
 			OWN_LOG("Error loading fbx from Assets/3DModels folder.");
 			aiReleaseImport(scene);
 
-			return nullptr;
+			return;
 		}
 	}
 	else {
 		GameObject* GO;
 		GO = App->scene->AddGameObject(modelName.c_str());
 		
-		GameObject* GOchild = ImportNodeRecursive(scene->mRootNode, scene, GO);
+		std::string fileName = LIB_MODELS_PATH + modelName + OWN_FILE_FORMAT;
+		std::ofstream dataFile(fileName.c_str(), std::fstream::out | std::fstream::binary);
+		OWN_LOG("Creating PEI file");
+
+		uint size = sizeof(uint);
+		char* data = new char[size];
+		memcpy(data, &scene->mNumMeshes, size);
+
+		dataFile.write(data, size);
+		
+		GameObject* GOchild = ImportNodeRecursive(scene->mRootNode, scene, GO, &dataFile);
+		
+		RELEASE_ARRAY(data);
 		GOchild = nullptr;
 		GO = nullptr;
 		aiReleaseImport(scene);
+		dataFile.close();
 	}
-
-	return nullptr;
 }
 
-GameObject * SceneImporter::ImportNodeRecursive(aiNode * node, const aiScene * scene, GameObject * parent)
+GameObject * SceneImporter::ImportNodeRecursive(aiNode * node, const aiScene * scene, GameObject * parent, std::ofstream* dataFile)
 {
 	GameObject* nodeGO = nullptr;
 	
-	/*	std::string fileName = LIB_MODELS_PATH + modelName + OWN_FILE_FORMAT;
-	std::ofstream dataFile(fileName.c_str(), std::fstream::out | std::fstream::binary);
-	OWN_LOG("Creating PEI file");*/
+	
 
 	if (node->mMetaData != nullptr) { // to get the gameobject not a transform matrix
 	
 		nodeGO = new GameObject();
 		nodeGO->name = node->mName.C_Str();
-		nodeGO->SetParent(parent);
+		nodeGO->SetParent(parent);		
 
 		aiVector3D position;
 		aiQuaternion rotation;
-		aiVector3D scaling;
-		node->mTransformation.Decompose(scaling, rotation, position);
+		aiVector3D scale;
+		node->mTransformation.Decompose(scale, rotation, position);
+
+		uint size = sizeof(float3) * 2 + sizeof(Quat); // numMeshes+(scale+pos) + rotation in bytes
+		char* data = new char[size];
+		char* cursor = data;
+		
+		
+		uint bytes = sizeof(float3);//sizeof float3		
+		memcpy(cursor, &scale, bytes);
+
+		cursor += bytes;//sizeof float3		
+		memcpy(cursor, &position, bytes);
+
+
+		cursor += bytes;
+		bytes = sizeof(Quat);//sizeof float3
+		memcpy(cursor, &rotation, bytes);
+
+		dataFile->write(data, size);
+
+		RELEASE_ARRAY(data);
+		cursor = nullptr;
 
 		nodeGO->transformComp->setPos(float3(position.x, position.y, position.z));
-		nodeGO->transformComp->setScale(float3(scaling.x, scaling.y, scaling.z));
+		nodeGO->transformComp->setScale(float3(scale.x, scale.y, scale.z));
 		nodeGO->transformComp->setRotQuat(Quat(rotation.x, rotation.y, rotation.z, rotation.w));
 		nodeGO->transformComp->UpdateLocalMatrix();
 		nodeGO->transformComp->localMatrix = nodeGO->transformComp->localMatrix * aiMatrixToFloat4x4(savedMatrix);
 		savedMatrix = aiMatrix4x4();
+
 		if (node->mNumMeshes > 0)
 		{
 			for (uint i = 0; i < node->mNumMeshes; i++)
@@ -287,7 +318,7 @@ GameObject * SceneImporter::ImportNodeRecursive(aiNode * node, const aiScene * s
 				aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
 
 				ComponentMesh* compMesh = new ComponentMesh();
-				compMesh = ImportMesh(mesh);
+				compMesh = ImportMesh(mesh, dataFile);
 				if (compMesh != nullptr) {
 					nodeGO->AddComponent(compMesh, MESH);
 				}
@@ -318,7 +349,7 @@ GameObject * SceneImporter::ImportNodeRecursive(aiNode * node, const aiScene * s
 	if (!nodeGO) { nodeGO = parent; }
 	for (uint i = 0; i < node->mNumChildren; i++) // recursivity
 	{
-		GameObject* child = ImportNodeRecursive(node->mChildren[i], scene, nodeGO);
+		GameObject* child = ImportNodeRecursive(node->mChildren[i], scene, nodeGO, dataFile);
 
 	}
 	return nodeGO;
@@ -390,7 +421,7 @@ ComponentMaterial * SceneImporter::ImportMaterial(aiMaterial * material) // impo
 	return mat;
 }
 
-ComponentMesh * SceneImporter::ImportMesh(aiMesh * mesh)
+ComponentMesh * SceneImporter::ImportMesh(aiMesh * mesh, std::ofstream* dataFile)
 {
 
 	bool error = false;
@@ -438,12 +469,43 @@ ComponentMesh * SceneImporter::ImportMesh(aiMesh * mesh)
 		newMesh = nullptr;
 		return nullptr;
 	}
+	else{
+		uint ranges[4] = { newMesh->num_index,newMesh->num_vertex, newMesh->num_normals, newMesh->num_textureCoords };
 
-	newMesh->GenerateBuffer();
+		uint size = sizeof(ranges) + sizeof(uint)*newMesh->num_index + sizeof(float3)*newMesh->num_vertex + sizeof(float3)*newMesh->num_normals + sizeof(float2) * newMesh->num_textureCoords; // numIndex + numVertex + index + vertex + normals + textureCoords
+
+		char* data = new char[size];
+		char* cursor = data;
+
+		uint bytes = sizeof(ranges);
+		memcpy(cursor, ranges, bytes);
+
+		cursor += bytes;
+		bytes = sizeof(uint)* newMesh->num_index;
+		memcpy(cursor, newMesh->index, bytes);
+
+		cursor += bytes;
+		bytes = sizeof(float3)* newMesh->num_vertex;
+		memcpy(cursor, newMesh->vertex, bytes);
+
+		cursor += bytes;
+		bytes = sizeof(float3)* newMesh->num_normals;
+		memcpy(cursor, newMesh->normals, bytes);
+
+		cursor += bytes;
+		bytes = sizeof(float2)* newMesh->num_textureCoords;
+		memcpy(cursor, newMesh->texturesCoords, bytes);
+
+		dataFile->write(data, size);
 	
+		newMesh->GenerateBuffer();
 
+		RELEASE_ARRAY(data);
+		cursor = nullptr;
+	}
 	return newMesh;
 }
+
 
 void SceneImporter::ImportFBXandLoad(const char * fbxPath)
 {
@@ -555,6 +617,137 @@ void SceneImporter::ImportFromMesh(const aiScene* currSc, aiMesh * new_mesh,std:
 		data = nullptr;
 	}
 	
+}
+
+void SceneImporter::newLoadPEI(const char * fileName) {
+
+	std::string modelName;
+
+	App->fileSys->GetNameFromPath(fileName, nullptr, &modelName, nullptr, nullptr);
+
+	Timer loadingTimer;
+
+	GameObject* gameObject = App->scene->AddGameObject(modelName.c_str());
+
+
+	ComponentTransformation* compTrans = gameObject->GetTransformComponent();
+
+	std::string filePath = LIB_MODELS_PATH;
+	filePath += modelName + OWN_FILE_FORMAT;
+
+	
+
+	std::ifstream dataFile(filePath.c_str(), std::fstream::out | std::fstream::binary);
+	if (dataFile.fail()) {
+		OWN_LOG("Error loading PEI. Cannot find PEI file %s in Lib/Textures", fileName);
+		return;
+	}
+
+	uint size = sizeof(uint);
+	char* scenedata = new char[size];	
+	dataFile.read(scenedata, size);
+
+	uint numMeshes = 0;
+	uint bytes = sizeof(size);
+	memcpy(&numMeshes, scenedata, bytes);
+
+	RELEASE_ARRAY(scenedata);
+	
+	uint totalSize = 0;
+	totalSize = size;
+
+	for (int i = 0; i < numMeshes; i++) {
+		std::string childName = modelName + "_mesh" + std::to_string(i);
+
+		GameObject* childGO = new GameObject(childName.c_str());
+		gameObject->AddChildren(childGO);
+
+		
+
+		ComponentTransformation* compTrans = childGO->transformComp;
+
+		dataFile.seekg(totalSize);
+		
+
+		uint ranges[4] = { 0,0,0,0 }; // [numIndex , numVertex, numNormals, numTexCoords]
+
+		uint headerSize = sizeof(float3)*2 + sizeof(Quat) + sizeof(ranges);
+
+		char* headerdata = new char[headerSize];
+		char* cursor = headerdata;		
+
+		dataFile.read(headerdata, headerSize);
+
+		bytes = sizeof(float3);
+		memcpy(&compTrans->getScale(), cursor, bytes);
+
+		cursor += bytes;
+
+		memcpy(&compTrans->getPos(), cursor, bytes);
+
+		cursor += bytes;
+		bytes = sizeof(Quat);//sizeof quat
+		memcpy(&compTrans->getQuatRot(), cursor, bytes);
+				
+		cursor += bytes;
+		bytes = sizeof(ranges);
+		memcpy(ranges, cursor, bytes);
+
+		ComponentMesh* compMesh = (ComponentMesh*)childGO->AddComponent(MESH);
+
+		//---
+
+		compMesh->num_index = ranges[0];
+		compMesh->num_vertex = ranges[1];
+		compMesh->num_normals = ranges[2];
+		compMesh->num_textureCoords = ranges[3];
+
+		compMesh->index = new uint[compMesh->num_index];
+		compMesh->vertex = new float3[compMesh->num_vertex];
+		compMesh->normals = new float3[compMesh->num_normals];
+		compMesh->texturesCoords = new float2[compMesh->num_textureCoords];
+
+		uint meshDataSize = sizeof(uint)* compMesh->num_index + sizeof(float3)*compMesh->num_vertex + sizeof(float3)*compMesh->num_normals + sizeof(float2) * compMesh->num_textureCoords;
+
+		char* meshdata = new char[meshDataSize];
+		char* mcursor = meshdata;
+
+
+		dataFile.seekg(totalSize + headerSize);
+
+		dataFile.read(meshdata, meshDataSize);
+
+
+		uint mbytes = sizeof(uint) *compMesh->num_index;//index		
+		memcpy(compMesh->index, mcursor, mbytes);
+
+		mcursor += mbytes;
+		mbytes = sizeof(float3)*compMesh->num_vertex;//vertex		
+		memcpy(compMesh->vertex, mcursor, mbytes);
+
+		mcursor += mbytes;
+		mbytes = sizeof(float3)*compMesh->num_normals;//normals	
+		memcpy(compMesh->normals, mcursor, mbytes);
+
+		mcursor += mbytes;
+		mbytes = sizeof(float2)*compMesh->num_textureCoords; //texCoords
+		memcpy(compMesh->texturesCoords, mcursor, mbytes);
+
+		totalSize += headerSize + meshDataSize;
+
+		compMesh->GenerateBuffer();
+
+
+		RELEASE_ARRAY(headerdata);
+		RELEASE_ARRAY(meshdata);
+		mcursor = nullptr;
+		compMesh = nullptr;
+
+	}
+	OWN_LOG("Succesfully loaded PEI: %s. Loading time: %i ms \n", modelName.c_str(), loadingTimer.Read());
+	gameObject = nullptr;
+
+	dataFile.close();
 }
 
 void SceneImporter::LoadPEI(const char * fileName, uint* meshTexLinker)
