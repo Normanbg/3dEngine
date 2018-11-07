@@ -16,6 +16,10 @@ ComponentCamera::~ComponentCamera()
 
 bool ComponentCamera::Update()
 {
+	if (myGO)
+	{
+		SetPos(myGO->transformComp->getPos());
+	}
 	return true;
 }
 
@@ -76,6 +80,15 @@ void ComponentCamera::SetFarPlaneDistance(float farPlaneDist) {
 	else {
 		camRes->frustum.farPlaneDistance = farPlaneDist;
 	}
+}
+
+void ComponentCamera::SetPos(float3 pos)
+{
+	camRes->SetPos(pos);
+}
+
+void ComponentCamera::DebugDraw(){
+	camRes->DebugDraw();
 }
 
 float * ComponentCamera::GetViewMatrix()

@@ -32,8 +32,9 @@ bool ModuleEditorCamera::Start()
 {
 	OWN_LOG("Setting up the camera");
 	bool ret = true;
-
 	cameraComp->camRes->frustum.pos = { -35, 8, 0 };
+	cameraComp->camRes->SetFOV(60);
+	cameraComp->camRes->SetAspectRatio(1.f);
 	cameraComp->LookAt(float3(0,0,0));	
 	return ret;
 }
@@ -137,7 +138,12 @@ void ModuleEditorCamera::UpdateProjMatrix()
 {
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glLoadMatrixf(cameraComp->GetProjectionMatrix());
+	if (App->scene->inGame) {
+		ComponentCamera* mainCam = App->scene->mainCamera->GetComponentCamera();
+		glLoadMatrixf(mainCam->GetProjectionMatrix());
+	}
+	else
+		glLoadMatrixf(cameraComp->GetProjectionMatrix());
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 }

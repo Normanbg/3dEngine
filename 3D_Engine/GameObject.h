@@ -59,6 +59,7 @@ public:
 	inline const uint GetUUID() { return uuid; }
 
 	void CalculateAllGlobalMatrix();
+	void setChildsStatic();
 
 public:
 	std::string					name;
@@ -67,12 +68,17 @@ public:
 	std::vector <GameObject*>	childrens;
 	ComponentTransformation*	transformComp;
 
+	AABB localAABB;
+	AABB globalAABB;
+	OBB obb;
+
 	bool active = true;
 	bool staticGO = false;	
 
 private:	
 		
 	void setName(char* _name);
+	
 	void ToggleSelected();
 	uint uuid = 0;
 

@@ -31,7 +31,10 @@ void UIPanelInspector::Draw() {
 		ImGui::SameLine();
 		ImGui::Text("| ");
 		ImGui::SameLine();
-		ImGui::Checkbox("Static", &go->staticGO);
+		if (ImGui::Checkbox("Static", &go->staticGO))
+		{
+			go->setChildsStatic();
+		}
 		ImGui::Separator();
 		std::vector<Component*> componentsRecover = go->components;
 		for (std::vector<Component*>::iterator itComponents = componentsRecover.begin(); itComponents != componentsRecover.end(); itComponents++) {

@@ -11,9 +11,12 @@ public:
 
 	void SetFOV(float _fov);
 	void SetAspectRatio(float new_ar);
+	void SetPos(float3 pos);
+	float3 GetPos();
 	float GetFov();
 	float GetAR();
 
+	void DebugDraw();
 public:
 	Frustum frustum;
 

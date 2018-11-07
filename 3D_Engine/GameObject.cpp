@@ -11,7 +11,10 @@ GameObject::GameObject()
 	transformComp = new ComponentTransformation();
 	transformComp->type = TRANSFORM;
 	transformComp->myGO = this;
-	components.push_back(transformComp);//For the transform comp the Addcomp is useless
+	components.push_back(transformComp);
+
+	localAABB.SetNegativeInfinity();
+	globalAABB.SetNegativeInfinity();
 
 	uuid = App->scene->random->Int();
 }
@@ -22,7 +25,7 @@ GameObject::GameObject(const char * Name)
 	transformComp = new ComponentTransformation();
 	transformComp->type = TRANSFORM;
 	transformComp->myGO = this;
-	components.push_back(transformComp);//For the transform comp the Addcomp is useless
+	components.push_back(transformComp);
 
 	uuid = App->scene->random->Int();
 	
@@ -106,6 +109,8 @@ void GameObject::CalculateAllGlobalMatrix(){
 	}
 	else
 		transformComp->globalMatrix = parent->transformComp->globalMatrix * transformComp->localMatrix;
+
+	
 
 	if (!childrens.empty())
 	{
@@ -308,6 +313,15 @@ ComponentMaterial * GameObject::GetComponentMaterial()
 void GameObject::setName(char * _name)
 {
 	name = _name;
+}
+
+void GameObject::setChildsStatic()
+{
+	for (auto it : childrens)
+	{
+		it->staticGO = true;
+		it->setChildsStatic();
+	}
 }
 
 void GameObject::ToggleSelected(){

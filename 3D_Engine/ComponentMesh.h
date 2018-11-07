@@ -59,7 +59,7 @@ public:
 
 	uint num_faces = 0;
 
-	AABB boundingBox;
+	
 	bool showBBox = false;
 	bool showWireframe = false;
 
