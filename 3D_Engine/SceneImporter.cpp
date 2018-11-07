@@ -281,29 +281,8 @@ GameObject * SceneImporter::ImportNodeRecursive(aiNode * node, const aiScene * s
 		aiVector3D position;
 		aiQuaternion rotation;
 		aiVector3D scale;
-		node->mTransformation.Decompose(scale, rotation, position);
-
-		uint size = sizeof(float3) * 2 + sizeof(Quat); // numMeshes+(scale+pos) + rotation in bytes
-		char* data = new char[size];
-		char* cursor = data;
+		node->mTransformation.Decompose(scale, rotation, position);		
 		
-		
-		uint bytes = sizeof(float3);//sizeof float3		
-		memcpy(cursor, &scale, bytes);
-
-		cursor += bytes;//sizeof float3		
-		memcpy(cursor, &position, bytes);
-
-
-		cursor += bytes;
-		bytes = sizeof(Quat);//sizeof float3
-		memcpy(cursor, &rotation, bytes);
-
-		dataFile->write(data, size);
-
-		RELEASE_ARRAY(data);
-		cursor = nullptr;
-
 		nodeGO->transformComp->setPos(float3(position.x, position.y, position.z));
 		nodeGO->transformComp->setScale(float3(scale.x, scale.y, scale.z));
 		nodeGO->transformComp->setRotQuat(Quat(rotation.x, rotation.y, rotation.z, rotation.w));
@@ -315,6 +294,28 @@ GameObject * SceneImporter::ImportNodeRecursive(aiNode * node, const aiScene * s
 		{
 			for (uint i = 0; i < node->mNumMeshes; i++)
 			{
+				
+
+				uint size = sizeof(float3) * 2 + sizeof(Quat); // numMeshes+(scale+pos) + rotation in bytes
+				char* data = new char[size];
+				char* cursor = data;
+
+
+				uint bytes = sizeof(float3);//sizeof float3		
+				memcpy(cursor, &nodeGO->transformComp->getScale(), bytes);
+
+				cursor += bytes;//sizeof float3		
+				memcpy(cursor, &nodeGO->transformComp->getPos(), bytes);
+
+				cursor += bytes;
+				bytes = sizeof(Quat);//sizeof float3
+				memcpy(cursor, &nodeGO->transformComp->getQuatRot(), bytes);
+
+				dataFile->write(data, size);
+
+				RELEASE_ARRAY(data);
+				cursor = nullptr;
+
 				aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
 
 				ComponentMesh* compMesh = new ComponentMesh();
@@ -470,6 +471,7 @@ ComponentMesh * SceneImporter::ImportMesh(aiMesh * mesh, std::ofstream* dataFile
 		return nullptr;
 	}
 	else{
+		
 		uint ranges[4] = { newMesh->num_index,newMesh->num_vertex, newMesh->num_normals, newMesh->num_textureCoords };
 
 		uint size = sizeof(ranges) + sizeof(uint)*newMesh->num_index + sizeof(float3)*newMesh->num_vertex + sizeof(float3)*newMesh->num_normals + sizeof(float2) * newMesh->num_textureCoords; // numIndex + numVertex + index + vertex + normals + textureCoords
@@ -677,17 +679,22 @@ void SceneImporter::newLoadPEI(const char * fileName) {
 		char* cursor = headerdata;		
 
 		dataFile.read(headerdata, headerSize);
+		float3 sc = float3::zero;
+		float3 pos = float3::zero;
+		Quat qua = { 0,0,0,0 };
 
 		bytes = sizeof(float3);
-		memcpy(&compTrans->getScale(), cursor, bytes);
+		memcpy(&sc, cursor, bytes);
+		compTrans->setScale(sc);
 
 		cursor += bytes;
-
-		memcpy(&compTrans->getPos(), cursor, bytes);
+		memcpy(&pos, cursor, bytes);
+		compTrans->setPos(pos);
 
 		cursor += bytes;
 		bytes = sizeof(Quat);//sizeof quat
-		memcpy(&compTrans->getQuatRot(), cursor, bytes);
+		memcpy(&qua, cursor, bytes);
+		compTrans->setRotQuat(qua);
 				
 		cursor += bytes;
 		bytes = sizeof(ranges);
