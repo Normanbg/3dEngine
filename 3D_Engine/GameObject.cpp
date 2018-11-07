@@ -156,6 +156,13 @@ Component * GameObject::AddComponent(ComponentType type) {
 	return ret;
 }
 
+void GameObject::AddComponent(Component * component, ComponentType type)
+{	
+	component->type = type;
+	component->myGO = this;
+	components.push_back(component);
+}
+
 
 void GameObject::GetComponents(ComponentType type, std::vector<Component*>& comp) {
 	Component* iterator;

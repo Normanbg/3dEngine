@@ -42,6 +42,7 @@ public:
 	void Load(Config* data);
 	
 	Component* AddComponent(ComponentType type);
+	void AddComponent(Component* component, ComponentType type);
 	void AddChildren(GameObject* child);
 
 	void RemoveComponent(Component* comp);

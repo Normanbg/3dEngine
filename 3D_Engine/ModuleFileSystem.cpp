@@ -162,30 +162,6 @@ void ModuleFileSystem::GetNameFromPath(const char * full_path, std::string * pat
 	}
 
 }
-void ModuleFileSystem::GetNameFromMesh(const char * meshName, std::string * name,uint& num)
-{
-	if (meshName != nullptr) {
-		std::string mesh = meshName;
-		uint underNum = mesh.find_last_of("_");
-		uint posNum = mesh.find_last_of("h");
-		if (posNum - underNum != 4) {
-			OWN_LOG("Error, name is not a mesh");
-			return;
-		}
-		if (name != nullptr) {
-			*name = mesh.substr(0, underNum);
-		}
-		if (num != -1)
-		{
-			mesh = meshName;
-			if (posNum < mesh.length()) {
-				std::string strNum = mesh.substr(posNum+1);
-				num = std::stoi(strNum);
-			}
-		}
-	
-	}
-}
 void ModuleFileSystem::NormalizePath(char * full_path, bool toLower) const
 {
 	uint len = strlen(full_path);
@@ -215,7 +191,6 @@ void ModuleFileSystem::NormalizePath(std::string & full_path, bool toLower) cons
 bool ModuleFileSystem::Copy(const char * source, const char * destination)
 {
 	bool ret = false;
-
 	char buf[8192];
 
 	PHYSFS_file* src = PHYSFS_openRead(source);
