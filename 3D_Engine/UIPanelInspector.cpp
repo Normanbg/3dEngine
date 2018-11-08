@@ -51,7 +51,8 @@ void UIPanelInspector::Draw() {
 		ImGui::Text("Texture size: %dpx x %dpx ", mat->texWidth, mat->texHeight);
 		ImGui::Text("ID: %i", mat->textureID);
 		float windowSize = ImGui::GetWindowContentRegionWidth();
-		ImGui::Image((void*)(mat->textureID), ImVec2(windowSize, windowSize));
+		ImVec2 size = ImGui::GetContentRegionAvail();
+		ImGui::Image((void*)(mat->textureID), size);
 		ImGui::Separator();
 
 	}
