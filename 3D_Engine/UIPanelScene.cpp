@@ -32,16 +32,15 @@ void UIPanelScene::Draw() {
 	ImGui::SameLine();
 	if (ImGui::Button("Pause", { 40, 20 }))
 	{
-		App->scene->inGame = false;
+		
 
 	}
 	ImGui::SameLine();
 	ImGui::PushStyleColor(ImGuiCol_Button, { 0.8f,0,0,1 });
 	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, { 1,0.2f,0,1 });
 	if (ImGui::Button("Stop", { 40, 20 }))
-	{
-		
-		
+	{		
+		App->scene->inGame = false;
 	}
 	ImGui::PopStyleColor();
 	ImGui::PopStyleColor();

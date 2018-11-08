@@ -89,9 +89,8 @@ GameObject * SceneImporter::ImportNodeRecursive(aiNode * node, const aiScene * s
 		nodeGO->transformComp->setPos(float3(position.x, position.y, position.z));
 		nodeGO->transformComp->setScale(float3(scale.x, scale.y, scale.z));
 		nodeGO->transformComp->setRotQuat(Quat(rotation.x, rotation.y, rotation.z, rotation.w));
-		nodeGO->transformComp->UpdateLocalMatrix();
-		nodeGO->transformComp->localMatrix = nodeGO->transformComp->localMatrix * aiMatrixToFloat4x4(savedMatrix);
-		savedMatrix = aiMatrix4x4();
+		/*nodeGO->transformComp->localMatrix = nodeGO->transformComp->localMatrix * aiMatrixToFloat4x4(savedMatrix);*/
+		//savedMatrix = aiMatrix4x4();
 
 		if (node->mNumMeshes > 0)
 		{
@@ -135,7 +134,7 @@ GameObject * SceneImporter::ImportNodeRecursive(aiNode * node, const aiScene * s
 		}
 	}
 	else {
-		savedMatrix = savedMatrix * node->mTransformation;
+		/*savedMatrix = savedMatrix * node->mTransformation;*/
 	}
 	if (!nodeGO) { nodeGO = parent; }
 	for (uint i = 0; i < node->mNumChildren; i++) // recursivity
