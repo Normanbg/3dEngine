@@ -132,7 +132,15 @@ uint ModuleScene::GetRandomUUID()
 void ModuleScene::ClearScene() const
 {
 	OWN_LOG("Clearing scene")
-		root->CleanUp();
+	for (int i = root->childrens.size() - 1; i > 0; i--) {
+		if (root->childrens[i] == mainCamera)
+			continue;
+	
+		root->RemoveChildren(root->childrens[i]);
+	}
+	for (int i = root->components.size() - 1; i > 0; i--) {
+		root->RemoveComponent(root->components[i]);
+	}
 }
 
 void ModuleScene::SaveScene() 
@@ -272,6 +280,8 @@ void ModuleScene::Draw() {
 	iterator = nullptr;
 	mesh = nullptr;
 }
+
+
 
 GameObject * ModuleScene::AddGameObject()
 {

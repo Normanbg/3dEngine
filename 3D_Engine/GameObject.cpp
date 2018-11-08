@@ -211,6 +211,17 @@ void GameObject::AddChildren(GameObject * child)
 	child->SetParent(this);
 }
 
+void GameObject::RemoveChildren(GameObject * toRemove)
+{
+	for (int i = 0; i < childrens.size(); i++) {
+		if (childrens[i] == toRemove) {
+			childrens[i]->CleanUp();
+			childrens.erase(childrens.begin() + i);
+			return;
+		}
+	}
+}
+
 void GameObject::RemoveComponent(Component * comp)
 {
 	for (int i = 0; i < components.size(); i++) {

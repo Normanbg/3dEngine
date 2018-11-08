@@ -45,6 +45,7 @@ public:
 	void AddComponent(Component* component, ComponentType type);
 	void AddChildren(GameObject* child);
 
+	void RemoveChildren(GameObject* toRemove);
 	void RemoveComponent(Component* comp);
 
 	void GetComponents(ComponentType type, std::vector<Component*>& components);	
