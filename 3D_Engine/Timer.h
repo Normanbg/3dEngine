@@ -13,12 +13,13 @@ public:
 
 	void Start();
 	void Stop();
+	void Resume();
 
-	Uint32 Read();
+	UINT32 Read();
 	float ReadSec();
 
-	//bool isPaused();
-	//void SetZero();
+	bool isPaused();
+	void SetZero();
 
 private:
 

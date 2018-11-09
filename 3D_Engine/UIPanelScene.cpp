@@ -3,15 +3,16 @@
 #include "ModuleRenderer3D.h"
 #include "ModuleScene.h"
 #include "ModuleWindow.h"
+#include "ModuleTime.h"
 #include "ModuleGui.h"
 #include "ComponentMaterial.h"
 #include "ImGui/imgui.h"
 
 UIPanelScene::UIPanelScene(const char * name, float positionX, float positionY, float width, float height, bool active) : UIPanel(name, positionX, positionY, width, height, active)
 {
-	playButtonMat = new ComponentMaterial();
-	pauseButtonMat = new ComponentMaterial();
-	stopButtonMat = new ComponentMaterial();
+	//playButtonMat = new ComponentMaterial();
+	//pauseButtonMat = new ComponentMaterial();
+	//stopButtonMat = new ComponentMaterial();
 }
 
 UIPanelScene::~UIPanelScene()
@@ -26,13 +27,21 @@ void UIPanelScene::Draw() {
 	ImGui::SetCursorPosX(region_size.x / 2 - 30);	
 	if (ImGui::Button("Play", { 40, 20 }))
 	{
-		App->scene->inGame = true;
+		if (App->scene->inGame) {
+			App->time->Resume();
+		}
+		else {
+			App->scene->inGame = true;
+			App->time->Play();
+		}
 
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("Pause", { 40, 20 }))
 	{
-		
+		if (App->scene->inGame && !App->time->IsPaused()) {
+			App->time->Pause();
+		}
 
 	}
 	ImGui::SameLine();
@@ -40,7 +49,11 @@ void UIPanelScene::Draw() {
 	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, { 1,0.2f,0,1 });
 	if (ImGui::Button("Stop", { 40, 20 }))
 	{		
-		App->scene->inGame = false;
+		if (App->scene->inGame) {
+			App->time->Reset();
+			App->scene->inGame = false;
+		}
+
 	}
 	ImGui::PopStyleColor();
 	ImGui::PopStyleColor();
@@ -58,4 +71,8 @@ void UIPanelScene::Draw() {
 	App->gui->MouseOnScene(ImGui::IsMouseHoveringWindow());
 	ImGui::End();
 	
+	ImGui::Begin("Scene Info", &active, flags);
+	ImGui::Text("Real Time: %0.0f", App->time->GetRealTimeSec());
+	ImGui::Text("Game Time: %0.0f", App->time->GetGameTimeSec());
+	ImGui::End();
 }

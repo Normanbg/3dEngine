@@ -20,6 +20,7 @@ public:
 	ModuleScene(bool start_enabled = true);
 	~ModuleScene();
 
+
 	bool Init(JSON_Object* obj) override;
 	update_status PreUpdate(float dt) override;
 	update_status Update(float dt) override;
@@ -57,17 +58,22 @@ public:
 	GameObject* mainCamera = nullptr;
 	GameObject* gObjSelected = nullptr;
 	Material* materialSelected = nullptr;
+	
+	bool inGame = false;
+	
+	int numCubes = 0;	
+
+	Quadtree* rootQuadTree = nullptr;
+
+private:
 
 	bool wantToSave = false;
 	bool wantToLoad = false;
+	pcg32_random_t rng;
+private:
+
 	bool RealSaveScene() const;
 	bool RealLoadScene();
-
-	bool inGame = false;
 	
-	int numCubes = 0;
-	pcg32_random_t rng;
-
-	Quadtree* rootQuadTree = nullptr;
 };
 #endif __MODULE_SCENE_H__
