@@ -193,16 +193,17 @@ void ComponentMesh::Load(Config * data)
 
 	App->renderer3D->importer->LoadMeshPEI(this);
 }
-
-void ComponentMesh::GenerateBoundingBox()
-{
-	AABB aabb;
-
-	aabb.SetNegativeInfinity();
-	aabb.Enclose((float3*)vertex, num_vertex);
-
-	myGO->globalAABB = aabb;
-}
+//
+//void ComponentMesh::GenerateBoundingBox()
+//{
+//	AABB aabb;
+//
+//	aabb.SetNegativeInfinity();
+//	aabb.Enclose((float3*)vertex, num_vertex);
+//
+//	myGO->globalAABB = aabb;
+//}
+//
 
 void ComponentMesh::DrawBoundingBox()
 {
@@ -210,6 +211,34 @@ void ComponentMesh::DrawBoundingBox()
 	myGO->globalAABB.GetCornerPoints(corners);
 	DebugDrawBox(corners);
 }
+
+void ComponentMesh::CreateBBox(ComponentMesh* newMesh)
+{
+	float minBoundingX = newMesh->vertex->x;
+	float maxBoundingX = newMesh->vertex->x;
+	float minBoundingY = newMesh->vertex->y;
+	float maxBoundingY = newMesh->vertex->y;
+	float minBoundingZ = newMesh->vertex->z;
+	float maxBoundingZ = newMesh->vertex->z;
+
+	for (int i = 0; i < newMesh->num_vertex; i++) {
+		if (newMesh->vertex[i].x < minBoundingX)
+			minBoundingX = newMesh->vertex[i].x;
+		else if (newMesh->vertex[i].x > maxBoundingX)
+			maxBoundingX = newMesh->vertex[i].x;
+		if (newMesh->vertex[i].y < minBoundingY)
+			minBoundingY = newMesh->vertex[i].y;
+		else if (newMesh->vertex[i].y > maxBoundingY)
+			maxBoundingY = newMesh->vertex[i].y;
+		if (newMesh->vertex[i].z < minBoundingZ)
+			minBoundingZ = newMesh->vertex[i].z;
+		else if (newMesh->vertex[i].z > maxBoundingZ)
+			maxBoundingZ = newMesh->vertex[i].z;
+	}
+	newMesh->bbox.minPoint = float3(minBoundingX, minBoundingY, minBoundingZ);
+	newMesh->bbox.maxPoint = float3(maxBoundingX, maxBoundingY, maxBoundingZ);
+}
+
 
 void ComponentMesh::SetMaterial(ComponentMaterial * tex)
 {

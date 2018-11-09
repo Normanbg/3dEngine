@@ -111,7 +111,12 @@ void GameObject::CalculateAllGlobalMatrix(){
 	else
 		transformComp->globalMatrix = parent->transformComp->globalMatrix * transformComp->localMatrix;
 
-	
+	OBB newobb = localAABB;
+	newobb.Transform(transformComp->globalMatrix);
+
+	obb = newobb;
+	globalAABB.SetNegativeInfinity();
+	globalAABB.Enclose(obb);
 
 	if (!childrens.empty())
 	{
@@ -345,7 +350,6 @@ void GameObject::SetLocalAABB(AABB aabb)
 		localAABB = aabb;
 		obb = localAABB;
 	}
-
 	else
 		localAABB.Enclose(aabb);
 }

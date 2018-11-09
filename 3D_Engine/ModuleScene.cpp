@@ -94,9 +94,10 @@ GameObject * ModuleScene::CreateCube()
 	memcpy(mesh->vertex, &cubeVertex[0], sizeof(float3) * 8);
 	memcpy(mesh->index, &cubeIndices[0], sizeof(uint) * 36);
 		
-	ret->GetComponentMesh()->num_vertex = cubeVertex.size();
-	ret->GetComponentMesh()->num_index = cubeIndices.size();
-	ret->GetComponentMesh()->GenerateBuffer();
+	mesh->num_vertex = cubeVertex.size();
+	mesh->num_index = cubeIndices.size();
+	mesh->GenerateBuffer();
+	mesh->CreateBBox(mesh);
 	return ret;
 }
 

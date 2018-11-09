@@ -43,10 +43,6 @@ public:
 
 	
 	void CleanUp();
-
-	void CreateBBox(ComponentMesh* newMesh);
-	
-	
 private:
 	float4x4 aiMatrixToFloat4x4(aiMatrix4x4 matrix);
 	aiMatrix4x4 savedMatrix = aiMatrix4x4();

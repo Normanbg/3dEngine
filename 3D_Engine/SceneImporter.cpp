@@ -120,7 +120,7 @@ GameObject * SceneImporter::ImportNodeRecursive(aiNode * node, const aiScene * s
 				compMesh = ImportMesh(mesh,meshName.c_str());
 				if (compMesh != nullptr) {
 					nodeGO->AddComponent(compMesh, MESH);
-					/*nodeGO*/
+					nodeGO->SetLocalAABB(compMesh->bbox);
 					compMesh->GenerateBuffer();
 				}				
 				if (compMesh&&compMat) {
@@ -234,8 +234,7 @@ ComponentMesh * SceneImporter::ImportMesh(aiMesh * mesh, const char* peiName)
 	OWN_LOG("Importing new mesh with %d vertices", newMesh->num_vertex);
 
 	//texMeshIDs[meshNum] = new_mesh->mMaterialIndex;
-	
-	CreateBBox(newMesh);
+	newMesh->CreateBBox(newMesh);
 
 	if (mesh->HasFaces()) { //------------indices
 		newMesh->num_index = mesh->mNumFaces * 3;
@@ -278,7 +277,7 @@ ComponentMesh * SceneImporter::ImportMesh(aiMesh * mesh, const char* peiName)
 		fileName += peiName;
 		fileName += OWN_FILE_FORMAT;
 		std::ofstream dataFile(fileName.c_str(), std::fstream::out | std::fstream::binary);
-		OWN_LOG("Iporting file to PEI");
+		OWN_LOG("Importing file to PEI");
 
 		uint ranges[4] = { newMesh->num_index,newMesh->num_vertex, newMesh->num_normals, newMesh->num_textureCoords };
 
@@ -398,34 +397,6 @@ void SceneImporter::CleanUp()
 {
 	aiDetachAllLogStreams();
 }
-
-void SceneImporter::CreateBBox(ComponentMesh* newMesh)
-{
-	float minBoundingX = newMesh->vertex->x;
-	float maxBoundingX = newMesh->vertex->x;
-	float minBoundingY = newMesh->vertex->y;
-	float maxBoundingY = newMesh->vertex->y;
-	float minBoundingZ = newMesh->vertex->z;
-	float maxBoundingZ = newMesh->vertex->z;
-
-	for (int i = 0; i < newMesh->num_vertex; i++) {
-		if (newMesh->vertex[i].x < minBoundingX)
-			minBoundingX = newMesh->vertex[i].x;
-		else if (newMesh->vertex[i].x > maxBoundingX)
-			maxBoundingX = newMesh->vertex[i].x;
-		if (newMesh->vertex[i].y < minBoundingY)
-			minBoundingY = newMesh->vertex[i].y;
-		else if (newMesh->vertex[i].y > maxBoundingY)
-			maxBoundingY = newMesh->vertex[i].y;
-		if (newMesh->vertex[i].z < minBoundingZ)
-			minBoundingZ = newMesh->vertex[i].z;
-		else if (newMesh->vertex[i].z > maxBoundingZ)
-			maxBoundingZ = newMesh->vertex[i].z;
-	}
-	newMesh->bbox.minPoint = float3(minBoundingX, minBoundingY, minBoundingZ);
-	newMesh->bbox.maxPoint = float3(maxBoundingX, maxBoundingY, maxBoundingZ);
-}
-
 
 float4x4 SceneImporter::aiMatrixToFloat4x4(aiMatrix4x4 matrix)
 {

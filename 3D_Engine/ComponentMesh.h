@@ -23,8 +23,10 @@ public:
 	ComponentMesh();
 	~ComponentMesh();
 
-	void GenerateBoundingBox();
+	//void GenerateBoundingBox();
 	void DrawBoundingBox();
+
+	void CreateBBox(ComponentMesh * newMesh);
 	
 	void SetMaterial(ComponentMaterial* texture);
 	
