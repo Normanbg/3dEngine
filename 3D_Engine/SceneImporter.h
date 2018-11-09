@@ -1,7 +1,7 @@
 #ifndef __SCENEIMPORTER_H__
 #define __SCENEIMPORTER_H__
 
-#include "MathGeoLib\Math\MathAll.h"
+#include "Math.h"
 
 #include <iostream>
 #include <fstream> 
@@ -44,6 +44,7 @@ public:
 	
 	void CleanUp();
 
+	void CreateBBox(ComponentMesh* newMesh);
 	
 	
 private:

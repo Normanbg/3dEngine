@@ -27,8 +27,10 @@ GameObject::GameObject(const char * Name)
 	transformComp->myGO = this;
 	components.push_back(transformComp);
 
-	uuid = App->scene->GetRandomUUID();
-	
+	localAABB.SetNegativeInfinity();
+	globalAABB.SetNegativeInfinity();
+
+	uuid = App->scene->GetRandomUUID();	
 }
 
 
@@ -332,6 +334,20 @@ void GameObject::setChildsStatic()
 		it->staticGO = true;
 		it->setChildsStatic();
 	}
+}
+
+void GameObject::SetLocalAABB(AABB aabb)
+{
+	AABB compare;
+	compare.SetNegativeInfinity();
+	if (localAABB.minPoint.Equals(compare.minPoint) && localAABB.minPoint.Equals(compare.minPoint))
+	{
+		localAABB = aabb;
+		obb = localAABB;
+	}
+
+	else
+		localAABB.Enclose(aabb);
 }
 
 void GameObject::ToggleSelected(){

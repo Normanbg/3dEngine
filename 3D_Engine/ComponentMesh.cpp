@@ -120,7 +120,7 @@ void ComponentMesh::GenerateBuffer()
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) *num_index, &index[0], GL_STATIC_DRAW);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	}
-	GenerateBoundingBox();
+	//GenerateBoundingBox();
 }
 
 void ComponentMesh::Draw()

@@ -62,6 +62,8 @@ public:
 	void CalculateAllGlobalMatrix();
 	void setChildsStatic();
 
+	void SetLocalAABB(AABB aabb);
+
 public:
 	std::string					name;
 	std::vector <Component*>	components;
@@ -69,8 +71,8 @@ public:
 	std::vector <GameObject*>	childrens;
 	ComponentTransformation*	transformComp;
 
-	AABB localAABB = AABB();
-	AABB globalAABB = AABB();
+	AABB localAABB;
+	AABB globalAABB;
 	OBB obb;
 
 	bool active = true;
