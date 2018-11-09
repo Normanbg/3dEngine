@@ -13,6 +13,7 @@ public:
 	~UIPanelScene();
 
 	void Draw();
+	void ClearScenePopUp();
 
 public:
 	ImTextureID img;

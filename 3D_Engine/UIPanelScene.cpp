@@ -23,6 +23,8 @@ void UIPanelScene::Draw() {
 	uint flags = ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse;
 	/*playButtonMat->Load()*/
 	ImGui::Begin("Scene", &active, flags);
+	if (App->gui->clearScene)
+		ClearScenePopUp();
 	ImVec2 region_size = ImGui::GetContentRegionAvail();
 	ImGui::SetCursorPosX(region_size.x / 2 - 30);	
 	if (ImGui::Button("Play", { 40, 20 }))
@@ -75,4 +77,35 @@ void UIPanelScene::Draw() {
 	ImGui::Text("Real Time: %0.0f", App->time->GetRealTimeSec());
 	ImGui::Text("Game Time: %0.0f", App->time->GetGameTimeSec());
 	ImGui::End();
+}
+
+void UIPanelScene::ClearScenePopUp(){
+	ImGui::OpenPopup("Do you want to save before clearing?");
+
+	if (ImGui::BeginPopupModal("Do you want to save before clearing?", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+	{
+		if (ImGui::Button("Yes", ImVec2(120, 0)))
+		{
+			App->scene->SaveScene();
+			App->scene->ClearScene();
+			App->gui->clearScene = false;
+			ImGui::CloseCurrentPopup();
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("No", ImVec2(120, 0)))
+		{
+			App->scene->ClearScene();
+			App->gui->clearScene = false; 
+			ImGui::CloseCurrentPopup();
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Cancel", ImVec2(120, 0)))
+		{
+			App->gui->clearScene = false;
+			ImGui::CloseCurrentPopup();
+		}
+
+		ImGui::EndPopup();
+	}
+
 }

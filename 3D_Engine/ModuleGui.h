@@ -66,7 +66,7 @@ public:
 	ImGuiIO* io;
 
 	bool draw_menu = true;
-
+	bool clearScene = false;
 private:
 
 	void SetWinDockInv();
