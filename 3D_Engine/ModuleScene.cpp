@@ -98,6 +98,7 @@ GameObject * ModuleScene::CreateCube()
 	mesh->num_index = cubeIndices.size();
 	mesh->GenerateBuffer();
 	mesh->CreateBBox(mesh);
+	ret->SetLocalAABB(mesh->bbox);
 	return ret;
 }
 
