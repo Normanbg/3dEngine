@@ -105,8 +105,9 @@ GameObject * SceneImporter::ImportNodeRecursive(aiNode * node, const aiScene * s
 				
 				if (material) {
 					compMat = new ComponentMaterial();
-					compMat = ImportMaterial(material);
-					if (compMat != nullptr) {
+					compMat = ImportMaterial(material);							
+					
+					if (compMat != nullptr) {						
 						nodeGO->AddComponent(compMat, MATERIAL);						
 					}
 					else {
@@ -124,12 +125,7 @@ GameObject * SceneImporter::ImportNodeRecursive(aiNode * node, const aiScene * s
 				if (compMesh&&compMat) {
 					compMesh->SetMaterial(compMat);
 				}
-				
-				else {
-					delete compMesh;
-				}
-				
-				
+								
 			}
 		}
 	}
@@ -148,11 +144,24 @@ GameObject * SceneImporter::ImportNodeRecursive(aiNode * node, const aiScene * s
 ComponentMaterial * SceneImporter::ImportMaterial(aiMaterial * material) // imports material to dds
 {
 	ComponentMaterial* mat = nullptr;
+	bool error, col, mater;
+	error = col = mater = false;
 
 	aiString texturePath;
+	mat = new ComponentMaterial();
+	
+
+	aiColor3D color = aiColor3D();
+	material->Get(AI_MATKEY_COLOR_DIFFUSE, color);
+	if (!color.IsBlack()) {
+		mat->colors = { color.r, color.g, color.b };
+		col = true;
+	}
+
 	aiReturn ret = material->GetTexture(aiTextureType_DIFFUSE, 0, &texturePath);
 	if (ret == aiReturn_SUCCESS) {
-		bool error = false;
+		mater = true; 
+
 		std::string path;
 		std::string textureName;
 		std::string extension;
@@ -182,9 +191,8 @@ ComponentMaterial * SceneImporter::ImportMaterial(aiMaterial * material) // impo
 
 			}
 			if (!error) {
-				mat = new ComponentMaterial();
-				mat->texture = new Material();
 				
+				mat->texture = new Material();
 				mat->texture->textureID = App->renderer3D->texImporter->LoadTexture(texDDSPath.c_str(), mat->texture);
 				OWN_LOG("Loading imported DDS texture from Lib/Textures folder");
 				if (mat->texture->textureID == -1) { // first check if texture is in local path "Lib/Textures"
@@ -198,15 +206,19 @@ ComponentMaterial * SceneImporter::ImportMaterial(aiMaterial * material) // impo
 			}
 		}
 		else {
-			mat = new ComponentMaterial();
+			
 			mat->texture = App->textures->GetMaterialsFromID(check);
-		}
+		}		
 	}
 	else {
 
 		OWN_LOG("Error loading texture from fbx. Error: %s", aiGetErrorString());
 	}
-
+	if (col == false && mater == false) {
+		mat->CleanUp();
+		RELEASE(mat);
+	}
+	
 	return mat;
 }
 
@@ -238,12 +250,12 @@ ComponentMesh * SceneImporter::ImportMesh(aiMesh * mesh, const char* peiName)
 		}
 	}
 
-	if (mesh->HasNormals() && !error) { //------------normals
+	if (mesh->HasNormals()) { //------------normals
 		newMesh->num_normals = newMesh->num_vertex;
 		newMesh->normals = new float3[newMesh->num_normals];
 		memcpy(newMesh->normals, mesh->mNormals, sizeof(float3) * newMesh->num_normals);
 	}
-	if (mesh->GetNumUVChannels() > 0 && !error) { //------------textureCoords
+	if (mesh->GetNumUVChannels() > 0) { //------------textureCoords
 		newMesh->num_textureCoords = newMesh->num_vertex;
 		newMesh->texturesCoords = new float2[newMesh->num_textureCoords];
 

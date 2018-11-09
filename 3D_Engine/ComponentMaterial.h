@@ -15,8 +15,8 @@ public:
 	ComponentMaterial();
 	~ComponentMaterial();
 
-	Material* texture;
-	
+	Material* texture = nullptr;
+	float3 colors = { 0,0,0 };
 
 	bool Update() override;
 	void CleanUp()override;

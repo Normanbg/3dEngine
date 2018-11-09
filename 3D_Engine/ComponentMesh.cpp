@@ -141,9 +141,14 @@ void ComponentMesh::Draw()
 	}
 	else {
 			
-		if (material != NULL && material->texture!= nullptr) {
-			glBindTexture(GL_TEXTURE_2D, material->texture->textureID);
-			glTexCoordPointer(2, GL_FLOAT, 0, &(texturesCoords[0]));
+		if (material != NULL){
+			if (material->texture != nullptr) {
+				glBindTexture(GL_TEXTURE_2D, material->texture->textureID);
+				glTexCoordPointer(2, GL_FLOAT, 0, &(texturesCoords[0]));
+			}
+			else {
+				glColor3f(material->colors.x, material->colors.y, material->colors.z);
+			}
 		}
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_index); // test: before it was 2 lines upper
 		glBindBuffer(GL_ARRAY_BUFFER, id_vertex);
@@ -155,7 +160,7 @@ void ComponentMesh::Draw()
 		glBindTexture(GL_TEXTURE_2D, 0);
 
 	}
-	
+	glColor3f(1.0f, 1.0f, 1.0f);
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 
