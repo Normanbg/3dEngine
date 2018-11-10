@@ -131,7 +131,7 @@ public:
 	inline float GetAvaliableVideoMem() const { return availableVideoMemF; }
 	inline float GetReservedVideoMem() const { return reservedVideoMemF; }
 
-	void SetOrganization(char* newName);
+	void SetOrganization(const char* newName);
 	std::string GetOrganization() const;
 
 private:
@@ -142,8 +142,7 @@ private:
 	void PrepareUpdate();
 	void FinishUpdate();
 
-	void SetDataFromJson(JSON_Object* data);
-
+	
 
 };
 

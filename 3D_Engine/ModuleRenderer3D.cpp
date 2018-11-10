@@ -7,6 +7,7 @@
 #include "GameObject.h"
 #include "ComponentCamera.h"
 #include "Camera.h"
+#include "Config.h"
 #include "ModuleGui.h"
 #include "ModuleScene.h"
 #include "Brofiler/Brofiler.h"
@@ -39,9 +40,7 @@ bool ModuleRenderer3D::Init(JSON_Object* obj)
 	OWN_LOG("Creating 3D Renderer context");
 	bool ret = true;
 	
-	if (obj != nullptr) {
-		SetDataFromJson(obj);
-	}
+	
 	
 	//Create OGL context 
 	context = SDL_GL_CreateContext(App->window->window); 
@@ -140,7 +139,6 @@ bool ModuleRenderer3D::Init(JSON_Object* obj)
 	importer->Init();
 	texImporter->Init();
 	
-	json_object_clear(obj);//clear obj to free memory
 	return ret;
 }
 
@@ -279,23 +277,16 @@ char * ModuleRenderer3D::GetGraphicsVendor() const
 	return (char*)glGetString(GL_VENDOR);;
 }
 
-void ModuleRenderer3D::SetDataFromJson(JSON_Object* data) {
 
-	_vSync = json_object_dotget_boolean(data, "VSync");
 
-}
+bool ModuleRenderer3D::LoadSettings(Config* data) {
 
-bool ModuleRenderer3D::Load(JSON_Object* data) {
-
-	SetDataFromJson(data);
-
-	//Set Vsync to change it in game
+	data->GetBool("VSync", false);
 
 	return true;
 }
-bool ModuleRenderer3D::Save(JSON_Object* data)const {
-	json_object_dotset_boolean(data, "Render.VSync", _vSync);
-	
+bool ModuleRenderer3D::SaveSettings(Config* data)const {
+	data->AddBool("VSync", _vSync);
 	return true;
 }
 

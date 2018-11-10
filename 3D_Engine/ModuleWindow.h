@@ -5,6 +5,7 @@
 #include "SDL/include/SDL.h"
 
 class Application;
+struct Config;
 
 class ModuleWindow : public Module
 {
@@ -17,10 +18,10 @@ public:
 
 	bool Init(JSON_Object* obj);
 	bool CleanUp();
-	bool Load(JSON_Object* data)override ;
-	bool Save(JSON_Object* data) const;
+	bool LoadSettings(Config* data)override ;
+	bool SaveSettings(Config* data) const override;
 
-	void SetTitle(char* title);
+	void SetTitle(const char* title);
 
 	void SetBorderless(bool borderless);
 	void SetResizable(bool resizable);

@@ -27,8 +27,8 @@ public:
 	update_status PostUpdate(float dt);
 	bool CleanUp();
 
-	bool Load(JSON_Object* data)override;
-	bool Save(JSON_Object* data) const;
+	bool LoadSettings(Config* data)override;
+	bool SaveSettings(Config* data) const override;
 
 	void OnResize(const int width, const int height);
 	char* GetGraphicsModel() const;

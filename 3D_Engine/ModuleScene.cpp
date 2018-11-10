@@ -174,12 +174,14 @@ void ModuleScene::LoadScene(const char*file)
 	const char* fileName = nullptr;
 	file == nullptr ? fileName = SCENE_FILE : fileName = file;
 	uint size = App->fileSys->readFile(fileName, &buffer);
-	fileName = nullptr;
+	
 
 	if (size < 0) {
-		OWN_LOG("Error loading file. All data not loaded.")
-			return;
+		OWN_LOG("Error loading file %s. All data not loaded.", fileName)
+		fileName = nullptr;
+		return;
 	}
+	fileName = nullptr;
 	Config conf(buffer);
 
 	int num = conf.GetNumElemsArray("GameObjects");

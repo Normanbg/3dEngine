@@ -1,6 +1,7 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleWindow.h"
+#include "Config.h"
 #include "Brofiler/Brofiler.h"
 
 ModuleWindow::ModuleWindow(bool start_enabled) : Module(start_enabled)
@@ -28,10 +29,7 @@ bool ModuleWindow::Init(JSON_Object* obj)
 {
 	OWN_LOG("Init SDL window & surface");
 	bool ret = true;
-
-	if (obj != nullptr) {		
-		SetDataFromJson(obj);
-	}
+		
 
 	if(SDL_Init(SDL_INIT_VIDEO) < 0)
 	{
@@ -92,8 +90,7 @@ bool ModuleWindow::Init(JSON_Object* obj)
 			//Get window surface
 			screen_surface = SDL_GetWindowSurface(window);
 		}
-	}
-	json_object_clear(obj);//clear obj to free memory
+	}	
 
 	return ret;
 }
@@ -114,7 +111,7 @@ bool ModuleWindow::CleanUp()
 	return true;
 }
 
-void ModuleWindow::SetTitle(char* title)
+void ModuleWindow::SetTitle(const char* title)
 {
 	_title = title;
 	SDL_SetWindowTitle(window, title);
@@ -180,39 +177,27 @@ void ModuleWindow::GetSize(int &w, int &h)const {
 	h = _h;
 }
 
-bool ModuleWindow::Load(JSON_Object* data) {
+bool ModuleWindow::LoadSettings(Config* data) {
 
-	SetDataFromJson(data);
-	
-	SetBrightness(_brightness);
-	
-	SetFullscreen(_fullscreen);
-	SetResizable(_resizable);
-	SetBorderless(_borderless);
-	SetFullscreenDesktop(_fullDesktop);
-	SetSize(_w, _h);
+	SetBrightness(data->GetFloat("Brightness", 1.0f));
+	SetFullscreen(data->GetBool("Fullscreen", false));
+	SetResizable(data->GetBool("Resizable", true));
+	SetBorderless(data->GetBool("Borderless", false));
+	SetFullscreenDesktop(data->GetBool("Fullscreen Desktop", false));
+	SetSize(data->GetUInt("Width",SCREEN_WIDTH), data->GetUInt("Height", SCREEN_HEIGHT));
 
 	return true;
 }
-bool ModuleWindow::Save(JSON_Object* data)const {
-	json_object_dotset_number(data, "Window.Brightness", _brightness );
-	json_object_dotset_number(data, "Window.Width", _w);
-	json_object_dotset_number(data, "Window.Height", _h);
-	json_object_dotset_boolean(data, "Window.Fullscreen", _fullscreen);
-	json_object_dotset_boolean(data, "Window.Borderless", _borderless);
-	json_object_dotset_boolean(data, "Window.Resizable", _resizable);
-	json_object_dotset_boolean(data, "Window.Fullscreen Desktop", _fullDesktop);
+bool ModuleWindow::SaveSettings(Config* data)const {
+	data->AddFloat("Brightness", GetBrightness());
+	data->AddBool("Fullscreen", IsFullscreen());
+	data->AddBool("Resizable", IsResizable());
+	data->AddBool("Borderless", IsBorderless());
+	data->AddBool("Fullscreen Desktop", IsFullscreenDesktop());
+	int w, h;
+	GetSize(w, h);
+	data->AddUInt("Width", w);
+	data->AddUInt("Height", h);
+
 	return true;
-}
-
-void ModuleWindow::SetDataFromJson(JSON_Object* data) {
-
-	_brightness = json_object_dotget_number(data, "Brightness");
-	_w = json_object_dotget_number(data, "Width");
-	_h = json_object_dotget_number(data, "Height");
-	_fullscreen = json_object_dotget_boolean(data, "Fullscreen");
-	_borderless = json_object_dotget_boolean(data, "Borderless");
-	_resizable = json_object_dotget_boolean(data, "Resizable");
-	_fullDesktop = json_object_dotget_boolean(data, "Fullscreen Desktop");
-
 }

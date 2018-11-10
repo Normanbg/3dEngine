@@ -67,38 +67,15 @@ bool Application::Init(){
 
 	BROFILER_CATEGORY("App_Init", Profiler::Color::DarkOrange);
 	bool ret = true;
-	JSON_Value* config = nullptr;
-	JSON_Object* objModules = nullptr;
-	
-	if (config = json_parse_file(CONFIG_FILE)) {
-		OWN_LOG("Config.JSON File detected");
-		JSON_Object* obj;
-		JSON_Object* appObj;
-		
-
-		obj = json_value_get_object(config);
-		appObj = json_object_get_object(obj, "App");
-	
-		SetDataFromJson(appObj);
-
-		objModules = obj;
-		json_object_clear(appObj);
-		obj = nullptr;
-		json_object_clear(obj);
-		
-	}
-
+	LoadGameNow();
 	// Call Init() in all modules
 	std::list<Module*>::iterator item = list_modules.begin();
 
-
 	while(item != list_modules.end() && ret == true)
 	{
-		ret = (*item)->Init(json_object_get_object(objModules, (*item)->name.c_str()));
+		ret = (*item)->Init(nullptr);
 		item++;
-	}
-	json_object_clear(objModules);
-	json_value_free(config);
+	}	
 
 	// After all Init calls we call Start() in all modules
 	OWN_LOG("Application Start --------------");
@@ -109,10 +86,6 @@ bool Application::Init(){
 		ret = (*item)->Start();
 		item++;
 	}
-
-	
-	
-
 	ms_timer.Start();
 	return ret;
 }
@@ -297,7 +270,7 @@ void Application::PauseGame(bool pause) {
 	SetTimeScale(pause ? 0.f : 1.f);	
 }
 
-void Application::SetOrganization(char* newName)
+void Application::SetOrganization(const char* newName)
 {
 	_organization = newName;
 }
@@ -321,38 +294,33 @@ void Application::SetOrganization(char* newName)
 
  bool Application::LoadGameNow()
  {
-	 
 	 bool ret = false;
-
-	 JSON_Value* config;	 
-
-	 if (config = json_parse_file(CONFIG_FILE)) {
-		 OWN_LOG("Config.JSON File detected");
-		 JSON_Object* obj;
-		 JSON_Object* appObj;
-
-
-		 obj = json_value_get_object(config);
-		 appObj = json_object_get_object(obj, "App");
-
-		 SetDataFromJson(appObj);
-
-		 
-		 json_object_clear(appObj);
-		
-		std::list<Module*>::iterator item = list_modules.begin();
-
-		 while (item != list_modules.end())
-		 {
-			 ret &= (*item)->Load(json_object_get_object(obj, (*item)->name.c_str()));
-			 item++;
-		 }
-		
-		 json_object_clear(obj);
-	 }
-	 	 
-	 json_value_free(config);
 	 
+	 char* buffer = nullptr;
+	 uint size = App->fileSys->readFile(CONFIG_FILE, &buffer);
+
+	 if (size < 0) {
+		 OWN_LOG("Error loading file %s. All data not loaded.", CONFIG_FILE)
+			 return ret;
+	 }
+	 Config conf(buffer);
+	 
+	 Config appdata = conf.GetArray("App", 0);
+	 std::string name = appdata.GetString("Name", "NoName");
+	 window->SetTitle(name.c_str());
+	 std::string org = appdata.GetString("Organization", "NoOrganization");
+	 SetOrganization(org.c_str());
+	 
+
+	 std::list<Module*>::iterator item = list_modules.begin();
+
+	 while (item != list_modules.end())
+	 {		 
+		 Config elem = conf.GetArray((*item)->name.c_str(), 0);
+		 ret &= (*item)->LoadSettings(&elem);
+		 item++;
+		
+	 }
 	 want_to_load = false;
 	 return ret;
  }
@@ -361,25 +329,36 @@ void Application::SetOrganization(char* newName)
  {
 	 bool ret = false;
 
-	 JSON_Value* value= json_value_init_object();
-	 JSON_Object* obj = json_value_get_object(value);
-	 
-	 json_object_dotset_string(obj, "App.Name", window->GetWindowTitle().c_str());
-	 json_object_dotset_string(obj, "App.Organization", GetOrganization().c_str());
-	 
+	 Config save;
 
+	 save.AddArray("App");
+	 Config appdata;
+	 appdata.AddString("Name", window->GetWindowTitle().c_str());
+	 appdata.AddString("Organization", GetOrganization().c_str());
+	 save.AddArrayChild(appdata);
+	 
+	 
+	 
 	 std::list<Module*>::const_iterator item = list_modules.begin();
 
 	 while (item != list_modules.end())
 	 {
-		 ret &= (*item)->Save(obj);
-		 item++;
+		 Config module;
+		save.AddArray((*item)->name.c_str());
+		
+		 ret &= (*item)->SaveSettings(&module);
+		 item++;		
+		 save.AddArrayChild(module);
 	 }
+	 //save.AddArrayChild(module);
 
-	 json_serialize_to_file(value, CONFIG_FILE);
-	 json_object_clear(obj);
-	 json_value_free(value);
+	 char* buffer = nullptr;
+	 uint size = save.Save(&buffer);
 
+	 App->fileSys->writeFile(CONFIG_FILE, buffer, size);
+	 OWN_LOG("Saving config.")
+	 RELEASE_ARRAY(buffer);
+	
 	 want_to_save = false;
 	 return ret;
  }
@@ -413,12 +392,3 @@ void Application::SetOrganization(char* newName)
 	 return ret;
  }
 
- void Application::SetDataFromJson(JSON_Object* data) {
- 
-	 const char* title = json_object_get_string(data, "Name");
-	 window->SetTitle((char*)title);
-
-	 const char* title2 = json_object_get_string(data, "Organization");
-	 SetOrganization((char*)title2);
- 
- }
