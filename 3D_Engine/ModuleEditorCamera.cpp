@@ -101,7 +101,6 @@ update_status ModuleEditorCamera::Update(float dt)
 			dir -= center;
 			dist = GO->globalAABB.Size().Length();
 		}
-
 		cameraComp->camRes->frustum.pos = (dir.Normalized() * dist);
 		cameraComp->LookAt(center);
 	}
