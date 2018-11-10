@@ -26,6 +26,7 @@ private:
 	bool	running;
 	float	started_at;
 	float	stopped_at;
+	float	resumed_at;
 };
 
 #endif //__TIMER_H__

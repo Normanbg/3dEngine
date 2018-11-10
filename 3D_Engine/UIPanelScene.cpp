@@ -29,14 +29,14 @@ void UIPanelScene::Draw() {
 	ImGui::SetCursorPosX(region_size.x / 2 - 30);	
 	if (ImGui::Button("Play", { 40, 20 }))
 	{
-		if (App->scene->inGame) {
+		if (App->time->IsPaused()) {
 			App->time->Resume();
 		}
 		else {
-			App->scene->inGame = true;
-			App->time->Play();
+			if(!App->time->IsPlaying())
+				App->time->Play();
 		}
-
+		App->scene->inGame = true;
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("Pause", { 40, 20 }))
@@ -52,7 +52,7 @@ void UIPanelScene::Draw() {
 	if (ImGui::Button("Stop", { 40, 20 }))
 	{		
 		if (App->scene->inGame) {
-			App->time->Reset();
+			App->time->Stop();
 			App->scene->inGame = false;
 		}
 
@@ -76,6 +76,7 @@ void UIPanelScene::Draw() {
 	ImGui::Begin("Scene Info", &active, flags);
 	ImGui::Text("Real Time: %0.0f", App->time->GetRealTimeSec());
 	ImGui::Text("Game Time: %0.0f", App->time->GetGameTimeSec());
+	ImGui::SliderFloat("Time Scale", App->time->GetTimeScale(), 0, 3.0f, "%.1f");
 	ImGui::End();
 }
 

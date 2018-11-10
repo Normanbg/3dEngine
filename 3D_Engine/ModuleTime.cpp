@@ -12,7 +12,7 @@ ModuleTime::~ModuleTime()
 
 update_status ModuleTime::PreUpdate(float dt)
 {
-	if (App->scene->inGame) {
+	if (playing) {
 		gameDeltaTime = dt * timeScale;
 		gameClock += gameDeltaTime;
 	}
@@ -29,24 +29,35 @@ bool ModuleTime::Start()
 
 void ModuleTime::Reset()
 {
-	realTimeClock.Resume();
+	realTimeClock.SetZero();
+	gameClock = 0;
 }
 
 void ModuleTime::Play()
 {
-	realTimeClock.Start();
-	
+	playing = true;
+	realTimeClock.Start();	
 }
 
 void ModuleTime::Resume()
 {
 	realTimeClock.Resume();
+	playing = true;
 	paused = false;
 }
 
 void ModuleTime::Pause()
 {
 	realTimeClock.Stop();
+	playing = false;
 	paused = true;
+}
+
+void ModuleTime::Stop()
+{
+	realTimeClock.Stop();
+	realTimeClock.SetZero();
+	playing = false;
+	gameClock = 0;
 }
 

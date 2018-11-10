@@ -29,8 +29,9 @@ void Timer::Stop()
 void Timer::Resume()
 {
 	running = true;
-	started_at += started_at - stopped_at;
-	stopped_at = 0;
+	resumed_at = SDL_GetTicks();
+	started_at += resumed_at - stopped_at;
+	resumed_at = stopped_at = 0;
 }
 
 // ---------------------------------------------
@@ -67,6 +68,5 @@ bool Timer::isPaused()
 
 void Timer::SetZero()
 {
-	started_at = 0;
-	stopped_at = 0;
+	started_at =stopped_at = resumed_at = 0;
 }

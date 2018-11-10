@@ -289,14 +289,15 @@ ComponentMesh * GameObject::GetComponentMesh()
 	return ret;
 }
 
-ComponentMaterial * GameObject::GetComponentMaterial(const char * name)
+ComponentMaterial * GameObject::GetComponentMaterial(const uint uuid)
 {
 	std::vector<Component*> materials;
 
 	GetComponents(MATERIAL, materials);
 	for (int i = 0; i < materials.size(); i++){
 		ComponentMaterial* it = (ComponentMaterial*)materials[i];
-		if (it->texture->name == name) {
+		const uint auxuuid = it->GetUUID();
+		if (auxuuid == uuid) {
 			return it;
 		}
 		it = nullptr;

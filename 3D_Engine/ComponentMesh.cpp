@@ -182,14 +182,16 @@ void ComponentMesh::Draw()
 void ComponentMesh::Save(Config & data) const
 {
 	data.AddUInt("UUID", uuid);
-	if (material != nullptr && material->texture != nullptr)
-		data.AddString("MeshTex", material->texture->name.c_str());
+	if (material != nullptr) {
+		const uint texuuid = material->GetUUID();
+		data.AddUInt("TexUUID", texuuid);
+	}
 }
 
 void ComponentMesh::Load(Config * data)
 {
 	uuid = data->GetUInt("UUID");
-	SetMaterial(myGO->GetComponentMaterial(data->GetString("MeshTex")));
+	SetMaterial(myGO->GetComponentMaterial(data->GetUInt("TexUUID")));
 
 	App->renderer3D->importer->LoadMeshPEI(this);
 }

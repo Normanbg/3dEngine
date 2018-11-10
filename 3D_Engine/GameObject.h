@@ -55,7 +55,7 @@ public:
 	ComponentCamera* GetComponentCamera();
 	ComponentMaterial * GetComponentMaterial();
 	ComponentMesh * GetComponentMesh();
-	ComponentMaterial* GetComponentMaterial(const char* name);
+	ComponentMaterial* GetComponentMaterial(const uint uuid);
 
 	inline const uint GetUUID() { return uuid; }
 

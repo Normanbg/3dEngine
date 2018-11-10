@@ -35,7 +35,7 @@ public:
 	
 	virtual void DrawInspector() { return; };
 
-	inline const uint GetUUID() { return uuid; }
+	inline const uint GetUUID() const { return uuid; }
 
 
 	virtual void Save(Config& data)const {};
