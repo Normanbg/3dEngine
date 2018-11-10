@@ -373,7 +373,7 @@ void GameObject::Save(Config& data) const
 	conf.AddFloat3("Translation", transformComp->getPos());
 	conf.AddFloat3("Scale", transformComp->getScale());
 	conf.AddFloat3("Rotation", transformComp->getEulerRot()); //save rotation as eulerangle(float3) to save memory.
-
+	conf.AddBool("Static", staticGO);
 	conf.AddArray("Components");	
 
 	for (int i = 0; i < components.size(); i++) { //iterate all over the components to save
@@ -408,7 +408,7 @@ void GameObject::Load(Config* data)
 	transformComp->setPos(data->GetFloat3("Translation", {0,0,0}));
 	transformComp->setRotEuler(data->GetFloat3("Rotation", { 0,0,0 }));
 	transformComp->setScale(data->GetFloat3("Scale", { 0,0,0 }));
-	//Need to apply the transformation?
+	staticGO = data->GetBool("Static", false);
 
 	int num = data->GetNumElemsArray("Components");
 	for (int i = 0; i < num; i++) {//iterate all over the childs to save (ecept transform comp)

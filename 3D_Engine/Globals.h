@@ -62,6 +62,7 @@ enum update_status
 #define ORGANIZATION "UPC CITM"
 #define CONFIG_FILE "Settings/config.JSON"
 #define SCENE_FILE "Scenes/scene.JSON"
+#define TEMP_SCENE_FILE "Scenes/scene_temp.JSON"
 #define CAMERA_SPEED 10.0f
 
 #define NUM_PATHS 7

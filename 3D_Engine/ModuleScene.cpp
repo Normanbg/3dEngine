@@ -145,14 +145,52 @@ void ModuleScene::ClearScene() const
 	}
 }
 
-void ModuleScene::SaveScene() 
+void ModuleScene::SaveScene(const char* file) 
 {
-	wantToSave = true;
+	Config save;
+
+	save.AddArray("GameObjects");
+	root->Save(save);	
+
+	char* buffer = nullptr;
+	uint size = save.Save(&buffer);
+
+	const char* fileName = nullptr;
+	file == nullptr ? fileName = SCENE_FILE : fileName = file;
+	App->fileSys->writeFile(fileName, buffer, size);
+
+	fileName = nullptr;
+
+	OWN_LOG("Saving scene.")
+		RELEASE_ARRAY(buffer);
 }
 
-void ModuleScene::LoadScene() 
+void ModuleScene::LoadScene(const char*file) 
 {
-	wantToLoad = true;
+
+	ClearScene();
+
+	char* buffer = nullptr;
+	const char* fileName = nullptr;
+	file == nullptr ? fileName = SCENE_FILE : fileName = file;
+	uint size = App->fileSys->readFile(fileName, &buffer);
+	fileName = nullptr;
+
+	if (size < 0) {
+		OWN_LOG("Error loading file. All data not loaded.")
+			return;
+	}
+	Config conf(buffer);
+
+	int num = conf.GetNumElemsArray("GameObjects");
+	for (int i = 0; i < num; i++) {
+		Config elem = conf.GetArray("GameObjects", i);
+		GameObject* go = new GameObject();
+		go->Load(&elem);
+	}
+	OWN_LOG("Loading new scene.")
+		RELEASE_ARRAY(buffer);
+
 }
 
 update_status ModuleScene::Update(float dt){
@@ -181,8 +219,6 @@ update_status ModuleScene::PostUpdate(float dt){
 		}
 	}
 
-	if (wantToLoad) { RealLoadScene(); wantToLoad = false; }
-	if (wantToSave) { RealSaveScene(); wantToSave = false;	}
 	update_status retUS;
 	ret ? retUS = UPDATE_CONTINUE : retUS = UPDATE_ERROR;
 	return retUS;
@@ -323,52 +359,3 @@ void ModuleScene::AddGOtoQuadtree(GameObject * go)
 		AddGOtoQuadtree(it);
 }
 
-bool ModuleScene::RealSaveScene() const
-{
-	bool ret = true;
-	Config save;
-
-	save.AddArray("GameObjects");
-	root->Save(save);
-
-	char* buffer = nullptr;
-	uint size = save.Save(&buffer);
-	App->fileSys->writeFile(SCENE_FILE, buffer, size);
-	OWN_LOG("Saving scene.")
-		RELEASE_ARRAY(buffer);
-	
-	return ret;
-	
-}
-
-bool ModuleScene::RealLoadScene()
-{
-	bool ret = true;
-
-
-
-	ClearScene();
-
-	char* buffer = nullptr;
-	uint size = App->fileSys->readFile(SCENE_FILE, &buffer);
-
-
-	if (size < 0) {
-		OWN_LOG("Error loading file. All data not loaded.")
-			return false;
-	}
-	Config conf(buffer);
-
-	int num = conf.GetNumElemsArray("GameObjects");
-	for (int i = 0; i < num; i++) {
-		Config elem = conf.GetArray("GameObjects", i);
-		GameObject* go = new GameObject();
-		go->Load(&elem);
-	}
-	OWN_LOG("Loading new scene.")
-		RELEASE_ARRAY(buffer);
-
-
-
-	return ret;
-}

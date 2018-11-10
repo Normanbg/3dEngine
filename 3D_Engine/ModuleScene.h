@@ -47,8 +47,8 @@ public:
 	uint GetRandomUUID();
 
 	void ClearScene()const;
-	void SaveScene();
-	void LoadScene();
+	void SaveScene(const char* file = nullptr);
+	void LoadScene(const char* file= nullptr);
 
 	void AddGOtoQuadtree(GameObject* go);
 
@@ -67,13 +67,9 @@ public:
 
 private:
 
-	bool wantToSave = false;
-	bool wantToLoad = false;
-	pcg32_random_t rng;
-private:
 
-	bool RealSaveScene() const;
-	bool RealLoadScene();
+	pcg32_random_t rng;
+
 	
 };
 #endif __MODULE_SCENE_H__
