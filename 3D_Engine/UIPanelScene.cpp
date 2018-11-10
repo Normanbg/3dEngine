@@ -33,8 +33,10 @@ void UIPanelScene::Draw() {
 			App->time->Resume();
 		}
 		else {
-			if(!App->time->IsPlaying())
+			if (!App->time->IsPlaying()) {
 				App->time->Play();
+				App->scene->SaveScene(TEMP_SCENE_FILE);
+			}
 		}
 		App->scene->inGame = true;
 	}
@@ -54,6 +56,7 @@ void UIPanelScene::Draw() {
 		if (App->scene->inGame) {
 			App->time->Stop();
 			App->scene->inGame = false;
+			App->scene->LoadScene(TEMP_SCENE_FILE);
 		}
 
 	}
@@ -74,8 +77,8 @@ void UIPanelScene::Draw() {
 	ImGui::End();
 	
 	ImGui::Begin("Scene Info", &active, flags);
-	ImGui::Text("Real Time: %0.0f", App->time->GetRealTimeSec());
-	ImGui::Text("Game Time: %0.0f", App->time->GetGameTimeSec());
+	ImGui::Text("Real Time: %.1f", App->time->GetRealTimeSec());
+	ImGui::Text("Game Time: %.1f", App->time->GetGameTimeSec());
 	ImGui::SliderFloat("Time Scale", App->time->GetTimeScale(), 0, 3.0f, "%.1f");
 	ImGui::End();
 }
