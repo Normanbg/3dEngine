@@ -39,12 +39,7 @@ update_status ModuleScene::PreUpdate(float dt)
 {
 	bool ret = true;
 
-	if (App->input->GetKey(SDL_SCANCODE_7) == KEY_DOWN) {///////////////// DEBUUG
-		GameObject* pte= CreateCube();
-		if (numCubes == 2)
-			pte->transformComp->setPos(float3(14.f, 0.f, 14.f));
-		AddGOtoQuadtree(pte);
-	}
+	
 
 	if(App->input->GetKey(SDL_SCANCODE_4)== KEY_DOWN) { ///// DEBUUG
 		SaveScene();
@@ -158,8 +153,17 @@ void ModuleScene::LoadScene()
 update_status ModuleScene::Update(float dt){
 
 	bool ret = true;
+	GameObject* PENE = nullptr;
+	if (App->input->GetKey(SDL_SCANCODE_7) == KEY_DOWN) {///////////////// DEBUUG
+		GameObject* pte = CreateCube();
+		PENE = pte;
+		if (numCubes == 2)
+			pte->transformComp->setPos(float3(14.f, 0.f, 14.f));
+		AddGOtoQuadtree(pte);
+	}
 	root->CalculateAllGlobalMatrix();
-
+	if (PENE)
+		AddGOtoQuadtree(PENE);
 
 	if (root->childrens.empty() == false) {
 
@@ -311,17 +315,7 @@ GameObject * ModuleScene::AddGameObject(const char * name, GameObject * parent)
 	return ret;
 }
 
-void ModuleScene::AddGOtoQuadtree(GameObject * go)
-{
-	if (go == nullptr)
-		return;
 
-	if (go->GetComponentMesh()) {
-		rootQuadTree->Insert(go);
-	}
-	for (auto it : go->childrens)
-		AddGOtoQuadtree(it);
-}
 
 bool ModuleScene::RealSaveScene() const
 {

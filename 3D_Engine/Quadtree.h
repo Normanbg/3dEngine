@@ -23,6 +23,9 @@ public:
 
 	void Subdivide();
 
+	void AddGOtoQuadtree(GameObject * go);
+	void Resize(GameObject * go);
+
 	void DebugDraw();
 
 private:

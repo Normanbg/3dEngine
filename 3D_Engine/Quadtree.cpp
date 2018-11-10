@@ -15,6 +15,8 @@ Quadtree::~Quadtree()
 }
 
 void Quadtree::Clear(){
+	quadTreeBox.SetNegativeInfinity();
+	subdivisions = 0;
 	if (!quTrChilds.empty()) {
 		for (int i = 0; i < quTrChilds.size(); i++)
 		{
@@ -100,6 +102,32 @@ void Quadtree::Subdivide(){
 	quTrChilds.push_back(new Quadtree(AABB(float3(centerXZ.x, 0.f, centerXZ.z), quadTreeBox.maxPoint), subdivisions + 1));
 	
 }
+
+void Quadtree::AddGOtoQuadtree(GameObject * go)
+{
+	if (go == nullptr)
+		return;
+
+	if (go->GetComponentMesh()) {
+		this->Insert(go);
+	}
+	for (auto it : go->childrens)
+		AddGOtoQuadtree(it);
+}
+
+void Quadtree::Resize(GameObject* go) {
+	if (go == nullptr)
+		return;
+	if (go->staticGO)
+	{
+		quadTreeBox.Enclose(go->globalAABB);
+		for (auto it : go->childrens)
+		{
+			Resize(it);
+		}
+	}
+}
+
 
 void Quadtree::DebugDraw(){
 
