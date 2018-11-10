@@ -82,7 +82,6 @@ update_status ModuleGui::Update(float dt)
 		if (ImGui::BeginMenu("File")) {
 			if (ImGui::MenuItem("Clear scene"))
 				clearScene = true;
-				/*App->scene->ClearScene();*/
 			if (ImGui::MenuItem("Save scene", "4"))
 				App->scene->SaveScene();
 			if (ImGui::MenuItem("Load scene", "5"))
@@ -163,6 +162,14 @@ update_status ModuleGui::Update(float dt)
 				else
 					App->audio->PlayFx(openFX);
 				panelMaterial->ChangeActive();
+			}
+			if (ImGui::MenuItem("Scene", NULL, panelScene->isEnabled())) {
+				if (panelScene->isEnabled()) {
+					App->audio->PlayFx(closeFX);
+				}
+				else
+					App->audio->PlayFx(openFX);
+				panelScene->ChangeActive();
 			}
 			ImGui::EndMenu();
 		}
