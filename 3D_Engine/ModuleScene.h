@@ -50,7 +50,7 @@ public:
 	void SaveScene(const char* file = nullptr);
 	void LoadScene(const char* file= nullptr);
 
-	void AddGOtoQuadtree(GameObject* go);
+	void AddGOtoQuadtree(GameObject* go) ;
 
 public:
 

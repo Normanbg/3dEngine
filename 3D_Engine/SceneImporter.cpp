@@ -38,6 +38,8 @@ void SceneImporter::Init()
 
 void SceneImporter::LoadFBXandImportPEI(const char * FBXpath)
 {
+	Timer loadTime;
+	
 	std::string fullFBXPath;// = MODELS_PATH;
 	fullFBXPath += FBXpath;
 
@@ -65,7 +67,7 @@ void SceneImporter::LoadFBXandImportPEI(const char * FBXpath)
 		GOchild = nullptr;
 		GO = nullptr;
 		aiReleaseImport(scene);
-		
+		OWN_LOG("Loaded succesfully fbx from %s. Loading time: %.1fms", FBXpath, loadTime.ReadSec());
 	}
 }
 
@@ -89,8 +91,7 @@ GameObject * SceneImporter::ImportNodeRecursive(aiNode * node, const aiScene * s
 		nodeGO->transformComp->setPos(float3(position.x, position.y, position.z));
 		nodeGO->transformComp->setScale(float3(scale.x, scale.y, scale.z));
 		nodeGO->transformComp->setRotQuat(Quat(rotation.x, rotation.y, rotation.z, rotation.w));
-		/*nodeGO->transformComp->localMatrix = nodeGO->transformComp->localMatrix * aiMatrixToFloat4x4(savedMatrix);*/
-		//savedMatrix = aiMatrix4x4();
+		
 
 		if (node->mNumMeshes > 0)
 		{
@@ -129,10 +130,7 @@ GameObject * SceneImporter::ImportNodeRecursive(aiNode * node, const aiScene * s
 								
 			}
 		}
-	}
-	else {
-		/*savedMatrix = savedMatrix * node->mTransformation;*/
-	}
+	}	
 	if (!nodeGO) { nodeGO = parent; }
 	for (uint i = 0; i < node->mNumChildren; i++) // recursivity
 	{
@@ -196,14 +194,11 @@ ComponentMaterial * SceneImporter::ImportMaterial(aiMaterial * material) // impo
 				mat->texture = new Material();
 				mat->texture->textureID = App->renderer3D->texImporter->LoadTexture(texDDSPath.c_str(), mat->texture);
 				OWN_LOG("Loading imported DDS texture from Lib/Textures folder");
-				if (mat->texture->textureID == -1) { // first check if texture is in local path "Lib/Textures"
-					OWN_LOG("Error loading texture.");
-				}
-				if (mat->texture->textureID != -1) { // if texture can be loaded					
+				if (mat->texture->textureID != -1) { 
 					mat->texture->name = textureName;
 					App->textures->AddMaterial(mat->texture);
 					 
-				}
+				}				
 			}
 		}
 		else {

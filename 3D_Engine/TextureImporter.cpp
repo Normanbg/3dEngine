@@ -110,16 +110,7 @@ bool TextureImporter::ImportToDDS( const char* texPath, const char* texName) { /
 		return true;
 	}
 	else{
-		ILinfo infoImage;
-		iluGetImageInfo(&infoImage);
-
-		ILenum error = ilGetError();
-		if (error != IL_NO_ERROR) {
-			OWN_LOG("Error getting image info Error:", iluErrorString(error));
-		}
-	
 		
-
 		ILuint size;
 		ILubyte *data;
 		if (extension == DDS_FORMAT) {

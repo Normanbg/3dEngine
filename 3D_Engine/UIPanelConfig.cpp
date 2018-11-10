@@ -216,10 +216,7 @@ void UIPanelConfig::Draw() {
 		if (ImGui::Checkbox("Bounding Box", &bBox)) {
 			App->renderer3D->SetBoundingBox(bBox);
 		}
-		bool FBXtest = App->renderer3D->GetLoadFBXTest();
-		if (ImGui::Checkbox("Test Load FBX", &FBXtest)) {
-			App->renderer3D->SetLoadFBXTest(FBXtest);
-		}
+		
 	}
 	
 	if (ImGui::CollapsingHeader("Camera")) {

@@ -190,6 +190,10 @@ void ModuleScene::LoadScene(const char*file)
 
 }
 
+void ModuleScene::AddGOtoQuadtree(GameObject * go)
+{
+}
+
 update_status ModuleScene::Update(float dt){
 
 	bool ret = true;
