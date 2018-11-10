@@ -89,12 +89,21 @@ update_status ModuleEditorCamera::Update(float dt)
 			cameraComp->camRes->frustum.Translate(_pos);
 	}
 
-	//focus -------------------------------------MISSING FOR GAMEOBJECTS!!!!!!!!!!!!!!
+	//--------------------------------------------------------------------CHECK FOCUS TO GAME OBJECTS
 	if (App->input->GetKey(SDL_SCANCODE_F) == KEY_REPEAT) {
 		float3 dir = cameraComp->camRes->frustum.pos;
-		cameraComp->camRes->frustum.pos = (dir.Normalized() * 10.f);
+		float dist = 10.f;
+		float3 center = float3::zero;
 
-		cameraComp->LookAt(float3(0, 0, 0));
+		if (App->scene->gObjSelected && App->scene->gObjSelected->GetComponentMesh()) {
+			GameObject* GO = App->scene->gObjSelected;
+			center = GO->globalAABB.CenterPoint();
+			dir -= center;
+			dist = GO->globalAABB.Size().Length();
+		}
+
+		cameraComp->camRes->frustum.pos = (dir.Normalized() * dist);
+		cameraComp->LookAt(center);
 	}
 
 	return UPDATE_CONTINUE;
