@@ -10,9 +10,7 @@
 
 UIPanelScene::UIPanelScene(const char * name, float positionX, float positionY, float width, float height, bool active) : UIPanel(name, positionX, positionY, width, height, active)
 {
-	//playButtonMat = new ComponentMaterial();
-	//pauseButtonMat = new ComponentMaterial();
-	//stopButtonMat = new ComponentMaterial();
+	selectedFile[0] = '\0';
 }
 
 UIPanelScene::~UIPanelScene()
@@ -25,6 +23,18 @@ void UIPanelScene::Draw() {
 	ImGui::Begin("Scene", &active, flags);
 	if (App->gui->clearScene)
 		ClearScenePopUp();
+	if (wantToLoadFile && FileState(OWN_FILE_FORMAT)) {
+	const char* fileName = CloseFileState();
+	if (fileName != nullptr)
+		App->renderer3D->importer->LoadMeshPEI(fileName);
+	wantToLoadFile = false;
+	}
+	if (fileState == opened) {
+		LoadFilePopUp((fileStateExtensionFilter.length() > 0) ? fileStateExtensionFilter.c_str() : nullptr);
+	}
+	else
+		inModal = false;
+
 	ImVec2 region_size = ImGui::GetContentRegionAvail();
 	ImGui::SetCursorPosX(region_size.x / 2 - 30);	
 	if (ImGui::Button("Play", { 40, 20 }))
@@ -62,7 +72,7 @@ void UIPanelScene::Draw() {
 	}
 	ImGui::PopStyleColor();
 	ImGui::PopStyleColor();
-
+	
 	size = float2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y);
 	if (lastSize.x != size.x || lastSize.y != size.y)
 	{
@@ -112,4 +122,116 @@ void UIPanelScene::ClearScenePopUp(){
 		ImGui::EndPopup();
 	}
 
+}
+
+void UIPanelScene::LoadFilePopUp(const char* extensionFilter, const char* rootDirectory )
+{
+	ImGui::OpenPopup("Load File");
+
+	if (ImGui::BeginPopupModal("Load File", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+	{
+		inModal = true;
+
+		//ImGui::PushStyleVar(ImGuiStyleVar_ChildWindowRounding, 5.0f);
+		ImGui::BeginChild("File Browser", ImVec2(0, 300), true);
+		DrawDirectoryRecursive(rootDirectory, extensionFilter);
+		ImGui::EndChild();
+		//ImGui::PopStyleVar();
+
+		ImGui::PushItemWidth(250.f);
+		if (ImGui::InputText("##file_selector", selectedFile, FILE_MAX, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_AutoSelectAll))
+			fileState = toClose;
+
+		ImGui::PopItemWidth();
+		ImGui::SameLine();
+		if (ImGui::Button("Ok", ImVec2(50, 20)))
+			fileState = toClose;
+		ImGui::SameLine();
+
+		if (ImGui::Button("Cancel", ImVec2(50, 20)))
+		{
+			fileState = toClose;
+			selectedFile[0] = '\0';
+		}
+
+		
+	}
+	else
+		inModal = false;
+
+	ImGui::EndPopup();
+}
+
+void UIPanelScene::DrawDirectoryRecursive(const char * directory, const char * filter_extension)
+{
+	std::vector<std::string> files;
+	std::vector<std::string> directories;
+
+	std::string dir((directory) ? directory : "");
+	dir += "/";
+
+	App->fileSys->DiscoverFiles(dir.c_str(), files, directories);
+
+	for (int i = 0; i<directories.size();i++)
+	{
+		if (ImGui::TreeNodeEx((dir + directories[i]).c_str(), 0, "%s/", directories[i].c_str()))
+		{
+			DrawDirectoryRecursive((dir + directories[i]).c_str(), filter_extension);
+			ImGui::TreePop();
+		}
+	}
+
+	std::sort(files.begin(), files.end());
+
+	for (std::vector<std::string>::const_iterator it = files.begin(); it != files.end(); ++it)
+	{
+		const std::string& str = *it;
+
+		bool estensionMatch = true;
+
+		if (filter_extension && str.substr(str.find_last_of(".") ) != filter_extension)
+			estensionMatch = false;
+
+		if (estensionMatch && ImGui::TreeNodeEx(str.c_str(), ImGuiTreeNodeFlags_Leaf))
+		{
+			if (ImGui::IsItemClicked()) {
+				sprintf_s(selectedFile, FILE_MAX, "%s%s", dir.c_str(), str.c_str());
+
+				if (ImGui::IsMouseDoubleClicked(0))
+					fileState = toClose;
+			}
+
+			ImGui::TreePop();
+		}
+	}
+
+}
+
+bool UIPanelScene::FileState(const char * extension, const char* rootFolder)
+{
+	bool ret = true;
+
+	switch (fileState)
+	{
+	case closed:
+		selectedFile[0] = '\0';
+		fileStateExtensionFilter = (extension) ? extension : "";
+		fileStateOrigin = (rootFolder) ? rootFolder : "";
+		fileState = opened;
+	case opened:
+		ret = false;
+		break;
+	}
+
+	return ret;
+}
+
+const char * UIPanelScene::CloseFileState()
+{
+	if (fileState == toClose)
+	{
+		fileState = closed;
+		return selectedFile[0] ? selectedFile : nullptr;
+	}
+	return nullptr;
 }

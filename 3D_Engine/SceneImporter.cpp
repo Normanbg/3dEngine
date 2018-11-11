@@ -1,12 +1,8 @@
-
-
 #include "ModuleScene.h"
 #include "GameObject.h"
-
 #include "Globals.h"
 #include "SceneImporter.h"
 #include "Timer.h"
-
 
 #include <string>
 
@@ -275,6 +271,7 @@ ComponentMesh * SceneImporter::ImportMesh(aiMesh * mesh, const char* peiName)
 		OWN_LOG("Importing file to PEI");
 
 		uint ranges[4] = { newMesh->num_index,newMesh->num_vertex, newMesh->num_normals, newMesh->num_textureCoords };
+		newMesh->num_faces = newMesh->num_index / 3;
 
 		uint size = sizeof(ranges) + sizeof(uint)*newMesh->num_index + sizeof(float3)*newMesh->num_vertex + sizeof(float3)*newMesh->num_normals + sizeof(float2) * newMesh->num_textureCoords; // numIndex + numVertex + index + vertex + normals + textureCoords
 
@@ -341,6 +338,7 @@ void SceneImporter::LoadMeshPEI(ComponentMesh* compMesh) {
 		compMesh->num_vertex = ranges[1];
 		compMesh->num_normals = ranges[2];
 		compMesh->num_textureCoords = ranges[3];
+		compMesh->num_faces = compMesh->num_index / 3;
 
 		compMesh->index = new uint[compMesh->num_index];
 		compMesh->vertex = new float3[compMesh->num_vertex];
@@ -385,6 +383,88 @@ void SceneImporter::LoadMeshPEI(ComponentMesh* compMesh) {
 
 	
 	
+	dataFile.close();
+}
+void SceneImporter::LoadMeshPEI(const char* fileNamePEI) {
+
+	Timer loadingTimer;
+	std::string peiName;
+	App->fileSys->GetNameFromPath(fileNamePEI, nullptr, &peiName, nullptr, nullptr);
+	std::string filePath = LIB_MODELS_PATH;
+	filePath += peiName;
+	filePath += OWN_FILE_FORMAT;
+
+	
+
+	std::ifstream dataFile(filePath.c_str(), std::fstream::out | std::fstream::binary);
+	if (dataFile.fail()) {
+		OWN_LOG("Error loading PEI. Cannot find PEI file in %s in Lib/Textures", filePath.c_str());
+		return;
+	}
+
+	GameObject* go = App->scene->AddGameObject(peiName.c_str());
+	ComponentMesh* compMesh =(ComponentMesh*) go->AddComponent(MESH);
+
+
+
+	uint ranges[4] = { 0,0,0,0 }; // [numIndex , numVertex, numNormals, numTexCoords]
+
+	uint rangesSize = sizeof(ranges);
+	char* headerdata = new char[rangesSize];
+
+
+	dataFile.read(headerdata, rangesSize);
+	memcpy(ranges, headerdata, rangesSize);
+
+	compMesh->num_index = ranges[0];
+	compMesh->num_vertex = ranges[1];
+	compMesh->num_normals = ranges[2];
+	compMesh->num_textureCoords = ranges[3];
+
+	compMesh->index = new uint[compMesh->num_index];
+	compMesh->vertex = new float3[compMesh->num_vertex];
+	compMesh->normals = new float3[compMesh->num_normals];
+	compMesh->texturesCoords = new float2[compMesh->num_textureCoords];
+	compMesh->num_faces = compMesh->num_index / 3;
+
+	uint meshDataSize = sizeof(uint)* compMesh->num_index + sizeof(float3)*compMesh->num_vertex + sizeof(float3)*compMesh->num_normals + sizeof(float2) * compMesh->num_textureCoords;
+
+	char* meshdata = new char[meshDataSize];
+	char* mcursor = meshdata;
+
+
+	dataFile.seekg(rangesSize);
+
+	dataFile.read(meshdata, meshDataSize);
+
+
+	uint mbytes = sizeof(uint) *compMesh->num_index;//index		
+	memcpy(compMesh->index, mcursor, mbytes);
+
+	mcursor += mbytes;
+	mbytes = sizeof(float3)*compMesh->num_vertex;//vertex		
+	memcpy(compMesh->vertex, mcursor, mbytes);
+
+	mcursor += mbytes;
+	mbytes = sizeof(float3)*compMesh->num_normals;//normals	
+	memcpy(compMesh->normals, mcursor, mbytes);
+
+	mcursor += mbytes;
+	mbytes = sizeof(float2)*compMesh->num_textureCoords; //texCoords
+	memcpy(compMesh->texturesCoords, mcursor, mbytes);
+
+
+	compMesh->GenerateBuffer();
+
+	OWN_LOG("Succesfully loaded PEI: %s. Loading time: %i ms \n", compMesh->myGO->name.c_str(), loadingTimer.Read());
+
+	RELEASE_ARRAY(headerdata);
+	RELEASE_ARRAY(meshdata);
+	mcursor = nullptr;
+	compMesh = nullptr;
+
+
+
 	dataFile.close();
 }
 

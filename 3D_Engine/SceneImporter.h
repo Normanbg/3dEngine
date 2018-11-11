@@ -40,6 +40,7 @@ public:
 	ComponentMaterial* ImportMaterial(aiMaterial* mat);
 	ComponentMesh* ImportMesh(aiMesh* mesh, const char* peiName);
 	void LoadMeshPEI(ComponentMesh* mesh);
+	void LoadMeshPEI(const char * fileNamePEI);
 
 	
 	void CleanUp();

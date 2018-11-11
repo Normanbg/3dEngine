@@ -27,6 +27,8 @@ public:
 
 	bool Copy(const char * source, const char * destination);
 
+	void DiscoverFiles(const char * directory, std::vector<std::string>& fileList, std::vector<std::string>& dirList) const;
+
 	
 	
 	void GetNameFromPath(const char * full_path, std::string * path, std::string * file, std::string * fileWithExtension, std::string * extension) const;

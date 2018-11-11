@@ -67,6 +67,7 @@ public:
 
 	bool draw_menu = true;
 	bool clearScene = false;
+	bool loadFile = false;
 private:
 
 	void SetWinDockInv();
