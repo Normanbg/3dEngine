@@ -3,6 +3,8 @@
 #include "PhysFS/include/physfs.h"
 
 
+
+
 #pragma comment( lib, "PhysFS/libx86/physfs.lib" )
 
 ModuleFileSystem::ModuleFileSystem(bool start_enabled) : Module(start_enabled)
@@ -162,6 +164,7 @@ void ModuleFileSystem::GetNameFromPath(const char * full_path, std::string * pat
 	}
 
 }
+
 void ModuleFileSystem::NormalizePath(char * full_path, bool toLower) const
 {
 	uint len = strlen(full_path);

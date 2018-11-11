@@ -97,8 +97,18 @@ bool TextureImporter::ImportToDDS( const char* texPath, const char* texName) { /
 	OWN_LOG("Importing texture from %s", texPath);
 	ILuint imageID;
 
+	std::string textureName;
 	std::string extension;
-	App->fileSys->GetNameFromPath(texPath, nullptr, nullptr, nullptr, &extension);
+	if (texName == nullptr) {
+		App->fileSys->GetNameFromPath(texPath, nullptr, &textureName, nullptr, &extension);
+	}
+	else {
+		textureName = texName;
+		App->fileSys->GetNameFromPath(texPath, nullptr, nullptr, nullptr, &extension);
+	}
+	
+	
+	
 
 	ilGenImages(1, &imageID); // generates an image
 	ilBindImage(imageID);
@@ -121,7 +131,7 @@ bool TextureImporter::ImportToDDS( const char* texPath, const char* texName) { /
 				{
 					OWN_LOG("Imported succsfully into DDS");
 
-					std::string textureName = texName;
+					
 					std::string libPath = LIB_TEXTURES_PATH + textureName + DDS_FORMAT;
 					App->fileSys->writeFile(libPath.c_str(), data, size);
 				}

@@ -22,9 +22,9 @@ public:
 	const char * CloseFileState();
 public:
 	ImTextureID img;
-	ComponentMaterial* playButtonMat;
-	ComponentMaterial* pauseButtonMat;
-	ComponentMaterial* stopButtonMat;
+	//ComponentMaterial* playButtonMat;
+	//ComponentMaterial* pauseButtonMat;
+	//ComponentMaterial* stopButtonMat;
 
 	float2 lastSize;
 	float2 size;

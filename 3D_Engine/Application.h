@@ -31,6 +31,7 @@ class ModuleScene;
 class ModuleTextures;
 class ModuleFileSystem;
 class ModuleTime;
+class ModuleResources;
 
 class Application
 {
@@ -45,6 +46,7 @@ public:
 	ModuleFileSystem* fileSys;
 	ModuleGui* gui;
 	ModuleTime* time;
+	ModuleResources* resources;
 
 private:
 

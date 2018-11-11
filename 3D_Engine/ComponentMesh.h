@@ -5,6 +5,7 @@
 #include "Globals.h"
 #include "Math.h"
 #include "ComponentMaterial.h"
+#include "ComponentWithResource.h"
 
 #include <array>
 #include <vector>
@@ -17,7 +18,7 @@
 
 struct ComponentMaterial;
 
-class ComponentMesh : public Component
+class ComponentMesh : public Component, public ComponentWithResource
 {
 public:
 	ComponentMesh();

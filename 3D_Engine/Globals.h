@@ -20,6 +20,7 @@ void log(const char file[], int line, const char* format, ...);
 
 
 typedef unsigned int uint;
+typedef unsigned long long UUID;
 
 enum update_status
 {
@@ -76,5 +77,17 @@ enum update_status
 #define OWN_FILE_FORMAT ".pei"
 #define DDS_FORMAT ".dds"
 #define FBX_FORMAT ".fbx"
+#define PNG_FORMAT ".png"
+#define TGA_FORMAT ".tga"
+#define JPG_FORMAT ".jpg"
+#define JPEG_FORMAT ".jpeg"
+#define WAV_FORMAT ".wav"
+#define OGG_FORMAT ".ogg"
+
+enum FileFormats {
+	pei
+
+
+};
 
 #endif // !__GLOBALS_H__

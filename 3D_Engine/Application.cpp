@@ -10,6 +10,7 @@
 #include "ModuleFileSystem.h"
 #include "ModuleTime.h"
 #include "ModuleEditorCamera.h"
+#include "ModuleResources.h"
 #include "ModuleGui.h"
 #include "Brofiler/Brofiler.h"
 
@@ -31,6 +32,7 @@ Application::Application()
 	textures = new ModuleTextures(this);
 	fileSys = new ModuleFileSystem(this);
 	time = new ModuleTime();
+	resources = new ModuleResources(this);
 	
 	_organization = ORGANIZATION;
 	// The order of calls is very important!
@@ -46,6 +48,7 @@ Application::Application()
 	AddModule(textures);
 	AddModule(scene);
 	AddModule(time);
+	AddModule(resources);
 	
 
 	AddModule(gui);

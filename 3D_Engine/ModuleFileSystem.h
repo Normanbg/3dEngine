@@ -4,8 +4,8 @@
 #include "Module.h"
 #include "Globals.h"
 
-class ModuleFileSystem :
-	public Module
+
+class ModuleFileSystem :public Module
 {
 public:
 	ModuleFileSystem(bool start_enabled = true);
@@ -29,9 +29,8 @@ public:
 
 	void DiscoverFiles(const char * directory, std::vector<std::string>& fileList, std::vector<std::string>& dirList) const;
 
-	
-	
 	void GetNameFromPath(const char * full_path, std::string * path, std::string * file, std::string * fileWithExtension, std::string * extension) const;
+
 };
 
 #endif // __MODULE_FS_H__
