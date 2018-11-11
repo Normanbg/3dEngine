@@ -34,7 +34,8 @@ void UIPanelInspector::Draw() {
 		if (ImGui::Checkbox("Static", &go->staticGO))
 		{
 			go->setChildsStatic();
-		}
+		}		
+		ImGui::TextColored(ImVec4(0.25f, 0.25f, 0.25f,1),"UUID: %i", go->GetUUID());
 		ImGui::Separator();
 		std::vector<Component*> componentsRecover = go->components;
 		for (std::vector<Component*>::iterator itComponents = componentsRecover.begin(); itComponents != componentsRecover.end(); itComponents++) {

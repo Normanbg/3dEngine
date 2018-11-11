@@ -213,3 +213,21 @@ bool ModuleFileSystem::Copy(const char * source, const char * destination)
 
 	return ret;
 }
+
+void ModuleFileSystem::DiscoverFiles(const char* directory, std::vector<std::string> & fileList, std::vector<std::string> & directoryList) const
+{
+	char **totalFiles = PHYSFS_enumerateFiles(directory);
+	char **i;
+
+	std::string dir(directory);
+
+	for (i = totalFiles; *i != nullptr; i++)
+	{
+		if (PHYSFS_isDirectory((dir + *i).c_str()))
+			directoryList.push_back(*i);
+		else
+			fileList.push_back(*i);
+	}
+
+	PHYSFS_freeList(totalFiles);
+}

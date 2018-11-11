@@ -32,7 +32,8 @@ void ComponentCamera::DrawInspector() {
 	float ar = camRes->GetAspectRatio();
 	float nearPl = camRes->frustum.nearPlaneDistance;
 	float farPl = camRes->frustum.farPlaneDistance;
-
+	ImGui::Separator();
+	ImGui::TextColored(ImVec4(0.25f, 0.25f, 0.25f, 1), "UUID: %i", GetUUID());
 	if (ImGui::DragFloat("Near Plane", &nearPl, 0.5f)) {
 		SetNearPlaneDistance(nearPl);
 	}
@@ -45,6 +46,7 @@ void ComponentCamera::DrawInspector() {
 	if (ImGui::SliderFloat("Aspect Ratio", &ar, 0.1f, 3.5f)) {
 		camRes->SetAspectRatio(ar);
 	}
+	ImGui::Separator();
 }
 
 // -----------------------------------------------------------------
