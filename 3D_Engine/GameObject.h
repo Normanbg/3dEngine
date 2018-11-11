@@ -60,7 +60,7 @@ public:
 	inline const uint GetUUID() { return uuid; }
 
 	void CalculateAllGlobalMatrix();
-	void setChildsStatic();
+	void SetChildsStatic(bool active);
 
 	void SetLocalAABB(AABB aabb);
 
@@ -80,7 +80,7 @@ public:
 
 private:	
 		
-	void setName(char* _name);
+	void SetName(char* _name);
 	
 	void ToggleSelected();
 	uint uuid = 0;
