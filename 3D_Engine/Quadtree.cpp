@@ -27,17 +27,17 @@ void Quadtree::Clear(){
 	}
 	for (auto j : gameobjs)
 	{
-		RELEASE(j);
+		j = nullptr;
 	}
 	gameobjs.clear();
 }
 
 void Quadtree::Insert(GameObject * gameobject) {
-	//if (gameobject->GetComponentMesh() == nullptr)
-	//{
-	//	OWN_LOG("%s require a mesh for the Bounding Box", gameobject->name.c_str());
-	//	return;
-	//}
+	if (gameobject->GetComponentMesh() == nullptr)
+	{
+		OWN_LOG("%s require a mesh for the Bounding Box", gameobject->name.c_str());
+		return;
+	}
 
 	if (quadTreeBox.Intersects(gameobject->globalAABB)) {
 		if (!quTrChilds.empty()) {
@@ -85,47 +85,26 @@ inline void Quadtree::Intersect(std::vector<GameObject*>& objects, const AABB& p
 }
 
 void Quadtree::Subdivide(){
-	float3 centerXZ = { quadTreeBox.HalfSize().x, quadTreeBox.Size().y, quadTreeBox.HalfSize().z };
-	
-	//nw
+
+	float x = quadTreeBox.Size().x;
+	float y = quadTreeBox.Size().y;
+	float z = quadTreeBox.Size().z;
+
+	float3 centerXZ = { quadTreeBox.HalfSize().x, y, quadTreeBox.HalfSize().z };
+
+	//NW
 	quTrChilds.push_back(new Quadtree(AABB(quadTreeBox.minPoint, quadTreeBox.minPoint + centerXZ), subdivisions + 1));
 
-	//ne
-	float3 neMin = quadTreeBox.minPoint + float3(centerXZ.x, 0.f, 0.f);
+	//NE
+	float3 neMin = quadTreeBox.minPoint + float3(quadTreeBox.HalfSize().x, 0.0f, 0.0f);
 	quTrChilds.push_back(new Quadtree(AABB(neMin, neMin + centerXZ), subdivisions + 1));
 
-	//sw 
-	float3 swMin = quadTreeBox.minPoint + float3(0.f, 0.f, centerXZ.z);
+	//SW
+	float3 swMin = quadTreeBox.minPoint + float3(0.0f, 0.0f, quadTreeBox.HalfSize().z);
 	quTrChilds.push_back(new Quadtree(AABB(swMin, swMin + centerXZ), subdivisions + 1));
 
-	//se
-	quTrChilds.push_back(new Quadtree(AABB(float3(centerXZ.x, 0.f, centerXZ.z), quadTreeBox.maxPoint), subdivisions + 1));
-	
-}
-
-void Quadtree::AddGOtoQuadtree(GameObject * go)
-{
-	if (go == nullptr)
-		return;
-
-	if (go->GetComponentMesh()) {
-		this->Insert(go);
-	}
-	for (auto it : go->childrens)
-		AddGOtoQuadtree(it);
-}
-
-void Quadtree::SetSize(GameObject* go) {
-	if (go == nullptr)
-		return;
-	if (go->staticGO)
-	{
-		quadTreeBox.Enclose(go->globalAABB);
-		for (auto it : go->childrens)
-		{
-			SetSize(it);
-		}
-	}
+	//SE
+	quTrChilds.push_back(new Quadtree(AABB(quadTreeBox.maxPoint - centerXZ, quadTreeBox.maxPoint), subdivisions + 1));
 }
 
 

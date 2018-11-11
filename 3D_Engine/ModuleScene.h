@@ -50,7 +50,7 @@ public:
 	void SaveScene(const char* file = nullptr);
 	void LoadScene(const char* file= nullptr);
 
-	//void SetQuadTree();
+	void SetQuadTree();
 	//void AddGOtoQuadtree(GameObject* go) ;
 
 public:
@@ -68,11 +68,15 @@ public:
 	Quadtree* rootQuadTree = nullptr;
 
 private:
-	void GetAllGObjs(GameObject* go);
+	void GetAllStaticGOs(GameObject* go);
+
+	void AddGOtoQuadtree(GameObject * go);
+
+	void SetQTSize(GameObject * go);
 
 private:
 	pcg32_random_t rng;
-	std::vector<GameObject*> gObjs;
+	std::vector<GameObject*> staticOBjs;
 
 
 	
