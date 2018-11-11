@@ -12,9 +12,9 @@ public:
 	void SetFOV(float _fov);
 	void SetAspectRatio(float new_ar);
 	void SetPos(float3 pos);
-	float3 GetPos();
-	float GetFov();
-	float GetAR();
+	const float3 GetPos() const;
+	const float GetFOV() const;
+	const float GetAspectRatio() const;
 
 	void DebugDraw();
 public:

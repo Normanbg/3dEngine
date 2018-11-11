@@ -40,8 +40,9 @@ void ComponentMaterial::DrawInspector()
 void ComponentMaterial::Save(Config & data) const
 {
 	data.AddUInt("UUID", uuid);
-	if (texture)
+	if (texture) {
 		data.AddString("TexName", texture->name.c_str());
+	}
 	if (!colors.IsZero()) {
 		data.AddFloat3("Colors", colors);
 	}
@@ -51,8 +52,8 @@ void ComponentMaterial::Load(Config * data)
 {
 	uuid = data->GetUInt("UUID");
 	colors = data->GetFloat3("Colors", { 0,0,0 });
-	std::string matName = data->GetString("TexName", "NoName");	
-	
+	std::string matName = data->GetString("TexName", "NoName");
+
 	if (matName != "NoName") {
 		texture = new Material();
 		texture->name = matName;
@@ -62,9 +63,4 @@ void ComponentMaterial::Load(Config * data)
 			App->textures->AddMaterial(texture);
 		}
 	}
-	
-
-
-	
-
 }
