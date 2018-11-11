@@ -32,6 +32,7 @@ void ComponentTransformation::CleanUp()
 void ComponentTransformation::DrawInspector()
 {
 	ImGui::Separator();
+	ImGui::TextColored(ImVec4(0.25f, 0.25f, 0.25f, 1), "UUID: %i", GetUUID());
 	float3 _pos = getPos();
 	float3 _rot = getEulerRot();
 	float3 _scale = getScale();

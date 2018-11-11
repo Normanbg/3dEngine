@@ -54,6 +54,7 @@ void ComponentMesh::CleanUp()
 
 void ComponentMesh::DrawInspector() {
 	ImGui::Separator();
+	ImGui::TextColored(ImVec4(0.25f, 0.25f, 0.25f, 1), "UUID: %i", GetUUID());
 	ImGui::Text("Vertices: %d", num_index);
 	ImGui::Text("Triangles: %d",num_faces);
 	ImGui::Text("Indices: %d", num_index);

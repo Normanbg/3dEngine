@@ -82,6 +82,8 @@ update_status ModuleGui::Update(float dt)
 		if (ImGui::BeginMenu("File")) {
 			if (ImGui::MenuItem("Clear scene"))
 				clearScene = true;
+			if (ImGui::MenuItem("Load File..."))
+				App->gui->panelScene->wantToLoadFile = true;
 			if (ImGui::MenuItem("Save scene", "4"))
 				App->scene->SaveScene();
 			if (ImGui::MenuItem("Load scene", "5"))

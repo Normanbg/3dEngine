@@ -24,6 +24,7 @@ void ComponentMaterial::CleanUp()
 void ComponentMaterial::DrawInspector()
 {
 	ImGui::Separator();
+	ImGui::TextColored(ImVec4(0.25f, 0.25f, 0.25f, 1), "UUID: %i", GetUUID());
 	if (texture) {
 		ImGui::Text(texture->name.c_str());
 

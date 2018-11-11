@@ -28,6 +28,9 @@ public:
 
 	float2 lastSize;
 	float2 size;
+
+	bool wantToLoadFile = false;
+
 private:
 	enum
 	{
@@ -37,13 +40,13 @@ private:
 	}fileState = closed;
 	bool inModal= false;
 	char selectedFile[FILE_MAX];
-	std::string fileStateFilter;
+	std::string fileStateExtensionFilter;
 	std::string fileStateOrigin;
 
 private: 
 
 	void DrawDirectoryRecursive(const char* directory, const char* filterExtension);
-	void LoadFilePopUp(const char* rootDirectory = nullptr, const char* extensionFilter = nullptr);
+	void LoadFilePopUp( const char* extensionFilter = nullptr, const char* rootDirectory = nullptr);
 	
 
 };

@@ -23,8 +23,14 @@ void UIPanelScene::Draw() {
 	ImGui::Begin("Scene", &active, flags);
 	if (App->gui->clearScene)
 		ClearScenePopUp();
+	if (wantToLoadFile && FileState(OWN_FILE_FORMAT)) {
+	const char* fileName = CloseFileState();
+	if (fileName != nullptr)
+		App->renderer3D->importer->LoadMeshPEI(fileName);
+	wantToLoadFile = false;
+	}
 	if (fileState == opened) {
-		LoadFilePopUp((fileStateFilter.length() > 0) ? fileStateFilter.c_str() : nullptr);
+		LoadFilePopUp((fileStateExtensionFilter.length() > 0) ? fileStateExtensionFilter.c_str() : nullptr);
 	}
 	else
 		inModal = false;
@@ -66,18 +72,7 @@ void UIPanelScene::Draw() {
 	}
 	ImGui::PopStyleColor();
 	ImGui::PopStyleColor();
-	//----TEST
-	ImGui::PushStyleColor(ImGuiCol_Button, { 0.8f,0,0,1 });
-	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, { 1,0.2f,0,1 });
-	if (ImGui::Button("open Load window", { 40, 20 }))
-	{
-		FileState("fbx");
-
-
-	}
-	ImGui::PopStyleColor();
-	ImGui::PopStyleColor();
-	//----TEST
+	
 	size = float2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y);
 	if (lastSize.x != size.x || lastSize.y != size.y)
 	{
@@ -129,7 +124,7 @@ void UIPanelScene::ClearScenePopUp(){
 
 }
 
-void UIPanelScene::LoadFilePopUp(const char* rootDirectory, const char* extensionFilter)
+void UIPanelScene::LoadFilePopUp(const char* extensionFilter, const char* rootDirectory )
 {
 	ImGui::OpenPopup("Load File");
 
@@ -159,10 +154,12 @@ void UIPanelScene::LoadFilePopUp(const char* rootDirectory, const char* extensio
 			selectedFile[0] = '\0';
 		}
 
-		ImGui::EndPopup();
+		
 	}
 	else
 		inModal = false;
+
+	ImGui::EndPopup();
 }
 
 void UIPanelScene::DrawDirectoryRecursive(const char * directory, const char * filter_extension)
@@ -192,7 +189,7 @@ void UIPanelScene::DrawDirectoryRecursive(const char * directory, const char * f
 
 		bool estensionMatch = true;
 
-		if (filter_extension && str.substr(str.find_last_of(".") + 1) != filter_extension)
+		if (filter_extension && str.substr(str.find_last_of(".") ) != filter_extension)
 			estensionMatch = false;
 
 		if (estensionMatch && ImGui::TreeNodeEx(str.c_str(), ImGuiTreeNodeFlags_Leaf))
@@ -218,7 +215,7 @@ bool UIPanelScene::FileState(const char * extension, const char* rootFolder)
 	{
 	case closed:
 		selectedFile[0] = '\0';
-		fileStateFilter = (extension) ? extension : "";
+		fileStateExtensionFilter = (extension) ? extension : "";
 		fileStateOrigin = (rootFolder) ? rootFolder : "";
 		fileState = opened;
 	case opened:
