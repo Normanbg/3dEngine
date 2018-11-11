@@ -328,19 +328,23 @@ ComponentMaterial * GameObject::GetComponentMaterial()
 //	return staticGO;
 //}
 
-void GameObject::setName(char * _name)
+void GameObject::SetName(char * _name)
 {
 	name = _name;
 }
-
-void GameObject::setChildsStatic()
-{
-	for (auto it : childrens)
-	{
-		it->staticGO = true;
-		it->setChildsStatic();
-	}
-}
+//
+//void GameObject::SetChildsStatic(bool active)
+//{
+//	if (this->staticGO != active && active == true)
+//		App->scene->staticsGObjs++;
+//	else if (this->staticGO != active && active == false)
+//		App->scene->staticsGObjs--;
+//	for (auto it : childrens)
+//	{
+//		it->SetChildsStatic(active);
+//		it->staticGO = active;
+//	}
+//}
 
 void GameObject::SetLocalAABB(AABB aabb)
 {

@@ -24,7 +24,7 @@ public:
 	void Subdivide();
 
 	void AddGOtoQuadtree(GameObject * go);
-	void Resize(GameObject * go);
+	void SetSize(GameObject * go);
 
 	void DebugDraw();
 

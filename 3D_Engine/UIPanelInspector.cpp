@@ -33,7 +33,13 @@ void UIPanelInspector::Draw() {
 		ImGui::SameLine();
 		if (ImGui::Checkbox("Static", &go->staticGO))
 		{
-			go->setChildsStatic();
+			//App->scene->SetQuadTree();
+
+			//if (go->staticGO)
+			//	App->scene->staticsGObjs++;
+			//else 
+			//	App->scene->staticsGObjs--;
+			//go->SetChildsStatic(go->staticGO);
 		}
 		ImGui::Separator();
 		std::vector<Component*> componentsRecover = go->components;

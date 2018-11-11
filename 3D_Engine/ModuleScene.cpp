@@ -189,25 +189,47 @@ void ModuleScene::LoadScene(const char*file)
 		RELEASE_ARRAY(buffer);
 
 }
+//
+//void ModuleScene::AddGOtoQuadtree(GameObject * go)
+//{
+//}
+//
+//void ModuleScene::SetQuadTree()
+//{
+//	rootQuadTree->Clear();
+//	GetAllGObjs(root);
+//
+//	for (auto it : gObjs){
+//		rootQuadTree->SetSize(it);
+//	}
+//	for (auto j : gObjs) {
+//		rootQuadTree->AddGOtoQuadtree(j);
+//	}
+//}
 
-void ModuleScene::AddGOtoQuadtree(GameObject * go)
+void ModuleScene::GetAllGObjs(GameObject* go)
 {
+	if (go != root)
+		gObjs.push_back(go);
+	for (auto it : go->childrens) {
+		GetAllGObjs(it);
+	}
 }
 
 update_status ModuleScene::Update(float dt){
 
 	bool ret = true;
-	GameObject* PENE = nullptr;
-	if (App->input->GetKey(SDL_SCANCODE_7) == KEY_DOWN) {///////////////// DEBUUG
-		GameObject* pte = CreateCube();
-		PENE = pte;
-		if (numCubes == 2)
-			pte->transformComp->setPos(float3(14.f, 0.f, 14.f));
-		AddGOtoQuadtree(pte);
-	}
+	//GameObject* PENE = nullptr;
+	//if (App->input->GetKey(SDL_SCANCODE_7) == KEY_DOWN) {///////////////// DEBUUG
+	//	GameObject* pte = CreateCube();
+	//	PENE = pte;
+	//	if (numCubes == 2)
+	//		pte->transformComp->setPos(float3(14.f, 0.f, 14.f));
+	//	AddGOtoQuadtree(pte);
+	//}
 	root->CalculateAllGlobalMatrix();
-	if (PENE)
-		AddGOtoQuadtree(PENE);
+	//if (PENE)
+	//	AddGOtoQuadtree(PENE);
 
 	if (root->childrens.empty() == false) {
 

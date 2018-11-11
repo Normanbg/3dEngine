@@ -18,16 +18,16 @@ void Quadtree::Clear(){
 	quadTreeBox.SetNegativeInfinity();
 	subdivisions = 0;
 	if (!quTrChilds.empty()) {
-		for (int i = 0; i < quTrChilds.size(); i++)
+		for (auto it : quTrChilds)
 		{
-			quTrChilds[i]->Clear();
-			quTrChilds[i] = nullptr;
+			it->Clear();
+			it = nullptr;
 		}
 		quTrChilds.clear();
 	}
-	for (int j = 0; j < gameobjs.size(); j++)
+	for (auto j : gameobjs)
 	{
-		RELEASE(gameobjs[j]);
+		RELEASE(j);
 	}
 	gameobjs.clear();
 }
@@ -115,7 +115,7 @@ void Quadtree::AddGOtoQuadtree(GameObject * go)
 		AddGOtoQuadtree(it);
 }
 
-void Quadtree::Resize(GameObject* go) {
+void Quadtree::SetSize(GameObject* go) {
 	if (go == nullptr)
 		return;
 	if (go->staticGO)
@@ -123,7 +123,7 @@ void Quadtree::Resize(GameObject* go) {
 		quadTreeBox.Enclose(go->globalAABB);
 		for (auto it : go->childrens)
 		{
-			Resize(it);
+			SetSize(it);
 		}
 	}
 }
