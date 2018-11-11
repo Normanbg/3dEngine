@@ -159,8 +159,8 @@ void ModuleEditorCamera::UpdateProjMatrix()
 void ModuleEditorCamera::ConfigInfo(){
 	float mouseS = GetMouseSensit();
 	float scrollS = GetScrollSensit();
-	float fov = cameraComp->camRes->GetFov();
-	float ar = cameraComp->camRes->GetAR();
+	float fov = cameraComp->camRes->GetFOV();
+	float ar = cameraComp->camRes->GetAspectRatio();
 	float nearPl = cameraComp->camRes->frustum.nearPlaneDistance;
 	float farPl = cameraComp->camRes->frustum.farPlaneDistance;
 	bool projChanged = false;

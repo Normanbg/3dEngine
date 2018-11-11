@@ -31,17 +31,17 @@ void Camera::SetPos(float3 pos){
 	frustum.pos = pos;
 }
 
-float3 Camera::GetPos()
+const float3 Camera::GetPos() const 
 {
 	return frustum.pos;
 }
 
-float Camera::GetFov()
+const float Camera::GetFOV()const
 {
 	return fov;
 }
 
-float Camera::GetAR()
+const float Camera::GetAspectRatio() const
 {
 	return frustum.horizontalFov;
 }

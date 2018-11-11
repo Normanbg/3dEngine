@@ -33,7 +33,7 @@ public:
 
 public:
 
-	Camera* camRes;
+	Camera* camRes = nullptr;
 };
 
 #endif // !__COMPONENTCAMERA_H__

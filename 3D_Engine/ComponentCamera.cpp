@@ -28,8 +28,8 @@ void ComponentCamera::CleanUp()
 }
 
 void ComponentCamera::DrawInspector() {
-	float fov = camRes->GetFov();
-	float ar = camRes->GetAR();
+	float fov = camRes->GetFOV();
+	float ar = camRes->GetAspectRatio();
 	float nearPl = camRes->frustum.nearPlaneDistance;
 	float farPl = camRes->frustum.farPlaneDistance;
 	ImGui::Separator();
@@ -116,11 +116,20 @@ float * ComponentCamera::GetProjectionMatrix()
 void ComponentCamera::Save(Config & data) const
 {
 	data.AddUInt("UUID", uuid);
-	//NEED TO FILL WITH USEFULL INFO
-
+	if (camRes) {
+		data.AddFloat3("Frustum Position", camRes->GetPos());
+		data.AddFloat("FOV", camRes->GetFOV());
+		data.AddFloat("Aspect Ratio", camRes->GetAspectRatio());
+	}
 }
 
 void ComponentCamera::Load(Config * data)
 {
 	uuid = data->GetUInt("UUID");
+	if (camRes==nullptr) {
+		camRes = new Camera();		
+	}
+	camRes->SetPos(data->GetFloat3("Frustum Position", { 0,0,0 }));
+	camRes->SetFOV(data->GetFloat("FOV", 0));
+	camRes->SetAspectRatio(data->GetFloat("Aspect Ratio", 0));
 }
