@@ -6,8 +6,6 @@
 #include "ModuleTextures.h"
 #include "Config.h"
 
-#include "ModuleInput.h"////delete me
-
 #include <vector>
 
 ModuleScene::ModuleScene(bool start_enabled) : Module(start_enabled){
@@ -40,16 +38,6 @@ bool ModuleScene::Init(JSON_Object * obj)
 update_status ModuleScene::PreUpdate(float dt)
 {
 	bool ret = true;
-
-	
-
-	if(App->input->GetKey(SDL_SCANCODE_4)== KEY_DOWN) { ///// DEBUUG
-		SaveScene();
-	}
-	if (App->input->GetKey(SDL_SCANCODE_5) == KEY_DOWN) { ///// DEBUUG
-
-		LoadScene();
-	}
 	 
 	if (root->childrens.empty() == false) {
 		for (int i = 0; i < root->childrens.size(); i++) {
