@@ -44,6 +44,7 @@ public:
 	void SetNormals(bool active) { _normals = active; }
 	void SetAxis(bool active) { _axis = active; }
 	void SetGrid(bool active) { _grid = active; }	
+	void SetQuadTree(bool active) { _quadtree = active; };
 	void SetBoundingBox(bool active);
 
 	inline bool GetDepthTest() const { return _depthTest; }
@@ -56,6 +57,7 @@ public:
 	inline bool GetBoundingBox()const { return _bBox; }
 	inline bool GetAxis() const { return _axis; }
 	inline bool GetGrid() const { return _grid; }
+	inline bool GetQuadTree() const { return _quadtree; }
 
 	/*vec GetAvgPosFromMeshes();*/
 	   
@@ -85,7 +87,7 @@ private:
 	void SetDataFromJson(JSON_Object* data);
 
 private:
-
+	
 	bool _vSync;
 
 	bool _depthTest = true;
@@ -98,7 +100,7 @@ private:
 	bool _grid = true;
 	bool _normals = false;
 	bool _bBox = false;
-
+	bool _quadtree = false;
 
 };
 

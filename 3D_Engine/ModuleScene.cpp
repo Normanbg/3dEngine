@@ -30,7 +30,9 @@ bool ModuleScene::Init(JSON_Object * obj)
 	mainCamera->AddComponent(CAMERA);
 	mainCamera->GetComponentCamera()->SetFarPlaneDistance(85.f);
 	mainCamera->GetComponentCamera()->LookAt({ 0.f, 0.f, 0.f });
-	rootQuadTree = new Quadtree(AABB({ 0.f, 0.f, 0.f }, { 15.f, 15.f ,15.f }), 0);
+	AABB rootAABB;
+	rootAABB.SetNegativeInfinity();
+	rootQuadTree = new Quadtree(rootAABB, 0);
 
 	return true;
 }
@@ -138,6 +140,7 @@ void ModuleScene::ClearScene() const
 	for (int i = root->components.size() - 1; i > 0; i--) {
 		root->RemoveComponent(root->components[i]);
 	}
+	rootQuadTree->Clear();
 }
 
 void ModuleScene::SaveScene(const char* file) 
@@ -360,6 +363,7 @@ void ModuleScene::Draw() {
 	}
 	if (!inGame && mainCamera != nullptr && rootQuadTree != nullptr) {
 		mainCamera->GetComponentCamera()->DebugDraw();
+		if (App->renderer3D->GetQuadTree())
 		rootQuadTree->DebugDraw();
 	}
 	iterator = nullptr;

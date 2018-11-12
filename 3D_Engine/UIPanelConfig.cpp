@@ -216,7 +216,11 @@ void UIPanelConfig::Draw() {
 		if (ImGui::Checkbox("Bounding Box", &bBox)) {
 			App->renderer3D->SetBoundingBox(bBox);
 		}
-		
+		ImGui::SameLine();
+		bool quadtree = App->renderer3D->GetQuadTree();
+		if (ImGui::Checkbox("Quadtree", &quadtree)) {
+			App->renderer3D->SetQuadTree(quadtree);
+		}
 	}
 	
 	if (ImGui::CollapsingHeader("Camera")) {
