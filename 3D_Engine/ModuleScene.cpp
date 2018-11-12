@@ -212,7 +212,31 @@ void ModuleScene::MousePicking()
 		else
 			ray = App->camera->cameraComp->GetFrustum().UnProjectLineSegment(x, y);
 
+		GetDynamicGOs(root);
+		float distance = 9 * 10 ^ 10;
+		GameObject* closest = nullptr;
 
+		for (auto it :  dynamicOBjs)
+		{
+			bool hit;
+			float dist;
+			it->RayHits(ray, hit, dist);
+
+			if (hit)
+			{
+				if (dist < distance)
+				{
+					distance = dist;
+					closest = it;
+				}
+			}
+		}
+
+		if (closest != nullptr)
+		{
+			DeselectAll();
+			ShowGameObjectInspector(closest);
+		}
 	}
 
 }
@@ -265,6 +289,8 @@ update_status ModuleScene::Update(float dt){
 	bool ret = true;
 	root->CalculateAllGlobalMatrix();
 
+	if (App->input->GetMouseButton(SDL_BUTTON_LEFT))
+		MousePicking();
 	if (root->childrens.empty() == false) {
 
 		for (int i = 0; i < root->childrens.size(); i++) {

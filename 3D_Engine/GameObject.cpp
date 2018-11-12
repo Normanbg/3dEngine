@@ -371,7 +371,28 @@ void GameObject::RayHits(const LineSegment & segment, bool & hit, float & dist){
 			LineSegment localRay(segment);
 			localRay.Transform(transformComp->getGlobalMatrix().Inverted());
 
-			//MISSING CHECK EACH TRIANGLE--------------------------------------------------------------------
+			uint* indices = mesh->index;
+			float3* vertices = mesh->vertex;
+			Triangle triangle;
+
+			for (int i = 0; i < mesh->num_index;) {
+				//TO CHEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEECK!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+				triangle.a.Set(vertices[(3 * indices[i])].x, vertices[(3 * indices[i])].y, vertices[(3 * indices[i])].z); ++i;
+				triangle.b.Set(vertices[(3 * indices[i])].x, vertices[(3 * indices[i])].y, vertices[(3 * indices[i])].z); ++i;
+				triangle.c.Set(vertices[(3 * indices[i])].x, vertices[(3 * indices[i])].y, vertices[(3 * indices[i])].z); ++i;
+
+				float distance;
+				float3 hitPoint;
+
+				if (localRay.Intersects(triangle, &distance, &hitPoint))
+				{
+					if (distance < dist)
+					{
+						dist = distance;
+						hit = true;
+					}
+				}
+			}
 		}
 	}
 }
