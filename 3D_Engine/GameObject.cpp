@@ -106,13 +106,13 @@ void GameObject::CleanUp(){
 void GameObject::CalculateAllGlobalMatrix(){
 	if (parent == nullptr)
 	{
-		transformComp->globalMatrix = transformComp->localMatrix;
+		transformComp->setGlobalMatrix(transformComp->getLocalMatrix());
 	}
 	else
-		transformComp->globalMatrix = parent->transformComp->globalMatrix * transformComp->localMatrix;
+		transformComp->getGlobalMatrix() = parent->transformComp->getGlobalMatrix() * transformComp->getLocalMatrix();
 
 	OBB newobb = localAABB;
-	newobb.Transform(transformComp->globalMatrix);
+	newobb.Transform(transformComp->getGlobalMatrix());
 
 	obb = newobb;
 	globalAABB.SetNegativeInfinity();
@@ -357,6 +357,23 @@ void GameObject::SetLocalAABB(AABB aabb)
 	}
 	else
 		localAABB.Enclose(aabb);
+}
+
+void GameObject::RayHits(const LineSegment & segment, bool & hit, float & dist){
+	hit = false;
+	dist = 9 * 10 ^ 10;
+
+	if (globalAABB.IsFinite() && segment.Intersects(globalAABB)) {
+		ComponentMesh* mesh;
+		mesh = GetComponentMesh();
+		if (mesh) {
+			//Segment for the mesh
+			LineSegment localRay(segment);
+			localRay.Transform(transformComp->getGlobalMatrix().Inverted());
+
+			//MISSING CHECK EACH TRIANGLE--------------------------------------------------------------------
+		}
+	}
 }
 
 void GameObject::ToggleSelected(){

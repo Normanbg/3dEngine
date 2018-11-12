@@ -127,7 +127,7 @@ void ComponentMesh::GenerateBuffer()
 void ComponentMesh::Draw()
 {
 	glPushMatrix();
-	glMultMatrixf(myGO->transformComp->globalMatrix.Transposed().ptr());
+	glMultMatrixf(myGO->transformComp->getGlobalMatrix().Transposed().ptr());
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);	
 

@@ -73,6 +73,7 @@ void UIPanelScene::Draw() {
 	ImGui::PopStyleColor();
 	ImGui::PopStyleColor();
 	
+	pos = float2(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y);
 	size = float2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y);
 	if (lastSize.x != size.x || lastSize.y != size.y)
 	{
@@ -123,6 +124,12 @@ void UIPanelScene::ClearScenePopUp(){
 	}
 
 }
+
+Rect UIPanelScene::GetWindowRect() const
+{
+	return Rect(pos.x, pos.y, size.x, size.y);
+}
+
 
 void UIPanelScene::LoadFilePopUp(const char* extensionFilter, const char* rootDirectory )
 {

@@ -6,6 +6,10 @@
 #include "ModuleTextures.h"
 #include "Config.h"
 
+#include "ModuleInput.h"
+#include "ModuleGui.h"
+#include "UIPanelScene.h"
+
 #include <vector>
 
 ModuleScene::ModuleScene(bool start_enabled) : Module(start_enabled){
@@ -180,10 +184,6 @@ void ModuleScene::LoadScene(const char*file)
 		RELEASE_ARRAY(buffer);
 
 }
-//
-//void ModuleScene::AddGOtoQuadtree(GameObject * go)
-//{
-//}
 
 void ModuleScene::SetQuadTree()
 {
@@ -198,12 +198,40 @@ void ModuleScene::SetQuadTree()
 	}
 }
 
+void ModuleScene::MousePicking()
+{
+	if (App->gui->isMouseOnScene()) {
+		Rect window = App->gui->panelScene->GetWindowRect();
+		float x = (2.0f * App->input->GetMouseX()) / window.Width() - 1.0f;
+		float y = 1.0f - (2.0f * App->input->GetMouseX()) / window.Height();
+
+		LineSegment ray;
+		if (App->scene->inGame) {
+			ray = mainCamera->GetComponentCamera()->GetFrustum().UnProjectLineSegment(x, y);
+		}
+		else
+			ray = App->camera->cameraComp->GetFrustum().UnProjectLineSegment(x, y);
+
+
+	}
+
+}
+
 void ModuleScene::GetAllStaticGOs(GameObject* go)
 {
 	if (go != root && go->staticGO)
 		staticOBjs.push_back(go);
 	for (auto it : go->childrens) {
 		GetAllStaticGOs(it);
+	}
+}
+
+void ModuleScene::GetDynamicGOs(GameObject * go)
+{
+	if (go != root && !go->staticGO)
+		dynamicOBjs.push_back(go);
+	for (auto it : go->childrens) {
+		GetDynamicGOs(it);
 	}
 }
 

@@ -134,22 +134,32 @@ void ComponentTransformation::setRotEuler(float3 _newrot)
 	UpdateLocalMatrix();
 }
 
-float3 ComponentTransformation::getPos()
+float3 ComponentTransformation::getPos() const
 {
 	return transform.position;
 }
 
-float3 ComponentTransformation::getScale()
+float3 ComponentTransformation::getScale() const
 {
 	return transform.scale;
 }
 
-float3 ComponentTransformation::getEulerRot()
+float3 ComponentTransformation::getEulerRot() const
 {
 	return transform.rotEuler;
 }
 
-Quat ComponentTransformation::getQuatRot()
+Quat ComponentTransformation::getQuatRot() const
 {
 	return transform.rotationQuat;
+}
+
+float4x4 ComponentTransformation::getGlobalMatrix() const
+{
+	return globalMatrix;
+}
+
+float4x4 ComponentTransformation::getLocalMatrix() const
+{
+	return localMatrix;
 }

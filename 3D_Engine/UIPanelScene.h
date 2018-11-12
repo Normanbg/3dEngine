@@ -17,6 +17,8 @@ public:
 
 	void Draw();
 	void ClearScenePopUp();
+
+	Rect GetWindowRect() const;
 	
 	bool FileState(const char * extension = nullptr, const char * rootFolder= nullptr);
 	const char * CloseFileState();
@@ -28,7 +30,7 @@ public:
 
 	float2 lastSize;
 	float2 size;
-
+	float2 pos;
 	bool wantToLoadFile = false;
 
 private:

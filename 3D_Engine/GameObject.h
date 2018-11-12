@@ -64,6 +64,7 @@ public:
 
 	void SetLocalAABB(AABB aabb);
 
+	void RayHits(const LineSegment& segment, bool& hit, float& dist);
 public:
 	std::string					name;
 	std::vector <Component*>	components;
