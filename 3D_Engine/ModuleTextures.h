@@ -40,6 +40,8 @@ public:
 	Material* GetMaterialsFromName(const char* name);
 	GLuint CheckIfImageAlreadyLoaded(const char * _path);
 
+	bool ImportTexture(const char* tex);
+
 	void LoadDroppedTexture(char*droppedFileDire);
 
 	std::vector<Material*> materials;

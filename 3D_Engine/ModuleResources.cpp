@@ -8,6 +8,10 @@
 #include "ModuleFileSystem.h"
 #include "ModuleRenderer3D.h"
 
+#include <filesystem>
+#include <iostream>
+
+
 ModuleResources::ModuleResources() 
 {
 }
@@ -19,7 +23,8 @@ ModuleResources::~ModuleResources()
 
 bool ModuleResources::Init(JSON_Object * obj)
 {
-	
+	ImportFilesToLibrary();
+
 	return true;
 }
 
@@ -33,11 +38,19 @@ bool ModuleResources::CleanUp()
 	return true;
 }
 
-UUID ModuleResources::Find(const char * fileInAssets) const
+void ModuleResources::ImportFilesToLibrary()
+{
+	std::string path = "/Assets";
+	for (auto & p : std::experimental::filesystem::directory_iterator(path)) {
+		std::cout << p << std::endl;
+	}
+}
+
+uuid ModuleResources::Find(const char * fileInAssets) const
 {
 	std::string fileName = fileInAssets;
 	
-	for (std::map<UUID, Resource*>::const_iterator it = resources.begin(); it != resources.end(); i++) {
+	for (std::map<uuid, Resource*>::const_iterator it = resources.begin(); it != resources.end(); it++) {
 		if (it->second->GetFileStr() == fileName) {
 			return it->first;
 		}	
@@ -45,17 +58,17 @@ UUID ModuleResources::Find(const char * fileInAssets) const
 	return 0;
 }
 
-UUID ModuleResources::ImportFile(const char * newFileInAssets)
+uuid ModuleResources::ImportFile(const char * newFileInAssets)
 {
-	UUID ret = 0;
+	uuid ret = 0;
 	bool import_ok = false; 
 	std::string writtenFile;
 	Resource::ResType type = GetResourceTypeFromExtension(newFileInAssets);
 	switch (type) {
-	case Resource::ResType::Texture: {import_ok = App->renderer3D->texImporter->ImportToDDS(newFileInAssets); break; }
-	case Resource::ResType::Scene: {break; }
-	case Resource::ResType::Mesh: {break; }
-	case Resource::ResType::Audio: {break; }
+	case Resource::ResType::Texture: {import_ok = App->textures->ImportTexture(newFileInAssets); break; }
+	case Resource::ResType::Scene: {import_ok = App->renderer3D->importer->ImportScene(newFileInAssets); break; }
+	case Resource::ResType::Mesh: {import_ok = App->fileSys->CopyPEItoLib(newFileInAssets); break; }
+	case Resource::ResType::Audio: {import_ok = App->fileSys->CopyAudioToLib(newFileInAssets); break; }
 	}
 	if (import_ok) {
 		Resource* res = CreateNewResource(type);
@@ -66,35 +79,35 @@ UUID ModuleResources::ImportFile(const char * newFileInAssets)
 	return ret;
 }
 
-UUID ModuleResources::GenerateNewUUID()
+uuid ModuleResources::GenerateNewUUID()
 {
 	return 0;
 }
 
-const Resource * ModuleResources::Get(UUID uuid) const
+const Resource * ModuleResources::Get(uuid _uuid) const
 {
-	for (std::map<UUID, Resource*>::const_iterator it = resources.begin(); it != resources.end(); i++) {
-		if (it->first == uuid) {
+	for (std::map<uuid, Resource*>::const_iterator it = resources.begin(); it != resources.end(); it++) {
+		if (it->first == _uuid) {
 			return it->second;
 		}
 	}
 	return nullptr;
 }
 
-Resource * ModuleResources::Get(UUID uuid)
+Resource * ModuleResources::Get(uuid _uuid)
 {
-	for (std::map<UUID, Resource*>::iterator it = resources.begin(); it != resources.end(); i++) {
-		if (it->first == uuid) {
+	for (std::map<uuid, Resource*>::iterator it = resources.begin(); it != resources.end(); it++) {
+		if (it->first == _uuid) {
 			return it->second;
 		}
 	}
 	return nullptr;
 }
 
-Resource * ModuleResources::CreateNewResource(Resource::ResType type, UUID forceUUID)
+Resource * ModuleResources::CreateNewResource(Resource::ResType type, uuid forceUUID)
 {
 	Resource* res = nullptr;
-	UUID uuid;
+	uuid uuid;
 
 	if (forceUUID != 0 && Get(forceUUID) == nullptr)
 		uuid = forceUUID;

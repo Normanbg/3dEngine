@@ -108,7 +108,6 @@ bool TextureImporter::ImportToDDS( const char* texPath, const char* texName) { /
 	}
 	
 	
-	
 
 	ilGenImages(1, &imageID); // generates an image
 	ilBindImage(imageID);
@@ -116,14 +115,13 @@ bool TextureImporter::ImportToDDS( const char* texPath, const char* texName) { /
 	bool ret = ilLoadImage(texPath);
 	if (!ret) {
 		OWN_LOG("Cannot Load Texture from %s", texPath);
-		ilDeleteImages(1, &imageID);
-		return true;
+		ilDeleteImages(1, &imageID);		
 	}
 	else{
 		
 		ILuint size;
 		ILubyte *data;
-		if (extension == DDS_FORMAT) {
+		/*if (extension == DDS_FORMAT) {
 			size = ilSaveL(IL_DDS, NULL, 0);
 			if (size != 0) {
 				data = new ILubyte[size]; // allocate data buffer
@@ -139,7 +137,7 @@ bool TextureImporter::ImportToDDS( const char* texPath, const char* texName) { /
 
 
 			}
-		} 
+		} */
 		ilSetInteger(IL_DXTC_FORMAT, IL_DXT5);// To pick a specific DXT compression use 
 		size = ilSaveL(IL_DDS, NULL, 0); // gets the size of the data buffer
 		if (size != 0) {
@@ -151,13 +149,14 @@ bool TextureImporter::ImportToDDS( const char* texPath, const char* texName) { /
 				std::string textureName = texName;				
 				std::string libPath = LIB_TEXTURES_PATH + textureName + DDS_FORMAT;
 				App->fileSys ->writeFile(libPath.c_str(), data, size);
+				ret = true;
 			}
 			delete[]data;
 			
 
 		}
 		data = nullptr;
-		ilDeleteImages(1, &imageID);
-		return false;
+		ilDeleteImages(1, &imageID);		
 	}
+	return ret;
 }

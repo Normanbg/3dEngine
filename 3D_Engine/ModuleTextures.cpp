@@ -76,6 +76,20 @@ GLuint ModuleTextures::CheckIfImageAlreadyLoaded(const char * name)
 	return -1;
 }
 
+bool ModuleTextures::ImportTexture(const char* tex)
+{
+	bool ret = false;
+	
+	std::string extension;
+	App->fileSys->GetNameFromPath(tex, nullptr, nullptr, nullptr, &extension);
+	if (extension != DDS_FORMAT) 
+		ret = App->renderer3D->texImporter->ImportToDDS(tex);	
+	else 
+		ret = App->fileSys->CopyDDStoLib(tex);	
+
+	return ret;
+}
+
 void ModuleTextures::LoadDroppedTexture(char * droppedFileDire)
 {
 	

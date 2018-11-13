@@ -4,7 +4,7 @@
 #include "Globals.h"
 #include "Resource.h"
 
-struct Config;
+class Config;
 
 class ResourceTexture :	public Resource
 {
@@ -19,7 +19,7 @@ class ResourceTexture :	public Resource
 	};
 
 public:
-	ResourceTexture(UUID uuid);
+	ResourceTexture(uuid UUID);
 	virtual ~ResourceTexture();
 
 	bool LoadInMemory() override;
@@ -36,4 +36,4 @@ public:
 	Format format = unknown;
 };
 
-#endif
+#endif// !__RESOURCE_TEXTURE_H__

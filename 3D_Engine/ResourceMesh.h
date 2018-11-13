@@ -1,21 +1,21 @@
 #ifndef __RESOURCE_MESH_H__
 #define __RESOURCE_MESH_H__
 
-#include "Globals.h"
 #include "Resource.h"
+#include "Globals.h"
 
-struct Config;
+class Resource;
 
 class ResourceMesh : public Resource
 {
 
 public:
-	ResourceMesh(UUID uuid);
+	ResourceMesh(uuid UUID);
 	virtual ~ResourceMesh();
 
 	bool LoadInMemory() override;
 	void Save(Config& config) const override;
 	void Load(const Config& config) override;
 
-}
-#endif
+};
+#endif// !__RESOURCE_MESH_H__

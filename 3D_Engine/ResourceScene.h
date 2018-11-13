@@ -10,12 +10,12 @@ class ResourceScene : public Resource
 {
 	
 public:
-	ResourceScene(UUID uuid);
+	ResourceScene(uuid UUID);
 	virtual ~ResourceScene();
 
 	bool LoadInMemory() override;
 	void Save(Config& config) const override;
 	void Load(const Config& config) override;
 
-}
+};
 #endif

@@ -32,7 +32,7 @@ Application::Application()
 	textures = new ModuleTextures(this);
 	fileSys = new ModuleFileSystem(this);
 	time = new ModuleTime();
-	resources = new ModuleResources(this);
+	resources = new ModuleResources();
 	
 	_organization = ORGANIZATION;
 	// The order of calls is very important!

@@ -19,18 +19,21 @@ public:
 	bool Start() override;
 	bool CleanUp() override;
 
-	UUID Find(const char* fileInAssets) const;
-	UUID ImportFile(const char* newFileInAssets);
-	UUID GenerateNewUUID();
-	const Resource* Get(UUID uuid) const;
-	Resource* Get(UUID uuid);
-	Resource* CreateNewResource(Resource::ResType type, UUID forceUUID = 0);
+	void ImportFilesToLibrary();
+
+	uuid Find(const char* fileInAssets) const;
+	uuid ImportFile(const char* newFileInAssets);
+	uuid GenerateNewUUID();
+	const Resource* Get(uuid uuid) const;
+	Resource* Get(uuid uuid);
+	Resource* CreateNewResource(Resource::ResType type, uuid forceUUID = 0);
 
 	const Resource::ResType GetResourceTypeFromExtension(const char * path) const;
 
 private:
-	UUID last_uuid = 1;
-	std::map<UUID, Resource*> resources;
+
+	uuid last_uuid = 1;
+	std::map<uuid, Resource*> resources;
 	
 };
 

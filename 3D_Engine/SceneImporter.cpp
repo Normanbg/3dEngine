@@ -32,6 +32,171 @@ void SceneImporter::Init()
 
 }
 
+bool SceneImporter::ImportScene(const char * FBXpath)
+{
+	bool ret = false;
+
+	std::string modelName;
+
+	App->fileSys->GetNameFromPath(FBXpath, nullptr, &modelName, nullptr, nullptr);
+
+	const aiScene* scene = aiImportFile(FBXpath, aiProcessPreset_TargetRealtime_MaxQuality);
+
+	if (scene == nullptr) {
+		
+		OWN_LOG("Error loading fbx from Assets/3DModels folder.");
+		aiReleaseImport(scene);
+		ret = false;		
+	}
+
+	uint numMaterials = scene->mNumMaterials;
+	uint* materialIDs = new uint[scene->mNumMaterials];
+
+	if (ret && scene->HasMaterials() ) {
+		OWN_LOG("Importing FBX texture to DDS from %s", FBXpath);
+		for (int i = 0; i < numMaterials; i++) {
+
+			aiMaterial* material = scene->mMaterials[i];
+
+			
+
+			aiString texturePath;
+			aiReturn retu = material->GetTexture(aiTextureType_DIFFUSE, 0, &texturePath);
+			if (retu == aiReturn_SUCCESS) {
+				
+				std::string textureName;
+				std::string extension;
+				App->fileSys->GetNameFromPath(texturePath.C_Str(), nullptr, &textureName, nullptr, nullptr);
+				App->fileSys->GetNameFromPath(texturePath.C_Str(), nullptr, nullptr, nullptr, &extension);
+								
+				std::string texDDSPath;
+					if (extension != DDS_FORMAT) {
+
+						ret = App->renderer3D->texImporter->ImportToDDS(texturePath.C_Str(), textureName.c_str());
+						if (!ret) {
+							std::string texAssetsPath = TEXTURES_PATH + textureName + extension;
+							ret = App->renderer3D->texImporter->ImportToDDS(texAssetsPath.c_str(), textureName.c_str()); // texture is 
+						}
+						texDDSPath = LIB_TEXTURES_PATH + textureName + DDS_FORMAT;
+
+					}
+					else {
+						texDDSPath = TEXTURES_PATH + textureName + DDS_FORMAT;
+						App->fileSys->CopyDDStoLib(texDDSPath.c_str());
+					}
+			}
+			else {
+				OWN_LOG("Error loading texture from fbx. Error: %s", aiGetErrorString());
+			}
+		}
+	}
+	if (ret && scene->HasMeshes()) {
+		OWN_LOG("Importing FBX mesh to PEI from %s", FBXpath);
+		
+
+		std::string fileName = LIB_MODELS_PATH + modelName + OWN_FILE_FORMAT;		
+
+		ret = ImportMeshRecursive(scene->mRootNode, scene);
+		aiReleaseImport(scene);		
+	}
+	else {
+		OWN_LOG("Error loading FBX, scene has no meshes");
+		ret = false;
+	}
+	return ret;
+}
+
+bool SceneImporter::ImportMeshRecursive(aiNode * node, const aiScene * scene)
+{
+	bool ret = true;
+
+	if (node->mMetaData != nullptr) {
+	
+		
+		if (node->mNumMeshes > 0){
+			for (uint i = 0; i < node->mNumMeshes; i++)
+			{
+				bool error = false;
+
+				std::string meshName = node->mName.C_Str();
+				aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
+
+				std::string fileName = LIB_MODELS_PATH;
+				fileName += meshName;
+				fileName += OWN_FILE_FORMAT;
+				std::ofstream dataFile(fileName.c_str(), std::fstream::out | std::fstream::binary);
+
+				uint ranges[4] = { mesh->mNumFaces * 3,mesh->mNumVertices, mesh->mNumVertices,  mesh->mNumVertices };
+				uint* index = nullptr;
+				if (mesh->HasFaces()) { //------------indices
+					
+					index = new uint[ranges[0]]; // assume each face is a triangle
+					for (uint i = 0; i < mesh->mNumFaces; ++i) {
+						if (mesh->mFaces[i].mNumIndices != 3) {
+							OWN_LOG("WARNING, geometry face with != 3 indices!");
+							error = true;
+						}
+						else {
+							memcpy(&index[i * 3], mesh->mFaces[i].mIndices, 3 * sizeof(uint));
+						}
+					}
+				}
+				float2* texturesCoords = nullptr;
+				if (mesh->GetNumUVChannels() > 0) { //------------textureCoords					
+					texturesCoords = new float2[ranges[3]];
+					for (int i = 0; i < ranges[3]; i++) {
+						texturesCoords[i].x = mesh->mTextureCoords[0][i].x;
+						texturesCoords[i].y = mesh->mTextureCoords[0][i].y;
+					}
+				}
+
+
+				if (!error) {
+
+					uint size = sizeof(ranges) + sizeof(uint)*ranges[0] + sizeof(float3)*ranges[1] + sizeof(float3)*ranges[2] + sizeof(float2) * ranges[3]; // numIndex + numVertex + index + vertex + normals + textureCoords
+
+					char* data = new char[size];
+					char* cursor = data;
+
+					uint bytes = sizeof(ranges);
+					memcpy(cursor, ranges, bytes);
+
+					cursor += bytes;
+					bytes = sizeof(uint)* ranges[0];
+					memcpy(cursor, index, bytes);
+
+					cursor += bytes;
+					bytes = sizeof(float3)*  ranges[1];
+					memcpy(cursor, mesh->mVertices, bytes);
+
+					cursor += bytes;
+					bytes = sizeof(float3)* ranges[2];
+					memcpy(cursor, mesh->mNormals, bytes);
+
+					cursor += bytes;
+					bytes = sizeof(float2)*  ranges[3];
+					memcpy(cursor, texturesCoords, bytes);
+
+					dataFile.write(data, size);
+
+					dataFile.close();
+					RELEASE_ARRAY(data);
+					cursor = nullptr;
+					ret = true;
+				}
+				RELEASE_ARRAY(texturesCoords);
+				RELEASE_ARRAY(index);
+			}
+		}
+	}
+	for (uint i = 0; i < node->mNumChildren; i++) // recursivity
+	{
+		ret &= ImportMeshRecursive(node->mChildren[i], scene);
+
+	}
+	return ret;
+}
+
 void SceneImporter::LoadFBXandImportPEI(const char * FBXpath)
 {
 	Timer loadTime;
@@ -471,19 +636,4 @@ void SceneImporter::LoadMeshPEI(const char* fileNamePEI) {
 void SceneImporter::CleanUp()
 {
 	aiDetachAllLogStreams();
-}
-
-float4x4 SceneImporter::aiMatrixToFloat4x4(aiMatrix4x4 matrix)
-{
-	float mat[16] =
-	{
-		matrix.a1, matrix.a2, matrix.a3, matrix.a4,
-		matrix.b1, matrix.b2, matrix.b3, matrix.b4,
-		matrix.c1, matrix.c2, matrix.c3, matrix.c4,
-		matrix.d1, matrix.d2, matrix.d3, matrix.d4
-	};
-
-	float4x4 nwMatrix;
-	nwMatrix.Set(mat);
-	return nwMatrix;
 }

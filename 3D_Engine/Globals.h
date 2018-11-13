@@ -20,7 +20,7 @@ void log(const char file[], int line, const char* format, ...);
 
 
 typedef unsigned int uint;
-typedef unsigned long long UUID;
+typedef unsigned long long uuid;
 
 enum update_status
 {
@@ -84,10 +84,5 @@ enum update_status
 #define WAV_FORMAT ".wav"
 #define OGG_FORMAT ".ogg"
 
-enum FileFormats {
-	pei
-
-
-};
 
 #endif // !__GLOBALS_H__

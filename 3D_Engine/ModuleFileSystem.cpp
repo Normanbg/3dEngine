@@ -107,19 +107,35 @@ uint ModuleFileSystem::readFile(const char * fileName, char** data)
 	return ret;
 }
 
-void ModuleFileSystem::CopyFileTo(const char * dest, const char * origin)
+bool ModuleFileSystem::CopyDDStoLib(const char * path) 
 {
-	char *data;
-	uint size = readFile(origin, &data);
-	writeFile(origin, data, size);
-}
-
-void ModuleFileSystem::CopyDDStoLib(const char * path) 
-{
+	bool ret = false;
 	std::string ddsName;
 	GetNameFromPath(path, nullptr, &ddsName, nullptr, nullptr);
 	std::string libpath = LIB_TEXTURES_PATH + ddsName + DDS_FORMAT;
-	CopyFileTo(libpath.c_str(), path);
+	ret = Copy(path, libpath.c_str());
+	return ret;
+}
+
+bool ModuleFileSystem::CopyPEItoLib(const char * path)
+{
+	bool ret = false;
+	std::string peiName;
+	GetNameFromPath(path, nullptr, &peiName, nullptr, nullptr);
+	std::string libpath = LIB_MODELS_PATH + peiName + DDS_FORMAT;
+	ret = Copy(path, libpath.c_str());
+
+	return ret;
+}
+bool ModuleFileSystem::CopyAudioToLib(const char * path)
+{
+	bool ret = false;
+	std::string auName;
+	GetNameFromPath(path, nullptr, nullptr, &auName, nullptr);
+	std::string libpath = LIB_MODELS_PATH + auName ;
+	ret = Copy(path, libpath.c_str());
+
+	return ret;
 }
 
 void ModuleFileSystem::GetNameFromPath(const char * full_path, std::string * path, std::string * file, std::string * fileWithExtension, std::string * extension) const
@@ -197,22 +213,22 @@ bool ModuleFileSystem::Copy(const char * source, const char * destination)
 	char buf[8192];
 
 	PHYSFS_file* src = PHYSFS_openRead(source);
-	PHYSFS_file* dst = PHYSFS_openWrite(destination);
+	PHYSFS_file* dest = PHYSFS_openWrite(destination);
 
 	PHYSFS_sint32 size;
-	if (src && dst)
-	{
+	if (src && dest){
+
 		while (size = (PHYSFS_sint32)PHYSFS_read(src, buf, 1, 8192))
-			PHYSFS_write(dst, buf, 1, size);
+			PHYSFS_write(dest, buf, 1, size);
 
 		PHYSFS_close(src);
-		PHYSFS_close(dst);
+		PHYSFS_close(dest);
 		ret = true;
 
-		OWN_LOG("File System copied file [%s] to [%s]", source, destination);
+		OWN_LOG("Copied file from %s to %s", source, destination);
 	}
 	else
-		OWN_LOG("File System error while copy from [%s] to [%s]", source, destination);
+		OWN_LOG("Error copying file from %s to %s", source, destination);
 
 	return ret;
 }

@@ -18,8 +18,10 @@ public:
 
 
 
-	void CopyFileTo(const char* dest, const char* origin);
-	void CopyDDStoLib(const char* path);
+	
+	bool CopyDDStoLib(const char* path);
+	bool CopyPEItoLib(const char* path);
+	bool CopyAudioToLib(const char * path);
 
 	void NormalizePath(char * full_path, bool toLower = false) const;
 

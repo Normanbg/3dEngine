@@ -33,9 +33,10 @@ public:
 	void Init();
 	
 
-
+	bool ImportScene(const char* scene );
+	
 	void LoadFBXandImportPEI(const char* FBXpath);
-	GameObject* ImportNodeRecursive(aiNode* node, const aiScene* scene, GameObject* parent);
+	
 
 	ComponentMaterial* ImportMaterial(aiMaterial* mat);
 	ComponentMesh* ImportMesh(aiMesh* mesh, const char* peiName);
@@ -44,10 +45,11 @@ public:
 
 	
 	void CleanUp();
+
 private:
-	float4x4 aiMatrixToFloat4x4(aiMatrix4x4 matrix);
-	aiMatrix4x4 savedMatrix = aiMatrix4x4();
-	
+	bool ImportMeshRecursive(aiNode* node, const aiScene* scene);
+
+	GameObject* ImportNodeRecursive(aiNode* node, const aiScene* scene, GameObject* parent);
 };
 
 #endif //__SCENEIMPORTER_H__

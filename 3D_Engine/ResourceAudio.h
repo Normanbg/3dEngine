@@ -10,12 +10,12 @@ class ResourceAudio : public Resource
 {
 
 public:
-	ResourceAudio(UUID uuid);
+	ResourceAudio(uuid UUID);
 	virtual ~ResourceAudio();
 
 	bool LoadInMemory() override;
 	void Save(Config& config) const override;
 	void Load(const Config& config) override;
 
-}
+};
 #endif
