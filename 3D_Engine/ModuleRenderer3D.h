@@ -13,6 +13,8 @@
 #include <vector>
 #define MAX_LIGHTS 8
 
+class ComponentCamera;
+
 class ModuleRenderer3D : public Module
 {
 public:
@@ -102,6 +104,7 @@ private:
 	bool _bBox = false;
 	bool _quadtree = false;
 
+	ComponentCamera* mainCam = nullptr;
 };
 
 #endif // !__RENDERER3D_H__

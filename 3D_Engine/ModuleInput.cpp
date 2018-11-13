@@ -6,6 +6,7 @@
 #include "ModuleRenderer3D.h"
 #include "ModuleEditorCamera.h"
 #include "ModuleGui.h"
+#include "UIPanelScene.h"
 #include "Brofiler/Brofiler.h"
 
 #include "mmgr/mmgr.h"
@@ -124,7 +125,8 @@ update_status ModuleInput::PreUpdate(float dt)
 
 			case SDL_WINDOWEVENT:
 				if (e.window.event == SDL_WINDOWEVENT_RESIZED) {
-					App->renderer3D->OnResize(e.window.data1, e.window.data2);	
+					float2 x = float2(App->gui->panelScene->size.x, App->gui->panelScene->size.y);;
+					App->renderer3D->OnResize(x.x, x.y);
 					App->window->SetSize(e.window.data1, e.window.data2);
 				}
 			break;

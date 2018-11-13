@@ -27,7 +27,7 @@ void UIPanelScene::Draw() {
 	App->window->GetSize(_w, _h);
 	pos = float2(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y);
 	//size = float2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y);
-	ImVec2 size = ImGui::GetWindowSize();
+	size = float2(ImGui::GetWindowSize().x, ImGui::GetWindowSize().x);
 	ImGui::SetCursorPos({ -(_w - size.x) / 2,-(_h - size.y) / 2 });
 	/*if (lastSize.x != size.x || lastSize.y != size.y)
 	{

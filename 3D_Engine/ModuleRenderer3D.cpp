@@ -7,6 +7,7 @@
 #include "GameObject.h"
 #include "ComponentCamera.h"
 #include "Camera.h"
+#include "UIPanelScene.h"
 #include "Config.h"
 #include "ModuleGui.h"
 #include "ModuleScene.h"
@@ -149,8 +150,11 @@ bool ModuleRenderer3D::Start() {
 	bool ret = true;
 	int width = 0;
 	int height = 0;
-	App->window->GetSize(width, height);///TO CHEEEEEEEEECK!!!!!!!!!!!!!!!!!!!!!!!!!
-	OnResize(width, height);
+	/*App->window->GetSize(width, height);///TO CHEEEEEEEEECK!!!!!!!!!!!!!!!!!!!!!!!!!
+	
+	OnResize(App->gui->panelScene->size.x, App->gui->panelScene->size.y);*/
+
+	mainCam = App->scene->mainCamera->GetComponentCamera();
 	return ret;
 }
 
@@ -162,14 +166,25 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 
-	
-	glMatrixMode(GL_MODELVIEW);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
 	if (App->scene->inGame) {
-		ComponentCamera* mainCam = App->scene->mainCamera->GetComponentCamera();
 		glLoadMatrixf(mainCam->GetViewMatrix());
 	}
 	else
 		glLoadMatrixf(App->camera->cameraComp->GetViewMatrix());
+	
+	glMatrixMode(GL_MODELVIEW);
+
+	if (App->scene->inGame) {
+		glLoadMatrixf(mainCam->GetViewMatrix());
+	}
+	else
+		glLoadMatrixf(App->camera->cameraComp->GetViewMatrix());
+
+
+
+
 
 	// light 0 on cam pos
 	lights[0].SetPos(App->camera->cameraComp->camRes->frustum.pos.x, App->camera->cameraComp->camRes->frustum.pos.y, App->camera->cameraComp->camRes->frustum.pos.z);
@@ -236,6 +251,7 @@ void ModuleRenderer3D::OnResize(const int width, const int height)
 //---------
 	int  _w, _h;
 	App->window->GetSize(_w, _h);
+
 	glDeleteFramebuffers(1, &framebuffer);
 	glDeleteTextures(1, &texture);
 	glDeleteRenderbuffers(1, &rbo);
