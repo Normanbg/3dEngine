@@ -107,13 +107,13 @@ void GameObject::CleanUp(){
 void GameObject::CalculateAllGlobalMatrix(){
 	if (parent == nullptr)
 	{
-		transformComp->setGlobalMatrix(transformComp->getLocalMatrix());
+		transformComp->globalMatrix = transformComp->localMatrix;
 	}
 	else
-		transformComp->getGlobalMatrix() = parent->transformComp->getGlobalMatrix() * transformComp->getLocalMatrix();
+		transformComp->globalMatrix = parent->transformComp->globalMatrix * transformComp->localMatrix;
 
 	OBB newobb = localAABB;
-	newobb.Transform(transformComp->getGlobalMatrix());
+	newobb.Transform(transformComp->globalMatrix);
 
 	obb = newobb;
 	globalAABB.SetNegativeInfinity();

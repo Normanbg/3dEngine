@@ -39,10 +39,10 @@ public:
 	void Save(Config& data) const;
 	void Load(Config* data);
 
-private:
+public:
 	Transform transform;
-	float4x4 localMatrix	= float4x4::identity;
-	float4x4 globalMatrix	= float4x4::identity;	
+	float4x4 localMatrix = float4x4::identity;
+	float4x4 globalMatrix = float4x4::identity;
 };
 
 #endif // !__COMPONENTTRANS_H__
