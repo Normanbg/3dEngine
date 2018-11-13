@@ -233,6 +233,8 @@ void ModuleRenderer3D::OnResize(const int width, const int height)
 	//glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	//glDeleteFramebuffers(1, &fbo);
 //---------
+	int  _w, _h;
+	App->window->GetSize(_w, _h);
 	glDeleteFramebuffers(1, &framebuffer);
 	glDeleteTextures(1, &texture);
 	glDeleteRenderbuffers(1, &rbo);
@@ -244,8 +246,7 @@ void ModuleRenderer3D::OnResize(const int width, const int height)
 	glBindTexture(GL_TEXTURE_2D, texture);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);	
 
 	// attach it to currently bound framebuffer object
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);

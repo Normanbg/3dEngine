@@ -55,6 +55,48 @@ update_status ModuleScene::PreUpdate(float dt)
 	return retUS;
 }
 
+update_status ModuleScene::Update(float dt) {
+
+	bool ret = true;
+	root->CalculateAllGlobalMatrix();
+
+	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) && App->gui->isMouseOnScene())
+		MousePicking();
+	if (root->childrens.empty() == false) {
+
+		for (int i = 0; i < root->childrens.size(); i++) {
+			ret &= root->childrens[i]->Update();
+		}
+	}
+	update_status retUS;
+	ret ? retUS = UPDATE_CONTINUE : retUS = UPDATE_ERROR;
+	return retUS;
+}
+
+update_status ModuleScene::PostUpdate(float dt) {
+
+	bool ret = true;
+	if (root->childrens.empty() == false) {
+		for (int i = 0; i < root->childrens.size(); i++) {
+			ret &= root->childrens[i]->PostUpdate();
+		}
+	}
+
+	update_status retUS;
+	ret ? retUS = UPDATE_CONTINUE : retUS = UPDATE_ERROR;
+	return retUS;
+}
+
+bool ModuleScene::CleanUp()
+{
+	ClearScene();
+
+	RELEASE(root);
+	RELEASE(rootQuadTree);
+
+	return true;
+}
+
 
 GameObject * ModuleScene::CreateCube()
 {
@@ -200,43 +242,41 @@ void ModuleScene::SetQuadTree()
 
 void ModuleScene::MousePicking()
 {
-	if (App->gui->isMouseOnScene()) {
-		Rect window = App->gui->panelScene->GetWindowRect();
-		float x = (2.0f * App->input->GetMouseX()) / window.Width() - 1.0f;
-		float y = 1.0f - (2.0f * App->input->GetMouseX()) / window.Height();
+	Rect window = App->gui->panelScene->GetWindowRect();
+	float x = (2.0f * App->input->GetMouseX()) / window.Width() - 1.0f;
+	float y = 1.0f - (2.0f * -App->input->GetMouseY()) / window.Height();
 
-		LineSegment ray;
-		if (App->scene->inGame) {
-			ray = mainCamera->GetComponentCamera()->GetFrustum().UnProjectLineSegment(x, y);
-		}
-		else
-			ray = App->camera->cameraComp->GetFrustum().UnProjectLineSegment(x, y);
+	LineSegment ray;
+	if (App->scene->inGame) {
+		ray = mainCamera->GetComponentCamera()->GetFrustum().UnProjectLineSegment(x, y);
+	}
+	else
+		ray = App->camera->cameraComp->GetFrustum().UnProjectLineSegment(x, y);
 
-		GetDynamicGOs(root);
-		float distance = 9 * 10 ^ 10;
-		GameObject* closest = nullptr;
+	GetDynamicGOs(root);
+	float distance = 9 * 10 ^ 10;
+	GameObject* closest = nullptr;
 
-		for (auto it :  dynamicOBjs)
+	for (auto it : dynamicOBjs)
+	{
+		bool hit;
+		float dist;
+		it->RayHits(ray, hit, dist);
+
+		if (hit)
 		{
-			bool hit;
-			float dist;
-			it->RayHits(ray, hit, dist);
-
-			if (hit)
+			if (dist < distance)
 			{
-				if (dist < distance)
-				{
-					distance = dist;
-					closest = it;
-				}
+				distance = dist;
+				closest = it;
 			}
 		}
+	}
 
-		if (closest != nullptr)
-		{
-			DeselectAll();
-			ShowGameObjectInspector(closest);
-		}
+	if (closest != nullptr)
+	{
+		DeselectAll();
+		ShowGameObjectInspector(closest);
 	}
 
 }
@@ -254,6 +294,8 @@ void ModuleScene::GetDynamicGOs(GameObject * go)
 {
 	if (go != root && !go->staticGO)
 		dynamicOBjs.push_back(go);
+	else if (go == root)
+		dynamicOBjs.clear();
 	for (auto it : go->childrens) {
 		GetDynamicGOs(it);
 	}
@@ -283,49 +325,6 @@ void ModuleScene::SetQTSize(GameObject* go) {
 		}
 	}
 }
-
-update_status ModuleScene::Update(float dt){
-
-	bool ret = true;
-	root->CalculateAllGlobalMatrix();
-
-	if (App->input->GetMouseButton(SDL_BUTTON_LEFT))
-		MousePicking();
-	if (root->childrens.empty() == false) {
-
-		for (int i = 0; i < root->childrens.size(); i++) {
-			ret &= root->childrens[i]->Update();
-		}
-	}
-	update_status retUS;
-	ret ? retUS = UPDATE_CONTINUE : retUS = UPDATE_ERROR;
-	return retUS;
-}
-
-update_status ModuleScene::PostUpdate(float dt){
-
-	bool ret = true;
-	if (root->childrens.empty() == false) {
-		for (int i = 0; i < root->childrens.size(); i++) {
-			ret &= root->childrens[i]->PostUpdate();
-		}
-	}
-
-	update_status retUS;
-	ret ? retUS = UPDATE_CONTINUE : retUS = UPDATE_ERROR;
-	return retUS;
-}
-
-bool ModuleScene::CleanUp()
-{	
-	ClearScene();
-
-	RELEASE(root);
-	RELEASE(rootQuadTree);
-
-	return true;
-}
-
 
 void ModuleScene::ShowGameObjectInspector(GameObject* newSelected)
 {

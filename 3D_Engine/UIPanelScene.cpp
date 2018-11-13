@@ -19,15 +19,37 @@ UIPanelScene::~UIPanelScene()
 
 void UIPanelScene::Draw() {
 	uint flags = ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse;
-	/*playButtonMat->Load()*/
 	ImGui::Begin("Scene", &active, flags);
+
+	int _w, _h;
+	App->window->GetSize(_w, _h);
+	pos = float2(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y);
+	//size = float2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y);
+	ImVec2 size = ImGui::GetWindowSize();
+	ImGui::SetCursorPos({ -(_w - size.x) / 2,-(_h - size.y) / 2 });
+	/*if (lastSize.x != size.x || lastSize.y != size.y)
+	{
+		lastSize.x = size.x;
+		lastSize.y = size.y;
+
+		App->renderer3D->OnResize(size.x, size.y);
+	}*/
+
+	img = (ImTextureID)App->renderer3D->texture;
+	ImGui::Image(img, ImVec2(_w, _h), ImVec2(0, 1), ImVec2(1, 0));
+	App->gui->MouseOnScene(ImGui::IsMouseHoveringWindow());
+	ImGui::End();
+	
+	ImGui::Begin("Scene Info", &active, flags);
+
+	//THAT WAS ON SCENE DIRECTLY BEFORE
 	if (App->gui->clearScene)
 		ClearScenePopUp();
 	if (wantToLoadFile && FileState(OWN_FILE_FORMAT)) {
-	const char* fileName = CloseFileState();
-	if (fileName != nullptr)
-		App->renderer3D->importer->LoadMeshPEI(fileName);
-	wantToLoadFile = false;
+		const char* fileName = CloseFileState();
+		if (fileName != nullptr)
+			App->renderer3D->importer->LoadMeshPEI(fileName);
+		wantToLoadFile = false;
 	}
 	if (fileState == opened) {
 		LoadFilePopUp((fileStateExtensionFilter.length() > 0) ? fileStateExtensionFilter.c_str() : nullptr);
@@ -36,7 +58,7 @@ void UIPanelScene::Draw() {
 		inModal = false;
 
 	ImVec2 region_size = ImGui::GetContentRegionAvail();
-	ImGui::SetCursorPosX(region_size.x / 2 - 30);	
+	ImGui::SetCursorPosX(region_size.x / 2 - 40);
 	if (ImGui::Button("Play", { 40, 20 }))
 	{
 		if (App->time->IsPaused()) {
@@ -62,7 +84,7 @@ void UIPanelScene::Draw() {
 	ImGui::PushStyleColor(ImGuiCol_Button, { 0.8f,0,0,1 });
 	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, { 1,0.2f,0,1 });
 	if (ImGui::Button("Stop", { 40, 20 }))
-	{		
+	{
 		if (App->scene->inGame) {
 			App->time->Stop();
 			App->scene->inGame = false;
@@ -72,22 +94,9 @@ void UIPanelScene::Draw() {
 	}
 	ImGui::PopStyleColor();
 	ImGui::PopStyleColor();
-	
-	pos = float2(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y);
-	size = float2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y);
-	if (lastSize.x != size.x || lastSize.y != size.y)
-	{
-		lastSize.x = size.x;
-		lastSize.y = size.y;
 
-		App->renderer3D->OnResize(size.x, size.y);
-	}
-	img = (ImTextureID)App->renderer3D->texture;
-	ImGui::Image(img, ImVec2(size.x, size.y), ImVec2(0, 1), ImVec2(1, 0));
-	App->gui->MouseOnScene(ImGui::IsMouseHoveringWindow());
-	ImGui::End();
-	
-	ImGui::Begin("Scene Info", &active, flags);
+
+
 	ImGui::Text("Real Time: %.1f", App->time->GetRealTimeSec());
 	ImGui::Text("Game Time: %.1f", App->time->GetGameTimeSec());
 	ImGui::SliderFloat("Time Scale", App->time->GetTimeScale(), 0, 3.0f, "%.1f");

@@ -167,8 +167,8 @@ void ModuleWindow::SetBrightness(float bright) {
 void ModuleWindow::SetSize(uint w, uint h) {
 	_h = h;
 	_w = w;
-	SDL_SetWindowSize(window, w, h);
-	
+	/*SDL_SetWindowSize(window, w, h);
+	*/
 }
 
 void ModuleWindow::GetSize(int &w, int &h)const {
