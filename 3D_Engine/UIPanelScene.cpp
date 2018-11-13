@@ -23,25 +23,23 @@ void UIPanelScene::Draw() {
 	uint flags = ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse;
 	ImGui::Begin("Scene", &active, flags);
 
-	int _w, _h;
-	App->window->GetSize(_w, _h);
 	pos = float2(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y);
-	//size = float2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y);
-	ImVec2 size = ImGui::GetWindowSize();
-	ImGui::SetCursorPos({ -(_w - size.x) / 2,-(_h - size.y) / 2 });
-	/*if (lastSize.x != size.x || lastSize.y != size.y)
+	size = float2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y);
+
+	if (lastSize.x != size.x || lastSize.y != size.y)
 	{
 		lastSize.x = size.x;
 		lastSize.y = size.y;
 
 		App->renderer3D->OnResize(size.x, size.y);
-	}*/
-
-	img = (ImTextureID)App->renderer3D->texture;
-	ImGui::Image(img, ImVec2(_w, _h), ImVec2(0, 1), ImVec2(1, 0));
+	}
+	img = (ImTextureID)App->renderer3D->GetFBOTexture();
+	ImGui::Image(img, ImVec2(size.x, size.y), ImVec2(0, 1), ImVec2(1, 0));
 	App->gui->MouseOnScene(ImGui::IsMouseHoveringWindow());
 	ImGui::End();
 	
+
+
 	ImGui::Begin("Scene Info", &active, flags);
 
 	//THAT WAS ON SCENE DIRECTLY BEFORE

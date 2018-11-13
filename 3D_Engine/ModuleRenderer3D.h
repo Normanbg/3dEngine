@@ -13,6 +13,8 @@
 #include <vector>
 #define MAX_LIGHTS 8
 
+class FBO;
+
 class ModuleRenderer3D : public Module
 {
 public:
@@ -63,7 +65,8 @@ public:
 	   
 	void LoadDroppedFBX(char* droppedFileDir);
 	void LoadDroppedPEI(char* droppedFileDir);
-	//void ClearSceneMeshes();	
+	
+	const uint GetFBOTexture();
 
 public:
 
@@ -76,9 +79,10 @@ public:
 	TextureImporter* texImporter;
 
 	//-----
-	uint texture;
-	uint framebuffer;
-	uint rbo;
+
+	//uint texture;
+	//uint framebuffer;
+	//uint rbo;
 	
 private:
 
@@ -101,6 +105,8 @@ private:
 	bool _normals = false;
 	bool _bBox = false;
 	bool _quadtree = false;
+
+	FBO* fboTex = nullptr;
 
 };
 

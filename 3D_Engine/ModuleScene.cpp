@@ -44,7 +44,8 @@ bool ModuleScene::Init(JSON_Object * obj)
 update_status ModuleScene::PreUpdate(float dt)
 {
 	bool ret = true;
-	 
+	root->CalculateAllGlobalMatrix();
+
 	if (root->childrens.empty() == false) {
 		for (int i = 0; i < root->childrens.size(); i++) {
 			ret &= root->childrens[i]->PreUpdate();
@@ -245,15 +246,21 @@ void ModuleScene::SetQuadTree()
 void ModuleScene::MousePicking()
 {
 	Rect window = App->gui->panelScene->GetWindowRect();
-	float x = (2.0f * App->input->GetMouseX()) / window.Width() - 1.0f;
+	/*float x = (2.0f * App->input->GetMouseX()) / window.Width() - 1.0f;
 	float y = 1.0f - (2.0f * -App->input->GetMouseY()) / window.Height();
+*/
+	float first_normalized_x = (App->input->GetMouseX() - window.left) / (window.right - window.left);
+	float first_normalized_y = (App->input->GetMouseY() - window.top) / (window.bottom - window.top);
+
+	float normalized_x = (first_normalized_x * 2) - 1;
+	float normalized_y = 1 - (first_normalized_y * 2);
 
 	LineSegment ray;
 	if (App->scene->inGame) {
-		ray = mainCamera->GetComponentCamera()->GetFrustum().UnProjectLineSegment(x, y);
+		ray = mainCamera->GetComponentCamera()->GetFrustum().UnProjectLineSegment(normalized_x, normalized_y);
 	}
 	else
-		ray = App->camera->cameraComp->GetFrustum().UnProjectLineSegment(x, y);
+		ray = App->camera->cameraComp->GetFrustum().UnProjectLineSegment(normalized_x, normalized_y);
 
 	GetDynamicGOs(root);
 	float distance = 9 * 10 ^ 10;
