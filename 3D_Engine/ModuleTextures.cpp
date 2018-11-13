@@ -2,6 +2,8 @@
 #include "ModuleFileSystem.h"
 #include "ModuleRenderer3D.h"
 
+#include "mmgr/mmgr.h"
+
 ModuleTextures::ModuleTextures(bool start_enabled) : Module(start_enabled)
 {
 	name = "textures";

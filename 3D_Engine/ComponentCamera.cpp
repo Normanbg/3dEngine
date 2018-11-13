@@ -4,6 +4,7 @@
 #include "ComponentCamera.h"
 #include "GameObject.h"
 #include "Camera.h"
+#include "mmgr/mmgr.h"
 
 ComponentCamera::ComponentCamera()
 {

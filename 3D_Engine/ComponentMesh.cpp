@@ -8,6 +8,8 @@
 #pragma comment (lib, "Glew/libx86/glew32.lib")  
 #pragma comment (lib, "Assimp/libx86/assimp.lib")
 
+#include "mmgr/mmgr.h"
+
 
 ComponentMesh::ComponentMesh()
 {

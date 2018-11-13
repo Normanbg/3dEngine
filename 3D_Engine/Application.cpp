@@ -13,6 +13,8 @@
 #include "ModuleGui.h"
 #include "Brofiler/Brofiler.h"
 
+#include "mmgr/mmgr.h"
+
 #include "./JSON/parson.h"
 
 

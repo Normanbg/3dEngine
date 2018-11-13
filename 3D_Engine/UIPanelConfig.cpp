@@ -6,6 +6,8 @@
 #include "ModuleInput.h"
 #include "ModuleEditorCamera.h"
 
+#include "mmgr/mmgr.h"
+
 UIPanelConfig::UIPanelConfig(const char * name, float positionX, float positionY, float width, float height, bool active) : UIPanel(name, positionX, positionY, width, height, active)
 {
 }

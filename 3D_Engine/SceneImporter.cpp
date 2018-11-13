@@ -6,6 +6,7 @@
 
 #include <string>
 
+#include "mmgr/mmgr.h"
 
 using namespace std;
 
@@ -101,7 +102,6 @@ GameObject * SceneImporter::ImportNodeRecursive(aiNode * node, const aiScene * s
 				aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
 				
 				if (material) {
-					compMat = new ComponentMaterial();
 					compMat = ImportMaterial(material);							
 					
 					if (compMat != nullptr) {						

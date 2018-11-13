@@ -4,6 +4,8 @@
 #include "Config.h"
 #include "Brofiler/Brofiler.h"
 
+#include "mmgr/mmgr.h"
+
 ModuleWindow::ModuleWindow(bool start_enabled) : Module(start_enabled)
 {
 	

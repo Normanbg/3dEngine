@@ -1,6 +1,8 @@
 #include "ComponentMaterial.h"
 #include "ModuleRenderer3D.h"
 
+#include "mmgr/mmgr.h"
+
 ComponentMaterial::ComponentMaterial()
 {
 	type = MATERIAL;
@@ -19,6 +21,7 @@ bool ComponentMaterial::Update()
 void ComponentMaterial::CleanUp()
 {
 	texture = nullptr;
+	//RELEASE(texture);
 }
 
 void ComponentMaterial::DrawInspector()

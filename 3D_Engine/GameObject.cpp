@@ -5,6 +5,7 @@
 #include <vector>
 #include <string>
 
+#include "mmgr/mmgr.h"
 
 GameObject::GameObject()
 {

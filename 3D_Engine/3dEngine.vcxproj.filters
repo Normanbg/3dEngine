@@ -46,6 +46,9 @@
     <Filter Include="Sources\Objects &amp; Components\Components">
       <UniqueIdentifier>{ad85996c-8a64-4f36-acd6-9a0255ab8702}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Tools\mmgr">
+      <UniqueIdentifier>{bfcf4468-eaa3-43db-ab52-6ab4a45e44e9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -369,6 +372,9 @@
     <ClInclude Include="ModuleTime.h">
       <Filter>Sources\Tools</Filter>
     </ClInclude>
+    <ClInclude Include="mmgr\mmgr.h">
+      <Filter>Sources\Tools\mmgr</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleInput.cpp">
@@ -589,6 +595,9 @@
     </ClCompile>
     <ClCompile Include="ModuleTime.cpp">
       <Filter>Sources\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="mmgr\mmgr.cpp">
+      <Filter>Sources\Tools\mmgr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -4,6 +4,7 @@
 
 #include <vector>
 
+#include "mmgr/mmgr.h"
 
 
 ComponentTransformation::ComponentTransformation()

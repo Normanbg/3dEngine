@@ -10,6 +10,8 @@
 #include "ModuleGui.h"
 #include "UIPanelScene.h"
 
+#include "mmgr/mmgr.h"
+
 #include <vector>
 
 ModuleScene::ModuleScene(bool start_enabled) : Module(start_enabled){
@@ -322,6 +324,8 @@ bool ModuleScene::CleanUp()
 
 	RELEASE(root);
 	RELEASE(rootQuadTree);
+	mainCamera->CleanUp();
+	RELEASE(mainCamera);
 
 	return true;
 }

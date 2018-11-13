@@ -11,6 +11,8 @@
 #include "ModuleGui.h"
 #include "Brofiler/Brofiler.h"
 
+#include "mmgr/mmgr.h"
+
 
 ModuleEditorCamera::ModuleEditorCamera(bool start_enabled) : Module(start_enabled)
 {

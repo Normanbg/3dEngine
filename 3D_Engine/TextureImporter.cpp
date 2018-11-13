@@ -6,7 +6,8 @@
 #include "ModuleFileSystem.h"
 #include "Devil/include/il.h"
 #include "Devil/include/ilut.h"
-#include "DevIL\include\ilu.h"
+#include "DevIL/include/ilu.h"
+#include "mmgr/mmgr.h"
 
 
 #pragma comment( lib, "Devil/libx86/DevIL.lib" )

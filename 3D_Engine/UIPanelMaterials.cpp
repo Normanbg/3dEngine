@@ -3,6 +3,8 @@
 #include "ModuleScene.h"
 #include "GameObject.h"
 
+#include "mmgr/mmgr.h"
+
 UIPanelMaterials::UIPanelMaterials(const char * name, float positionX, float positionY, float width, float height, bool active) : UIPanel(name, positionX, positionY, width, height, active)
 {
 }
