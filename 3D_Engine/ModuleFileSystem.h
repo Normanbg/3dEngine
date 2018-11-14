@@ -17,7 +17,7 @@ public:
 	uint readFile(const char* fileName, char** data);
 
 
-
+	
 	
 	bool CopyDDStoLib(const char* path);
 	bool CopyPEItoLib(const char* path);
@@ -29,7 +29,9 @@ public:
 
 	bool Copy(const char * source, const char * destination);
 
-	void DiscoverFiles(const char * directory, std::vector<std::string>& fileList, std::vector<std::string>& dirList) const;
+	
+
+	void GetFilesFromDir(const char * directory, std::vector<std::string>& fileList, std::vector<std::string>& directoryList) const;
 
 	void GetNameFromPath(const char * full_path, std::string * path, std::string * file, std::string * fileWithExtension, std::string * extension) const;
 

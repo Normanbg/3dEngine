@@ -2,7 +2,8 @@
 #include "ModuleFileSystem.h"
 #include "PhysFS/include/physfs.h"
 
-
+#include <filesystem>
+#include <Windows.h>
 
 
 #pragma comment( lib, "PhysFS/libx86/physfs.lib" )
@@ -107,7 +108,7 @@ uint ModuleFileSystem::readFile(const char * fileName, char** data)
 	return ret;
 }
 
-bool ModuleFileSystem::CopyDDStoLib(const char * path) 
+bool ModuleFileSystem::CopyDDStoLib(const char * path)
 {
 	bool ret = false;
 	std::string ddsName;
@@ -233,20 +234,21 @@ bool ModuleFileSystem::Copy(const char * source, const char * destination)
 	return ret;
 }
 
-void ModuleFileSystem::DiscoverFiles(const char* directory, std::vector<std::string> & fileList, std::vector<std::string> & directoryList) const
+
+void ModuleFileSystem::GetFilesFromDir(const char* directory, std::vector<std::string> & files, std::vector<std::string> & directories) const
 {
-	char **totalFiles = PHYSFS_enumerateFiles(directory);
-	char **i;
+	char **filesInDir = PHYSFS_enumerateFiles(directory);
+	char **filePointer;
 
-	std::string dir(directory);
+	std::string dir = directory;
 
-	for (i = totalFiles; *i != nullptr; i++)
+	for (filePointer = filesInDir; *filePointer != nullptr; filePointer++)
 	{
-		if (PHYSFS_isDirectory((dir + *i).c_str()))
-			directoryList.push_back(*i);
+		if (PHYSFS_isDirectory((dir + *filePointer).c_str()))
+			directories.push_back(*filePointer);
 		else
-			fileList.push_back(*i);
+			files.push_back(*filePointer);
 	}
 
-	PHYSFS_freeList(totalFiles);
+	PHYSFS_freeList(filesInDir);
 }

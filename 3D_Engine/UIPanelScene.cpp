@@ -170,7 +170,7 @@ void UIPanelScene::DrawDirectoryRecursive(const char * directory, const char * f
 	std::string dir((directory) ? directory : "");
 	dir += "/";
 
-	App->fileSys->DiscoverFiles(dir.c_str(), files, directories);
+	App->fileSys->GetFilesFromDir(dir.c_str(), files, directories);
 
 	for (int i = 0; i<directories.size();i++)
 	{

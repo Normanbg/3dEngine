@@ -74,6 +74,7 @@ enum update_status
 #define LIB_MODELS_PATH "Library/3DModels/"
 #define SETTINGS_PATH "Settings/"
 #define SCENES_PATH "Scenes/"
+#define ASSETS_PATH "Assets/"
 #define OWN_FILE_FORMAT ".pei"
 #define DDS_FORMAT ".dds"
 #define FBX_FORMAT ".fbx"

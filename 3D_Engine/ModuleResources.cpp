@@ -40,10 +40,33 @@ bool ModuleResources::CleanUp()
 
 void ModuleResources::ImportFilesToLibrary()
 {
-	std::string path = "/Assets";
-	for (auto & p : std::experimental::filesystem::directory_iterator(path)) {
-		std::cout << p << std::endl;
+	
+	
+	
+	std::vector<std::string> files;
+	std::vector<std::string> dirs;
+	
+	
+	App->fileSys->GetFilesFromDir(ASSETS_PATH, files, dirs);
+	while (dirs.size() >0) {
+		uint lastDirs = dirs.size();
+		std::string path = ASSETS_PATH;
+		path += dirs[dirs.size() - 1].c_str();
+		path += "/";
+		App->fileSys->GetFilesFromDir(path.c_str(), files, dirs);
+		uint diff = dirs.size() != lastDirs;
+		if (diff>0) {
+			for (int i = 0; i < diff; i--) {
+				std::string name = dirs[dirs.size() - 1 - diff];
+				//working on it
+				dirs.pop_back();
+			}
+		}
+		dirs.pop_back();
+
 	}
+	
+	
 }
 
 uuid ModuleResources::Find(const char * fileInAssets) const
