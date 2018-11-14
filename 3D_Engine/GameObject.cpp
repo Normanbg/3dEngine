@@ -362,35 +362,39 @@ void GameObject::SetLocalAABB(AABB aabb)
 
 void GameObject::RayHits(const LineSegment & segment, bool & hit, float & dist){
 	hit = false;
-	dist = 9 * 10 ^ 10;
+	dist = 99999999999.f;
 
-	if (globalAABB.IsFinite() && segment.Intersects(globalAABB)) {
-		ComponentMesh* mesh;
-		mesh = GetComponentMesh();
-		if (mesh) {
-			//Segment for the mesh
-			LineSegment localRay(segment);
-			localRay.Transform(transformComp->getGlobalMatrix().Inverted());
+	if (globalAABB.IsFinite()) {
+		if (segment.Intersects(globalAABB)) {
+			ComponentMesh* mesh;
+			mesh = GetComponentMesh();
+			if (mesh) {
+				if (!mesh->vertex)
+					return;
+				//Segment for the mesh
+				LineSegment localRay(segment);
+				localRay.Transform(transformComp->getGlobalMatrix().Inverted());
 
-			uint* indices = mesh->index;
-			float3* vertices = mesh->vertex;
-			Triangle triangle;
+				uint* indices = mesh->index;
+				float3* vertices = mesh->vertex;
+				Triangle triangle;
 
-			for (int i = 0; i < mesh->num_index;) {
-				//TO CHEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEECK!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-				triangle.a.Set(vertices[(3 * indices[i])].x, vertices[(3 * indices[i])].y, vertices[(3 * indices[i])].z); ++i;
-				triangle.b.Set(vertices[(3 * indices[i])].x, vertices[(3 * indices[i])].y, vertices[(3 * indices[i])].z); ++i;
-				triangle.c.Set(vertices[(3 * indices[i])].x, vertices[(3 * indices[i])].y, vertices[(3 * indices[i])].z); ++i;
+				for (int i = 0; i < mesh->num_index;) {
+					//TO CHEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEECK!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+					triangle.a = vertices[indices[i]]; ++i;
+					triangle.b = vertices[indices[i]]; ++i;
+					triangle.c = vertices[indices[i]]; ++i;
 
-				float distance;
-				float3 hitPoint;
+					float distance;
+					float3 hitPoint;
 
-				if (localRay.Intersects(triangle, &distance, &hitPoint))
-				{
-					if (distance < dist)
+					if (localRay.Intersects(triangle, &distance, &hitPoint))
 					{
-						dist = distance;
-						hit = true;
+						if (distance < dist)
+						{
+							dist = distance;
+							hit = true;
+						}
 					}
 				}
 			}

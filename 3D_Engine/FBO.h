@@ -16,8 +16,6 @@ public:
 
 	void BindFBO();
 	void UnBindFBO();
-	void Clear();
-	void Delete();
 
 public:
 	uint texture;

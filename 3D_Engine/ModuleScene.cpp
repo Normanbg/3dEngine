@@ -61,9 +61,9 @@ update_status ModuleScene::PreUpdate(float dt)
 update_status ModuleScene::Update(float dt) {
 
 	bool ret = true;
-	root->CalculateAllGlobalMatrix();
+	//root->CalculateAllGlobalMatrix();
 
-	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) && App->gui->isMouseOnScene())
+	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT && App->gui->isMouseOnScene())
 		MousePicking();
 	if (root->childrens.empty() == false) {
 
@@ -245,49 +245,47 @@ void ModuleScene::SetQuadTree()
 
 void ModuleScene::MousePicking()
 {
-	Rect window = App->gui->panelScene->GetWindowRect();
+	ImVec2 normalized = App->gui->panelScene->GetMouse();
 	/*float x = (2.0f * App->input->GetMouseX()) / window.Width() - 1.0f;
 	float y = 1.0f - (2.0f * -App->input->GetMouseY()) / window.Height();
 */
-	float first_normalized_x = (App->input->GetMouseX() - window.left) / (window.right - window.left);
-	float first_normalized_y = (App->input->GetMouseY() - window.top) / (window.bottom - window.top);
+	if (normalized.x > -1 && normalized.x < 1){
+		if (normalized.y > -1 && normalized.y < 1){
 
-	float normalized_x = (first_normalized_x * 2) - 1;
-	float normalized_y = 1 - (first_normalized_y * 2);
+			LineSegment ray;
+			if (App->scene->inGame) {
+				ray = mainCamera->GetComponentCamera()->GetFrustum().UnProjectLineSegment(normalized.x, normalized.y);
+			}
+			else
+				ray = App->camera->cameraComp->GetFrustum().UnProjectLineSegment(normalized.x, normalized.y);
 
-	LineSegment ray;
-	if (App->scene->inGame) {
-		ray = mainCamera->GetComponentCamera()->GetFrustum().UnProjectLineSegment(normalized_x, normalized_y);
-	}
-	else
-		ray = App->camera->cameraComp->GetFrustum().UnProjectLineSegment(normalized_x, normalized_y);
+			GetDynamicGOs(root);
+			float distance = 9 * 10 ^ 10;
+			GameObject* closest = nullptr;
 
-	GetDynamicGOs(root);
-	float distance = 9 * 10 ^ 10;
-	GameObject* closest = nullptr;
-
-	for (auto it : dynamicOBjs)
-	{
-		bool hit;
-		float dist;
-		it->RayHits(ray, hit, dist);
-
-		if (hit)
-		{
-			if (dist < distance)
+			for (auto it : dynamicOBjs)
 			{
-				distance = dist;
-				closest = it;
+				bool hit;
+				float dist;
+				it->RayHits(ray, hit, dist);
+
+				if (hit)
+				{
+					if (dist < distance)
+					{
+						distance = dist;
+						closest = it;
+					}
+				}
+			}
+
+			if (closest != nullptr)
+			{
+				DeselectAll();
+				ShowGameObjectInspector(closest);
 			}
 		}
 	}
-
-	if (closest != nullptr)
-	{
-		DeselectAll();
-		ShowGameObjectInspector(closest);
-	}
-
 }
 
 void ModuleScene::GetAllStaticGOs(GameObject* go)

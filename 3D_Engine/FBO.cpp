@@ -55,16 +55,4 @@ void FBO::UnBindFBO(){
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glBindRenderbuffer(GL_RENDERBUFFER, 0);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	//glViewport(0, 0, App->window->GetWindowSize().x, App->window->GetWindowSize().y);
-}
-
-void FBO::Clear()
-{
-}
-
-void FBO::Delete()
-{
-	glDeleteFramebuffers(1, &framebuffer);
-	glDeleteTextures(1, &texture);
-	glDeleteRenderbuffers(1, &rbo);
 }

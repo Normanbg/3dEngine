@@ -57,8 +57,8 @@ void UIPanelScene::Draw() {
 	else
 		inModal = false;
 
-	ImVec2 region_size = ImGui::GetContentRegionAvail();
-	ImGui::SetCursorPosX(region_size.x / 2 - 40);
+	ImVec2 PRegion = ImGui::GetContentRegionAvail();
+	ImGui::SetCursorPosX(PRegion.x / 2 - 40);
 	if (ImGui::Button("Play", { 40, 20 }))
 	{
 		if (App->time->IsPaused()) {
@@ -134,9 +134,26 @@ void UIPanelScene::ClearScenePopUp(){
 
 }
 
-Rect UIPanelScene::GetWindowRect() const
+ImVec2 UIPanelScene::GetMouse() const
 {
-	return Rect(pos.x, pos.y, size.x, size.y);
+	ImVec2 mousePos = ImVec2(ImGui::GetMousePos().x - pos.x, ImGui::GetMousePos().y - pos.y);
+	ImVec2 mouseNormalized;
+
+	mouseNormalized.x = mousePos.x / size.x;
+	mouseNormalized.y = mousePos.y / size.y;
+
+	/*mouseNormalized.x = (mouseNormalized.x - 0.5) *  2;
+	mouseNormalized.y = (mouseNormalized.y - 0.5) * -2;*/
+
+	mouseNormalized.x -= 0.5;
+	mouseNormalized.x *= 2;
+
+	mouseNormalized.y -= 0.5;
+	mouseNormalized.y *= 2;
+
+	mouseNormalized.y *= -1;
+
+	return mouseNormalized;
 }
 
 
