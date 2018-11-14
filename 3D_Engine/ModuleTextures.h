@@ -40,7 +40,7 @@ public:
 	Material* GetMaterialsFromName(const char* name);
 	GLuint CheckIfImageAlreadyLoaded(const char * _path);
 
-	bool ImportTexture(const char* tex);
+	bool ImportTexture(const char* tex , std::string* written = nullptr);
 
 	void LoadDroppedTexture(char*droppedFileDire);
 

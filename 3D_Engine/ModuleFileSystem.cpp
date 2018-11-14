@@ -24,7 +24,7 @@ ModuleFileSystem::ModuleFileSystem(bool start_enabled) : Module(start_enabled)
 
 	//Create main files if they do not exist and add them to the search path
 	const char* mainPaths[] = {
-		MODELS_PATH, TEXTURES_PATH, AUDIO_PATH, LIB_MODELS_PATH, LIB_TEXTURES_PATH, SETTINGS_PATH, SCENES_PATH
+		MODELS_PATH, TEXTURES_PATH, AUDIO_PATH, LIB_MODELS_PATH, LIB_TEXTURES_PATH,LIB_AUDIO_PATH, SETTINGS_PATH, SCENES_PATH
 	};
 	for (uint i = 0; i < NUM_PATHS; ++i)
 	{
@@ -108,32 +108,36 @@ uint ModuleFileSystem::readFile(const char * fileName, char** data)
 	return ret;
 }
 
-bool ModuleFileSystem::CopyDDStoLib(const char * path)
+bool ModuleFileSystem::CopyDDStoLib(const char * path, std::string* written)
 {
 	bool ret = false;
 	std::string ddsName;
 	GetNameFromPath(path, nullptr, &ddsName, nullptr, nullptr);
 	std::string libpath = LIB_TEXTURES_PATH + ddsName + DDS_FORMAT;
+	if (written) { written = &libpath; }
 	ret = Copy(path, libpath.c_str());
 	return ret;
 }
 
-bool ModuleFileSystem::CopyPEItoLib(const char * path)
+bool ModuleFileSystem::CopyPEItoLib(const char * path, std::string* written)
 {
 	bool ret = false;
 	std::string peiName;
 	GetNameFromPath(path, nullptr, &peiName, nullptr, nullptr);
 	std::string libpath = LIB_MODELS_PATH + peiName + DDS_FORMAT;
+	if (written) { written = &libpath; }
+
 	ret = Copy(path, libpath.c_str());
 
 	return ret;
 }
-bool ModuleFileSystem::CopyAudioToLib(const char * path)
+bool ModuleFileSystem::CopyAudioToLib(const char * path, std::string* written)
 {
 	bool ret = false;
 	std::string auName;
 	GetNameFromPath(path, nullptr, nullptr, &auName, nullptr);
-	std::string libpath = LIB_MODELS_PATH + auName ;
+	std::string libpath = LIB_AUDIO_PATH + auName ;
+	if (written) { written = &libpath; }
 	ret = Copy(path, libpath.c_str());
 
 	return ret;
@@ -234,8 +238,8 @@ bool ModuleFileSystem::Copy(const char * source, const char * destination)
 	return ret;
 }
 
-
-void ModuleFileSystem::GetFilesFromDir(const char* directory, std::vector<std::string> & files, std::vector<std::string> & directories) const
+//if recursive == true searches all files in directory including subfolders
+void ModuleFileSystem::GetFilesFromDir(const char* directory, std::vector<std::string> & files, std::vector<std::string> & directories, bool recursive) const
 {
 	char **filesInDir = PHYSFS_enumerateFiles(directory);
 	char **filePointer;
@@ -246,9 +250,26 @@ void ModuleFileSystem::GetFilesFromDir(const char* directory, std::vector<std::s
 	{
 		if (PHYSFS_isDirectory((dir + *filePointer).c_str()))
 			directories.push_back(*filePointer);
-		else
-			files.push_back(*filePointer);
+		else {
+			std::string dir = directory;
+			dir += *filePointer;
+			files.push_back(dir.c_str() );
+		}
 	}
-
+	if (recursive && directories.size() > 0) {
+		std::vector<std::string> newDirs;
+		for (int i = 0; i < directories.size(); i++) {
+			std::string dir = directory + directories[i] + "/";
+			GetFilesFromDir(dir.c_str(), files, newDirs);
+			if (newDirs.size() > 0) {
+				for (int j = newDirs.size()-1; j >=0 ; j--) {
+					directories.push_back(directories[i] + "/" + newDirs[j]);
+					newDirs.pop_back();
+				}
+			}
+		}
+		
+	
+	}
 	PHYSFS_freeList(filesInDir);
 }

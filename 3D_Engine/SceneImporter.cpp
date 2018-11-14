@@ -4,7 +4,6 @@
 #include "SceneImporter.h"
 #include "Timer.h"
 
-#include <string>
 
 
 using namespace std;
@@ -32,10 +31,10 @@ void SceneImporter::Init()
 
 }
 
-bool SceneImporter::ImportScene(const char * FBXpath)
+bool SceneImporter::ImportScene(const char * FBXpath, std::string* written)
 {
-	bool ret = false;
-
+	bool ret = true;
+	
 	std::string modelName;
 
 	App->fileSys->GetNameFromPath(FBXpath, nullptr, &modelName, nullptr, nullptr);
@@ -46,7 +45,8 @@ bool SceneImporter::ImportScene(const char * FBXpath)
 		
 		OWN_LOG("Error loading fbx from Assets/3DModels folder.");
 		aiReleaseImport(scene);
-		ret = false;		
+		ret = false;
+		return ret;
 	}
 
 	uint numMaterials = scene->mNumMaterials;
@@ -71,11 +71,10 @@ bool SceneImporter::ImportScene(const char * FBXpath)
 								
 				std::string texDDSPath;
 					if (extension != DDS_FORMAT) {
-
-						ret = App->renderer3D->texImporter->ImportToDDS(texturePath.C_Str(), textureName.c_str());
-						if (!ret) {
-							std::string texAssetsPath = TEXTURES_PATH + textureName + extension;
-							ret = App->renderer3D->texImporter->ImportToDDS(texAssetsPath.c_str(), textureName.c_str()); // texture is 
+						std::string texAssetsPath = TEXTURES_PATH + textureName + extension;
+						ret = App->renderer3D->texImporter->ImportToDDS(texAssetsPath.c_str(), textureName.c_str());
+						if (!ret) {							
+							ret = App->renderer3D->texImporter->ImportToDDS(texturePath.C_Str(), textureName.c_str()); 
 						}
 						texDDSPath = LIB_TEXTURES_PATH + textureName + DDS_FORMAT;
 
@@ -95,7 +94,7 @@ bool SceneImporter::ImportScene(const char * FBXpath)
 		
 
 		std::string fileName = LIB_MODELS_PATH + modelName + OWN_FILE_FORMAT;		
-
+		if (written) { written = &fileName; }
 		ret = ImportMeshRecursive(scene->mRootNode, scene);
 		aiReleaseImport(scene);		
 	}
@@ -148,6 +147,9 @@ bool SceneImporter::ImportMeshRecursive(aiNode * node, const aiScene * scene)
 						texturesCoords[i].x = mesh->mTextureCoords[0][i].x;
 						texturesCoords[i].y = mesh->mTextureCoords[0][i].y;
 					}
+				}
+				else { // no textureCoords
+					ranges[3] = 0;
 				}
 
 

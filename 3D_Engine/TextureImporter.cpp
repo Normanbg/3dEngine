@@ -92,10 +92,11 @@ GLuint TextureImporter::LoadTexture(const char * path, Material* texture)
 
 
 
-bool TextureImporter::ImportToDDS( const char* texPath, const char* texName) { //returns error
+bool TextureImporter::ImportToDDS( const char* texPath, const char* texName, std::string* written) { 
 
 	OWN_LOG("Importing texture from %s", texPath);
 	ILuint imageID;
+	
 
 	std::string textureName;
 	std::string extension;
@@ -120,24 +121,7 @@ bool TextureImporter::ImportToDDS( const char* texPath, const char* texName) { /
 	else{
 		
 		ILuint size;
-		ILubyte *data;
-		/*if (extension == DDS_FORMAT) {
-			size = ilSaveL(IL_DDS, NULL, 0);
-			if (size != 0) {
-				data = new ILubyte[size]; // allocate data buffer
-				if (ilSaveL(IL_DDS, data, size) > 0) // Save with the ilSaveIL function
-				{
-					OWN_LOG("Imported succsfully into DDS");
-
-					
-					std::string libPath = LIB_TEXTURES_PATH + textureName + DDS_FORMAT;
-					App->fileSys->writeFile(libPath.c_str(), data, size);
-				}
-				delete[]data;
-
-
-			}
-		} */
+		ILubyte *data;		
 		ilSetInteger(IL_DXTC_FORMAT, IL_DXT5);// To pick a specific DXT compression use 
 		size = ilSaveL(IL_DDS, NULL, 0); // gets the size of the data buffer
 		if (size != 0) {
@@ -146,7 +130,7 @@ bool TextureImporter::ImportToDDS( const char* texPath, const char* texName) { /
 			{
 				OWN_LOG("Imported succsfully into DDS");
 				
-				std::string textureName = texName;				
+								
 				std::string libPath = LIB_TEXTURES_PATH + textureName + DDS_FORMAT;
 				App->fileSys ->writeFile(libPath.c_str(), data, size);
 				ret = true;

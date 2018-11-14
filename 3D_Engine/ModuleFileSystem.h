@@ -19,9 +19,9 @@ public:
 
 	
 	
-	bool CopyDDStoLib(const char* path);
-	bool CopyPEItoLib(const char* path);
-	bool CopyAudioToLib(const char * path);
+	bool CopyDDStoLib(const char* path,  std::string* written = nullptr);
+	bool CopyPEItoLib(const char* path, std::string* written = nullptr);
+	bool CopyAudioToLib(const char * path,  std::string* written = nullptr);
 
 	void NormalizePath(char * full_path, bool toLower = false) const;
 
@@ -31,7 +31,7 @@ public:
 
 	
 
-	void GetFilesFromDir(const char * directory, std::vector<std::string>& fileList, std::vector<std::string>& directoryList) const;
+	void GetFilesFromDir(const char * directory, std::vector<std::string>& fileList, std::vector<std::string>& directoryList, bool recursive = false) const;
 
 	void GetNameFromPath(const char * full_path, std::string * path, std::string * file, std::string * fileWithExtension, std::string * extension) const;
 

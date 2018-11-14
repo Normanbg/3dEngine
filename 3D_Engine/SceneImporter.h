@@ -33,7 +33,7 @@ public:
 	void Init();
 	
 
-	bool ImportScene(const char* scene );
+	bool ImportScene(const char* scene, std::string* written );
 	
 	void LoadFBXandImportPEI(const char* FBXpath);
 	

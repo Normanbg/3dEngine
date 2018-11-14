@@ -141,7 +141,8 @@ void ComponentMesh::Draw()
 		glBindBuffer(GL_ARRAY_BUFFER, 0); //resets the buffer
 	}
 	else {
-			
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		if (material != NULL){
 			if (material->texture != nullptr) {
 				glBindTexture(GL_TEXTURE_2D, material->texture->textureID);
