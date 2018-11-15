@@ -13,7 +13,7 @@ public:
 	~TextureImporter();
 
 	void Init();
-	bool ImportToDDS(const char * texPath, const char* texName = nullptr, std::string* written = nullptr);
+	bool ImportToDDS(const char * texPath, const char* texName = nullptr, std::vector<std::string>* written = nullptr);
 		
 	GLuint LoadTexture(const char* path, Material* texture);
 

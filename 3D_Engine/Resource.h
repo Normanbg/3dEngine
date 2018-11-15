@@ -24,29 +24,33 @@ public:
 
 	inline ResType GetType() const { return type; }
 	inline uuid GetUUID() const { return UUID; }
-	inline const char* GetFile() const { return fileName.c_str(); }
-	inline std::string GetFileStr() const { return fileName; }
-	inline const char* GetExportedFile() const { return exportedFile.c_str(); }
-	inline std::string GetExportedFileStr() const { return exportedFile; }
+	inline const char* GetName() const { return fileName.c_str(); }
+	inline std::string GetNameStr() const { return fileName; }
+	inline std::string GetExportedFiles() const { return exportedFile; }
+	inline const char* GetPath() const { return path.c_str(); }
+	inline std::string GetPathStr() const { return path; }
 
-	inline void SetFile(const char* file) { fileName = file; }
-	inline void SetExportedFile(const char* file) { exportedFile = file; }
-
-	bool IsLoadedToMemory() const { return loaded; }
-	bool LoadToMemory();
-	uint CountReferences() const;
+	inline void SetName(const char* file) { fileName = file; }	
+	inline void SetExportedFile(std::string files) { exportedFile = files; }
+	inline void SetPath(const char* _path) { path = _path; }
+		
+	uint GetCountReferences() const { return references; }
+	bool IsLoaded() const { return loaded; }
 
 	virtual void Save(Config& config) const {};
 	virtual void Load(const Config& config) {};
-	virtual bool LoadInMemory() = 0;
-
+	virtual void LoadInMemory() {};
+	virtual void UnloadInMemory() {};
+	virtual void CleanUp() {};
 
 protected:
 	ResType type = None;
 	uuid UUID = 0;
 	std::string fileName;
+	std::string path;
 	std::string exportedFile;
-	uint loaded = 0;
+	uint references = 0;
+	bool loaded = false;
 
 };
 

@@ -16,7 +16,7 @@ GameObject::GameObject()
 	localAABB.SetNegativeInfinity();
 	globalAABB.SetNegativeInfinity();
 
-	uuid = App->scene->GetRandomUUID();
+	UUID = App->scene->GetRandomUUID();
 }
 
 GameObject::GameObject(const char * Name)
@@ -30,7 +30,7 @@ GameObject::GameObject(const char * Name)
 	localAABB.SetNegativeInfinity();
 	globalAABB.SetNegativeInfinity();
 
-	uuid = App->scene->GetRandomUUID();	
+	UUID = App->scene->GetRandomUUID();	
 }
 
 
@@ -289,7 +289,7 @@ ComponentMesh * GameObject::GetComponentMesh()
 	return ret;
 }
 
-ComponentMaterial * GameObject::GetComponentMaterial(const uint uuid)
+ComponentMaterial * GameObject::GetComponentMaterial(const uuid UUID)
 {
 	std::vector<Component*> materials;
 
@@ -297,7 +297,7 @@ ComponentMaterial * GameObject::GetComponentMaterial(const uint uuid)
 	for (int i = 0; i < materials.size(); i++){
 		ComponentMaterial* it = (ComponentMaterial*)materials[i];
 		const uint auxuuid = it->GetUUID();
-		if (auxuuid == uuid) {
+		if (auxuuid == UUID) {
 			return it;
 		}
 		it = nullptr;
@@ -369,9 +369,9 @@ void GameObject::Save(Config& data) const
 	Config conf;
 		
 
-	conf.AddUInt("UUID", uuid);
+	conf.AddUInt("UUID", UUID);
 	if (parent != nullptr) { // in case of root
-		conf.AddUInt("Parent_UUID", parent->uuid);
+		conf.AddUInt("Parent_UUID", parent->UUID);
 	}
 	conf.AddString("Name", name.c_str());
 	conf.AddFloat3("Translation", transformComp->getPos());
@@ -397,7 +397,7 @@ void GameObject::Save(Config& data) const
 
 void GameObject::Load(Config* data)
 {
-	uuid = data->GetUInt("UUID", 0);
+	UUID = data->GetUInt("UUID", 0);
 	uint parentUUID = data->GetUInt("Parent_UUID",0);
 
 	GameObject* par = App->scene->GetGameObjectByUUID(parentUUID);

@@ -40,11 +40,11 @@ public:
 	GameObject* AddGameObject(const char* name);	
 	GameObject* AddGameObject(const char* name, GameObject* parent);
 	GameObject* CreateCube();
-	GameObject* GetGameObjectByUUID(uint uuid) const;
-	GameObject* GetGameObjectUUIDRecursive(uint uuid, GameObject* go) const;
+	GameObject* GetGameObjectByUUID(uuid UUID) const;
+	GameObject* GetGameObjectUUIDRecursive(uuid UUID, GameObject* go) const;
 
 	void ChangeRootGO(GameObject* newRoot){ root = newRoot; }
-	uint GetRandomUUID();
+	uuid GetRandomUUID();
 
 	void ClearScene()const;
 	void SaveScene(const char* file = nullptr);

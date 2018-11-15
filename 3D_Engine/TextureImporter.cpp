@@ -92,7 +92,7 @@ GLuint TextureImporter::LoadTexture(const char * path, Material* texture)
 
 
 
-bool TextureImporter::ImportToDDS( const char* texPath, const char* texName, std::string* written) { 
+bool TextureImporter::ImportToDDS( const char* texPath, const char* texName, std::vector<std::string>* written) {
 
 	OWN_LOG("Importing texture from %s", texPath);
 	ILuint imageID;
@@ -130,8 +130,9 @@ bool TextureImporter::ImportToDDS( const char* texPath, const char* texName, std
 			{
 				OWN_LOG("Imported succsfully into DDS");
 				
-								
+				
 				std::string libPath = LIB_TEXTURES_PATH + textureName + DDS_FORMAT;
+				if (written) { (*written).push_back(libPath); }
 				App->fileSys ->writeFile(libPath.c_str(), data, size);
 				ret = true;
 			}

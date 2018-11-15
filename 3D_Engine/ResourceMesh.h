@@ -3,6 +3,7 @@
 
 #include "Resource.h"
 #include "Globals.h"
+#include "Math.h"
 
 class Resource;
 
@@ -13,9 +14,32 @@ public:
 	ResourceMesh(uuid UUID);
 	virtual ~ResourceMesh();
 
-	bool LoadInMemory() override;
+	void LoadInMemory() override;
+	void UnloadInMemory() override;
 	void Save(Config& config) const override;
 	void Load(const Config& config) override;
+	void CleanUp() override;
+	
+private:
 
+	void GenerateBuffersGPU();
+
+public: 
+	uint id_index = -1;
+	uint num_index = 0;
+	uint* index = nullptr;
+
+	uint id_vertex = -1;
+	uint num_vertex = 0;
+	float3* vertex = nullptr;
+
+	uint id_normals = -1;
+	uint num_normals = 0;
+	float3* normals = nullptr;
+
+	uint num_textureCoords = 0;
+	float2* texturesCoords = nullptr;
+
+	uint num_faces = 0;
 };
 #endif// !__RESOURCE_MESH_H__

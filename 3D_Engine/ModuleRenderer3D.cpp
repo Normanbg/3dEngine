@@ -333,26 +333,10 @@ void ModuleRenderer3D::LoadDroppedPEI(char * droppedFileDir)
 	GameObject* go = App->scene->AddGameObject();
 	go->name = name;
 	ComponentMesh* mesh = (ComponentMesh*)go->AddComponent(MESH);
-	App->renderer3D->importer->LoadMeshPEI(mesh);
+	//App->renderer3D->importer->LoadMeshPEI(mesh);
 	go = nullptr;
 	mesh = nullptr;
 }
-
-
-
-/*
-void ModuleRenderer3D::ClearSceneMeshes() {
-
-	/*OWN_LOG("Clearing meshes in scene")
-		for (int i = meshes.size() - 1; i >= 0; i--) {
-			meshes[i].CleanUp();
-		}
-	meshes.clear();
-	for (int i = textures.size() - 1; i >= 0; i--) {
-		textures[i].CleanUp();
-	}
-	textures.clear();
-}*/
 
 
 void ModuleRenderer3D::ShowAxis() {

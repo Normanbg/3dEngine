@@ -12,9 +12,9 @@ ResourceTexture::~ResourceTexture()
 {
 }
 
-bool ResourceTexture::LoadInMemory()
+void ResourceTexture::LoadInMemory()
 {
-	return false;
+
 }
 
 void ResourceTexture::Save(Config & config) const
@@ -24,4 +24,3 @@ void ResourceTexture::Save(Config & config) const
 void ResourceTexture::Load(const Config & config)
 {
 }
-

@@ -19,9 +19,9 @@ public:
 
 	
 	
-	bool CopyDDStoLib(const char* path,  std::string* written = nullptr);
-	bool CopyPEItoLib(const char* path, std::string* written = nullptr);
-	bool CopyAudioToLib(const char * path,  std::string* written = nullptr);
+	bool CopyDDStoLib(const char* path, std::vector<std::string>* written = nullptr);
+	bool CopyPEItoLib(const char* path, std::vector<std::string>* written = nullptr);
+	bool CopyAudioToLib(const char * path, std::vector<std::string>* written = nullptr);
 
 	void NormalizePath(char * full_path, bool toLower = false) const;
 

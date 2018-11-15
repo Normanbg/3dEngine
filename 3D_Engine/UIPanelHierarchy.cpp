@@ -23,7 +23,7 @@ void UIPanelHierarchy::Draw()
 		if (ImGui::BeginMenu("Create"))
 		{
 			if (ImGui::MenuItem("Cube")) {
-				App->scene->CreateCube();
+				//App->scene->CreateCube();
 			}
 			//if (ImGui::MenuItem("Load")) { App->LoadGame(); }
 			ImGui::EndMenu();

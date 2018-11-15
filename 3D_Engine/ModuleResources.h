@@ -21,12 +21,16 @@ public:
 
 	void ImportFilesToLibrary();
 
-	uuid Find(const char* fileInAssets) const;
-	uuid ImportFile(const char* newFileInAssets);
+	uuid FindByName(const char* fileInAssets, Resource::ResType type = Resource::ResType::None) const;
+	uuid FindByPath(const char* fileInAssets, Resource::ResType type = Resource::ResType::None) const;
+	void ImportFile(const char* newFileInAssets);
 	uuid GenerateNewUUID();
 	const Resource* Get(uuid uuid) const;
 	Resource* Get(uuid uuid);
+	std::map<uuid, Resource*> GetResourcesList() const { return resources; }
+
 	Resource* CreateNewResource(Resource::ResType type, uuid forceUUID = 0);
+	void GenerateMetaFile(const char* assetFile, std::vector<uuid> exportedUUIDs);
 
 	const Resource::ResType GetResourceTypeFromExtension(const char * path) const;
 

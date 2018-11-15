@@ -108,36 +108,36 @@ uint ModuleFileSystem::readFile(const char * fileName, char** data)
 	return ret;
 }
 
-bool ModuleFileSystem::CopyDDStoLib(const char * path, std::string* written)
+bool ModuleFileSystem::CopyDDStoLib(const char * path, std::vector<std::string>* written)
 {
 	bool ret = false;
 	std::string ddsName;
 	GetNameFromPath(path, nullptr, &ddsName, nullptr, nullptr);
 	std::string libpath = LIB_TEXTURES_PATH + ddsName + DDS_FORMAT;
-	if (written) { written = &libpath; }
+	if (written) { (*written).push_back(libpath); }
 	ret = Copy(path, libpath.c_str());
 	return ret;
 }
 
-bool ModuleFileSystem::CopyPEItoLib(const char * path, std::string* written)
+bool ModuleFileSystem::CopyPEItoLib(const char * path, std::vector<std::string>* written)
 {
 	bool ret = false;
 	std::string peiName;
 	GetNameFromPath(path, nullptr, &peiName, nullptr, nullptr);
 	std::string libpath = LIB_MODELS_PATH + peiName + DDS_FORMAT;
-	if (written) { written = &libpath; }
+	if (written) { (*written).push_back(libpath); }
 
 	ret = Copy(path, libpath.c_str());
 
 	return ret;
 }
-bool ModuleFileSystem::CopyAudioToLib(const char * path, std::string* written)
+bool ModuleFileSystem::CopyAudioToLib(const char * path, std::vector<std::string>* written)
 {
 	bool ret = false;
 	std::string auName;
 	GetNameFromPath(path, nullptr, nullptr, &auName, nullptr);
 	std::string libpath = LIB_AUDIO_PATH + auName ;
-	if (written) { written = &libpath; }
+	if (written) { (*written).push_back(libpath); }
 	ret = Copy(path, libpath.c_str());
 
 	return ret;

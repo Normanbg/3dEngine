@@ -76,7 +76,7 @@ GLuint ModuleTextures::CheckIfImageAlreadyLoaded(const char * name)
 	return -1;
 }
 
-bool ModuleTextures::ImportTexture(const char* tex, std::string* written)
+bool ModuleTextures::ImportTexture(const char* tex, std::vector<std::string>* written)
 {
 	bool ret = false;
 	

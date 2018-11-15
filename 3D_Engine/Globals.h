@@ -94,6 +94,7 @@ enum update_status
 #define WAV_FORMAT_CAP ".WAV"
 #define OGG_FORMAT ".ogg"
 #define OGG_FORMAT_CAP ".OGG"
+#define META_FORMAT ".meta"
 
 
 

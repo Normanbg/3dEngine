@@ -51,37 +51,60 @@ void ModuleResources::ImportFilesToLibrary()
 	
 }
 
-uuid ModuleResources::Find(const char * fileInAssets) const
+uuid ModuleResources::FindByPath(const char * fileInAssets, Resource::ResType type) const
 {
 	std::string fileName = fileInAssets;
 	
 	for (std::map<uuid, Resource*>::const_iterator it = resources.begin(); it != resources.end(); it++) {
-		if (it->second->GetFileStr() == fileName) {
+		if (it->second->GetPathStr() == fileName) {
+			if(type == Resource::ResType::None || type == it->second->GetType())
 			return it->first;
 		}	
 	}
 	return 0;
 }
 
-uuid ModuleResources::ImportFile(const char * newFileInAssets)
+uuid ModuleResources::FindByName(const char * fileInAssets, Resource::ResType type) const
 {
-	uuid ret = 0;
+	std::string fileName = fileInAssets;
+
+	for (std::map<uuid, Resource*>::const_iterator it = resources.begin(); it != resources.end(); it++) {
+		if (it->second->GetNameStr() == fileName) {
+			if (type == Resource::ResType::None || type == it->second->GetType())
+			return it->first;
+		}
+	}
+	return 0;
+}
+
+void  ModuleResources::ImportFile(const char * newFileInAssets)
+{
+	
 	bool import_ok = false; 
-	std::string writtenFile;
+	std::vector<std::string> exportedFiles;
 	Resource::ResType type = GetResourceTypeFromExtension(newFileInAssets);
 	switch (type) {
-	case Resource::ResType::Texture: {import_ok = App->textures->ImportTexture(newFileInAssets, &writtenFile); break; }
-	case Resource::ResType::Scene: {import_ok = App->renderer3D->importer->ImportScene(newFileInAssets, &writtenFile); break; }
-	case Resource::ResType::Mesh: {import_ok = App->fileSys->CopyPEItoLib(newFileInAssets, &writtenFile); break; }
-	case Resource::ResType::Audio: {import_ok = App->fileSys->CopyAudioToLib(newFileInAssets, &writtenFile); break; }
+	case Resource::ResType::Texture: {import_ok = App->textures->ImportTexture(newFileInAssets, &exportedFiles); break; }
+	case Resource::ResType::Scene: {import_ok = App->renderer3D->importer->ImportScene(newFileInAssets, &exportedFiles); break; }
+	case Resource::ResType::Mesh: {import_ok = App->fileSys->CopyPEItoLib(newFileInAssets, &exportedFiles); break; }
+	case Resource::ResType::Audio: {import_ok = App->fileSys->CopyAudioToLib(newFileInAssets, &exportedFiles); break; }
 	}
 	if (import_ok) {
-		Resource* res = CreateNewResource(type);
-		res->SetFile(newFileInAssets);
-		res->SetExportedFile(writtenFile.c_str());
-		ret = res->GetUUID();
+		std::vector<uuid> uuids;
+		for (int i = 0; i < exportedFiles.size(); i++) {
+			Resource* res = CreateNewResource(type);
+			std::string name;
+			App->fileSys->GetNameFromPath(exportedFiles[i].c_str(), nullptr, &name, nullptr, nullptr);
+			res->SetName(name.c_str());
+			res->SetPath(newFileInAssets);
+			res->SetExportedFile(exportedFiles[i].c_str());
+			uuids.push_back(res->GetUUID());
+		}		
+			
+		GenerateMetaFile(newFileInAssets, uuids);
+		
 	}
-	return ret;
+	
 }
 
 uuid ModuleResources::GenerateNewUUID()
@@ -123,12 +146,32 @@ Resource * ModuleResources::CreateNewResource(Resource::ResType type, uuid force
 	case Resource::ResType::Texture: {	res = (Resource*) new ResourceTexture(uuid); break;	}
 	case Resource::ResType::Mesh: {	res = (Resource*) new ResourceMesh(uuid); break;	}
 	case Resource::ResType::Audio: {res = (Resource*) new ResourceAudio(uuid); break;	}
-	case Resource::ResType::Scene: {res = (Resource*) new ResourceScene(uuid); break;	}
+	case Resource::ResType::Scene: {res = (Resource*) new ResourceMesh(uuid); break;	}
 	}
 	if (res != nullptr) {
 		resources[uuid] = res;
 	}
 	return res;
+}
+
+void ModuleResources::GenerateMetaFile(const char* assetFile, std::vector<uuid> exportedUUIDs)
+{
+	Config meta;
+	meta.AddUInt("UUIDs Num", exportedUUIDs.size());
+	for (int i = 0; i < exportedUUIDs.size(); i++) {
+		meta.AddUInt("UUID", exportedUUIDs[i]);
+		Resource* res = Get(exportedUUIDs[i]);
+		res->Save(meta);
+	}
+	meta.AddUInt("TimeStamp", 0);	
+
+	char* buffer = nullptr;
+	uint size = meta.Save(&buffer);
+	std::string name;
+	App->fileSys->GetNameFromPath(assetFile, nullptr, &name, nullptr, nullptr);	
+	name += META_FORMAT;
+	App->fileSys->writeFile(name.c_str(), buffer, size);
+	RELEASE_ARRAY(buffer);
 }
 
 const Resource::ResType ModuleResources::GetResourceTypeFromExtension(const char * path) const

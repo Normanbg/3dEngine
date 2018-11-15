@@ -10,9 +10,12 @@ ResourceAudio::~ResourceAudio()
 {
 }
 
-bool ResourceAudio::LoadInMemory()
+void ResourceAudio::LoadInMemory()
 {
-	return false;
+}
+
+void ResourceAudio::UnloadInMemory()
+{
 }
 
 void ResourceAudio::Save(Config & config) const

@@ -17,6 +17,7 @@
 
 
 struct ComponentMaterial;
+class ResourceMesh;
 
 class ComponentMesh : public Component, public ComponentWithResource
 {
@@ -27,7 +28,7 @@ public:
 	//void GenerateBoundingBox();
 	void DrawBoundingBox();
 
-	void CreateBBox(ComponentMesh * newMesh);
+	void CreateBBox();
 	
 	void SetMaterial(ComponentMaterial* texture);
 	
@@ -41,26 +42,14 @@ public:
 	void Load(Config* data) override;
 
 	void GenerateBuffer();
+
+	void SetResource(uuid resource)override;
+	Resource* GetResource() const override { return (Resource*)resourceMesh; }
 	
 	void Draw();
 
 public:
-	uint id_index = -1;
-	uint num_index = 0;
-	uint* index = nullptr;
-
-	uint id_vertex = -1;
-	uint num_vertex = 0;
-	float3* vertex = nullptr;
-
-	uint id_normals = -1;
-	uint num_normals = 0;
-	float3* normals = nullptr;
-
-	uint num_textureCoords = 0;
-	float2* texturesCoords = nullptr;
-
-	uint num_faces = 0;
+	
 
 	AABB bbox;
 	
@@ -71,6 +60,7 @@ public:
 
 
 private:
+	ResourceMesh* resourceMesh = nullptr;
 	ComponentMaterial* material = nullptr;
 };
 

@@ -10,13 +10,4 @@ Resource::~Resource()
 {
 }
 
-bool Resource::LoadToMemory()
-{
-	return false;
-}
 
-uint Resource::CountReferences() const
-{
-	
-	return uint();
-}

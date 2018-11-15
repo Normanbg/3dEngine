@@ -1,5 +1,7 @@
 #include "UIPanelMaterials.h"
 #include "ModuleTextures.h"
+#include "Resource.h"
+#include "ModuleResources.h"
 #include "ModuleScene.h"
 #include "GameObject.h"
 
@@ -23,6 +25,11 @@ void UIPanelMaterials::Draw()
 	
 	DrawChilds(App->textures->materials);
 	ImGui::End();
+
+	ImGui::Begin("Resources", &active);
+
+	DrawChildsRes(App->resources->GetResourcesList());
+	ImGui::End();
 	
 }
 
@@ -42,5 +49,28 @@ void UIPanelMaterials::DrawChilds(std::vector<Material*> materials)
 			ImGui::TreePop();
 		}
 		mat = nullptr;
+	}
+}
+
+void UIPanelMaterials::DrawChildsRes(std::map<uuid, Resource*> resources)
+{
+	uint flags = 0;
+	for (std::map<uuid, Resource*>::iterator goIterator = resources.begin(); goIterator != resources.end(); goIterator++)
+	{
+		Resource* res = (*goIterator).second;
+		flags |= ImGuiTreeNodeFlags_Leaf;
+		std::string name = res->GetName();
+		if (ImGui::TreeNodeEx(name.c_str(), flags)) {
+			if (ImGui::IsItemHovered())
+			{
+				ImGui::BeginTooltip();
+				ImGui::Text("UUID: %d", res->GetUUID());
+				ImGui::Text("Directory: %s", res->GetPath());
+				ImGui::Text("Reference Count: %d", res->GetCountReferences());
+				ImGui::EndTooltip();
+			}
+			ImGui::TreePop();
+		}
+		res = nullptr;
 	}
 }

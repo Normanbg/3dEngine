@@ -55,9 +55,9 @@ public:
 	ComponentCamera* GetComponentCamera();
 	ComponentMaterial * GetComponentMaterial();
 	ComponentMesh * GetComponentMesh();
-	ComponentMaterial* GetComponentMaterial(const uint uuid);
+	ComponentMaterial* GetComponentMaterial(const uuid UUID);
 
-	inline const uint GetUUID() { return uuid; }
+	inline const uuid GetUUID() { return UUID; }
 
 	void CalculateAllGlobalMatrix();
 	void SetChildsStatic(bool active);
@@ -83,7 +83,7 @@ private:
 	void SetName(char* _name);
 	
 	void ToggleSelected();
-	uint uuid = 0;
+	uuid UUID = 0;
 
 private:
 	bool inspectorSelected = false;

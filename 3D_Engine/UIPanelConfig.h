@@ -3,6 +3,9 @@
 
 #include "UIPanel.h"
 
+#define MEMORY_UPDATE_READING 10
+#define MAX_MEMORY_LOG 100
+
 class UIPanelConfig : public UIPanel
 {
 public:
@@ -10,6 +13,9 @@ public:
 	~UIPanelConfig();
 
 	void Draw();
+private:
 
+	uint updates;
+	std::vector<float> memory;
 };
 #endif // !__PANELCONFIG_H__

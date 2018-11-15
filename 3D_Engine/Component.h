@@ -19,7 +19,7 @@ enum ComponentType {
 class Component {
 public:
 	Component() { 
-		uuid = App->scene->GetRandomUUID();
+		UUID = App->scene->GetRandomUUID();
 	}
 	~Component() {
 		delete myGO;
@@ -35,7 +35,7 @@ public:
 	
 	virtual void DrawInspector() { return; };
 
-	inline const uint GetUUID() const { return uuid; }
+	inline const uint GetUUID() const { return UUID; }
 
 
 	virtual void Save(Config& data)const {};
@@ -49,7 +49,7 @@ public:
 
 protected:
 
-	uint uuid= 0;
+	uuid UUID= 0;
 
 	
 };
