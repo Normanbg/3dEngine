@@ -67,6 +67,11 @@ public:
 	uint staticsGObjs = 0;
 	Quadtree* rootQuadTree = nullptr;
 
+
+	//-----------------------------------
+	bool drawRay = false;
+	LineSegment line;
+
 private:
 	void GetAllStaticGOs(GameObject* go);
 	void GetDynamicGOs(GameObject* go);

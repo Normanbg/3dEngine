@@ -6,6 +6,7 @@
 #include "ModuleTime.h"
 #include "ModuleGui.h"
 #include "ComponentMaterial.h"
+#include "ModuleInput.h"
 #include "ImGui/imgui.h"
 
 #include "mmgr/mmgr.h"
@@ -23,7 +24,7 @@ void UIPanelScene::Draw() {
 	uint flags = ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse;
 	ImGui::Begin("Scene", &active, flags);
 
-	pos = float2(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y);
+	pos = float2(ImGui::GetCursorPosX() + ImGui::GetWindowPos().x, ImGui::GetCursorPosY() + ImGui::GetWindowPos().y);
 	size = float2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y);
 
 	if (lastSize.x != size.x || lastSize.y != size.y)
@@ -136,9 +137,12 @@ void UIPanelScene::ClearScenePopUp(){
 
 ImVec2 UIPanelScene::GetMouse() const
 {
-	ImVec2 mousePos = ImVec2(ImGui::GetMousePos().x - pos.x, ImGui::GetMousePos().y - pos.y);
+	ImVec2 IMPOS = ImGui::GetMousePos();
+
+	ImVec2 mousePos = ImVec2(IMPOS.x - pos.x, IMPOS.y - pos.y);
 	ImVec2 mouseNormalized;
 
+	OWN_LOG("X : %f, Y: %f, MPOSX: %f, MPOSY: %f, X : %f, Y: %f ", mousePos.x, mousePos.y, IMPOS.x, IMPOS.y);
 	mouseNormalized.x = mousePos.x / size.x;
 	mouseNormalized.y = mousePos.y / size.y;
 

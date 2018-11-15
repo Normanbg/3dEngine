@@ -62,7 +62,10 @@ update_status ModuleScene::Update(float dt) {
 
 	bool ret = true;
 	//root->CalculateAllGlobalMatrix();
-
+	if (drawRay)
+		DebugDrawLine(line);
+	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT)
+		App->gui->panelScene->GetMouse();
 	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT && App->gui->isMouseOnScene())
 		MousePicking();
 	if (root->childrens.empty() == false) {
@@ -252,6 +255,7 @@ void ModuleScene::MousePicking()
 	if (normalized.x > -1 && normalized.x < 1){
 		if (normalized.y > -1 && normalized.y < 1){
 
+			
 			LineSegment ray;
 			if (App->scene->inGame) {
 				ray = mainCamera->GetComponentCamera()->GetFrustum().UnProjectLineSegment(normalized.x, normalized.y);
@@ -262,7 +266,8 @@ void ModuleScene::MousePicking()
 			GetDynamicGOs(root);
 			float distance = 9 * 10 ^ 10;
 			GameObject* closest = nullptr;
-
+			drawRay = true;
+			line = ray;
 			for (auto it : dynamicOBjs)
 			{
 				bool hit;

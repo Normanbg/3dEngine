@@ -154,10 +154,7 @@ bool ModuleRenderer3D::Start() {
 	BROFILER_CATEGORY("Renderer3D_Start", Profiler::Color::HotPink);
 
 	bool ret = true;
-	//int width = 0;
-	//int height = 0;
-	////App->window->GetSize(width, height);///TO CHEEEEEEEEECK!!!!!!!!!!!!!!!!!!!!!!!!!
-	////OnResize(width, height);
+
 	return ret;
 }
 

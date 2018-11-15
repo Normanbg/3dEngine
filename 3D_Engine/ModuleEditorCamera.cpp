@@ -55,12 +55,12 @@ update_status ModuleEditorCamera::Update(float dt)
 	BROFILER_CATEGORY("Camera3D_Update", Profiler::Color::Chartreuse);
 
 	////Alt+Left click should orbit the object
-	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_LALT)) {
+	if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_LALT)) {
 		Orbit(dt);
 	}
 	
 	////While Right clicking, WASDRT fps-like movement & free look enabled
-	if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT) {
+	if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT && !App->input->GetKey(SDL_SCANCODE_LALT)) {
 		float3 _pos(0, 0, 0);
 		float speed = CAMERA_SPEED * dt;
 		if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT)
