@@ -14,7 +14,7 @@ void ResourceAudio::LoadInMemory()
 {
 }
 
-void ResourceAudio::UnloadInMemory()
+void ResourceAudio::FreeInMemory()
 {
 }
 

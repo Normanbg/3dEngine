@@ -41,7 +41,7 @@ public:
 	void Save(Config& data) const override;
 	void Load(Config* data) override;
 
-	void GenerateBuffer();
+	//void GenerateBuffer();
 
 	void SetResource(uuid resource)override;
 	Resource* GetResource() const override { return (Resource*)resourceMesh; }

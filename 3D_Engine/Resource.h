@@ -40,7 +40,7 @@ public:
 	virtual void Save(Config& config) const {};
 	virtual void Load(const Config& config) {};
 	virtual void LoadInMemory() {};
-	virtual void UnloadInMemory() {};
+	virtual void FreeInMemory() {};
 	virtual void CleanUp() {};
 
 protected:

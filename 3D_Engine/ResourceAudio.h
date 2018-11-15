@@ -14,7 +14,7 @@ public:
 	virtual ~ResourceAudio();
 
 	void LoadInMemory() override;
-	void UnloadInMemory() override;
+	void FreeInMemory() override;
 	void Save(Config& config) const override;
 	void Load(const Config& config) override;
 	

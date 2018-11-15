@@ -2,8 +2,8 @@
 #include "ModuleScene.h"
 #include "GameObject.h"
 #include "Quadtree.h"
+#include "Resource.h"
 #include "ModuleEditorCamera.h"
-#include "ModuleTextures.h"
 #include "Config.h"
 
 #include "ModuleInput.h"////delete me
@@ -291,19 +291,19 @@ void ModuleScene::ShowGameObjectInspector(GameObject* newSelected)
 
 }
 
-void ModuleScene::ShowMaterialInspector(Material * newSelected)
+void ModuleScene::ShowTextureResourceInspector(uuid newResource)
 {
-	if (materialSelected == newSelected)
+	if (TextureResourceSelected == newResource)
 		return;
 	DeselectAll();
-	materialSelected = newSelected;
+	TextureResourceSelected = newResource;
 
 }
 
 void ModuleScene::DeselectAll()
 {	
 	gObjSelected = nullptr;	
-	materialSelected = nullptr;
+	TextureResourceSelected = 0;
 }
 
 void ModuleScene::SetBoundingBox(bool active)

@@ -16,8 +16,6 @@
 #include "Assimp/include/cfileio.h"
 #pragma comment (lib, "Assimp/libx86/assimp.lib")
 
-class ComponentMesh;
-
 class SceneImporter
 {
 public:
@@ -35,12 +33,12 @@ public:
 
 	bool ImportScene(const char* scene, std::vector<std::string>* written ); //imports .fbx to multiple .pei & textures (0.0)
 	
-	void LoadFBXandImportPEI(const char* FBXpath);//loads .fbx scene (1.0)
-	ComponentMaterial* ImportMaterial(aiMaterial* mat); // loads a single texture (1.2)
-	ComponentMesh* ImportMesh(aiMesh* mesh, const char* peiName); //loads a single mesh (1.2)
+	void LoadFBXScene(const char* FBXpath);//loads .fbx scene (1.0)
+	ComponentMaterial* ImportMaterialToResource(aiMaterial* mat); // loads a single texture (1.2)
+	ComponentMesh* ImportMeshToResource(aiMesh* mesh, const char* peiName); //loads a single mesh (1.2)
 
 	//void LoadMeshPEI(ComponentMesh* mesh);
-	void LoadMeshPEI(const char * fileNamePEI, ResourceMesh* resource); // loads a .pei into a resourceMesh
+	void LoadMeshPEI(const char * fileNamePEI, ResourceMesh* resource); // loads a .pei into a resourceMesh (check if it is obsolete)
 
 	
 	void CleanUp();

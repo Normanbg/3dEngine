@@ -10,8 +10,8 @@
 
 class vector;
 class GameObject;
-class Material;
 class Quadtree;
+class Resource;
 
 class ModuleScene : public Module
 {
@@ -28,7 +28,7 @@ public:
 	bool CleanUp() override;
 
 	void ShowGameObjectInspector(GameObject * newSelected);
-	void ShowMaterialInspector(Material * newSelected);
+	void ShowTextureResourceInspector(uuid newSelected);
 	void DeselectAll();
 
 	void SetBoundingBox(bool active);
@@ -58,7 +58,7 @@ public:
 	GameObject* root;
 	GameObject* mainCamera = nullptr;
 	GameObject* gObjSelected = nullptr;
-	Material* materialSelected = nullptr;
+	uuid TextureResourceSelected = 0;
 	
 	bool inGame = false;
 	

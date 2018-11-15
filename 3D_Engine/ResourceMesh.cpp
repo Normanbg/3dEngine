@@ -19,7 +19,7 @@ ResourceMesh::~ResourceMesh()
 void ResourceMesh::LoadInMemory()
 {
 	if (!loaded) {
-		App->renderer3D->importer->LoadMeshPEI(exportedFile.c_str(), this);
+		App->importer->LoadMeshPEI(exportedFile.c_str(), this);
 		GenerateBuffersGPU();
 		loaded = true;
 	}
@@ -27,7 +27,7 @@ void ResourceMesh::LoadInMemory()
 	
 }
 
-void ResourceMesh::UnloadInMemory()
+void ResourceMesh::FreeInMemory()
 {
 	references--;
 	if (references == 0) {
@@ -62,7 +62,7 @@ void ResourceMesh::Load(const Config & config)
 
 void ResourceMesh::CleanUp()
 {	
-	UnloadInMemory();
+	FreeInMemory();
 	
 
 }

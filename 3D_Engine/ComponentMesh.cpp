@@ -39,7 +39,8 @@ bool ComponentMesh::Update()
 
 void ComponentMesh::CleanUp()
 {
-	
+	resourceMesh->FreeInMemory();
+	resourceMesh = nullptr;
 
 	material = nullptr;
 
@@ -62,17 +63,17 @@ void ComponentMesh::DrawInspector() {
 	}
 	if (ImGui::BeginCombo("Material", currentMaterial)) 
 	{
-		std::vector<Material*> mat = App->textures->materials;
+		std::vector<Resource*> mat = App->resources->GetResourcesListType(Resource::ResType::Texture);
 			
 		// change by GetMaterials List to initiate it with label NO TEXTURE
 		for (int i = 0; i < mat.size(); i++)
 		{
 			bool is_selected = false;
 			if (currentMaterial != nullptr) {
-				bool is_selected = (strcmp(currentMaterial, mat[i]->name.c_str()) == 0);
+				bool is_selected = (strcmp(currentMaterial, mat[i]->GetName()) == 0);
 			}
-			if (ImGui::Selectable(mat[i]->name.c_str(), is_selected)) {
-				currentMaterial = mat[i]->name.c_str();
+			if (ImGui::Selectable(mat[i]->GetName(), is_selected)) {
+				currentMaterial = mat[i]->GetName();
 				ComponentMaterial* compMat = myGO->GetComponentMaterial();
 
 				if (compMat == nullptr) { //if the GO has already a component Material
@@ -80,7 +81,9 @@ void ComponentMesh::DrawInspector() {
 				}
 
 				//compMat->texture = App->textures->GetMaterialsFromName(currentMaterial);
+				compMat->SetResource(App->resources->FindByName(mat[i]->GetName(), Resource::ResType::Texture));
 				SetMaterial(compMat);
+				
 				compMat = nullptr;
 				if (is_selected) {
 					ImGui::SetItemDefaultFocus();
@@ -175,13 +178,17 @@ void ComponentMesh::Save(Config & data) const
 		const uint texuuid = material->GetUUID();
 		data.AddUInt("TexUUID", texuuid);
 	}
+	if (resourceMesh!=nullptr) {
+		data.AddString("NamePEI", resourceMesh->GetName());
+	}
 }
 
 void ComponentMesh::Load(Config * data)
 {
 	UUID = data->GetUInt("UUID");
 	SetMaterial(myGO->GetComponentMaterial(data->GetUInt("TexUUID")));
-
+	resourceMesh = (ResourceMesh*) App->resources->Get(App->resources->FindByName(data->GetString("NamePEI"), Resource::ResType::Mesh));
+	resourceMesh->LoadInMemory();
 	//App->renderer3D->importer->LoadMeshPEI(this);
 }
 

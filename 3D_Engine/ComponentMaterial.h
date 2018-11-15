@@ -3,7 +3,6 @@
 
 #include "Component.h"
 #include "Globals.h"
-#include "ModuleTextures.h"
 #include "ComponentWithResource.h"
 #include "ResourceTexture.h"
 

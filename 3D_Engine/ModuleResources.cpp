@@ -3,7 +3,6 @@
 #include "ResourceAudio.h"
 #include "ResourceMesh.h"
 #include "ResourceTexture.h"
-#include "ResourceScene.h"
 #include "ModuleScene.h"
 #include "ModuleFileSystem.h"
 #include "ModuleRenderer3D.h"
@@ -77,17 +76,18 @@ uuid ModuleResources::FindByName(const char * fileInAssets, Resource::ResType ty
 	return 0;
 }
 
-void  ModuleResources::ImportFile(const char * newFileInAssets)
+bool  ModuleResources::ImportFile(const char * newFileInAssets)
 {
-	
+	bool ret = false;
 	bool import_ok = false; 
 	std::vector<std::string> exportedFiles;
 	Resource::ResType type = GetResourceTypeFromExtension(newFileInAssets);
 	switch (type) {
-	case Resource::ResType::Texture: {import_ok = App->textures->ImportTexture(newFileInAssets, &exportedFiles); break; }
-	case Resource::ResType::Scene: {import_ok = App->renderer3D->importer->ImportScene(newFileInAssets, &exportedFiles); break; }
+	case Resource::ResType::Texture: {import_ok = App->texImporter->ImportTexture(newFileInAssets, &exportedFiles); break; }
+	case Resource::ResType::Scene: {import_ok = App->importer->ImportScene(newFileInAssets, &exportedFiles); break; }
 	case Resource::ResType::Mesh: {import_ok = App->fileSys->CopyPEItoLib(newFileInAssets, &exportedFiles); break; }
 	case Resource::ResType::Audio: {import_ok = App->fileSys->CopyAudioToLib(newFileInAssets, &exportedFiles); break; }
+	case Resource::ResType::None: {return false; }
 	}
 	if (import_ok) {
 		std::vector<uuid> uuids;
@@ -102,9 +102,9 @@ void  ModuleResources::ImportFile(const char * newFileInAssets)
 		}		
 			
 		GenerateMetaFile(newFileInAssets, uuids);
-		
+		ret = true;
 	}
-	
+	return ret;
 }
 
 uuid ModuleResources::GenerateNewUUID()
@@ -132,6 +132,23 @@ Resource * ModuleResources::Get(uuid _uuid)
 	return nullptr;
 }
 
+std::vector<Resource*> ModuleResources::GetResourcesListType(Resource::ResType type, bool loaded) 
+{
+	std::vector<Resource*> ret;
+	for (std::map<uuid, Resource*>::iterator it = resources.begin(); it != resources.end(); it++) {
+		if (it->second->GetType() == type) {
+			if (loaded) {
+				if (it->second->IsLoaded()) {
+					ret.push_back(it->second);
+				}
+			}
+			else
+				ret.push_back(it->second);
+		}
+	}
+	return ret;
+}
+
 Resource * ModuleResources::CreateNewResource(Resource::ResType type, uuid forceUUID)
 {
 	Resource* res = nullptr;
@@ -141,6 +158,10 @@ Resource * ModuleResources::CreateNewResource(Resource::ResType type, uuid force
 		uuid = forceUUID;
 	else
 		uuid = App->scene->GetRandomUUID();
+	if (Get(uuid) != nullptr) {
+		OWN_LOG("Resource already created! UUID matching");
+		return nullptr;
+	}
 
 	switch (type) {
 	case Resource::ResType::Texture: {	res = (Resource*) new ResourceTexture(uuid); break;	}

@@ -2,7 +2,6 @@
 #define __GAMEOBJECT_H__
 #include "Globals.h"
 #include "ModuleScene.h"
-#include "ModuleTextures.h"
 #include "ModuleRenderer3D.h"
 
 

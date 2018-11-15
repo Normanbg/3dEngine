@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "ModuleGui.h"
 #include "ImGui/imgui.h"
+#include "ModuleResources.h"
 #include "ModuleRenderer3D.h"
 #include "GameObject.h"
 #include "Component.h"
@@ -17,7 +18,7 @@ UIPanelInspector::~UIPanelInspector()
 
 void UIPanelInspector::Draw() {
 	ImGui::Begin(name.c_str(), &active);
-	if (App->scene->gObjSelected != nullptr && App->scene->materialSelected != nullptr) {
+	if (App->scene->gObjSelected != nullptr && App->scene->TextureResourceSelected != 0) {
 		assert("Error. UI Inspector has material and gameobject to show. Need to deselect before.");
 	}
 	if (App->scene->gObjSelected != nullptr) {
@@ -48,17 +49,17 @@ void UIPanelInspector::Draw() {
 		}
 
 	}
-	if (App->scene->materialSelected != nullptr) {
+	if (App->scene->TextureResourceSelected != 0) {
 
-		Material* mat = App->scene->materialSelected;
+		ResourceTexture* mat =( ResourceTexture *) App->resources->Get(App->scene->TextureResourceSelected);
 		ImGui::Text("Name:");
 		ImGui::SameLine();
-		ImGui::TextColored(ImVec4(1, 0, 0, 1), mat->name.c_str());
-		ImGui::Text("Texture size: %dpx x %dpx ", mat->texWidth, mat->texHeight);
-		ImGui::Text("ID: %i", mat->textureID);
+		ImGui::TextColored(ImVec4(1, 0, 0, 1), mat->GetName());
+		ImGui::Text("Texture size: %dpx x %dpx ", mat->width, mat->height);
+		ImGui::Text("ID: %i", mat->gpuID);
 		float windowSize = ImGui::GetWindowContentRegionWidth();
 		ImVec2 size = ImGui::GetContentRegionAvail();
-		ImGui::Image((void*)(mat->textureID), size);
+		ImGui::Image((void*)(mat->gpuID), size);
 		ImGui::Separator();
 
 	}

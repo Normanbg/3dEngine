@@ -4,7 +4,6 @@
 
 #include <vector>
 #include <map>
-class Material;
 class Resource;
 
 class UIPanelMaterials :	public UIPanel
@@ -14,7 +13,7 @@ public:
 	~UIPanelMaterials();
 
 	void Draw();
-	void DrawChilds(std::vector<Material*> childs);
-	void DrawChildsRes(std::map<uuid, Resource* > resources);
+	void DrawTextureChilds(std::vector<Resource*> childs);
+	void DrawResourcesChilds(std::map<uuid, Resource* > resources);
 };
 #endif //__PANELTEXTURES_H__

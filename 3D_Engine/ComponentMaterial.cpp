@@ -19,6 +19,9 @@ bool ComponentMaterial::Update()
 
 void ComponentMaterial::CleanUp()
 {
+	if (HasTexture()) {
+		resourceTexture->FreeInMemory();
+	}
 	resourceTexture = nullptr;
 }
 
@@ -32,7 +35,7 @@ void ComponentMaterial::DrawInspector()
 
 		ImGui::Text("Texture size:\nWidth: %dpx \nHeight: %dpx ", resourceTexture->width, resourceTexture->height);
 		float windowSize = ImGui::GetWindowContentRegionWidth();
-		ImGui::Image((void*)(resourceTexture->gpu_id), ImVec2(windowSize, windowSize));
+		ImGui::Image((void*)(resourceTexture->gpuID), ImVec2(windowSize, windowSize));
 	}
 	ImGui::Text("Color:");
 	ImGui::ColorPicker3("Color##2f", (float*)&colors);
@@ -48,7 +51,7 @@ void ComponentMaterial::SetResource(uuid resource)
 const uint ComponentMaterial::GetTexID() const
 {
 	if (HasTexture()) {
-		return resourceTexture->gpu_id;
+		return resourceTexture->gpuID;
 	}
 	return -1;
 }
@@ -84,14 +87,9 @@ void ComponentMaterial::Load(Config * data)
 	UUID = data->GetUInt("UUID");
 	colors = data->GetFloat3("Colors", { 0,0,0 });
 	std::string matName = data->GetString("TexName", "NoName");
-	/*
+	
 	if (matName != "NoName") {
-		resourceTexture = new Material();
-		texture->name = matName;
-		std::string path = LIB_TEXTURES_PATH + texture->name + DDS_FORMAT;
-		texture->textureID = App->renderer3D->texImporter->LoadTexture(path.c_str(), texture);
-		if (App->textures->CheckIfImageAlreadyLoaded(texture->name.c_str()) == -1) {
-			App->textures->AddMaterial(texture);
-		}
-	}*/
+		resourceTexture =(ResourceTexture*) App->resources->Get(App->resources->FindByName(matName.c_str(), Resource::ResType::Texture));
+		resourceTexture->LoadInMemory();
+	}
 }

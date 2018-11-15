@@ -1,5 +1,4 @@
 #include "UIPanelMaterials.h"
-#include "ModuleTextures.h"
 #include "Resource.h"
 #include "ModuleResources.h"
 #include "ModuleScene.h"
@@ -17,34 +16,37 @@ UIPanelMaterials::~UIPanelMaterials()
 void UIPanelMaterials::Draw()
 {
 	uint flags = 0;
-	if (App->textures->materials.empty()) {
+	std::vector<Resource*> textures = App->resources->GetResourcesListType(Resource::ResType::Texture, true);
+	
+	
+	if (textures.empty()) {
 		flags = ImGuiTreeNodeFlags_Leaf;
 	}//normanbg: I think that is not needed
 
-	ImGui::Begin(name.c_str(), &active);
+	ImGui::Begin("Loaded Textures", &active);
 	
-	DrawChilds(App->textures->materials);
+	DrawTextureChilds(textures);
 	ImGui::End();
 
 	ImGui::Begin("Resources", &active);
 
-	DrawChildsRes(App->resources->GetResourcesList());
+	DrawResourcesChilds(App->resources->GetResourcesList());
 	ImGui::End();
 	
 }
 
-void UIPanelMaterials::DrawChilds(std::vector<Material*> materials)
+void UIPanelMaterials::DrawTextureChilds(std::vector<Resource*> materials)
 {
 	uint flags = 0;
-	for (std::vector<Material*>::iterator goIterator = materials.begin(); goIterator != materials.end(); goIterator++)
+	for (std::vector<Resource*>::iterator goIterator = materials.begin(); goIterator != materials.end(); goIterator++)
 	{
-		Material* mat = *goIterator;
+		Resource* mat = *goIterator;
 		flags |= ImGuiTreeNodeFlags_Leaf;
-		if (ImGui::TreeNodeEx(mat->name.c_str(), flags)) {
+		if (ImGui::TreeNodeEx(mat->GetName(), flags)) {
 			if (ImGui::IsItemClicked(0) || ImGui::IsItemClicked(1))///need to work on it
 			{
 				App->scene->DeselectAll();
-				App->scene->ShowMaterialInspector(mat);
+				App->scene->ShowTextureResourceInspector(mat->GetUUID());
 			}
 			ImGui::TreePop();
 		}
@@ -52,7 +54,7 @@ void UIPanelMaterials::DrawChilds(std::vector<Material*> materials)
 	}
 }
 
-void UIPanelMaterials::DrawChildsRes(std::map<uuid, Resource*> resources)
+void UIPanelMaterials::DrawResourcesChilds(std::map<uuid, Resource*> resources)
 {
 	uint flags = 0;
 	for (std::map<uuid, Resource*>::iterator goIterator = resources.begin(); goIterator != resources.end(); goIterator++)

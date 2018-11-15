@@ -73,9 +73,9 @@ bool SceneImporter::ImportScene(const char * FBXpath, std::vector<std::string>* 
 				std::string texDDSPath;
 					if (extension != DDS_FORMAT) {
 						std::string texAssetsPath = TEXTURES_PATH + textureName + extension;
-						ret = App->renderer3D->texImporter->ImportToDDS(texAssetsPath.c_str(), textureName.c_str());
+						ret = App->texImporter->ImportToDDS(texAssetsPath.c_str(), textureName.c_str());
 						if (!ret) {							
-							ret = App->renderer3D->texImporter->ImportToDDS(texturePath.C_Str(), textureName.c_str()); 
+							ret = App->texImporter->ImportToDDS(texturePath.C_Str(), textureName.c_str()); 
 						}
 						texDDSPath = LIB_TEXTURES_PATH + textureName + DDS_FORMAT;
 
@@ -202,7 +202,7 @@ bool SceneImporter::ImportMeshRecursive(aiNode * node, const aiScene * scene, st
 	return ret;
 }
 
-void SceneImporter::LoadFBXandImportPEI(const char * FBXpath)
+void SceneImporter::LoadFBXScene(const char * FBXpath)
 {
 	Timer loadTime;
 	
@@ -271,8 +271,7 @@ GameObject * SceneImporter::ImportNodeRecursive(aiNode * node, const aiScene * s
 				aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
 				
 				if (material) {
-					compMat = new ComponentMaterial();
-					compMat = ImportMaterial(material);							
+					compMat = ImportMaterialToResource(material);							
 					
 					if (compMat != nullptr) {						
 						nodeGO->AddComponent(compMat, MATERIAL);						
@@ -284,11 +283,11 @@ GameObject * SceneImporter::ImportNodeRecursive(aiNode * node, const aiScene * s
 								
 				std::string meshName = nodeGO->name;
 				
-				compMesh = ImportMesh(mesh,meshName.c_str());
+				compMesh = ImportMeshToResource(mesh,meshName.c_str());
 				if (compMesh != nullptr) {
 					nodeGO->AddComponent(compMesh, MESH);
 					nodeGO->SetLocalAABB(compMesh->bbox);
-					compMesh->GenerateBuffer();
+					//compMesh->GenerateBuffer();
 				}				
 				if (compMesh&&compMat) {
 					compMesh->SetMaterial(compMat);
@@ -306,7 +305,7 @@ GameObject * SceneImporter::ImportNodeRecursive(aiNode * node, const aiScene * s
 	return nodeGO;
 }
 
-ComponentMaterial * SceneImporter::ImportMaterial(aiMaterial * material) // imports material to dds
+ComponentMaterial * SceneImporter::ImportMaterialToResource(aiMaterial * material) // imports material to dds
 {
 	ComponentMaterial* mat = nullptr;
 	bool error, col, mater;
@@ -333,43 +332,15 @@ ComponentMaterial * SceneImporter::ImportMaterial(aiMaterial * material) // impo
 		App->fileSys->GetNameFromPath(texturePath.C_Str(), &path, &textureName, nullptr, nullptr);
 		App->fileSys->GetNameFromPath(texturePath.C_Str(), nullptr, nullptr, nullptr, &extension);
 
-		GLuint check = App->textures->CheckIfImageAlreadyLoaded(textureName.c_str());
-		if (check == -1) {
-			std::string texDDSPath;
-			if (extension != DDS_FORMAT) {
-
-				error = App->renderer3D->texImporter->ImportToDDS(texturePath.C_Str(), textureName.c_str());
-				if (error) {
-					std::string texAssetsPath = TEXTURES_PATH + textureName + extension; //THIS CANNOT LOAD SCENES THAT ARE NOT IN ASSETS/TEXTURE FOLDER
-					error = App->renderer3D->texImporter->ImportToDDS(texAssetsPath.c_str(), textureName.c_str());
-				}
-				texDDSPath = LIB_TEXTURES_PATH + textureName + DDS_FORMAT;
-
-			}
-			else {
-				texDDSPath = LIB_TEXTURES_PATH + textureName + DDS_FORMAT;
-				if (path != LIB_TEXTURES_PATH) {
-					std::string fllPath = TEXTURES_PATH + textureName + extension;
-					App->fileSys->NormalizePath(fllPath);
-					App->fileSys->Copy(fllPath.c_str(), texDDSPath.c_str());
-				}
-
-			}
-			if (!error) {
-				
-				mat->texture = new Material();
-				mat->texture->textureID = App->renderer3D->texImporter->LoadTexture(texDDSPath.c_str(), mat->texture);
-				OWN_LOG("Loading imported DDS texture from Lib/Textures folder");
-				if (mat->texture->textureID != -1) { 
-					mat->texture->name = textureName;
-					App->textures->AddMaterial(mat->texture);
-					 
-				}				
-			}
+		uuid UUID = App->resources->FindByName(textureName.c_str(), Resource::ResType::Texture);
+		if (UUID == 0) {
+			if (App->resources->ImportFile(texturePath.C_Str())) {
+				mat->SetResource(App->resources->FindByName(textureName.c_str(),  Resource::ResType::Texture));
+			}			
 		}
 		else {
 			
-			mat->texture = App->textures->GetMaterialsFromID(check);
+			mat->SetResource(UUID);
 		}		
 	}
 	else {
@@ -384,7 +355,7 @@ ComponentMaterial * SceneImporter::ImportMaterial(aiMaterial * material) // impo
 	return mat;
 }
 
-ComponentMesh * SceneImporter::ImportMesh(aiMesh * mesh, const char* peiName)
+ComponentMesh * SceneImporter::ImportMeshToResource(aiMesh * mesh, const char* peiName)
 {
 
 	bool error = false;

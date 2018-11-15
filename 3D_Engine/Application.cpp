@@ -6,12 +6,13 @@
 #include "ModuleAudio.h"
 #include "ModuleScene.h"
 #include "ModuleRenderer3D.h"
-#include "ModuleTextures.h"
 #include "ModuleFileSystem.h"
 #include "ModuleTime.h"
 #include "ModuleEditorCamera.h"
 #include "ModuleResources.h"
 #include "ModuleGui.h"
+#include "SceneImporter.h"
+#include "TextureImporter.h"
 #include "Brofiler/Brofiler.h"
 
 #include "./JSON/parson.h"
@@ -29,7 +30,6 @@ Application::Application()
 	camera = new ModuleEditorCamera(this);
 	gui = new ModuleGui(this);
 	scene = new ModuleScene(this);
-	textures = new ModuleTextures(this);
 	fileSys = new ModuleFileSystem(this);
 	time = new ModuleTime();
 	resources = new ModuleResources();
@@ -45,7 +45,6 @@ Application::Application()
 	AddModule(input);
 	AddModule(fileSys);
 	AddModule(audio);
-	AddModule(textures);
 	AddModule(scene);
 	AddModule(time);
 	AddModule(resources);
@@ -64,6 +63,8 @@ Application::~Application(){
 		delete (*item);
 	}
 	list_modules.clear();
+	RELEASE(importer);
+	RELEASE(texImporter);
 }
 
 bool Application::Init(){
@@ -71,6 +72,13 @@ bool Application::Init(){
 	BROFILER_CATEGORY("App_Init", Profiler::Color::DarkOrange);
 	bool ret = true;
 	LoadGameNow();
+
+	importer = new SceneImporter();
+	texImporter = new TextureImporter();
+
+	importer->Init();
+	texImporter->Init();
+
 	// Call Init() in all modules
 	std::list<Module*>::iterator item = list_modules.begin();
 
@@ -89,6 +97,10 @@ bool Application::Init(){
 		ret = (*item)->Start();
 		item++;
 	}
+
+	
+
+
 	ms_timer.Start();
 	return ret;
 }
@@ -205,6 +217,10 @@ bool Application::CleanUp()
 		ret = (*item)->CleanUp();
 		item++;
 	}
+
+
+	importer->CleanUp();
+
 	return ret;
 }
 

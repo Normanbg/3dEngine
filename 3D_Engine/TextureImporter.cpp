@@ -36,7 +36,7 @@ void TextureImporter::Init(){
 }
 
 
-GLuint TextureImporter::LoadTexture(const char * path, Material* texture)
+GLuint TextureImporter::LoadTexture(const char * path,uint &texWidth,uint &texHeight)
 {
 	OWN_LOG("Loading Texture from %s", path);
 	ILuint imageID;
@@ -60,8 +60,8 @@ GLuint TextureImporter::LoadTexture(const char * path, Material* texture)
 		}
 
 		GLuint textureID;
-		texture->texHeight = infoImage.Height;
-		texture->texWidth = infoImage.Width;
+		texHeight = infoImage.Height;
+		texWidth = infoImage.Width;
 		
 		glGenTextures(1, &textureID);//generates a texture buffer 
 		glBindTexture(GL_TEXTURE_2D, textureID);
@@ -90,6 +90,19 @@ GLuint TextureImporter::LoadTexture(const char * path, Material* texture)
 	}
 }
 
+bool TextureImporter::ImportTexture(const char* tex, std::vector<std::string>* written)
+{
+	bool ret = false;
+
+	std::string extension;
+	App->fileSys->GetNameFromPath(tex, nullptr, nullptr, nullptr, &extension);
+	if (extension != DDS_FORMAT)
+		ret = App->texImporter->ImportToDDS(tex, nullptr, written);
+	else
+		ret = App->fileSys->CopyDDStoLib(tex, written);
+
+	return ret;
+}
 
 
 bool TextureImporter::ImportToDDS( const char* texPath, const char* texName, std::vector<std::string>* written) {
@@ -144,4 +157,36 @@ bool TextureImporter::ImportToDDS( const char* texPath, const char* texName, std
 		ilDeleteImages(1, &imageID);		
 	}
 	return ret;
+}
+
+void TextureImporter::LoadDroppedTexture(char * droppedFileDire)
+{
+
+
+	std::string texName;
+	std::string extension;
+
+	App->fileSys->GetNameFromPath(droppedFileDire, nullptr, &texName, nullptr, nullptr);
+	App->fileSys->GetNameFromPath(droppedFileDire, nullptr, nullptr, nullptr, &extension);
+	if (extension != DDS_FORMAT) {
+		App->texImporter->ImportToDDS(droppedFileDire, texName.c_str());
+	}
+
+	//if (App->textures->CheckIfImageAlreadyLoaded(texName.c_str()) == -1) {
+	//	Material* mat = new Material;
+	//	if (extension == DDS_FORMAT) {
+	//		mat->textureID = App->renderer3D->texImporter->LoadTexture(droppedFileDire, mat);
+	//	}
+	//	else {
+	//		std::string texPath;
+
+	//		texPath = LIB_TEXTURES_PATH + texName + DDS_FORMAT;
+	//		mat->textureID = App->renderer3D->texImporter->LoadTexture(texPath.c_str(), mat);
+	//	}
+	//	mat->name = texName;
+	//	App->textures->AddMaterial(mat);
+	//}
+	else {
+		OWN_LOG("Material already loeaded");
+	}
 }
