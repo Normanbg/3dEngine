@@ -62,7 +62,7 @@ update_status ModuleScene::Update(float dt) {
 
 	bool ret = true;
 	//root->CalculateAllGlobalMatrix();
-	if (drawRay)
+	if (drawRay && App->renderer3D->GetRay())
 		DebugDrawLine(line);
 	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT)
 		App->gui->panelScene->GetMouse();
@@ -343,6 +343,7 @@ void ModuleScene::ShowGameObjectInspector(GameObject* newSelected)
 {
 	if (gObjSelected == newSelected)
 		return;
+	newSelected->ToggleSelected();
 	DeselectAll();
 	gObjSelected = newSelected;
 
@@ -359,7 +360,9 @@ void ModuleScene::ShowMaterialInspector(Material * newSelected)
 
 void ModuleScene::DeselectAll()
 {	
-	gObjSelected = nullptr;	
+	if (gObjSelected != nullptr)
+		gObjSelected->ToggleSelected();
+	gObjSelected = nullptr;
 	materialSelected = nullptr;
 }
 

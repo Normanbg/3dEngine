@@ -46,7 +46,11 @@ void UIPanelHierarchy::DrawChilds(std::vector<GameObject*> childs){
 			flags |= ImGuiTreeNodeFlags_Leaf;
 
 		//TODO::COLOR IF IS ACTIVE--------------
+
+		//ImGui::PushID((*goIterator)->GetUUID);------------------------------------------------------------USE THIS FOR REPEATED GAMEOBJECTS ACTING NORMAL!!!!!!!!!!!!!!!!!!!!!!!!!!
 		bool treeNodeOpened = ImGui::TreeNodeEx((*goIterator)->name.c_str(), flags);
+		//ImGui::PopID();
+		
 		if (ImGui::IsItemClicked(0) || ImGui::IsItemClicked(1))
 		{
 			//CTRL pressed = addselectedG0

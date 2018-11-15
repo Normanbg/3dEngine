@@ -137,25 +137,16 @@ void UIPanelScene::ClearScenePopUp(){
 
 ImVec2 UIPanelScene::GetMouse() const
 {
-	ImVec2 IMPOS = ImGui::GetMousePos();
+	ImVec2 mousePos = ImGui::GetMousePos();
 
-	ImVec2 mousePos = ImVec2(IMPOS.x - pos.x, IMPOS.y - pos.y);
+	ImVec2 realMousePos = ImVec2(mousePos.x - pos.x, mousePos.y - pos.y);
 	ImVec2 mouseNormalized;
 
-	OWN_LOG("X : %f, Y: %f, MPOSX: %f, MPOSY: %f, X : %f, Y: %f ", mousePos.x, mousePos.y, IMPOS.x, IMPOS.y);
-	mouseNormalized.x = mousePos.x / size.x;
-	mouseNormalized.y = mousePos.y / size.y;
+	mouseNormalized.x = realMousePos.x / size.x;
+	mouseNormalized.y = realMousePos.y / size.y;
 
-	/*mouseNormalized.x = (mouseNormalized.x - 0.5) *  2;
-	mouseNormalized.y = (mouseNormalized.y - 0.5) * -2;*/
-
-	mouseNormalized.x -= 0.5;
-	mouseNormalized.x *= 2;
-
-	mouseNormalized.y -= 0.5;
-	mouseNormalized.y *= 2;
-
-	mouseNormalized.y *= -1;
+	mouseNormalized.x = (mouseNormalized.x - 0.5) *  2;
+	mouseNormalized.y = (mouseNormalized.y - 0.5) * -2;
 
 	return mouseNormalized;
 }

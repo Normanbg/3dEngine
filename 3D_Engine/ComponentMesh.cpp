@@ -134,7 +134,14 @@ void ComponentMesh::Draw()
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);	
 
 	//glColor3f(colors.x, colors.y, colors.z);
-	showWireframe ? glPolygonMode(GL_FRONT_AND_BACK, GL_LINE) : glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); // wireframe
+	if (myGO->GetSelected() && drawWire) {
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);		
+	}
+	if (showWireframe) {
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);// wireframe
+	}
+	else
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); 
 	
 	if (num_index == 0) {// if the mesh has no index
 		glBindBuffer(GL_ARRAY_BUFFER, id_vertex);

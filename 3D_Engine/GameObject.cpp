@@ -306,6 +306,11 @@ ComponentMaterial * GameObject::GetComponentMaterial(const uint uuid)
 	return nullptr;
 }
 
+bool GameObject::GetSelected()
+{
+	return inspectorSelected;
+}
+
 ComponentMaterial * GameObject::GetComponentMaterial()
 {
 	ComponentMaterial* ret = nullptr;

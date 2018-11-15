@@ -66,6 +66,7 @@ public:
 	bool showBBox = false;
 	bool showWireframe = false;
 
+	bool drawWire = false;
 
 
 

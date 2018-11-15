@@ -56,6 +56,7 @@ public:
 	ComponentMaterial * GetComponentMaterial();
 	ComponentMesh * GetComponentMesh();
 	ComponentMaterial* GetComponentMaterial(const uint uuid);
+	bool GetSelected();
 
 	inline const uint GetUUID() { return uuid; }
 

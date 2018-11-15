@@ -223,6 +223,10 @@ void UIPanelConfig::Draw() {
 		if (ImGui::Checkbox("Quadtree", &quadtree)) {
 			App->renderer3D->SetQuadTree(quadtree);
 		}
+		bool ray = App->renderer3D->GetRay();
+		if (ImGui::Checkbox("Mouse Ray", &ray)) {
+			App->renderer3D->SetRay(ray);
+		}
 	}
 	
 	if (ImGui::CollapsingHeader("Camera")) {

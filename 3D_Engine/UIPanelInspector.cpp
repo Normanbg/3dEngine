@@ -48,8 +48,17 @@ void UIPanelInspector::Draw() {
 		for (std::vector<Component*>::iterator itComponents = componentsRecover.begin(); itComponents != componentsRecover.end(); itComponents++) {
 			DrawComponent((*itComponents));
 		}
+	/*	ImVec2 region = ImGui::GetContentRegionAvail();
+		ImGui::SetCursorPosX(region.x / 4);*/
+		if (ImGui::CollapsingHeader("ADD COMPONENT")) {
+
+			ImGui::Button("VAYA NABO TENS LOCO");
+		}
+
+
 
 	}
+
 	if (App->scene->materialSelected != nullptr) {
 
 		Material* mat = App->scene->materialSelected;
@@ -66,6 +75,15 @@ void UIPanelInspector::Draw() {
 	}
 	ImGui::End();
 }
+
+void EndButtonDropDown()
+{
+	ImGui::PopStyleColor(3);
+	ImGui::EndPopup();
+}
+
+
+
 
 void UIPanelInspector::DrawComponent(Component* compDraw)
 {
