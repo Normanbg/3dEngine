@@ -375,7 +375,7 @@ void GameObject::RayHits(const LineSegment & segment, bool & hit, float & dist){
 			ComponentMesh* mesh;
 			mesh = GetComponentMesh();
 			if (mesh && mesh->HasMesh()) {
-				if (mesh->GetResourceMesh()->vertex != nullptr)
+				if (mesh->GetResourceMesh()->vertex == nullptr)
 					return;
 				//Segment for the mesh
 				LineSegment localRay(segment);
