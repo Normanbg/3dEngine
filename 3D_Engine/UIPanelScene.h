@@ -24,6 +24,7 @@ public:
 	//ComponentMaterial* pauseButtonMat;
 	//ComponentMaterial* stopButtonMat;
 
+private:
 	float2 lastSize;
 	float2 size;
 	float2 pos;

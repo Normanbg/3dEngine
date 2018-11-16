@@ -74,12 +74,14 @@ public:
 	bool drawRay = false;
 	LineSegment line;
 
-	ImGuizmo::OPERATION guizmoOp;
+	ImGuizmo::OPERATION guizmoOp = ImGuizmo::TRANSLATE;
 
 private:
 	void GetAllStaticGOs(GameObject* go);
 	void GetDynamicGOs(GameObject* go);
 	void AddGOtoQuadtree(GameObject * go);
+
+	void UpdateGuizmoOp();
 
 	void SetQTSize(GameObject * go);
 
@@ -87,6 +89,6 @@ private:
 	pcg32_random_t rng;
 	std::vector<GameObject*> staticOBjs;
 	std::vector<GameObject*> dynamicOBjs;
-	
+
 };
 #endif __MODULE_SCENE_H__
