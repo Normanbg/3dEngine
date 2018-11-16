@@ -92,11 +92,8 @@ void ModuleResources::CheckMetaFiles()
 			bool meta = App->fileSys->IsMetaFile(files[(*fileIt).second]);
 			if (meta) {
 				OWN_LOG("resource missing! %s", files[(*fileIt).second].c_str());
-				
-					App->fileSys->RemoveFile(files[(*fileIt).second].c_str());			
-					std::string resPath = files[(*fileIt).second].c_str();
-					resPath = resPath.substr(0, resPath.size() - 5);
-					RemoveResource(resPath.c_str());
+				RemoveResource(files[(*fileIt).second].c_str());
+					
 			}
 			else {
 				OWN_LOG("meta missing! %s", files[(*fileIt).second].c_str())
@@ -246,9 +243,35 @@ Resource * ModuleResources::CreateNewResource(Resource::ResType type, uuid force
 	return res;
 }
 
-void ModuleResources::RemoveResource(const char * path)
+void ModuleResources::RemoveResource(const char * metaPath)
 {
-	resources.erase(FindByPath(path));
+	
+	std::string mPath = metaPath;
+	char* buffer = nullptr;
+	App->fileSys->readFile(mPath.c_str(), &buffer);
+	Config meta(buffer);
+	uuid UUID = meta.GetUInt("ResourceUUID", 0);
+	uint childs = meta.GetUInt("UUID Childs Num", 0);
+	Resource* res= nullptr;
+	if (childs > 0) {
+		for (int i = 0; i < childs; i++) {
+			std::string uuidNum = "UUID_" + std::to_string(i);
+			uint childUUID = meta.GetUInt(uuidNum.c_str(), 0);
+			res = Get(childUUID);
+			res->CleanUp();
+			resources.erase(res->GetUUID());
+			App->fileSys->RemoveFile(res->GetExportedFiles().c_str());
+		}
+	}
+	else {		
+		res = Get(UUID);
+		resources.erase(res->GetUUID());
+		res->CleanUp();
+		App->fileSys->RemoveFile(res->GetExportedFiles().c_str());
+	}
+
+	App->fileSys->RemoveFile(metaPath);
+	res = nullptr;
 }
 
 void ModuleResources::RemoveResource(uuid UUID)
