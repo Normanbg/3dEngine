@@ -42,10 +42,10 @@ bool ModuleGui::Start()
 {
 	BROFILER_CATEGORY("GUI_Start", Profiler::Color::Chartreuse);
 	
-	dropFX = App->audio->LoadFx("fx/drop.wav");
-	closeFX = App->audio->LoadFx("fx/close.wav");
-	openFX = App->audio->LoadFx("fx/open.wav");
-	searchingFX = App->audio->LoadFx("fx/searching.wav");
+	dropFX = App->audio->LoadFx("Fx/drop.wav");
+	closeFX = App->audio->LoadFx("Fx/close.wav");
+	openFX = App->audio->LoadFx("Fx/open.wav");
+	searchingFX = App->audio->LoadFx("Fx/searching.wav");
 
 	uiPanels.push_back(panelAbout = new UIPanelAbout("About", 150, 150, 350, 350));
 	uiPanels.push_back(panelConfig = new UIPanelConfig("Configuration", 1025, 15, 250, 550, true));
