@@ -49,11 +49,24 @@ void UIPanelInspector::Draw() {
 		for (std::vector<Component*>::iterator itComponents = componentsRecover.begin(); itComponents != componentsRecover.end(); itComponents++) {
 			DrawComponent((*itComponents));
 		}
-	/*	ImVec2 region = ImGui::GetContentRegionAvail();
-		ImGui::SetCursorPosX(region.x / 4);*/
 		if (ImGui::CollapsingHeader("ADD COMPONENT")) {
-
-			ImGui::Button("VAYA NABO TENS LOCO");
+		
+			if (!go->GetComponentCamera()) {
+				if (ImGui::Button("Camera")) {
+					go->AddComponent(CAMERA);
+				}
+			}
+			///NOW IF WE USE THIS IT CRASHES BECAUSE WE ARE NOT ABLE TO SELECT ALL THE MESHES AND MATERIALS TO ADD
+			/*if (!go->GetComponentMaterial()) {
+				if (ImGui::Button("Material")) {
+					go->AddComponent(MATERIAL);
+				}
+			}
+			if (!go->GetComponentMesh()) {
+				if (ImGui::Button("Mesh")) {
+					go->AddComponent(MESH);
+				}
+			}*/
 		}
 
 
