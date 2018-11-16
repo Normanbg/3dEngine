@@ -174,7 +174,7 @@ void UIPanelConfig::Draw() {
 		
 		updates++;
 
-		
+		sMStats stats = m_getMemoryStatistics();
 
 		if (updates > MEMORY_UPDATE_READING)
 		{			
@@ -182,12 +182,12 @@ void UIPanelConfig::Draw() {
 			if (memory.size() > MAX_FPS_LOG) {			
 				memory.erase(memory.begin());				
 			}
-			memory.push_back(App->GetCurrentVideoMem());
+			memory.push_back(stats.totalReportedMemory);
 		}
 
 		char title[20];
 		sprintf_s(title, 20, "Memory Consumption");
-		ImGui::PlotHistogram("##memory", &memory[0], memory.size(), 0, title, 0.0f, 40.0f, ImVec2(310, 100));
+		ImGui::PlotHistogram("##memory", &memory[0], memory.size(), 0, title, 0.0f, stats.peakReportedMemory * 1.5f, ImVec2(310, 100));
 	}
 	if (ImGui::CollapsingHeader("Render")) {
 		bool depthTest = App->renderer3D->GetDepthTest();

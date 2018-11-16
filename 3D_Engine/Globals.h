@@ -64,7 +64,7 @@ enum update_status
 #define CONFIG_FILE "Settings/config.JSON"
 #define SCENE_FILE "Scenes/scene.JSON"
 #define TEMP_SCENE_FILE "Scenes/scene_temp.JSON"
-#define ENGINE_AUDIO_PATH "Engine/Audio/"
+#define ENGINE_FX_PATH "Engine/Audio/Fx/"
 #define CAMERA_SPEED 10.0f
 
 #define NUM_PATHS 8
