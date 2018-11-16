@@ -19,8 +19,8 @@ public:
 
 	
 	
-	bool CopyDDStoLib(const char* path, std::vector<std::string>* written = nullptr);
-	bool CopyPEItoLib(const char* path, std::vector<std::string>* written = nullptr);
+	bool CopyDDStoLib(const char* path, std::vector<std::string>* written);
+	bool CopyPEItoLib(const char* path, std::vector<std::string>* written = nullptr, uuid forceUUID = 0);
 	bool CopyAudioToLib(const char * path, std::vector<std::string>* written = nullptr);
 
 	void NormalizePath(char * full_path, bool toLower = false) const;
@@ -29,7 +29,9 @@ public:
 
 	bool Copy(const char * source, const char * destination);
 
-	
+	bool IsMetaFile(std::string file);
+	uint GetLastModification(const char* file) const;
+	void GetUUID_PEI(const char* fullName, std::string * uuid, std::string * pei);
 
 	void GetFilesFromDir(const char * directory, std::vector<std::string>& fileList, std::vector<std::string>& directoryList, bool recursive = false) const;
 

@@ -33,7 +33,7 @@ void SceneImporter::Init()
 
 }
 
-bool SceneImporter::ImportScene(const char * FBXpath, std::vector<std::string>* written)
+bool SceneImporter::ImportScene(const char * FBXpath, std::vector<std::string>* written, uuid forceUUID )
 {
 	bool ret = true;
 	
@@ -71,7 +71,7 @@ bool SceneImporter::ImportScene(const char * FBXpath, std::vector<std::string>* 
 				App->fileSys->GetNameFromPath(texturePath.C_Str(), nullptr, &textureName, nullptr, nullptr);
 				App->fileSys->GetNameFromPath(texturePath.C_Str(), nullptr, nullptr, nullptr, &extension);
 								
-				std::string texDDSPath;
+				std::string texDDSPath;				
 					if (extension != DDS_FORMAT) {
 						std::string texAssetsPath = TEXTURES_PATH + textureName + extension;
 						ret = App->texImporter->ImportToDDS(texAssetsPath.c_str(), textureName.c_str());
@@ -83,7 +83,7 @@ bool SceneImporter::ImportScene(const char * FBXpath, std::vector<std::string>* 
 					}
 					else {
 						texDDSPath = TEXTURES_PATH + textureName + DDS_FORMAT;
-						App->fileSys->CopyDDStoLib(texDDSPath.c_str());
+						App->fileSys->CopyDDStoLib(texDDSPath.c_str(), nullptr);
 					}
 			}
 			else {
@@ -97,7 +97,7 @@ bool SceneImporter::ImportScene(const char * FBXpath, std::vector<std::string>* 
 
 		//std::string fileName = LIB_MODELS_PATH + modelName + OWN_FILE_FORMAT;		
 		//if (written) { (*written).push_back(fileName); }
-		ret = ImportMeshRecursive(scene->mRootNode, scene, written);
+		ret = ImportMeshRecursive(scene->mRootNode, scene, written, forceUUID);
 		aiReleaseImport(scene);		
 	}
 	else {
@@ -107,7 +107,7 @@ bool SceneImporter::ImportScene(const char * FBXpath, std::vector<std::string>* 
 	return ret;
 }
 
-bool SceneImporter::ImportMeshRecursive(aiNode * node, const aiScene * scene, std::vector<std::string>* meshesNames)
+bool SceneImporter::ImportMeshRecursive(aiNode * node, const aiScene * scene, std::vector<std::string>* meshesNames, uuid forceUUID)
 {
 	bool ret = true;
 
@@ -122,8 +122,10 @@ bool SceneImporter::ImportMeshRecursive(aiNode * node, const aiScene * scene, st
 				std::string meshName = node->mName.C_Str();
 				aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
 
+				std::string uuid;
+				if (forceUUID != 0) { uuid += std::to_string(forceUUID) + "~"; }
 				std::string fileName = LIB_MODELS_PATH;
-				fileName += meshName;
+				fileName += uuid + meshName;
 				fileName += OWN_FILE_FORMAT;
 				std::ofstream dataFile(fileName.c_str(), std::fstream::out | std::fstream::binary);
 
@@ -197,7 +199,7 @@ bool SceneImporter::ImportMeshRecursive(aiNode * node, const aiScene * scene, st
 	}
 	for (uint i = 0; i < node->mNumChildren; i++) // recursivity
 	{
-		ret &= ImportMeshRecursive(node->mChildren[i], scene, meshesNames);
+		ret &= ImportMeshRecursive(node->mChildren[i], scene, meshesNames, forceUUID);
 
 	}
 	return ret;
@@ -335,7 +337,7 @@ ComponentMaterial * SceneImporter::ImportMaterialToResource(aiMaterial * materia
 
 		uuid UUID = App->resources->FindByName(textureName.c_str(), Resource::ResType::Texture);
 		if (UUID == 0) {
-			if (App->resources->ImportFile(texturePath.C_Str())) {
+			if (App->resources->ImportFileAndGenerateMeta(texturePath.C_Str())) {
 				mat->SetResource(App->resources->FindByName(textureName.c_str(),  Resource::ResType::Texture));
 			}			
 		}

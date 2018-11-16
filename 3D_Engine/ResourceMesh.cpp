@@ -58,6 +58,7 @@ void ResourceMesh::Save(Config & config) const
 
 void ResourceMesh::Load(const Config & config)
 {
+	
 }
 
 void ResourceMesh::CleanUp()

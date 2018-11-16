@@ -31,7 +31,7 @@ public:
 	void Init();
 	
 
-	bool ImportScene(const char* scene, std::vector<std::string>* written ); //imports .fbx to multiple .pei & textures (0.0)
+	bool ImportScene(const char* scene, std::vector<std::string>* written, uuid forceUUID = 0); //imports .fbx to multiple .pei & textures (0.0)
 	
 	void LoadFBXScene(const char* FBXpath);//loads .fbx scene (1.0)
 	ComponentMaterial* ImportMaterialToResource(aiMaterial* mat); // loads a single texture (1.2)
@@ -44,7 +44,7 @@ public:
 	void CleanUp();
 
 private:
-	bool ImportMeshRecursive(aiNode* node, const aiScene* scene, std::vector<std::string>* meshesNames); //imports .fbx meshes into .pei (0.1)
+	bool ImportMeshRecursive(aiNode* node, const aiScene* scene, std::vector<std::string>* meshesNames, uuid forceUUID = 0); //imports .fbx meshes into .pei (0.1)
 
 	GameObject* ImportNodeRecursive(aiNode* node, const aiScene* scene, GameObject* parent);//imports .fbx hierarchy (1.1)
 
