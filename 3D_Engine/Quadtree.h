@@ -3,6 +3,8 @@
 #include "Globals.h"
 #include "Math.h"
 
+#include <map>
+
 constexpr auto QT_MAX_ELEMS = 1;
 constexpr auto MAX_SUBDIVISIONS = 2;
 
@@ -20,6 +22,7 @@ public:
 	void Insert(GameObject* gameobject);
 	/*void Remove(GameObject* gameobject);*/
 	void Intersect(std::vector<GameObject*>& gameobjects, const AABB& bBox) const;
+	void Intersect(std::map<float, GameObject*>& objects, const Ray& bBox) const;
 
 	void Subdivide();
 

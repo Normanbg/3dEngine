@@ -179,6 +179,7 @@ void ModuleScene::ClearScene() const
 	for (int i = root->components.size() - 1; i > 0; i--) {
 		root->RemoveComponent(root->components[i]);
 	}
+	App->scene->DeselectAll();
 	rootQuadTree->Clear();
 }
 
@@ -248,9 +249,7 @@ void ModuleScene::SetQuadTree()
 void ModuleScene::MousePicking()
 {
 	ImVec2 normalized = App->gui->panelScene->GetMouse();
-	/*float x = (2.0f * App->input->GetMouseX()) / window.Width() - 1.0f;
-	float y = 1.0f - (2.0f * -App->input->GetMouseY()) / window.Height();
-*/
+
 	if (normalized.x > -1 && normalized.x < 1){
 		if (normalized.y > -1 && normalized.y < 1){
 
