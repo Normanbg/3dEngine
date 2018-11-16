@@ -17,7 +17,7 @@ public:
 	uint readFile(const char* fileName, char** data);
 
 
-	
+	void RemoveFile(const char* path);
 	
 	bool CopyDDStoLib(const char* path, std::vector<std::string>* written);
 	bool CopyPEItoLib(const char* path, std::vector<std::string>* written = nullptr, uuid forceUUID = 0);

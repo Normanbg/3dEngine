@@ -107,6 +107,11 @@ uint ModuleFileSystem::readFile(const char * fileName, char** data)
 	return ret;
 }
 
+void ModuleFileSystem::RemoveFile(const char * path)
+{
+	remove(path);
+}
+
 bool ModuleFileSystem::CopyDDStoLib(const char * path, std::vector<std::string>* written)
 {
 	bool ret = false;

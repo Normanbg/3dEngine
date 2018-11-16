@@ -5,7 +5,13 @@
 #include "Module.h"
 #include "Resource.h"
 
+
 #include <map>
+
+#define MS_TO_CHECK_META 2000
+
+
+class Timer;
 
 class ModuleResources : public Module
 {
@@ -17,6 +23,7 @@ public:
 
 
 	bool Start() override;
+	update_status PreUpdate(float dt) override;
 	bool CleanUp() override;
 
 	void CheckMetaFiles();
@@ -32,6 +39,8 @@ public:
 	std::vector<Resource*> GetResourcesListType(Resource::ResType type, bool loaded = false); // gets resources ResourceType "type" & possibilty to only take the loaded ones.
 
 	Resource* CreateNewResource(Resource::ResType type, uuid forceUUID = 0);
+	void RemoveResource(const char* path);
+	void RemoveResource(uuid UUID);
 	void GenerateMetaFile(const char* assetFile, uuid ResourceUUID, std::vector<uuid> exportedUUIDs);
 
 	const Resource::ResType GetResourceTypeFromExtension(const char * path) const;
@@ -41,6 +50,7 @@ private:
 
 	uuid last_uuid = 1;
 	std::map<uuid, Resource*> resources;
+	Timer lastCheck;
 
 private:
 
