@@ -52,6 +52,8 @@ update_status ModuleScene::PreUpdate(float dt)
 		}
 	}
 
+	if (gObjSelected)
+		UpdateGuizmoOp();
 
 	update_status retUS;
 	ret ? retUS = UPDATE_CONTINUE : retUS = UPDATE_ERROR;
@@ -64,8 +66,7 @@ update_status ModuleScene::Update(float dt) {
 	//root->CalculateAllGlobalMatrix();
 	if (drawRay && App->renderer3D->GetRay())
 		DebugDrawLine(line);
-	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT)
-		App->gui->panelScene->GetMouse();
+
 	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT && App->gui->isMouseOnScene() && !ImGuizmo::IsOver())
 		MousePicking();
 	if (root->childrens.empty() == false) {
@@ -290,33 +291,60 @@ void ModuleScene::MousePicking()
 		}
 	}
 }
-
+//switch (current_gizmo_operation)
+//{
+//case ImGuizmo::OPERATION::TRANSLATE:
+//{
+//	float4x4 new_trans = moved_transformation * (*it)->transform->GetGlobalTransform();
+//	(*it)->transform->SetGlobalTransform(new_trans);
+//}
+//break;
+//
+//case ImGuizmo::OPERATION::ROTATE:
+//{
+//	float4x4 new_trans = moved_transformation * (*it)->transform->GetGlobalTransform();
+//	(*it)->transform->SetGlobalTransform(new_trans);
+//}
+//break;
+//case ImGuizmo::OPERATION::SCALE:
+//{
+//	float4x4 save_trans = moved_transformation;
+//	moved_transformation = moved_transformation * last_moved_transformation.Inverted();
+//
+//	float4x4 new_trans = moved_transformation * (*it)->transform->GetGlobalTransform();
+//	(*it)->transform->SetGlobalTransform(new_trans);
+//
+//	last_moved_transformation = save_trans;
+//}
+//break;
+//}
 void ModuleScene::DrawGuizmo(ImGuizmo::OPERATION operation)
 {
 	ComponentTransformation* transform = gObjSelected->GetTransformComponent();
 	if (transform) {
 		ImGuizmo::Enable(true);
-		ImGuizmo::MODE mode;
-		float4x4* matrixL;
+		ImVec2 pos = { App->gui->panelScene->positionX,App->gui->panelScene->positionY };
+		ImVec2 sceneSize = { App->gui->panelScene->width,App->gui->panelScene->height };
 
-		matrixL = &transform->localMatrix;
-		matrixL->Transpose();
+		ImGuizmo::SetRect(pos.x, pos.y, sceneSize.x, sceneSize.y);
+		ImGuizmo::MODE mode;
+		float4x4* transMatr;
+		float t[16];
 
 		float4x4 viewMatrix, projectionMatrix;
 		glGetFloatv(GL_MODELVIEW_MATRIX, (float*)viewMatrix.v);
 		glGetFloatv(GL_PROJECTION_MATRIX, (float*)projectionMatrix.v);
-		ImGuiIO& io = ImGui::GetIO();
-		ImGuizmo::SetOrthographic(true);
-		ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
+		transMatr = &transform->localMatrix;
+		transMatr->Transpose();
+		ImGuizmo::SetOrthographic(false);
 
-		ImGuizmo::Manipulate((float*)viewMatrix.v, (float*)projectionMatrix.v, operation, ImGuizmo::LOCAL, (float*)matrixL, NULL, NULL);
-		matrixL->Transpose();
+		ImGuizmo::Manipulate((float*)viewMatrix.v, (float*)projectionMatrix.v, operation, ImGuizmo::LOCAL, (float*)transMatr, t);
+		transMatr->Transpose();
 
 		if (ImGuizmo::IsUsing()) {
 			root->CalculateAllGlobalMatrix();
-
-			//QUADTREE RECALC
 		}
+
 	}
 }
 
@@ -350,6 +378,21 @@ void ModuleScene::AddGOtoQuadtree(GameObject * go)
 	}
 	for (auto it : go->childrens)
 		AddGOtoQuadtree(it);
+}
+
+void ModuleScene::UpdateGuizmoOp() {
+	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT)
+	{
+		guizmoOp = ImGuizmo::TRANSLATE;
+	}
+	if (App->input->GetKey(SDL_SCANCODE_E) == KEY_REPEAT)
+	{
+		guizmoOp = ImGuizmo::ROTATE;
+	}
+	if (App->input->GetKey(SDL_SCANCODE_R) == KEY_REPEAT)
+	{
+		guizmoOp = ImGuizmo::SCALE;
+	}
 }
 
 void ModuleScene::SetQTSize(GameObject* go) {
@@ -447,22 +490,7 @@ void ModuleScene::Draw() {
 			mesh->Draw();
 		}
 	}
-	if (gObjSelected != nullptr)
-	{
-		if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT)
-		{
-			guizmoOp = ImGuizmo::TRANSLATE;
-		}
-		if (App->input->GetKey(SDL_SCANCODE_E) == KEY_REPEAT)
-		{
-			guizmoOp = ImGuizmo::ROTATE;
-		}
-		if (App->input->GetKey(SDL_SCANCODE_R) == KEY_REPEAT)
-		{
-			guizmoOp = ImGuizmo::SCALE;
-		}
-		DrawGuizmo(ImGuizmo::ROTATE);
-	}
+	
 	if (!inGame && mainCamera != nullptr && rootQuadTree != nullptr) {
 		mainCamera->GetComponentCamera()->DebugDraw();
 		if (App->renderer3D->GetQuadTree())
