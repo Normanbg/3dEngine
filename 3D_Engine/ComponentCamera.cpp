@@ -20,6 +20,8 @@ bool ComponentCamera::Update()
 	if (myGO)
 	{
 		SetPos(myGO->transformComp->getPos());
+		if (myGO->GetSelected())
+			camRes->DebugDraw();
 	}
 	return true;
 }

@@ -128,50 +128,17 @@ void ComponentMesh::Draw()
 {
 	glPushMatrix();
 	glMultMatrixf(myGO->transformComp->getGlobalMatrix().Transposed().ptr());
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glEnableClientState(GL_TEXTURE_COORD_ARRAY);	
+	showWireframe ? glPolygonMode(GL_FRONT_AND_BACK, GL_LINE) : glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); // wireframe
 
-	//glColor3f(colors.x, colors.y, colors.z);
-	if (myGO->GetSelected() && drawWire) {
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);		
-	}
-	if (showWireframe) {
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);// wireframe
-	}
-	else
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); 
-	
-	if (resourceMesh->num_index == 0) {// if the mesh has no index
-		glBindBuffer(GL_ARRAY_BUFFER, resourceMesh->id_vertex);
-		glVertexPointer(3, GL_FLOAT, 0, NULL);
-		glDrawArrays(GL_TRIANGLES, 0, resourceMesh->num_vertex);
-		glBindBuffer(GL_ARRAY_BUFFER, 0); //resets the buffer
-	}
-	else {
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		if (material != NULL){
-			if (material->HasTexture() ) {
-				glBindTexture(GL_TEXTURE_2D, material->GetTexID());
-				glTexCoordPointer(2, GL_FLOAT, 0, &(resourceMesh->texturesCoords[0]));
-			}
-			else {
-				glColor3f(material->colors.x, material->colors.y, material->colors.z);
-			}
-		}
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, resourceMesh->id_index); // test: before it was 2 lines upper
-		glBindBuffer(GL_ARRAY_BUFFER, resourceMesh->id_vertex);
-		glVertexPointer(3, GL_FLOAT, 0, NULL);		
-		glDrawElements(GL_TRIANGLES, resourceMesh->num_index, GL_UNSIGNED_INT, NULL);
-		
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		glBindTexture(GL_TEXTURE_2D, 0);
+	DrawMesh();
 
+	if (myGO->GetSelected()) {// It will redraw mesh with wireframe in blue if the gameObject is selected
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		glColor3f(0.f, 0.f, 1.0f);
+		glLineWidth(5.0f);
+		DrawMesh();
+		drawWire = true;
 	}
-	glColor3f(1.0f, 1.0f, 1.0f);
-	glDisableClientState(GL_VERTEX_ARRAY);
-	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 
 	if (App->renderer3D->GetNormals()) {
 		for (int j = 0; j < resourceMesh->num_normals; j++) {
@@ -186,6 +153,44 @@ void ComponentMesh::Draw()
 	if (showBBox) {
 		DrawBoundingBox();
 	}
+}
+
+void ComponentMesh::DrawMesh(){
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+
+	if (resourceMesh->num_index == 0) {// if the mesh has no index
+		glBindBuffer(GL_ARRAY_BUFFER, resourceMesh->id_vertex);
+		glVertexPointer(3, GL_FLOAT, 0, NULL);
+		glDrawArrays(GL_TRIANGLES, 0, resourceMesh->num_vertex);
+		glBindBuffer(GL_ARRAY_BUFFER, 0); //resets the buffer
+	}
+	else {
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		if (material != NULL) {
+			if (material->HasTexture()) {
+				glBindTexture(GL_TEXTURE_2D, material->GetTexID());
+				glTexCoordPointer(2, GL_FLOAT, 0, &(resourceMesh->texturesCoords[0]));
+			}
+			else {
+				glColor3f(material->colors.x, material->colors.y, material->colors.z);
+			}
+		}
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, resourceMesh->id_index); // test: before it was 2 lines upper
+		glBindBuffer(GL_ARRAY_BUFFER, resourceMesh->id_vertex);
+		glVertexPointer(3, GL_FLOAT, 0, NULL);
+		glDrawElements(GL_TRIANGLES, resourceMesh->num_index, GL_UNSIGNED_INT, NULL);
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+	}
+	glColor3f(1.0f, 1.0f, 1.0f);
+	glDisableClientState(GL_VERTEX_ARRAY);
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+
 }
 
 void ComponentMesh::Save(Config & data) const

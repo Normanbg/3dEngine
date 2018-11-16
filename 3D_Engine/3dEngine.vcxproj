@@ -90,6 +90,7 @@
     <ClInclude Include="DeviceId\DeviceId.h" />
     <ClInclude Include="DeviceId\dxgi1_4.h" />
     <ClInclude Include="FBO.h" />
+    <ClInclude Include="ImGuizmo\ImGuizmo.h" />
     <ClInclude Include="mmgr\mmgr.h" />
     <ClInclude Include="ModuleFileSystem.h" />
     <ClInclude Include="ModuleResources.h" />
@@ -191,6 +192,7 @@
     <ClInclude Include="UIPanelInspector.h" />
     <ClInclude Include="UIPanelScene.h" />
     <ClInclude Include="UIPanelMaterials.h" />
+    <ClInclude Include="UIPanelSceneInfo.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
@@ -204,6 +206,7 @@
     <ClCompile Include="Config.cpp" />
     <ClCompile Include="DeviceId\DeviceId.cpp" />
     <ClCompile Include="FBO.cpp" />
+    <ClCompile Include="ImGuizmo\ImGuizmo.cpp" />
     <ClCompile Include="Math.cpp" />
     <ClCompile Include="mmgr\mmgr.cpp" />
     <ClCompile Include="ModuleFileSystem.cpp" />
@@ -273,6 +276,7 @@
     <ClCompile Include="UIPanelInspector.cpp" />
     <ClCompile Include="UIPanelScene.cpp" />
     <ClCompile Include="UIPanelMaterials.cpp" />
+    <ClCompile Include="UIPanelSceneInfo.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="MathGeoLib\Geometry\KDTree.inl" />

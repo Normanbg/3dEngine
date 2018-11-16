@@ -59,13 +59,16 @@ public:
 	bool showBBox = false;
 	bool showWireframe = false;
 
-	bool drawWire = false;
 
 
+private:
+	void DrawMesh();
 
 private:
 	ResourceMesh* resourceMesh = nullptr;
 	ComponentMaterial* material = nullptr;
+
+	bool drawWire = false;
 };
 
 #endif // !__COMPONENTMESH_H__

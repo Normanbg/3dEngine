@@ -53,6 +53,8 @@ public:
 	void SetQuadTree();
 	void MousePicking();
 
+	///-----------------------
+	void DrawGuizmo(ImGuizmo::OPERATION operation);
 public:
 
 	GameObject* root;
@@ -71,6 +73,8 @@ public:
 	//-----------------------------------
 	bool drawRay = false;
 	LineSegment line;
+
+	ImGuizmo::OPERATION guizmoOp;
 
 private:
 	void GetAllStaticGOs(GameObject* go);

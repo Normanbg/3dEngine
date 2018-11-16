@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "ImGui/imgui.h"
+#include "ImGuizmo/ImGuizmo.h"
 #include "SDL/include/SDL.h"
 #include "Globals.h"
 #include "PerfTimer.h"

@@ -72,17 +72,33 @@ void Quadtree::Insert(GameObject * gameobject) {
 	}
 }
 
-inline void Quadtree::Intersect(std::vector<GameObject*>& objects, const AABB& primitive) const
+void Quadtree::Intersect(std::vector<GameObject*>& objects, const AABB& primBox) const
 {
-	if (primitive.Intersects(quadTreeBox))
+	if (primBox.Intersects(quadTreeBox))
 	{
 		for (std::vector<GameObject*>::const_iterator it = this->gameobjs.begin(); it != this->gameobjs.end(); ++it)
 		{
-			if (primitive.Intersects((*it)->globalAABB))
+			if (primBox.Intersects((*it)->globalAABB))
 				objects.push_back(*it);
 		}
 		for (int i = 0; i < 4; ++i)
-			if (quTrChilds[i] != nullptr) quTrChilds[i]->Intersect(objects, primitive);
+			if (quTrChilds[i] != nullptr) quTrChilds[i]->Intersect(objects, primBox);
+	}
+}
+
+void Quadtree::Intersect(std::map<float, GameObject*>& objects, const Ray & ray) const
+{
+	if (ray.Intersects(quadTreeBox))
+	{
+		float hit_near, hit_far;
+		for (std::vector<GameObject*>::const_iterator it = this->gameobjs.begin(); it != this->gameobjs.end(); ++it)
+		{
+			if (ray.Intersects((*it)->globalAABB), hit_near, hit_far)
+				objects[hit_near] = *it;
+		}
+
+		for (int i = 0; i < 4; ++i)
+			if (quTrChilds[i] != nullptr) quTrChilds[i]->Intersect(objects, ray);
 	}
 }
 

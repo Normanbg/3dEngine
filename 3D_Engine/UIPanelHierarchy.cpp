@@ -32,6 +32,10 @@ void UIPanelHierarchy::Draw()
 		}
 		ImGui::EndMenuBar();
 	}
+	//FOR DESELECTING GAME OBJECTS
+	if (ImGui::IsMouseDoubleClicked(0) && ImGui::IsMouseHoveringWindow()) {
+		App->scene->DeselectAll();
+	}
 	DrawChilds(App->scene->root->childrens);
 	ImGui::End();
 }

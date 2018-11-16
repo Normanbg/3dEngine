@@ -4,6 +4,7 @@
 #include "ImGui/imgui_impl_sdl.h"
 #include "ImGui/imgui_impl_opengl2.h"
 #include "MathGeoLib/Geometry/GeometryAll.h"
+#include "ImGuizmo/ImGuizmo.h"
 #include "UIPanel.h"
 #include "UIPanelAbout.h"
 #include "UIPanelConfig.h"
@@ -12,6 +13,7 @@
 #include "UIPanelHierarchy.h"
 #include "UIPanelMaterials.h"
 #include "UIPanelScene.h"
+#include "UIPanelSceneInfo.h"
 #include "ModuleWindow.h"
 #include "ModuleInput.h"
 #include "ModuleAudio.h"
@@ -54,6 +56,7 @@ bool ModuleGui::Start()
 	uiPanels.push_back(panelHierarchy = new UIPanelHierarchy("Hierarchy", 0, 15, 250, 550, true));
 	uiPanels.push_back(panelMaterial = new UIPanelMaterials("Materials", 0, 399, 240, 406, true));
 	uiPanels.push_back(panelScene = new UIPanelScene("Scene", 0, 399, 240, 406, true));
+	uiPanels.push_back(panelSceneInfo = new UIPanelSceneInfo("Scene Info", 0, 399, 240, 406, true));
 
 	ImGui::CreateContext();
 	demoShowcase = false;
@@ -74,6 +77,7 @@ update_status ModuleGui::PreUpdate(float dt)
 	ImGui_ImplOpenGL2_NewFrame();
 	ImGui_ImplSDL2_NewFrame(App->window->window);
 	ImGui::NewFrame();
+	ImGuizmo::BeginFrame();
 	return UPDATE_CONTINUE;
 }
 
@@ -85,7 +89,7 @@ update_status ModuleGui::Update(float dt)
 			if (ImGui::MenuItem("Clear scene"))
 				clearScene = true;
 			if (ImGui::MenuItem("Load File..."))
-				App->gui->panelScene->wantToLoadFile = true;
+				panelSceneInfo->wantToLoadFile = true;
 			if (ImGui::MenuItem("Save scene"))
 				App->scene->SaveScene();
 			if (ImGui::MenuItem("Load scene"))
@@ -174,6 +178,14 @@ update_status ModuleGui::Update(float dt)
 				else
 					App->audio->PlayFx(openFX);
 				panelScene->ChangeActive();
+			}
+			if (ImGui::MenuItem("Scene Info", NULL, panelSceneInfo->isEnabled())) {
+				if (panelSceneInfo->isEnabled()) {
+					App->audio->PlayFx(closeFX);
+				}
+				else
+					App->audio->PlayFx(openFX);
+				panelSceneInfo->ChangeActive();
 			}
 			ImGui::EndMenu();
 		}

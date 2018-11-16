@@ -28,6 +28,12 @@ void UIPanelMaterials::Draw()
 	ImGui::Begin("Loaded Textures", &active);
 	
 	DrawTextureChilds(textures);
+
+	//FOR DESELECTING MATERIALS
+	if (ImGui::IsMouseDoubleClicked(0) && ImGui::IsMouseHoveringWindow()) {
+		App->scene->DeselectAll();
+	}
+
 	ImGui::End();
 
 	ImGui::Begin("Resources", &active);
