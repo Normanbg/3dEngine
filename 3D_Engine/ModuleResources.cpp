@@ -4,6 +4,7 @@
 #include "ResourceMesh.h"
 #include "ResourceTexture.h"
 #include "ModuleScene.h"
+#include "Timer.h"
 #include "ModuleFileSystem.h"
 #include "ModuleRenderer3D.h"
 
@@ -29,6 +30,16 @@ bool ModuleResources::Start()
 {
 	CheckMetaFiles();
 	return true;
+}
+
+update_status ModuleResources::PreUpdate(float dt)
+{
+	if (lastCheck.Read() > MS_TO_CHECK_META) {
+		lastCheck.SetZero();
+		CheckMetaFiles();
+	}
+
+	return UPDATE_CONTINUE;
 }
 
 bool ModuleResources::CleanUp()
@@ -80,8 +91,12 @@ void ModuleResources::CheckMetaFiles()
 		
 			bool meta = App->fileSys->IsMetaFile(files[(*fileIt).second]);
 			if (meta) {
-				OWN_LOG("resource missing! %s", files[(*fileIt).second].c_str())
-			
+				OWN_LOG("resource missing! %s", files[(*fileIt).second].c_str());
+				
+					App->fileSys->RemoveFile(files[(*fileIt).second].c_str());			
+					std::string resPath = files[(*fileIt).second].c_str();
+					resPath = resPath.substr(0, resPath.size() - 5);
+					RemoveResource(resPath.c_str());
 			}
 			else {
 				OWN_LOG("meta missing! %s", files[(*fileIt).second].c_str())
@@ -89,7 +104,7 @@ void ModuleResources::CheckMetaFiles()
 			}
 		}
 	}
-	
+	lastCheck.Start();
 }
 
 uuid ModuleResources::FindByPath(const char * fileInAssets, Resource::ResType type) const
@@ -231,6 +246,16 @@ Resource * ModuleResources::CreateNewResource(Resource::ResType type, uuid force
 	return res;
 }
 
+void ModuleResources::RemoveResource(const char * path)
+{
+	resources.erase(FindByPath(path));
+}
+
+void ModuleResources::RemoveResource(uuid UUID)
+{
+	resources.erase(UUID);
+}
+
 void ModuleResources::GenerateMetaFile(const char* assetFile,  uuid resourceUUID, std::vector<uuid> exportedUUIDs )
 {
 	Config meta;
@@ -308,14 +333,26 @@ bool ModuleResources::ManageResourceWithMeta(const char * resource, const char *
 		RELEASE_ARRAY(buffer);
 		return false;
 	}
+
+
+
+	
+	uuid resourceUUID = meta.GetUInt("ResourceUUID", 0);
+	if (Get(resourceUUID)) { // if texture or mesh is already in resources
+		return true;
+	}
 	Resource::ResType type = GetResourceTypeFromExtension(resource);
-	uuid resourceUUID = meta.GetUInt("ResourceUUID", 0);	
 	if (type == Resource::ResType::Scene) {
 		uint childs = meta.GetUInt("UUID Childs Num", 0);
 	for (int i = 0; i < childs; i++) {
 
 			std::string uuidNum = "UUID_" + std::to_string(i);
 			uint childUUID = meta.GetUInt(uuidNum.c_str(), 0);
+
+			if (Get(childUUID)) { // if scene mesh is already in resources
+				return true;
+			}
+
 			std::string uuidPeiNum = "UUID_PEIName_" + std::to_string(i);
 			std::string uuidPei = meta.GetString(uuidPeiNum.c_str(), "");
 
