@@ -51,7 +51,7 @@ public:
 	void LoadScene(const char* file= nullptr);
 
 	void SetQuadTree();
-	//void AddGOtoQuadtree(GameObject* go) ;
+	void MousePicking();
 
 public:
 
@@ -67,9 +67,14 @@ public:
 	uint staticsGObjs = 0;
 	Quadtree* rootQuadTree = nullptr;
 
+
+	//-----------------------------------
+	bool drawRay = false;
+	LineSegment line;
+
 private:
 	void GetAllStaticGOs(GameObject* go);
-
+	void GetDynamicGOs(GameObject* go);
 	void AddGOtoQuadtree(GameObject * go);
 
 	void SetQTSize(GameObject * go);
@@ -77,8 +82,7 @@ private:
 private:
 	pcg32_random_t rng;
 	std::vector<GameObject*> staticOBjs;
-
-
+	std::vector<GameObject*> dynamicOBjs;
 	
 };
 #endif __MODULE_SCENE_H__

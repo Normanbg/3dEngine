@@ -6,6 +6,7 @@
 #include "ModuleResources.h"
 #include "ResourceMesh.h"
 
+#include "mmgr/mmgr.h"
 
 using namespace std;
 
@@ -271,7 +272,7 @@ GameObject * SceneImporter::ImportNodeRecursive(aiNode * node, const aiScene * s
 				aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
 				
 				if (material) {
-					compMat = ImportMaterialToResource(material);							
+					compMat = ImportMaterialToResource(material);		
 					
 					if (compMat != nullptr) {						
 						nodeGO->AddComponent(compMat, MATERIAL);						

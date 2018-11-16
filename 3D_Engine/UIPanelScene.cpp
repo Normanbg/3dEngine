@@ -6,7 +6,10 @@
 #include "ModuleTime.h"
 #include "ModuleGui.h"
 #include "ComponentMaterial.h"
+#include "ModuleInput.h"
 #include "ImGui/imgui.h"
+
+#include "mmgr/mmgr.h"
 
 UIPanelScene::UIPanelScene(const char * name, float positionX, float positionY, float width, float height, bool active) : UIPanel(name, positionX, positionY, width, height, active)
 {
@@ -19,15 +22,37 @@ UIPanelScene::~UIPanelScene()
 
 void UIPanelScene::Draw() {
 	uint flags = ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse;
-	/*playButtonMat->Load()*/
 	ImGui::Begin("Scene", &active, flags);
+
+	pos = float2(ImGui::GetCursorPosX() + ImGui::GetWindowPos().x, ImGui::GetCursorPosY() + ImGui::GetWindowPos().y);
+	size = float2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y);
+
+	if (lastSize.x != size.x || lastSize.y != size.y)
+	{
+		lastSize.x = size.x;
+		lastSize.y = size.y;
+
+		App->renderer3D->OnResize(size.x, size.y);
+	}
+	img = (ImTextureID)App->renderer3D->GetFBOTexture();
+	ImGui::Image(img, ImVec2(size.x, size.y), ImVec2(0, 1), ImVec2(1, 0));
+	App->gui->MouseOnScene(ImGui::IsMouseHoveringWindow());
+	ImGui::End();
+	
+
+
+	ImGui::Begin("Scene Info", &active, flags);
+
+	//THAT WAS ON SCENE DIRECTLY BEFORE
 	if (App->gui->clearScene)
 		ClearScenePopUp();
 	if (wantToLoadFile && FileState(OWN_FILE_FORMAT)) {
+
 	const char* fileName = CloseFileState();
 	if (fileName != nullptr)
 		//App->renderer3D->importer->LoadMeshPEI(fileName);
 	wantToLoadFile = false;
+
 	}
 	if (fileState == opened) {
 		LoadFilePopUp((fileStateExtensionFilter.length() > 0) ? fileStateExtensionFilter.c_str() : nullptr);
@@ -35,8 +60,8 @@ void UIPanelScene::Draw() {
 	else
 		inModal = false;
 
-	ImVec2 region_size = ImGui::GetContentRegionAvail();
-	ImGui::SetCursorPosX(region_size.x / 2 - 30);	
+	ImVec2 PRegion = ImGui::GetContentRegionAvail();
+	ImGui::SetCursorPosX(PRegion.x / 2 - 40);
 	if (ImGui::Button("Play", { 40, 20 }))
 	{
 		if (App->time->IsPaused()) {
@@ -62,7 +87,7 @@ void UIPanelScene::Draw() {
 	ImGui::PushStyleColor(ImGuiCol_Button, { 0.8f,0,0,1 });
 	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, { 1,0.2f,0,1 });
 	if (ImGui::Button("Stop", { 40, 20 }))
-	{		
+	{
 		if (App->scene->inGame) {
 			App->time->Stop();
 			App->scene->inGame = false;
@@ -72,21 +97,9 @@ void UIPanelScene::Draw() {
 	}
 	ImGui::PopStyleColor();
 	ImGui::PopStyleColor();
-	
-	size = float2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y);
-	if (lastSize.x != size.x || lastSize.y != size.y)
-	{
-		lastSize.x = size.x;
-		lastSize.y = size.y;
 
-		App->renderer3D->OnResize(size.x, size.y);
-	}
-	img = (ImTextureID)App->renderer3D->texture;
-	ImGui::Image(img, ImVec2(size.x, size.y), ImVec2(0, 1), ImVec2(1, 0));
-	App->gui->MouseOnScene(ImGui::IsMouseHoveringWindow());
-	ImGui::End();
-	
-	ImGui::Begin("Scene Info", &active, flags);
+
+
 	ImGui::Text("Real Time: %.1f", App->time->GetRealTimeSec());
 	ImGui::Text("Game Time: %.1f", App->time->GetGameTimeSec());
 	ImGui::SliderFloat("Time Scale", App->time->GetTimeScale(), 0, 3.0f, "%.1f");
@@ -123,6 +136,23 @@ void UIPanelScene::ClearScenePopUp(){
 	}
 
 }
+
+ImVec2 UIPanelScene::GetMouse() const
+{
+	ImVec2 mousePos = ImGui::GetMousePos();
+
+	ImVec2 realMousePos = ImVec2(mousePos.x - pos.x, mousePos.y - pos.y);
+	ImVec2 mouseNormalized;
+
+	mouseNormalized.x = realMousePos.x / size.x;
+	mouseNormalized.y = realMousePos.y / size.y;
+
+	mouseNormalized.x = (mouseNormalized.x - 0.5) *  2;
+	mouseNormalized.y = (mouseNormalized.y - 0.5) * -2;
+
+	return mouseNormalized;
+}
+
 
 void UIPanelScene::LoadFilePopUp(const char* extensionFilter, const char* rootDirectory )
 {

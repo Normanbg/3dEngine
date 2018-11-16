@@ -45,6 +45,9 @@ public:
 
 	void SetResource(uuid resource)override;
 	Resource* GetResource() const override { return (Resource*)resourceMesh; }
+	ResourceMesh* GetResourceMesh() const{ return resourceMesh; }
+
+	const bool HasMesh() const;
 	
 	void Draw();
 
@@ -56,6 +59,7 @@ public:
 	bool showBBox = false;
 	bool showWireframe = false;
 
+	bool drawWire = false;
 
 
 

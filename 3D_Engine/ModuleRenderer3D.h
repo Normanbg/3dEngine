@@ -13,6 +13,8 @@
 #include <vector>
 #define MAX_LIGHTS 8
 
+class FBO;
+
 class ModuleRenderer3D : public Module
 {
 public:
@@ -44,6 +46,8 @@ public:
 	void SetNormals(bool active) { _normals = active; }
 	void SetAxis(bool active) { _axis = active; }
 	void SetGrid(bool active) { _grid = active; }	
+	void SetQuadTree(bool active) { _quadtree = active; };
+	void SetRay(bool active) { _ray = active; };
 	void SetBoundingBox(bool active);
 
 	inline bool GetDepthTest() const { return _depthTest; }
@@ -56,12 +60,15 @@ public:
 	inline bool GetBoundingBox()const { return _bBox; }
 	inline bool GetAxis() const { return _axis; }
 	inline bool GetGrid() const { return _grid; }
+	inline bool GetQuadTree() const { return _quadtree; }
+	inline bool GetRay() const { return _ray; }
 
 	/*vec GetAvgPosFromMeshes();*/
 	   
 	void LoadDroppedFBX(char* droppedFileDir);
 	void LoadDroppedPEI(char* droppedFileDir);
-	//void ClearSceneMeshes();	
+	
+	const uint GetFBOTexture();
 
 public:
 
@@ -72,9 +79,10 @@ public:
 
 
 	//-----
-	uint texture;
-	uint framebuffer;
-	uint rbo;
+
+	//uint texture;
+	//uint framebuffer;
+	//uint rbo;
 	
 private:
 
@@ -83,7 +91,7 @@ private:
 	void SetDataFromJson(JSON_Object* data);
 
 private:
-
+	
 	bool _vSync;
 
 	bool _depthTest = true;
@@ -96,7 +104,10 @@ private:
 	bool _grid = true;
 	bool _normals = false;
 	bool _bBox = false;
+	bool _quadtree = false;
+	bool _ray = false;
 
+	FBO* fboTex = nullptr;
 
 };
 

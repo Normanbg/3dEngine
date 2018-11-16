@@ -10,6 +10,8 @@
 #pragma comment (lib, "Glew/libx86/glew32.lib")  
 #pragma comment (lib, "Assimp/libx86/assimp.lib")
 
+#include "mmgr/mmgr.h"
+
 
 ComponentMesh::ComponentMesh()
 {
@@ -114,15 +116,30 @@ void ComponentMesh::SetResource(uuid resource)
 
 
 
+const bool ComponentMesh::HasMesh() const
+{
+	bool ret;
+	resourceMesh ? ret = true : ret = false;
+	return ret;
+
+}
+
 void ComponentMesh::Draw()
 {
 	glPushMatrix();
-	glMultMatrixf(myGO->transformComp->globalMatrix.Transposed().ptr());
+	glMultMatrixf(myGO->transformComp->getGlobalMatrix().Transposed().ptr());
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);	
 
 	//glColor3f(colors.x, colors.y, colors.z);
-	showWireframe ? glPolygonMode(GL_FRONT_AND_BACK, GL_LINE) : glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); // wireframe
+	if (myGO->GetSelected() && drawWire) {
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);		
+	}
+	if (showWireframe) {
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);// wireframe
+	}
+	else
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); 
 	
 	if (resourceMesh->num_index == 0) {// if the mesh has no index
 		glBindBuffer(GL_ARRAY_BUFFER, resourceMesh->id_vertex);

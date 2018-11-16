@@ -57,3 +57,22 @@ void DebugDrawBox(float3* vertices, Color color, float lineWidth)
 	glLineWidth(1.0f);
 	glEnd();
 }
+
+void DebugDrawLine(const LineSegment line, const float4x4 & transform, Color color, float lineWidth) {
+	glColor3f(color.r, color.g, color.b);
+	glLineWidth(lineWidth);
+
+	glPushMatrix();
+	glMultMatrixf((GLfloat*)transform.Transposed().ptr());
+
+	glBegin(GL_LINES);
+
+	glVertex3fv((GLfloat*)&line.a);
+	glVertex3fv((GLfloat*)&line.b);
+
+	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+	glLineWidth(1.0f);
+	glEnd();
+
+	glPopMatrix();
+}

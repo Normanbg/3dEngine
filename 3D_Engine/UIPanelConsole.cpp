@@ -3,6 +3,8 @@
 #include "ModuleGui.h"
 #include "ImGui/imgui.h"
 
+#include "mmgr/mmgr.h"
+
 UIPanelConsole::UIPanelConsole(const char * name, float positionX, float positionY, float width, float height, bool active) : UIPanel(name, positionX, positionY, width, height, active)
 {
 }

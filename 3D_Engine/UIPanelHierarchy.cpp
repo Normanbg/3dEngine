@@ -7,6 +7,8 @@
 #include "ModuleScene.h"
 #include "ModuleInput.h"
 
+#include "mmgr/mmgr.h"
+
 UIPanelHierarchy::UIPanelHierarchy(const char * name, float positionX, float positionY, float width, float height, bool active) : UIPanel(name, positionX, positionY, width, height, active)
 {
 }
@@ -44,7 +46,11 @@ void UIPanelHierarchy::DrawChilds(std::vector<GameObject*> childs){
 			flags |= ImGuiTreeNodeFlags_Leaf;
 
 		//TODO::COLOR IF IS ACTIVE--------------
+
+		ImGui::PushID((*goIterator)->GetUUID());
 		bool treeNodeOpened = ImGui::TreeNodeEx((*goIterator)->name.c_str(), flags);
+		ImGui::PopID();
+		
 		if (ImGui::IsItemClicked(0) || ImGui::IsItemClicked(1))
 		{
 			//CTRL pressed = addselectedG0

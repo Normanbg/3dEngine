@@ -89,6 +89,8 @@
     <ClInclude Include="Config.h" />
     <ClInclude Include="DeviceId\DeviceId.h" />
     <ClInclude Include="DeviceId\dxgi1_4.h" />
+    <ClInclude Include="FBO.h" />
+    <ClInclude Include="mmgr\mmgr.h" />
     <ClInclude Include="ModuleFileSystem.h" />
     <ClInclude Include="ModuleResources.h" />
     <ClInclude Include="ModuleTime.h" />
@@ -201,7 +203,9 @@
     <ClCompile Include="ComponentWithResource.cpp" />
     <ClCompile Include="Config.cpp" />
     <ClCompile Include="DeviceId\DeviceId.cpp" />
+    <ClCompile Include="FBO.cpp" />
     <ClCompile Include="Math.cpp" />
+    <ClCompile Include="mmgr\mmgr.cpp" />
     <ClCompile Include="ModuleFileSystem.cpp" />
     <ClCompile Include="ModuleResources.cpp" />
     <ClCompile Include="ModuleTime.cpp" />

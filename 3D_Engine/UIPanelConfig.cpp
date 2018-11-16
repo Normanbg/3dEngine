@@ -6,6 +6,8 @@
 #include "ModuleInput.h"
 #include "ModuleEditorCamera.h"
 
+#include "mmgr/mmgr.h"
+
 UIPanelConfig::UIPanelConfig(const char * name, float positionX, float positionY, float width, float height, bool active) : UIPanel(name, positionX, positionY, width, height, active)
 {
 }
@@ -232,7 +234,15 @@ void UIPanelConfig::Draw() {
 		if (ImGui::Checkbox("Bounding Box", &bBox)) {
 			App->renderer3D->SetBoundingBox(bBox);
 		}
-		
+		ImGui::SameLine();
+		bool quadtree = App->renderer3D->GetQuadTree();
+		if (ImGui::Checkbox("Quadtree", &quadtree)) {
+			App->renderer3D->SetQuadTree(quadtree);
+		}
+		bool ray = App->renderer3D->GetRay();
+		if (ImGui::Checkbox("Mouse Ray", &ray)) {
+			App->renderer3D->SetRay(ray);
+		}
 	}
 	
 	if (ImGui::CollapsingHeader("Camera")) {

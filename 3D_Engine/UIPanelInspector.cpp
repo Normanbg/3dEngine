@@ -8,6 +8,8 @@
 #include "Component.h"
 #include "ModuleScene.h"
 
+#include "mmgr/mmgr.h"
+
 UIPanelInspector::UIPanelInspector(const char * name, float positionX, float positionY, float width, float height, bool active) : UIPanel(name, positionX, positionY, width, height, active)
 {
 }
@@ -47,9 +49,19 @@ void UIPanelInspector::Draw() {
 		for (std::vector<Component*>::iterator itComponents = componentsRecover.begin(); itComponents != componentsRecover.end(); itComponents++) {
 			DrawComponent((*itComponents));
 		}
+	/*	ImVec2 region = ImGui::GetContentRegionAvail();
+		ImGui::SetCursorPosX(region.x / 4);*/
+		if (ImGui::CollapsingHeader("ADD COMPONENT")) {
+
+			ImGui::Button("VAYA NABO TENS LOCO");
+		}
+
+
 
 	}
+
 	if (App->scene->TextureResourceSelected != 0) {
+
 
 		ResourceTexture* mat =( ResourceTexture *) App->resources->Get(App->scene->TextureResourceSelected);
 		ImGui::Text("Name:");
@@ -65,6 +77,15 @@ void UIPanelInspector::Draw() {
 	}
 	ImGui::End();
 }
+
+void EndButtonDropDown()
+{
+	ImGui::PopStyleColor(3);
+	ImGui::EndPopup();
+}
+
+
+
 
 void UIPanelInspector::DrawComponent(Component* compDraw)
 {

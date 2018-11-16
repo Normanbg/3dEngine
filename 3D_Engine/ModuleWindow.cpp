@@ -1,8 +1,11 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleWindow.h"
+#include "ModuleRenderer3D.h"
 #include "Config.h"
 #include "Brofiler/Brofiler.h"
+
+#include "mmgr/mmgr.h"
 
 ModuleWindow::ModuleWindow(bool start_enabled) : Module(start_enabled)
 {
@@ -168,14 +171,20 @@ void ModuleWindow::SetSize(uint w, uint h) {
 	_h = h;
 	_w = w;
 	SDL_SetWindowSize(window, w, h);
-	
+	/*if (!_fullscreen)
+		App->renderer3D->OnResize(w, h);*/
 }
 
 void ModuleWindow::GetSize(int &w, int &h)const {
 
-	w = _w;
-	h = _h;
+	SDL_GetWindowSize(window, &w, &h);
 }
+
+//const float2 ModuleWindow::GetSize() {
+//	int w, int h;
+//	GetSize(w, h);
+//	return float2(w, h);
+//}
 
 bool ModuleWindow::LoadSettings(Config* data) {
 

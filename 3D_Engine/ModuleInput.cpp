@@ -8,6 +8,9 @@
 #include "ModuleGui.h"
 #include "Brofiler/Brofiler.h"
 
+#include "mmgr/mmgr.h"
+
+
 #define MAX_KEYS 300
 
 ModuleInput::ModuleInput(bool start_enabled) : Module(start_enabled)
@@ -120,9 +123,10 @@ update_status ModuleInput::PreUpdate(float dt)
 			break;
 
 			case SDL_WINDOWEVENT:
-			if(e.window.event == SDL_WINDOWEVENT_RESIZED)
-			App->renderer3D->OnResize(e.window.data1, e.window.data2);
-			//App->window->SetSize(e.window.data1, e.window.data2); MARGELI!!!
+				if (e.window.event == SDL_WINDOWEVENT_RESIZED) {
+					//App->renderer3D->OnResize(e.window.data1, e.window.data2);	
+					App->window->SetSize(e.window.data1, e.window.data2);
+				}
 			break;
 			case SDL_DROPFILE:
 				dropped_filedir = e.drop.file;

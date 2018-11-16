@@ -11,7 +11,9 @@
 #include "ModuleGui.h"
 #include "ModuleScene.h"
 #include "Brofiler/Brofiler.h"
+#include "FBO.h"
 
+#include "mmgr/mmgr.h"
 
 
 
@@ -68,6 +70,7 @@ bool ModuleRenderer3D::Init(JSON_Object* obj)
 		if(_vSync && SDL_GL_SetSwapInterval(1) < 0)
 			OWN_LOG("Warning: Unable to set VSync! SDL Error: %s\n", SDL_GetError());
 
+
 		//Initialize Projection Matrix as identity
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
@@ -79,6 +82,11 @@ bool ModuleRenderer3D::Init(JSON_Object* obj)
 			OWN_LOG("Error initializing OpenGL! %s\n", gluErrorString(error));
 			ret = false;
 		}
+
+		fboTex = new FBO();
+		int w, h;
+		App->window->GetSize(w, h);
+		fboTex->Create(w , h);
 
 		//Initialize Modelview Matrix
 		glMatrixMode(GL_MODELVIEW);
@@ -139,10 +147,7 @@ bool ModuleRenderer3D::Start() {
 	BROFILER_CATEGORY("Renderer3D_Start", Profiler::Color::HotPink);
 
 	bool ret = true;
-	int width = 0;
-	int height = 0;
-	App->window->GetSize(width, height);///TO CHEEEEEEEEECK!!!!!!!!!!!!!!!!!!!!!!!!!
-	OnResize(width, height);
+
 	return ret;
 }
 
@@ -150,11 +155,19 @@ bool ModuleRenderer3D::Start() {
 update_status ModuleRenderer3D::PreUpdate(float dt)
 {
 	BROFILER_CATEGORY("Renderer3D_PreUpdate", Profiler::Color::HotPink);
-	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+	fboTex->BindFBO();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 
-	
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	if (App->scene->inGame) {
+		ComponentCamera* mainCam = App->scene->mainCamera->GetComponentCamera();
+		glLoadMatrixf(mainCam->GetProjectionMatrix());
+	}
+	else
+		glLoadMatrixf(App->camera->cameraComp->GetProjectionMatrix());
+
 	glMatrixMode(GL_MODELVIEW);
 	if (App->scene->inGame) {
 		ComponentCamera* mainCam = App->scene->mainCamera->GetComponentCamera();
@@ -185,7 +198,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 
 	//DrawMeshes();
 	App->scene->Draw();
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	fboTex->UnBindFBO();
 
 	App->gui->Draw();	
 
@@ -200,6 +213,9 @@ bool ModuleRenderer3D::CleanUp()
 	OWN_LOG("Destroying 3D Renderer");
 
 		
+	fboTex->UnBindFBO();
+	RELEASE(fboTex);
+
 	SDL_GL_DeleteContext(context); 
 	return true;
 }
@@ -225,38 +241,44 @@ void ModuleRenderer3D::OnResize(const int width, const int height)
 	//glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	//glDeleteFramebuffers(1, &fbo);
 //---------
-	glDeleteFramebuffers(1, &framebuffer);
-	glDeleteTextures(1, &texture);
-	glDeleteRenderbuffers(1, &rbo);
+	//int  _w, _h;
+	//App->window->GetSize(_w, _h);
+	//glDeleteFramebuffers(1, &framebuffer);
+	//glDeleteTextures(1, &texture);
+	//glDeleteRenderbuffers(1, &rbo);
 
-	glGenFramebuffers(1, &framebuffer);
-	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+	//glGenFramebuffers(1, &framebuffer);
+	//glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
 
-	glGenTextures(1, &texture);
-	glBindTexture(GL_TEXTURE_2D, texture);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	
+	//glGenTextures(1, &texture);
+	//glBindTexture(GL_TEXTURE_2D, texture);
+	//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);	
 
-	// attach it to currently bound framebuffer object
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
-	
-	glGenRenderbuffers(1, &rbo);
-	glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
-	
+	//// attach it to currently bound framebuffer object
+	//glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+	//
+	//glGenRenderbuffers(1, &rbo);
+	//glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+	//glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
 
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rbo);
+	//glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rbo);
 
-	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-		OWN_LOG("ERROR::FRAMEBUFFER:: Framebuffer is not complete!");
-	glBindTexture(GL_TEXTURE_2D, 0);
-	glBindRenderbuffer(GL_RENDERBUFFER, 0);
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	//if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+	//	OWN_LOG("ERROR::FRAMEBUFFER:: Framebuffer is not complete!");
+	//glBindTexture(GL_TEXTURE_2D, 0);
+	//glBindRenderbuffer(GL_RENDERBUFFER, 0);
+	//glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-	glViewport(0, 0, width, height);
-	App->camera->UpdateProjMatrix();
+	if (App->scene->inGame) {
+		ComponentCamera* mainCam = App->scene->mainCamera->GetComponentCamera();
+		mainCam->camRes->SetAspectRatio((float)width / (float)height);
+	}
+	else
+		App->camera->cameraComp->camRes->SetAspectRatio((float)width / (float)height);
+	///*glViewport(0, 0, width, height);
+	//App->camera->UpdateProjMatrix();*/
 }
 
 char* ModuleRenderer3D::GetGraphicsModel() const
@@ -328,6 +350,11 @@ void ModuleRenderer3D::LoadDroppedPEI(char * droppedFileDir)
 	//App->renderer3D->importer->LoadMeshPEI(mesh);
 	go = nullptr;
 	mesh = nullptr;
+}
+
+const uint ModuleRenderer3D::GetFBOTexture()
+{
+	return fboTex->texture;
 }
 
 

@@ -1,10 +1,12 @@
 #include "GameObject.h"
 #include "Config.h"
+#include "ResourceMesh.h"
 
 #include <array>
 #include <vector>
 #include <string>
 
+#include "mmgr/mmgr.h"
 
 GameObject::GameObject()
 {
@@ -305,6 +307,11 @@ ComponentMaterial * GameObject::GetComponentMaterial(const uuid UUID)
 	return nullptr;
 }
 
+bool GameObject::GetSelected()
+{
+	return inspectorSelected;
+}
+
 ComponentMaterial * GameObject::GetComponentMaterial()
 {
 	ComponentMaterial* ret = nullptr;
@@ -357,6 +364,48 @@ void GameObject::SetLocalAABB(AABB aabb)
 	}
 	else
 		localAABB.Enclose(aabb);
+}
+
+void GameObject::RayHits(const LineSegment & segment, bool & hit, float & dist){
+	hit = false;
+	dist = 99999999999.f;
+
+	if (globalAABB.IsFinite()) {
+		if (segment.Intersects(globalAABB)) {
+			ComponentMesh* mesh;
+			mesh = GetComponentMesh();
+			if (mesh && mesh->HasMesh()) {
+				if (mesh->GetResourceMesh()->vertex != nullptr)
+					return;
+				//Segment for the mesh
+				LineSegment localRay(segment);
+				localRay.Transform(transformComp->getGlobalMatrix().Inverted());
+
+				uint* indices = mesh->GetResourceMesh()->index;
+				float3* vertices = mesh->GetResourceMesh()->vertex;
+				Triangle triangle;
+
+				for (int i = 0; i < mesh->GetResourceMesh()->num_index;) {
+					//TO CHEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEECK!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+					triangle.a = vertices[indices[i]]; ++i;
+					triangle.b = vertices[indices[i]]; ++i;
+					triangle.c = vertices[indices[i]]; ++i;
+
+					float distance;
+					float3 hitPoint;
+
+					if (localRay.Intersects(triangle, &distance, &hitPoint))
+					{
+						if (distance < dist)
+						{
+							dist = distance;
+							hit = true;
+						}
+					}
+				}
+			}
+		}
+	}
 }
 
 void GameObject::ToggleSelected(){

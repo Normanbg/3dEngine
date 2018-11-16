@@ -17,6 +17,8 @@ public:
 
 	void Draw();
 	void ClearScenePopUp();
+
+	ImVec2 GetMouse() const;
 	
 	bool FileState(const char * extension = nullptr, const char * rootFolder= nullptr);
 	const char * CloseFileState();
@@ -28,7 +30,8 @@ public:
 
 	float2 lastSize;
 	float2 size;
-
+	float2 pos;
+	ImVec2 region;
 	bool wantToLoadFile = false;
 
 private:

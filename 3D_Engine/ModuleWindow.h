@@ -36,6 +36,7 @@ public:
 	float GetBrightness() const { return _brightness; }
 	std::string GetWindowTitle() const { return _title; }
 	void GetSize(int &h, int &w)const;
+	const float2 GetSize();
 
 	void SetBrightness(float bright);
 

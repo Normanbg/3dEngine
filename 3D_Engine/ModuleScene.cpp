@@ -6,7 +6,11 @@
 #include "ModuleEditorCamera.h"
 #include "Config.h"
 
-#include "ModuleInput.h"////delete me
+#include "ModuleInput.h"
+#include "ModuleGui.h"
+#include "UIPanelScene.h"
+
+#include "mmgr/mmgr.h"
 
 #include <vector>
 
@@ -30,7 +34,9 @@ bool ModuleScene::Init(JSON_Object * obj)
 	mainCamera->AddComponent(CAMERA);
 	mainCamera->GetComponentCamera()->SetFarPlaneDistance(85.f);
 	mainCamera->GetComponentCamera()->LookAt({ 0.f, 0.f, 0.f });
-	rootQuadTree = new Quadtree(AABB({ 0.f, 0.f, 0.f }, { 15.f, 15.f ,15.f }), 0);
+	AABB rootAABB;
+	rootAABB.SetNegativeInfinity();
+	rootQuadTree = new Quadtree(rootAABB, 0);
 
 	return true;
 }
@@ -38,17 +44,8 @@ bool ModuleScene::Init(JSON_Object * obj)
 update_status ModuleScene::PreUpdate(float dt)
 {
 	bool ret = true;
+	root->CalculateAllGlobalMatrix();
 
-	
-
-	if(App->input->GetKey(SDL_SCANCODE_4)== KEY_DOWN) { ///// DEBUUG
-		SaveScene();
-	}
-	if (App->input->GetKey(SDL_SCANCODE_5) == KEY_DOWN) { ///// DEBUUG
-
-		LoadScene();
-	}
-	 
 	if (root->childrens.empty() == false) {
 		for (int i = 0; i < root->childrens.size(); i++) {
 			ret &= root->childrens[i]->PreUpdate();
@@ -61,6 +58,50 @@ update_status ModuleScene::PreUpdate(float dt)
 	return retUS;
 }
 
+update_status ModuleScene::Update(float dt) {
+
+	bool ret = true;
+	//root->CalculateAllGlobalMatrix();
+	if (drawRay && App->renderer3D->GetRay())
+		DebugDrawLine(line);
+	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT)
+		App->gui->panelScene->GetMouse();
+	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT && App->gui->isMouseOnScene())
+		MousePicking();
+	if (root->childrens.empty() == false) {
+
+		for (int i = 0; i < root->childrens.size(); i++) {
+			ret &= root->childrens[i]->Update();
+		}
+	}
+	update_status retUS;
+	ret ? retUS = UPDATE_CONTINUE : retUS = UPDATE_ERROR;
+	return retUS;
+}
+
+update_status ModuleScene::PostUpdate(float dt) {
+
+	bool ret = true;
+	if (root->childrens.empty() == false) {
+		for (int i = 0; i < root->childrens.size(); i++) {
+			ret &= root->childrens[i]->PostUpdate();
+		}
+	}
+
+	update_status retUS;
+	ret ? retUS = UPDATE_CONTINUE : retUS = UPDATE_ERROR;
+	return retUS;
+}
+
+bool ModuleScene::CleanUp()
+{
+	ClearScene();
+
+	RELEASE(root);
+	RELEASE(rootQuadTree);
+
+	return true;
+}
 /*
 GameObject * ModuleScene::CreateCube()
 {
@@ -138,6 +179,7 @@ void ModuleScene::ClearScene() const
 	for (int i = root->components.size() - 1; i > 0; i--) {
 		root->RemoveComponent(root->components[i]);
 	}
+	rootQuadTree->Clear();
 }
 
 void ModuleScene::SaveScene(const char* file) 
@@ -189,10 +231,6 @@ void ModuleScene::LoadScene(const char*file)
 		RELEASE_ARRAY(buffer);
 
 }
-//
-//void ModuleScene::AddGOtoQuadtree(GameObject * go)
-//{
-//}
 
 void ModuleScene::SetQuadTree()
 {
@@ -207,12 +245,70 @@ void ModuleScene::SetQuadTree()
 	}
 }
 
+void ModuleScene::MousePicking()
+{
+	ImVec2 normalized = App->gui->panelScene->GetMouse();
+	/*float x = (2.0f * App->input->GetMouseX()) / window.Width() - 1.0f;
+	float y = 1.0f - (2.0f * -App->input->GetMouseY()) / window.Height();
+*/
+	if (normalized.x > -1 && normalized.x < 1){
+		if (normalized.y > -1 && normalized.y < 1){
+
+			
+			LineSegment ray;
+			if (App->scene->inGame) {
+				ray = mainCamera->GetComponentCamera()->GetFrustum().UnProjectLineSegment(normalized.x, normalized.y);
+			}
+			else
+				ray = App->camera->cameraComp->GetFrustum().UnProjectLineSegment(normalized.x, normalized.y);
+
+			GetDynamicGOs(root);
+			float distance = 9 * 10 ^ 10;
+			GameObject* closest = nullptr;
+			drawRay = true;
+			line = ray;
+			for (auto it : dynamicOBjs)
+			{
+				bool hit;
+				float dist;
+				it->RayHits(ray, hit, dist);
+
+				if (hit)
+				{
+					if (dist < distance)
+					{
+						distance = dist;
+						closest = it;
+					}
+				}
+			}
+
+			if (closest != nullptr)
+			{
+				DeselectAll();
+				ShowGameObjectInspector(closest);
+			}
+		}
+	}
+}
+
 void ModuleScene::GetAllStaticGOs(GameObject* go)
 {
 	if (go != root && go->staticGO)
 		staticOBjs.push_back(go);
 	for (auto it : go->childrens) {
 		GetAllStaticGOs(it);
+	}
+}
+
+void ModuleScene::GetDynamicGOs(GameObject * go)
+{
+	if (go != root && !go->staticGO)
+		dynamicOBjs.push_back(go);
+	else if (go == root)
+		dynamicOBjs.clear();
+	for (auto it : go->childrens) {
+		GetDynamicGOs(it);
 	}
 }
 
@@ -241,51 +337,12 @@ void ModuleScene::SetQTSize(GameObject* go) {
 	}
 }
 
-update_status ModuleScene::Update(float dt){
-
-	bool ret = true;
-	root->CalculateAllGlobalMatrix();
-
-	if (root->childrens.empty() == false) {
-
-		for (int i = 0; i < root->childrens.size(); i++) {
-			ret &= root->childrens[i]->Update();
-		}
-	}
-	update_status retUS;
-	ret ? retUS = UPDATE_CONTINUE : retUS = UPDATE_ERROR;
-	return retUS;
-}
-
-update_status ModuleScene::PostUpdate(float dt){
-
-	bool ret = true;
-	if (root->childrens.empty() == false) {
-		for (int i = 0; i < root->childrens.size(); i++) {
-			ret &= root->childrens[i]->PostUpdate();
-		}
-	}
-
-	update_status retUS;
-	ret ? retUS = UPDATE_CONTINUE : retUS = UPDATE_ERROR;
-	return retUS;
-}
-
-bool ModuleScene::CleanUp()
-{	
-	ClearScene();
-
-	RELEASE(root);
-	RELEASE(rootQuadTree);
-
-	return true;
-}
-
 
 void ModuleScene::ShowGameObjectInspector(GameObject* newSelected)
 {
 	if (gObjSelected == newSelected)
 		return;
+	newSelected->ToggleSelected();
 	DeselectAll();
 	gObjSelected = newSelected;
 
@@ -302,8 +359,12 @@ void ModuleScene::ShowTextureResourceInspector(uuid newResource)
 
 void ModuleScene::DeselectAll()
 {	
-	gObjSelected = nullptr;	
+
+	if (gObjSelected != nullptr)
+		gObjSelected->ToggleSelected();
+	gObjSelected = nullptr;
 	TextureResourceSelected = 0;
+
 }
 
 void ModuleScene::SetBoundingBox(bool active)
@@ -360,6 +421,7 @@ void ModuleScene::Draw() {
 	}
 	if (!inGame && mainCamera != nullptr && rootQuadTree != nullptr) {
 		mainCamera->GetComponentCamera()->DebugDraw();
+		if (App->renderer3D->GetQuadTree())
 		rootQuadTree->DebugDraw();
 	}
 	iterator = nullptr;

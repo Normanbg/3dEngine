@@ -1,5 +1,7 @@
 #include "Camera.h"
 
+#include "mmgr/mmgr.h"
+
 Camera::Camera()
 {
 	SetFOV(60);

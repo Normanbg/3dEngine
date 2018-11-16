@@ -54,7 +54,11 @@ public:
 	ComponentCamera* GetComponentCamera();
 	ComponentMaterial * GetComponentMaterial();
 	ComponentMesh * GetComponentMesh();
+
 	ComponentMaterial* GetComponentMaterial(const uuid UUID);
+
+	bool GetSelected();
+
 
 	inline const uuid GetUUID() { return UUID; }
 
@@ -63,6 +67,7 @@ public:
 
 	void SetLocalAABB(AABB aabb);
 
+	void RayHits(const LineSegment& segment, bool& hit, float& dist);
 public:
 	std::string					name;
 	std::vector <Component*>	components;

@@ -28,10 +28,12 @@ public:
 	void setScale(float3 _newscale);
 	void setRotQuat(Quat qNewRot);
 	void setRotEuler(float3 _newrot);
-	float3 getPos();
-	float3 getScale();
-	float3 getEulerRot();
-	Quat getQuatRot();
+	float3 getPos() const;
+	float3 getScale() const;
+	float3 getEulerRot() const;
+	Quat getQuatRot() const;
+	float4x4 getGlobalMatrix() const;
+	float4x4 getLocalMatrix() const;
 
 	void UpdateLocalMatrix();
 	void Save(Config& data) const;
@@ -39,8 +41,8 @@ public:
 
 public:
 	Transform transform;
-	float4x4 localMatrix	= float4x4::identity;
-	float4x4 globalMatrix	= float4x4::identity;	
+	float4x4 localMatrix = float4x4::identity;
+	float4x4 globalMatrix = float4x4::identity;
 };
 
 #endif // !__COMPONENTTRANS_H__

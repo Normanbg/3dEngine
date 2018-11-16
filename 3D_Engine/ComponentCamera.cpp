@@ -4,6 +4,7 @@
 #include "ComponentCamera.h"
 #include "GameObject.h"
 #include "Camera.h"
+#include "mmgr/mmgr.h"
 
 ComponentCamera::ComponentCamera()
 {
@@ -94,7 +95,7 @@ void ComponentCamera::DebugDraw(){
 		camRes->DebugDraw();
 }
 
-float * ComponentCamera::GetViewMatrix()
+float * ComponentCamera::GetViewMatrix() const
 {
 	static float4x4 m;
 
@@ -104,13 +105,18 @@ float * ComponentCamera::GetViewMatrix()
 	return (float*)m.v;
 }
 
-float * ComponentCamera::GetProjectionMatrix()
+float * ComponentCamera::GetProjectionMatrix() const
 {
 	static float4x4 m;
 
 	m = camRes->frustum.ProjectionMatrix().Transposed();
 	return (float*)m.v;
 
+}
+
+Frustum ComponentCamera::GetFrustum() const
+{
+	return camRes->frustum;
 }
 
 void ComponentCamera::Save(Config & data) const

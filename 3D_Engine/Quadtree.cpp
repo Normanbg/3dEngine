@@ -2,6 +2,8 @@
 #include "GameObject.h"
 #include "ComponentMesh.h"
 
+#include "mmgr/mmgr.h"
+
 #include <vector>
 
 Quadtree::Quadtree(AABB limits, uint subdivision)
