@@ -39,6 +39,10 @@ void ResourceTexture::Save(Config & config) const
 
 void ResourceTexture::Load(const Config & config)
 {
+	if (exportedFile.size() == 0) {
+		exportedFile = LIB_TEXTURES_PATH + fileName + DDS_FORMAT;
+	
+	}
 }
 
 void ResourceTexture::CleanUp()

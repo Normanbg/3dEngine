@@ -112,18 +112,23 @@ bool ModuleFileSystem::CopyDDStoLib(const char * path, std::vector<std::string>*
 	bool ret = false;
 	std::string ddsName;
 	GetNameFromPath(path, nullptr, &ddsName, nullptr, nullptr);
-	std::string libpath = LIB_TEXTURES_PATH + ddsName + DDS_FORMAT;
+
+	std::string libpath = LIB_TEXTURES_PATH +  ddsName + DDS_FORMAT;
 	if (written) { (*written).push_back(libpath); }
 	ret = Copy(path, libpath.c_str());
 	return ret;
 }
 
-bool ModuleFileSystem::CopyPEItoLib(const char * path, std::vector<std::string>* written)
+bool ModuleFileSystem::CopyPEItoLib(const char * path, std::vector<std::string>* written, uuid forceUUID)
 {
 	bool ret = false;
 	std::string peiName;
 	GetNameFromPath(path, nullptr, &peiName, nullptr, nullptr);
-	std::string libpath = LIB_MODELS_PATH + peiName + DDS_FORMAT;
+
+	std::string uuid;
+	if (forceUUID != 0) { uuid += std::to_string(forceUUID) + "~"; }
+
+	std::string libpath = LIB_MODELS_PATH +uuid+ peiName + DDS_FORMAT;
 	if (written) { (*written).push_back(libpath); }
 
 	ret = Copy(path, libpath.c_str());
@@ -134,12 +139,27 @@ bool ModuleFileSystem::CopyAudioToLib(const char * path, std::vector<std::string
 {
 	bool ret = false;
 	std::string auName;
-	GetNameFromPath(path, nullptr, nullptr, &auName, nullptr);
+	GetNameFromPath(path, nullptr, nullptr, &auName, nullptr);	
+
 	std::string libpath = LIB_AUDIO_PATH + auName ;
 	if (written) { (*written).push_back(libpath); }
 	ret = Copy(path, libpath.c_str());
 
 	return ret;
+}
+
+void ModuleFileSystem::GetUUID_PEI(const char * fullName, std::string * uuid , std::string * pei)
+{
+	if (fullName != nullptr) {
+		std::string UUIDPEIName = fullName;
+		uint posLow = UUIDPEIName.find_first_of("~");
+		if (uuid) {
+			*uuid = UUIDPEIName.substr(0, posLow - 1);
+			UUIDPEIName = fullName;
+		}
+		if(pei)
+		*pei = UUIDPEIName.substr(posLow+1);
+	}
 }
 
 void ModuleFileSystem::GetNameFromPath(const char * full_path, std::string * path, std::string * file, std::string * fileWithExtension, std::string * extension) const
@@ -236,6 +256,30 @@ bool ModuleFileSystem::Copy(const char * source, const char * destination)
 
 	return ret;
 }
+
+bool ModuleFileSystem::IsMetaFile(std::string file)
+{
+	if (file.size() >5 ) {
+		file = file.substr(file.size() - 5);
+		if (file == META_FORMAT) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+uint ModuleFileSystem::GetLastModification(const char * file) const
+{
+	struct stat result;
+	if (stat(file, &result) == 0) {
+		return  result.st_mtime;
+
+	}
+	return 0;
+}
+
+
 
 //if recursive == true searches all files in directory including subfolders
 void ModuleFileSystem::GetFilesFromDir(const char* directory, std::vector<std::string> & files, std::vector<std::string> & directories, bool recursive) const

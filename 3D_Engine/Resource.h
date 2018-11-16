@@ -11,11 +11,12 @@ class Resource
 {
 public:
 	enum ResType {
+		None,
 		Texture,
 		Mesh,
 		Scene,
-		Audio,
-		None
+		Audio
+		
 	};
 
 public:
@@ -33,6 +34,7 @@ public:
 	inline void SetName(const char* file) { fileName = file; }	
 	inline void SetExportedFile(std::string files) { exportedFile = files; }
 	inline void SetPath(const char* _path) { path = _path; }
+	void SetUUID(uuid newUUID);
 		
 	uint GetCountReferences() const { return references; }
 	bool IsLoaded() const { return loaded; }
@@ -51,6 +53,7 @@ protected:
 	std::string exportedFile;
 	uint references = 0;
 	bool loaded = false;
+	bool to_delete = false;
 
 };
 

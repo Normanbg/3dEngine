@@ -19,26 +19,32 @@ public:
 	bool Start() override;
 	bool CleanUp() override;
 
-	void ImportFilesToLibrary();
+	void CheckMetaFiles();
 
 	uuid FindByName(const char* name, Resource::ResType type = Resource::ResType::None) const;
 	uuid FindByPath(const char* fileInAssets, Resource::ResType type = Resource::ResType::None) const;
-	bool ImportFile(const char* newFileInAssets);
+	bool ImportFileAndGenerateMeta(const char* newFileInAssets);
 	uuid GenerateNewUUID();
 	const Resource* Get(uuid uuid) const;
 	Resource* Get(uuid uuid);
+	
 	std::map<uuid, Resource*> GetResourcesList() const { return resources; }
 	std::vector<Resource*> GetResourcesListType(Resource::ResType type, bool loaded = false); // gets resources ResourceType "type" & possibilty to only take the loaded ones.
 
 	Resource* CreateNewResource(Resource::ResType type, uuid forceUUID = 0);
-	void GenerateMetaFile(const char* assetFile, std::vector<uuid> exportedUUIDs);
+	void GenerateMetaFile(const char* assetFile, uuid ResourceUUID, std::vector<uuid> exportedUUIDs);
 
 	const Resource::ResType GetResourceTypeFromExtension(const char * path) const;
+	void ChangeResourceUUID(uuid formerUUID, uuid newUUID);
 
 private:
 
 	uuid last_uuid = 1;
 	std::map<uuid, Resource*> resources;
+
+private:
+
+	bool ManageResourceWithMeta(const char* resource, const char* meta);
 	
 };
 
