@@ -199,6 +199,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	//DrawMeshes();
 	App->scene->Draw();
 	fboTex->UnBindFBO();
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	App->gui->Draw();	
 
