@@ -28,7 +28,7 @@ public:
 	void Stop();
 
 	float GetGameTimeSec()const { return gameClock; }
-	
+	const float GetGameDeltaTime() const { return gameDeltaTime; }
 
 	float GetRealTimeSec() { return realTimeClock.ReadSec(); }
 	float GetRealTimeMs() { return realTimeClock.Read(); }

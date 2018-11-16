@@ -134,7 +134,7 @@ bool ModuleAudio::PlayMusic(const char* path, float fade_time)
 unsigned int ModuleAudio::LoadFx(const char* path)
 {
 	unsigned int ret = 0;
-	std::string rootPath = ENGINE_AUDIO_PATH;
+	std::string rootPath = ENGINE_FX_PATH;
 	rootPath += path; 
 
 	Mix_Chunk* chunk = Mix_LoadWAV(rootPath.c_str());
