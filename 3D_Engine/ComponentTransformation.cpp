@@ -93,13 +93,13 @@ void ComponentTransformation::UpdateLocalMatrix() {
 
 void ComponentTransformation::Save(Config & data) const
 {
-	data.AddUInt("UUID", uuid);
+	data.AddUInt("UUID", UUID);
 	
 }
 
 void ComponentTransformation::Load(Config * data)
 {
-	uuid = data->GetUInt("UUID");
+	UUID = data->GetUInt("UUID");
 }
 
 void ComponentTransformation::setPos(float3 _newpos)

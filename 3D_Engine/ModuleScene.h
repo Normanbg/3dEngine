@@ -10,8 +10,8 @@
 
 class vector;
 class GameObject;
-class Material;
 class Quadtree;
+class Resource;
 
 class ModuleScene : public Module
 {
@@ -28,7 +28,7 @@ public:
 	bool CleanUp() override;
 
 	void ShowGameObjectInspector(GameObject * newSelected);
-	void ShowMaterialInspector(Material * newSelected);
+	void ShowTextureResourceInspector(uuid newSelected);
 	void DeselectAll();
 
 	void SetBoundingBox(bool active);
@@ -40,11 +40,11 @@ public:
 	GameObject* AddGameObject(const char* name);	
 	GameObject* AddGameObject(const char* name, GameObject* parent);
 	GameObject* CreateCube();
-	GameObject* GetGameObjectByUUID(uint uuid) const;
-	GameObject* GetGameObjectUUIDRecursive(uint uuid, GameObject* go) const;
+	GameObject* GetGameObjectByUUID(uuid UUID) const;
+	GameObject* GetGameObjectUUIDRecursive(uuid UUID, GameObject* go) const;
 
 	void ChangeRootGO(GameObject* newRoot){ root = newRoot; }
-	uint GetRandomUUID();
+	uuid GetRandomUUID();
 
 	void ClearScene()const;
 	void SaveScene(const char* file = nullptr);
@@ -58,7 +58,7 @@ public:
 	GameObject* root;
 	GameObject* mainCamera = nullptr;
 	GameObject* gObjSelected = nullptr;
-	Material* materialSelected = nullptr;
+	uuid TextureResourceSelected = 0;
 	
 	bool inGame = false;
 	

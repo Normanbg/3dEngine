@@ -171,7 +171,23 @@ void UIPanelConfig::Draw() {
 
 		ImGui::Text("VRAM Reserved: "); ImGui::SameLine();
 		ImGui::TextColored(yellow, "%.2f Mb", App->GetReservedVideoMem());
+		
+		updates++;
 
+		
+
+		if (updates > MEMORY_UPDATE_READING)
+		{			
+			updates = 0;
+			if (memory.size() > MAX_FPS_LOG) {			
+				memory.erase(memory.begin());				
+			}
+			memory.push_back(App->GetCurrentVideoMem());
+		}
+
+		char title[20];
+		sprintf_s(title, 20, "Memory Consumption");
+		ImGui::PlotHistogram("##memory", &memory[0], memory.size(), 0, title, 0.0f, 40.0f, ImVec2(310, 100));
 	}
 	if (ImGui::CollapsingHeader("Render")) {
 		bool depthTest = App->renderer3D->GetDepthTest();

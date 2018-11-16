@@ -30,9 +30,7 @@ ModuleRenderer3D::ModuleRenderer3D(bool start_enabled) : Module(start_enabled)
 
 // Destructor
 ModuleRenderer3D::~ModuleRenderer3D(){
-
-	delete texImporter;
-	delete importer;
+		
 }
 
 // Called before render is available
@@ -141,11 +139,6 @@ bool ModuleRenderer3D::Init(JSON_Object* obj)
 		SetTexture2D(true);
 	}
 
-	importer = new SceneImporter();
-	texImporter = new TextureImporter();	
-
-	importer->Init();
-	texImporter->Init();
 	
 	return ret;
 }
@@ -219,7 +212,6 @@ bool ModuleRenderer3D::CleanUp()
 	BROFILER_CATEGORY("Renderer3D_CleanUp", Profiler::Color::HotPink);
 	OWN_LOG("Destroying 3D Renderer");
 
-	importer->CleanUp();
 		
 	fboTex->UnBindFBO();
 	RELEASE(fboTex);
@@ -343,7 +335,7 @@ void ModuleRenderer3D::SetBoundingBox(bool active){
 
 void ModuleRenderer3D::LoadDroppedFBX(char * droppedFileDir){
 	
-	importer->LoadFBXandImportPEI(droppedFileDir);
+	App->importer->LoadFBXScene(droppedFileDir);
 	//App->camera->FocusToMeshes();
 }
 
@@ -355,7 +347,7 @@ void ModuleRenderer3D::LoadDroppedPEI(char * droppedFileDir)
 	GameObject* go = App->scene->AddGameObject();
 	go->name = name;
 	ComponentMesh* mesh = (ComponentMesh*)go->AddComponent(MESH);
-	App->renderer3D->importer->LoadMeshPEI(mesh);
+	//App->renderer3D->importer->LoadMeshPEI(mesh);
 	go = nullptr;
 	mesh = nullptr;
 }
@@ -364,22 +356,6 @@ const uint ModuleRenderer3D::GetFBOTexture()
 {
 	return fboTex->texture;
 }
-
-
-
-/*
-void ModuleRenderer3D::ClearSceneMeshes() {
-
-	/*OWN_LOG("Clearing meshes in scene")
-		for (int i = meshes.size() - 1; i >= 0; i--) {
-			meshes[i].CleanUp();
-		}
-	meshes.clear();
-	for (int i = textures.size() - 1; i >= 0; i--) {
-		textures[i].CleanUp();
-	}
-	textures.clear();
-}*/
 
 
 void ModuleRenderer3D::ShowAxis() {

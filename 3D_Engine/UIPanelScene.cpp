@@ -47,10 +47,12 @@ void UIPanelScene::Draw() {
 	if (App->gui->clearScene)
 		ClearScenePopUp();
 	if (wantToLoadFile && FileState(OWN_FILE_FORMAT)) {
-		const char* fileName = CloseFileState();
-		if (fileName != nullptr)
-			App->renderer3D->importer->LoadMeshPEI(fileName);
-		wantToLoadFile = false;
+
+	const char* fileName = CloseFileState();
+	if (fileName != nullptr)
+		//App->renderer3D->importer->LoadMeshPEI(fileName);
+	wantToLoadFile = false;
+
 	}
 	if (fileState == opened) {
 		LoadFilePopUp((fileStateExtensionFilter.length() > 0) ? fileStateExtensionFilter.c_str() : nullptr);
@@ -198,7 +200,7 @@ void UIPanelScene::DrawDirectoryRecursive(const char * directory, const char * f
 	std::string dir((directory) ? directory : "");
 	dir += "/";
 
-	App->fileSys->DiscoverFiles(dir.c_str(), files, directories);
+	App->fileSys->GetFilesFromDir(dir.c_str(), files, directories);
 
 	for (int i = 0; i<directories.size();i++)
 	{

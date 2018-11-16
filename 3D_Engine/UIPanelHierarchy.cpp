@@ -25,7 +25,7 @@ void UIPanelHierarchy::Draw()
 		if (ImGui::BeginMenu("Create"))
 		{
 			if (ImGui::MenuItem("Cube")) {
-				App->scene->CreateCube();
+				//App->scene->CreateCube();
 			}
 			//if (ImGui::MenuItem("Load")) { App->LoadGame(); }
 			ImGui::EndMenu();
@@ -47,9 +47,9 @@ void UIPanelHierarchy::DrawChilds(std::vector<GameObject*> childs){
 
 		//TODO::COLOR IF IS ACTIVE--------------
 
-		//ImGui::PushID((*goIterator)->GetUUID);------------------------------------------------------------USE THIS FOR REPEATED GAMEOBJECTS ACTING NORMAL!!!!!!!!!!!!!!!!!!!!!!!!!!
+		ImGui::PushID((*goIterator)->GetUUID());
 		bool treeNodeOpened = ImGui::TreeNodeEx((*goIterator)->name.c_str(), flags);
-		//ImGui::PopID();
+		ImGui::PopID();
 		
 		if (ImGui::IsItemClicked(0) || ImGui::IsItemClicked(1))
 		{

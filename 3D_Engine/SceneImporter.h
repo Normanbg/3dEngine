@@ -16,8 +16,6 @@
 #include "Assimp/include/cfileio.h"
 #pragma comment (lib, "Assimp/libx86/assimp.lib")
 
-class ComponentMesh;
-
 class SceneImporter
 {
 public:
@@ -33,21 +31,23 @@ public:
 	void Init();
 	
 
+	bool ImportScene(const char* scene, std::vector<std::string>* written ); //imports .fbx to multiple .pei & textures (0.0)
+	
+	void LoadFBXScene(const char* FBXpath);//loads .fbx scene (1.0)
+	ComponentMaterial* ImportMaterialToResource(aiMaterial* mat); // loads a single texture (1.2)
+	ComponentMesh* ImportMeshToResource(aiMesh* mesh, const char* peiName); //loads a single mesh (1.2)
 
-	void LoadFBXandImportPEI(const char* FBXpath);
-	GameObject* ImportNodeRecursive(aiNode* node, const aiScene* scene, GameObject* parent);
-
-	ComponentMaterial* ImportMaterial(aiMaterial* mat);
-	ComponentMesh* ImportMesh(aiMesh* mesh, const char* peiName);
-	void LoadMeshPEI(ComponentMesh* mesh);
-	void LoadMeshPEI(const char * fileNamePEI);
+	//void LoadMeshPEI(ComponentMesh* mesh);
+	void LoadMeshPEI(const char * fileNamePEI, ResourceMesh* resource); // loads a .pei into a resourceMesh (check if it is obsolete)
 
 	
 	void CleanUp();
+
 private:
-	float4x4 aiMatrixToFloat4x4(aiMatrix4x4 matrix);
-	aiMatrix4x4 savedMatrix = aiMatrix4x4();
-	
+	bool ImportMeshRecursive(aiNode* node, const aiScene* scene, std::vector<std::string>* meshesNames); //imports .fbx meshes into .pei (0.1)
+
+	GameObject* ImportNodeRecursive(aiNode* node, const aiScene* scene, GameObject* parent);//imports .fbx hierarchy (1.1)
+
 };
 
 #endif //__SCENEIMPORTER_H__

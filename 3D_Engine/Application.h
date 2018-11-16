@@ -28,9 +28,11 @@ class ModuleRenderer3D;
 class ModuleEditorCamera;
 class ModuleGui;
 class ModuleScene;
-class ModuleTextures;
 class ModuleFileSystem;
 class ModuleTime;
+class ModuleResources;
+class SceneImporter;
+class TextureImporter;
 
 class Application
 {
@@ -41,10 +43,14 @@ public:
 	ModuleRenderer3D* renderer3D;
 	ModuleEditorCamera* camera;
 	ModuleScene* scene;
-	ModuleTextures* textures;
 	ModuleFileSystem* fileSys;
 	ModuleGui* gui;
 	ModuleTime* time;
+	ModuleResources* resources;
+
+
+	SceneImporter* importer;
+	TextureImporter* texImporter;
 
 private:
 

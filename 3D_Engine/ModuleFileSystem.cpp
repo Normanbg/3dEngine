@@ -1,7 +1,6 @@
 #include "Application.h"
 #include "ModuleFileSystem.h"
 #include "PhysFS/include/physfs.h"
-
 #include "mmgr/mmgr.h"
 
 #pragma comment( lib, "PhysFS/libx86/physfs.lib" )
@@ -24,7 +23,7 @@ ModuleFileSystem::ModuleFileSystem(bool start_enabled) : Module(start_enabled)
 
 	//Create main files if they do not exist and add them to the search path
 	const char* mainPaths[] = {
-		MODELS_PATH, TEXTURES_PATH, AUDIO_PATH, LIB_MODELS_PATH, LIB_TEXTURES_PATH, SETTINGS_PATH, SCENES_PATH
+		MODELS_PATH, TEXTURES_PATH, AUDIO_PATH, LIB_MODELS_PATH, LIB_TEXTURES_PATH,LIB_AUDIO_PATH, SETTINGS_PATH, SCENES_PATH
 	};
 	for (uint i = 0; i < NUM_PATHS; ++i)
 	{
@@ -108,19 +107,39 @@ uint ModuleFileSystem::readFile(const char * fileName, char** data)
 	return ret;
 }
 
-void ModuleFileSystem::CopyFileTo(const char * dest, const char * origin)
+bool ModuleFileSystem::CopyDDStoLib(const char * path, std::vector<std::string>* written)
 {
-	char *data;
-	uint size = readFile(origin, &data);
-	writeFile(origin, data, size);
-}
-
-void ModuleFileSystem::CopyDDStoLib(const char * path) 
-{
+	bool ret = false;
 	std::string ddsName;
 	GetNameFromPath(path, nullptr, &ddsName, nullptr, nullptr);
 	std::string libpath = LIB_TEXTURES_PATH + ddsName + DDS_FORMAT;
-	CopyFileTo(libpath.c_str(), path);
+	if (written) { (*written).push_back(libpath); }
+	ret = Copy(path, libpath.c_str());
+	return ret;
+}
+
+bool ModuleFileSystem::CopyPEItoLib(const char * path, std::vector<std::string>* written)
+{
+	bool ret = false;
+	std::string peiName;
+	GetNameFromPath(path, nullptr, &peiName, nullptr, nullptr);
+	std::string libpath = LIB_MODELS_PATH + peiName + DDS_FORMAT;
+	if (written) { (*written).push_back(libpath); }
+
+	ret = Copy(path, libpath.c_str());
+
+	return ret;
+}
+bool ModuleFileSystem::CopyAudioToLib(const char * path, std::vector<std::string>* written)
+{
+	bool ret = false;
+	std::string auName;
+	GetNameFromPath(path, nullptr, nullptr, &auName, nullptr);
+	std::string libpath = LIB_AUDIO_PATH + auName ;
+	if (written) { (*written).push_back(libpath); }
+	ret = Copy(path, libpath.c_str());
+
+	return ret;
 }
 
 void ModuleFileSystem::GetNameFromPath(const char * full_path, std::string * path, std::string * file, std::string * fileWithExtension, std::string * extension) const
@@ -165,6 +184,7 @@ void ModuleFileSystem::GetNameFromPath(const char * full_path, std::string * pat
 	}
 
 }
+
 void ModuleFileSystem::NormalizePath(char * full_path, bool toLower) const
 {
 	uint len = strlen(full_path);
@@ -197,40 +217,58 @@ bool ModuleFileSystem::Copy(const char * source, const char * destination)
 	char buf[8192];
 
 	PHYSFS_file* src = PHYSFS_openRead(source);
-	PHYSFS_file* dst = PHYSFS_openWrite(destination);
+	PHYSFS_file* dest = PHYSFS_openWrite(destination);
 
 	PHYSFS_sint32 size;
-	if (src && dst)
-	{
+	if (src && dest){
+
 		while (size = (PHYSFS_sint32)PHYSFS_read(src, buf, 1, 8192))
-			PHYSFS_write(dst, buf, 1, size);
+			PHYSFS_write(dest, buf, 1, size);
 
 		PHYSFS_close(src);
-		PHYSFS_close(dst);
+		PHYSFS_close(dest);
 		ret = true;
 
-		OWN_LOG("File System copied file [%s] to [%s]", source, destination);
+		OWN_LOG("Copied file from %s to %s", source, destination);
 	}
 	else
-		OWN_LOG("File System error while copy from [%s] to [%s]", source, destination);
+		OWN_LOG("Error copying file from %s to %s", source, destination);
 
 	return ret;
 }
 
-void ModuleFileSystem::DiscoverFiles(const char* directory, std::vector<std::string> & fileList, std::vector<std::string> & directoryList) const
+//if recursive == true searches all files in directory including subfolders
+void ModuleFileSystem::GetFilesFromDir(const char* directory, std::vector<std::string> & files, std::vector<std::string> & directories, bool recursive) const
 {
-	char **totalFiles = PHYSFS_enumerateFiles(directory);
-	char **i;
+	char **filesInDir = PHYSFS_enumerateFiles(directory);
+	char **filePointer;
 
-	std::string dir(directory);
+	std::string dir = directory;
 
-	for (i = totalFiles; *i != nullptr; i++)
+	for (filePointer = filesInDir; *filePointer != nullptr; filePointer++)
 	{
-		if (PHYSFS_isDirectory((dir + *i).c_str()))
-			directoryList.push_back(*i);
-		else
-			fileList.push_back(*i);
+		if (PHYSFS_isDirectory((dir + *filePointer).c_str()))
+			directories.push_back(*filePointer);
+		else {
+			std::string dir = directory;
+			dir += *filePointer;
+			files.push_back(dir.c_str() );
+		}
 	}
-
-	PHYSFS_freeList(totalFiles);
+	if (recursive && directories.size() > 0) {
+		std::vector<std::string> newDirs;
+		for (int i = 0; i < directories.size(); i++) {
+			std::string dir = directory + directories[i] + "/";
+			GetFilesFromDir(dir.c_str(), files, newDirs);
+			if (newDirs.size() > 0) {
+				for (int j = newDirs.size()-1; j >=0 ; j--) {
+					directories.push_back(directories[i] + "/" + newDirs[j]);
+					newDirs.pop_back();
+				}
+			}
+		}
+		
+	
+	}
+	PHYSFS_freeList(filesInDir);
 }

@@ -121,7 +121,7 @@ Frustum ComponentCamera::GetFrustum() const
 
 void ComponentCamera::Save(Config & data) const
 {
-	data.AddUInt("UUID", uuid);
+	data.AddUInt("UUID", UUID);
 	if (camRes) {
 		data.AddFloat3("Frustum Position", camRes->GetPos());
 		data.AddFloat("FOV", camRes->GetFOV());
@@ -131,7 +131,7 @@ void ComponentCamera::Save(Config & data) const
 
 void ComponentCamera::Load(Config * data)
 {
-	uuid = data->GetUInt("UUID");
+	UUID = data->GetUInt("UUID");
 	if (camRes==nullptr) {
 		camRes = new Camera();		
 	}

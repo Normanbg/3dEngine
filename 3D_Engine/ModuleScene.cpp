@@ -2,8 +2,8 @@
 #include "ModuleScene.h"
 #include "GameObject.h"
 #include "Quadtree.h"
+#include "Resource.h"
 #include "ModuleEditorCamera.h"
-#include "ModuleTextures.h"
 #include "Config.h"
 
 #include "ModuleInput.h"
@@ -102,8 +102,7 @@ bool ModuleScene::CleanUp()
 
 	return true;
 }
-
-
+/*
 GameObject * ModuleScene::CreateCube()
 {
 	GameObject* ret = nullptr;
@@ -134,28 +133,28 @@ GameObject * ModuleScene::CreateCube()
 	mesh->num_vertex = cubeVertex.size();
 	mesh->num_index = cubeIndices.size();
 	mesh->GenerateBuffer();
-	mesh->CreateBBox(mesh);
+	mesh->CreateBBox();
 	ret->SetLocalAABB(mesh->bbox);
 	return ret;
 }
-
-GameObject * ModuleScene::GetGameObjectByUUID(uint uuid) const
+*/
+GameObject * ModuleScene::GetGameObjectByUUID(uuid UUID) const
 {
 	GameObject* ret= nullptr;
-	ret = GetGameObjectUUIDRecursive(uuid, root);	
+	ret = GetGameObjectUUIDRecursive(UUID, root);
 	return ret;
 }
 
-GameObject * ModuleScene::GetGameObjectUUIDRecursive(uint uuid, GameObject * go) const
+GameObject * ModuleScene::GetGameObjectUUIDRecursive(uuid UUID, GameObject * go) const
 {
 	GameObject* ret = go;
-	if (ret->uuid == uuid) {
+	if (ret->UUID == UUID) {
 		return ret;
 	}
 
 	for (int i = 0; i < go->childrens.size(); i++) {
 		ret = go->childrens[i];
-		ret = GetGameObjectUUIDRecursive(uuid, ret);
+		ret = GetGameObjectUUIDRecursive(UUID, ret);
 		if (ret) {
 			return ret;
 		}
@@ -163,7 +162,7 @@ GameObject * ModuleScene::GetGameObjectUUIDRecursive(uint uuid, GameObject * go)
 	return nullptr;
 }
 
-uint ModuleScene::GetRandomUUID()
+uuid ModuleScene::GetRandomUUID()
 {
 	return pcg32_random_r(&rng);
 }
@@ -349,21 +348,23 @@ void ModuleScene::ShowGameObjectInspector(GameObject* newSelected)
 
 }
 
-void ModuleScene::ShowMaterialInspector(Material * newSelected)
+void ModuleScene::ShowTextureResourceInspector(uuid newResource)
 {
-	if (materialSelected == newSelected)
+	if (TextureResourceSelected == newResource)
 		return;
 	DeselectAll();
-	materialSelected = newSelected;
+	TextureResourceSelected = newResource;
 
 }
 
 void ModuleScene::DeselectAll()
 {	
+
 	if (gObjSelected != nullptr)
 		gObjSelected->ToggleSelected();
 	gObjSelected = nullptr;
-	materialSelected = nullptr;
+	TextureResourceSelected = 0;
+
 }
 
 void ModuleScene::SetBoundingBox(bool active)

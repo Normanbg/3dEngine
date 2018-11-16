@@ -46,8 +46,11 @@
     <Filter Include="Sources\Objects &amp; Components\Components">
       <UniqueIdentifier>{ad85996c-8a64-4f36-acd6-9a0255ab8702}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Resources">
+      <UniqueIdentifier>{2faae09d-9319-4fa7-9023-2dbcac47262d}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Sources\Tools\mmgr">
-      <UniqueIdentifier>{bfcf4468-eaa3-43db-ab52-6ab4a45e44e9}</UniqueIdentifier>
+      <UniqueIdentifier>{b97f3e15-7d0f-41c3-9144-899f73306c31}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -65,9 +68,6 @@
     </ClInclude>
     <ClInclude Include="Color.h">
       <Filter>Sources\Containers</Filter>
-    </ClInclude>
-    <ClInclude Include="Timer.h">
-      <Filter>Sources\Tools</Filter>
     </ClInclude>
     <ClInclude Include="MathGeoLib\Geometry\AABB.h">
       <Filter>Sources\Tools\MathGeolib</Filter>
@@ -321,9 +321,6 @@
     <ClInclude Include="ComponentTransformation.h">
       <Filter>Sources\Objects &amp; Components\Components</Filter>
     </ClInclude>
-    <ClInclude Include="ModuleTextures.h">
-      <Filter>Sources\Modules</Filter>
-    </ClInclude>
     <ClInclude Include="SceneImporter.h">
       <Filter>Sources\Tools</Filter>
     </ClInclude>
@@ -372,11 +369,32 @@
     <ClInclude Include="ModuleTime.h">
       <Filter>Sources\Tools</Filter>
     </ClInclude>
+    <ClInclude Include="ComponentWithResource.h">
+      <Filter>Sources\Objects &amp; Components\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleResources.h">
+      <Filter>Sources\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>Sources\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceTexture.h">
+      <Filter>Sources\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceAudio.h">
+      <Filter>Sources\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceMesh.h">
+      <Filter>Sources\Resources</Filter>
+    </ClInclude>
     <ClInclude Include="mmgr\mmgr.h">
       <Filter>Sources\Tools\mmgr</Filter>
     </ClInclude>
     <ClInclude Include="FBO.h">
       <Filter>Sources\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="Timer.h">
+      <Filter>Sources\Tools\ImGui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -557,9 +575,6 @@
     <ClCompile Include="ComponentTransformation.cpp">
       <Filter>Sources\Objects &amp; Components\Components</Filter>
     </ClCompile>
-    <ClCompile Include="ModuleTextures.cpp">
-      <Filter>Sources\Modules</Filter>
-    </ClCompile>
     <ClCompile Include="SceneImporter.cpp">
       <Filter>Sources\Tools</Filter>
     </ClCompile>
@@ -598,6 +613,24 @@
     </ClCompile>
     <ClCompile Include="ModuleTime.cpp">
       <Filter>Sources\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentWithResource.cpp">
+      <Filter>Sources\Objects &amp; Components\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleResources.cpp">
+      <Filter>Sources\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource.cpp">
+      <Filter>Sources\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceTexture.cpp">
+      <Filter>Sources\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceAudio.cpp">
+      <Filter>Sources\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceMesh.cpp">
+      <Filter>Sources\Resources</Filter>
     </ClCompile>
     <ClCompile Include="mmgr\mmgr.cpp">
       <Filter>Sources\Tools\mmgr</Filter>

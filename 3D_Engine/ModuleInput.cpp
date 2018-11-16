@@ -144,18 +144,18 @@ update_status ModuleInput::PreUpdate(float dt)
 					break;
 				case PNG:
 					OWN_LOG("Dropped .png file");
-					App->textures->LoadDroppedTexture(dropped_filedir);
+					App->texImporter->LoadDroppedTexture(dropped_filedir);
 					
 					break;
 				case JPG:
 					OWN_LOG("Dropped .jpg file");
-					App->textures->LoadDroppedTexture(dropped_filedir);
+					App->texImporter->LoadDroppedTexture(dropped_filedir);
 
 					break;
 				case DDS:
 					OWN_LOG("Dropped .dds file");
 					
-					App->textures->LoadDroppedTexture(dropped_filedir);
+					App->texImporter->LoadDroppedTexture(dropped_filedir);
 					break;
 				case PEI:
 					OWN_LOG("Dropped .pei file");
@@ -165,7 +165,7 @@ update_status ModuleInput::PreUpdate(float dt)
 				case TGA:
 					OWN_LOG("Dropped .tga file");
 
-					App->textures->LoadDroppedTexture(dropped_filedir);
+					App->texImporter->LoadDroppedTexture(dropped_filedir);
 					break;			
 				}
 			break;

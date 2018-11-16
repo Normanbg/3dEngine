@@ -1,5 +1,6 @@
 #include "GameObject.h"
 #include "Config.h"
+#include "ResourceMesh.h"
 
 #include <array>
 #include <vector>
@@ -17,7 +18,7 @@ GameObject::GameObject()
 	localAABB.SetNegativeInfinity();
 	globalAABB.SetNegativeInfinity();
 
-	uuid = App->scene->GetRandomUUID();
+	UUID = App->scene->GetRandomUUID();
 }
 
 GameObject::GameObject(const char * Name)
@@ -31,7 +32,7 @@ GameObject::GameObject(const char * Name)
 	localAABB.SetNegativeInfinity();
 	globalAABB.SetNegativeInfinity();
 
-	uuid = App->scene->GetRandomUUID();	
+	UUID = App->scene->GetRandomUUID();	
 }
 
 
@@ -290,7 +291,7 @@ ComponentMesh * GameObject::GetComponentMesh()
 	return ret;
 }
 
-ComponentMaterial * GameObject::GetComponentMaterial(const uint uuid)
+ComponentMaterial * GameObject::GetComponentMaterial(const uuid UUID)
 {
 	std::vector<Component*> materials;
 
@@ -298,7 +299,7 @@ ComponentMaterial * GameObject::GetComponentMaterial(const uint uuid)
 	for (int i = 0; i < materials.size(); i++){
 		ComponentMaterial* it = (ComponentMaterial*)materials[i];
 		const uint auxuuid = it->GetUUID();
-		if (auxuuid == uuid) {
+		if (auxuuid == UUID) {
 			return it;
 		}
 		it = nullptr;
@@ -373,18 +374,18 @@ void GameObject::RayHits(const LineSegment & segment, bool & hit, float & dist){
 		if (segment.Intersects(globalAABB)) {
 			ComponentMesh* mesh;
 			mesh = GetComponentMesh();
-			if (mesh) {
-				if (!mesh->vertex)
+			if (mesh && mesh->HasMesh()) {
+				if (mesh->GetResourceMesh()->vertex != nullptr)
 					return;
 				//Segment for the mesh
 				LineSegment localRay(segment);
 				localRay.Transform(transformComp->getGlobalMatrix().Inverted());
 
-				uint* indices = mesh->index;
-				float3* vertices = mesh->vertex;
+				uint* indices = mesh->GetResourceMesh()->index;
+				float3* vertices = mesh->GetResourceMesh()->vertex;
 				Triangle triangle;
 
-				for (int i = 0; i < mesh->num_index;) {
+				for (int i = 0; i < mesh->GetResourceMesh()->num_index;) {
 					//TO CHEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEECK!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 					triangle.a = vertices[indices[i]]; ++i;
 					triangle.b = vertices[indices[i]]; ++i;
@@ -417,9 +418,9 @@ void GameObject::Save(Config& data) const
 	Config conf;
 		
 
-	conf.AddUInt("UUID", uuid);
+	conf.AddUInt("UUID", UUID);
 	if (parent != nullptr) { // in case of root
-		conf.AddUInt("Parent_UUID", parent->uuid);
+		conf.AddUInt("Parent_UUID", parent->UUID);
 	}
 	conf.AddString("Name", name.c_str());
 	conf.AddFloat3("Translation", transformComp->getPos());
@@ -445,7 +446,7 @@ void GameObject::Save(Config& data) const
 
 void GameObject::Load(Config* data)
 {
-	uuid = data->GetUInt("UUID", 0);
+	UUID = data->GetUInt("UUID", 0);
 	uint parentUUID = data->GetUInt("Parent_UUID",0);
 
 	GameObject* par = App->scene->GetGameObjectByUUID(parentUUID);

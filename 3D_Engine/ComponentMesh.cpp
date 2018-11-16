@@ -1,6 +1,8 @@
 #include "Application.h"
 #include "ComponentMesh.h"
+#include "ResourceMesh.h"
 #include "ModuleRenderer3D.h"
+#include "ModuleResources.h"
 #include "GameObject.h"
 
 #pragma comment (lib, "glu32.lib")
@@ -27,7 +29,7 @@ update_status ComponentMesh::PreUpdate(float dt)
 {
 	glBindBuffer(GL_ARRAY_BUFFER, 0); ///
 
-	return update_status();
+	return UPDATE_CONTINUE;
 }
 
 
@@ -39,55 +41,51 @@ bool ComponentMesh::Update()
 
 void ComponentMesh::CleanUp()
 {
-	if (id_index != -1)
-		glDeleteBuffers(1, &id_index);
-	if (id_vertex != -1)
-		glDeleteBuffers(1, &id_vertex);
-	if (id_normals != -1)
-		glDeleteBuffers(1, &id_normals);
+	resourceMesh->FreeInMemory();
+	resourceMesh = nullptr;
 
 	material = nullptr;
 
-	delete[] index;
-	delete[] vertex;
-	delete[] normals;
-	delete[] texturesCoords;
 }
 
 void ComponentMesh::DrawInspector() {
 	ImGui::Separator();
 	ImGui::TextColored(ImVec4(0.25f, 0.25f, 0.25f, 1), "UUID: %i", GetUUID());
-	ImGui::Text("Vertices: %d", num_index);
-	ImGui::Text("Triangles: %d",num_faces);
-	ImGui::Text("Indices: %d", num_index);
-	ImGui::Text("Normals: %d \n", num_normals);
-	
+	ImGui::Text("Resource UUID: %i", resourceMesh->GetUUID());
+	ImGui::Text("");
+	ImGui::Text("Vertices: %d", resourceMesh->num_index);
+	ImGui::Text("Triangles: %d", resourceMesh->num_faces);
+	ImGui::Text("Indices: %d", resourceMesh->num_index);
+	ImGui::Text("Normals: %d \n", resourceMesh->num_normals);
+
 	const char* currentMaterial = NULL;
 	if (material != nullptr) {
-		currentMaterial = material->texture->name.c_str();
+		currentMaterial = material->GetTextureName();
 	
 	}
 	if (ImGui::BeginCombo("Material", currentMaterial)) 
 	{
-		std::vector<Material*> mat = App->textures->materials;
+		std::vector<Resource*> mat = App->resources->GetResourcesListType(Resource::ResType::Texture);
 			
 		// change by GetMaterials List to initiate it with label NO TEXTURE
 		for (int i = 0; i < mat.size(); i++)
 		{
 			bool is_selected = false;
 			if (currentMaterial != nullptr) {
-				bool is_selected = (strcmp(currentMaterial, mat[i]->name.c_str()) == 0);
+				bool is_selected = (strcmp(currentMaterial, mat[i]->GetName()) == 0);
 			}
-			if (ImGui::Selectable(mat[i]->name.c_str(), is_selected)) {
-				currentMaterial = mat[i]->name.c_str();
+			if (ImGui::Selectable(mat[i]->GetName(), is_selected)) {
+				currentMaterial = mat[i]->GetName();
 				ComponentMaterial* compMat = myGO->GetComponentMaterial();
 
 				if (compMat == nullptr) { //if the GO has already a component Material
 					compMat = (ComponentMaterial*)myGO->AddComponent(MATERIAL);
 				}
 
-				compMat->texture = App->textures->GetMaterialsFromName(currentMaterial);
+				//compMat->texture = App->textures->GetMaterialsFromName(currentMaterial);
+				compMat->SetResource(App->resources->FindByName(mat[i]->GetName(), Resource::ResType::Texture));
 				SetMaterial(compMat);
+				
 				compMat = nullptr;
 				if (is_selected) {
 					ImGui::SetItemDefaultFocus();
@@ -102,28 +100,28 @@ void ComponentMesh::DrawInspector() {
 	currentMaterial = nullptr;
 	ImGui::Separator();
 }
-
+/*
 void ComponentMesh::GenerateBuffer()
 {
 	
-	glGenBuffers(1, (GLuint*) &(id_vertex));
-	glGenBuffers(1, (GLuint*) &(id_normals));// generates 1 buffer. then it assign a GLuint to its mem adress.
 	
-	glBindBuffer(GL_ARRAY_BUFFER, id_vertex); // set the type of buffer
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float3)*num_vertex, &vertex[0], GL_STATIC_DRAW);
-	
-	
-	glBindBuffer(GL_ARRAY_BUFFER, id_normals);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float3)*num_normals, &normals[0], GL_STATIC_DRAW);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-	if (num_index > 0) {
-		glGenBuffers(1, (GLuint*) &(id_index));
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_index);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) *num_index, &index[0], GL_STATIC_DRAW);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	}
 	//GenerateBoundingBox();
+}*/
+
+void ComponentMesh::SetResource(uuid resource)
+{
+	resourceMesh = (ResourceMesh*) App->resources->Get(resource);
+	resourceMesh->LoadInMemory();
+}
+
+
+
+const bool ComponentMesh::HasMesh() const
+{
+	bool ret;
+	resourceMesh ? ret = true : ret = false;
+	return ret;
+
 }
 
 void ComponentMesh::Draw()
@@ -143,27 +141,28 @@ void ComponentMesh::Draw()
 	else
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); 
 	
-	if (num_index == 0) {// if the mesh has no index
-		glBindBuffer(GL_ARRAY_BUFFER, id_vertex);
+	if (resourceMesh->num_index == 0) {// if the mesh has no index
+		glBindBuffer(GL_ARRAY_BUFFER, resourceMesh->id_vertex);
 		glVertexPointer(3, GL_FLOAT, 0, NULL);
-		glDrawArrays(GL_TRIANGLES, 0, num_vertex);
+		glDrawArrays(GL_TRIANGLES, 0, resourceMesh->num_vertex);
 		glBindBuffer(GL_ARRAY_BUFFER, 0); //resets the buffer
 	}
 	else {
-			
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		if (material != NULL){
-			if (material->texture != nullptr) {
-				glBindTexture(GL_TEXTURE_2D, material->texture->textureID);
-				glTexCoordPointer(2, GL_FLOAT, 0, &(texturesCoords[0]));
+			if (material->HasTexture() ) {
+				glBindTexture(GL_TEXTURE_2D, material->GetTexID());
+				glTexCoordPointer(2, GL_FLOAT, 0, &(resourceMesh->texturesCoords[0]));
 			}
 			else {
 				glColor3f(material->colors.x, material->colors.y, material->colors.z);
 			}
 		}
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_index); // test: before it was 2 lines upper
-		glBindBuffer(GL_ARRAY_BUFFER, id_vertex);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, resourceMesh->id_index); // test: before it was 2 lines upper
+		glBindBuffer(GL_ARRAY_BUFFER, resourceMesh->id_vertex);
 		glVertexPointer(3, GL_FLOAT, 0, NULL);		
-		glDrawElements(GL_TRIANGLES, num_index, GL_UNSIGNED_INT, NULL);
+		glDrawElements(GL_TRIANGLES, resourceMesh->num_index, GL_UNSIGNED_INT, NULL);
 		
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -175,10 +174,10 @@ void ComponentMesh::Draw()
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 
 	if (App->renderer3D->GetNormals()) {
-		for (int j = 0; j < num_normals; j++) {
+		for (int j = 0; j < resourceMesh->num_normals; j++) {
 			glBegin(GL_LINES);
-			glVertex3f(vertex[j].x, vertex[j].y, vertex[j].z);
-			glVertex3f(vertex[j].x - normals[j].x, vertex[j].y - normals[j].y, vertex[j].z - normals[j].z);
+			glVertex3f(resourceMesh->vertex[j].x, resourceMesh->vertex[j].y, resourceMesh->vertex[j].z);
+			glVertex3f(resourceMesh->vertex[j].x - resourceMesh->normals[j].x, resourceMesh->vertex[j].y - resourceMesh->normals[j].y, resourceMesh->vertex[j].z - resourceMesh->normals[j].z);
 			glLineWidth(1.0f);
 			glEnd();
 		}
@@ -191,31 +190,25 @@ void ComponentMesh::Draw()
 
 void ComponentMesh::Save(Config & data) const
 {
-	data.AddUInt("UUID", uuid);
+	data.AddUInt("UUID", UUID);
 	if (material != nullptr) {
 		const uint texuuid = material->GetUUID();
 		data.AddUInt("TexUUID", texuuid);
+	}
+	if (resourceMesh!=nullptr) {
+		data.AddString("NamePEI", resourceMesh->GetName());
 	}
 }
 
 void ComponentMesh::Load(Config * data)
 {
-	uuid = data->GetUInt("UUID");
+	UUID = data->GetUInt("UUID");
 	SetMaterial(myGO->GetComponentMaterial(data->GetUInt("TexUUID")));
-
-	App->renderer3D->importer->LoadMeshPEI(this);
+	resourceMesh = (ResourceMesh*) App->resources->Get(App->resources->FindByName(data->GetString("NamePEI"), Resource::ResType::Mesh));
+	resourceMesh->LoadInMemory();
+	//App->renderer3D->importer->LoadMeshPEI(this);
 }
-//
-//void ComponentMesh::GenerateBoundingBox()
-//{
-//	AABB aabb;
-//
-//	aabb.SetNegativeInfinity();
-//	aabb.Enclose((float3*)vertex, num_vertex);
-//
-//	myGO->globalAABB = aabb;
-//}
-//
+
 
 void ComponentMesh::DrawBoundingBox()
 {
@@ -224,31 +217,31 @@ void ComponentMesh::DrawBoundingBox()
 	DebugDrawBox(corners);
 }
 
-void ComponentMesh::CreateBBox(ComponentMesh* newMesh)
+void ComponentMesh::CreateBBox()
 {
-	float minBoundingX = newMesh->vertex->x;
-	float maxBoundingX = newMesh->vertex->x;
-	float minBoundingY = newMesh->vertex->y;
-	float maxBoundingY = newMesh->vertex->y;
-	float minBoundingZ = newMesh->vertex->z;
-	float maxBoundingZ = newMesh->vertex->z;
+	float minBoundingX = resourceMesh->vertex->x;
+	float maxBoundingX = resourceMesh->vertex->x;
+	float minBoundingY = resourceMesh->vertex->y;
+	float maxBoundingY = resourceMesh->vertex->y;
+	float minBoundingZ = resourceMesh->vertex->z;
+	float maxBoundingZ = resourceMesh->vertex->z;
 
-	for (int i = 0; i < newMesh->num_vertex; i++) {
-		if (newMesh->vertex[i].x < minBoundingX)
-			minBoundingX = newMesh->vertex[i].x;
-		else if (newMesh->vertex[i].x > maxBoundingX)
-			maxBoundingX = newMesh->vertex[i].x;
-		if (newMesh->vertex[i].y < minBoundingY)
-			minBoundingY = newMesh->vertex[i].y;
-		else if (newMesh->vertex[i].y > maxBoundingY)
-			maxBoundingY = newMesh->vertex[i].y;
-		if (newMesh->vertex[i].z < minBoundingZ)
-			minBoundingZ = newMesh->vertex[i].z;
-		else if (newMesh->vertex[i].z > maxBoundingZ)
-			maxBoundingZ = newMesh->vertex[i].z;
+	for (int i = 0; i < resourceMesh->num_vertex; i++) {
+		if (resourceMesh->vertex[i].x < minBoundingX)
+			minBoundingX = resourceMesh->vertex[i].x;
+		else if (resourceMesh->vertex[i].x > maxBoundingX)
+			maxBoundingX = resourceMesh->vertex[i].x;
+		if (resourceMesh->vertex[i].y < minBoundingY)
+			minBoundingY = resourceMesh->vertex[i].y;
+		else if (resourceMesh->vertex[i].y > maxBoundingY)
+			maxBoundingY = resourceMesh->vertex[i].y;
+		if (resourceMesh->vertex[i].z < minBoundingZ)
+			minBoundingZ = resourceMesh->vertex[i].z;
+		else if (resourceMesh->vertex[i].z > maxBoundingZ)
+			maxBoundingZ = resourceMesh->vertex[i].z;
 	}
-	newMesh->bbox.minPoint = float3(minBoundingX, minBoundingY, minBoundingZ);
-	newMesh->bbox.maxPoint = float3(maxBoundingX, maxBoundingY, maxBoundingZ);
+	bbox.minPoint = float3(minBoundingX, minBoundingY, minBoundingZ);
+	bbox.maxPoint = float3(maxBoundingX, maxBoundingY, maxBoundingZ);
 }
 
 
