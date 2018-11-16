@@ -66,7 +66,7 @@ update_status ModuleScene::Update(float dt) {
 		DebugDrawLine(line);
 	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT)
 		App->gui->panelScene->GetMouse();
-	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT && App->gui->isMouseOnScene())
+	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT && App->gui->isMouseOnScene() && !ImGuizmo::IsOver())
 		MousePicking();
 	if (root->childrens.empty() == false) {
 
@@ -291,6 +291,35 @@ void ModuleScene::MousePicking()
 	}
 }
 
+void ModuleScene::DrawGuizmo(ImGuizmo::OPERATION operation)
+{
+	ComponentTransformation* transform = gObjSelected->GetTransformComponent();
+	if (transform) {
+		ImGuizmo::Enable(true);
+		ImGuizmo::MODE mode;
+		float4x4* matrixL;
+
+		matrixL = &transform->localMatrix;
+		matrixL->Transpose();
+
+		float4x4 viewMatrix, projectionMatrix;
+		glGetFloatv(GL_MODELVIEW_MATRIX, (float*)viewMatrix.v);
+		glGetFloatv(GL_PROJECTION_MATRIX, (float*)projectionMatrix.v);
+		ImGuiIO& io = ImGui::GetIO();
+		ImGuizmo::SetOrthographic(true);
+		ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
+
+		ImGuizmo::Manipulate((float*)viewMatrix.v, (float*)projectionMatrix.v, operation, ImGuizmo::LOCAL, (float*)matrixL, NULL, NULL);
+		matrixL->Transpose();
+
+		if (ImGuizmo::IsUsing()) {
+			root->CalculateAllGlobalMatrix();
+
+			//QUADTREE RECALC
+		}
+	}
+}
+
 void ModuleScene::GetAllStaticGOs(GameObject* go)
 {
 	if (go != root && go->staticGO)
@@ -417,6 +446,22 @@ void ModuleScene::Draw() {
 		if (App->camera->ContainsAaBox(mesh->myGO->globalAABB) == IS_IN || App->camera->ContainsAaBox(mesh->myGO->globalAABB) == INTERSECT) {//MISSING IF FRUSTUM CULLING ACTIVE!!!!!!---------------------------------------------------------
 			mesh->Draw();
 		}
+	}
+	if (gObjSelected != nullptr)
+	{
+		if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT)
+		{
+			guizmoOp = ImGuizmo::TRANSLATE;
+		}
+		if (App->input->GetKey(SDL_SCANCODE_E) == KEY_REPEAT)
+		{
+			guizmoOp = ImGuizmo::ROTATE;
+		}
+		if (App->input->GetKey(SDL_SCANCODE_R) == KEY_REPEAT)
+		{
+			guizmoOp = ImGuizmo::SCALE;
+		}
+		DrawGuizmo(ImGuizmo::ROTATE);
 	}
 	if (!inGame && mainCamera != nullptr && rootQuadTree != nullptr) {
 		mainCamera->GetComponentCamera()->DebugDraw();

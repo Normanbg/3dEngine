@@ -52,6 +52,9 @@
     <Filter Include="Sources\Tools\mmgr">
       <UniqueIdentifier>{b97f3e15-7d0f-41c3-9144-899f73306c31}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Tools\ImGuizmo">
+      <UniqueIdentifier>{19af97b0-e4f1-4188-b804-93d7810b1ef2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -399,6 +402,9 @@
     <ClInclude Include="UIPanelSceneInfo.h">
       <Filter>Sources\Modules\GuiPanels</Filter>
     </ClInclude>
+    <ClInclude Include="ImGuizmo\ImGuizmo.h">
+      <Filter>Sources\Tools\ImGuizmo</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleInput.cpp">
@@ -643,6 +649,9 @@
     </ClCompile>
     <ClCompile Include="UIPanelSceneInfo.cpp">
       <Filter>Sources\Modules\GuiPanels</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGuizmo\ImGuizmo.cpp">
+      <Filter>Sources\Tools\ImGuizmo</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
