@@ -28,9 +28,9 @@ public:
 	void Save(Config& data) const;
 	void Load(Config* data);
 
-	float * GetViewMatrix() const;
-	float * GetProjectionMatrix() const;
-	Frustum GetFrustum() const;
+	const float * GetViewMatrix() const;
+	const float * GetProjectionMatrix() const;
+	const Frustum GetFrustum() const;
 
 public:
 

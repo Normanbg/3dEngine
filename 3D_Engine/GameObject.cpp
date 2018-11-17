@@ -243,23 +243,11 @@ void GameObject::RemoveComponent(Component * comp)
 }
 
 
-//void GameObject::DrawMeshes()
-//{
-//	Component* iterator;
-//	for (int i = 0; i < components.size(); i++) {
-//		iterator = components[i];
-//		
-//	}
-//	iterator = nullptr;
-//}
-
-
-
-ComponentTransformation * GameObject::GetTransformComponent()
+ComponentTransformation * GameObject::GetComponentTransform() const
 {
 	ComponentTransformation* ret = nullptr;
 	//WILL ONLY FIND THE FIRST COMPONENT EQUAL TO TYPE OF EACH G0
-	for (std::vector<Component*>::iterator it = components.begin(); it != components.end(); it++)
+	for (std::vector<Component*>::const_iterator it = components.begin(); it != components.end(); it++)
 	{
 		if ((*it)->type == TRANSFORM)
 			return (ComponentTransformation*)(*it);
@@ -267,11 +255,11 @@ ComponentTransformation * GameObject::GetTransformComponent()
 	return ret;
 }
 
-ComponentCamera * GameObject::GetComponentCamera()
+ComponentCamera * GameObject::GetComponentCamera() const
 {
 	ComponentCamera* ret = nullptr;
 	//WILL ONLY FIND THE FIRST COMPONENT EQUAL TO TYPE OF EACH G0
-	for (std::vector<Component*>::iterator it = components.begin(); it != components.end(); it++)
+	for (std::vector<Component*>::const_iterator it = components.begin(); it != components.end(); it++)
 	{
 		if ((*it)->type == CAMERA)
 			return (ComponentCamera*)(*it);
@@ -279,11 +267,11 @@ ComponentCamera * GameObject::GetComponentCamera()
 	return ret;
 }
 
-ComponentMesh * GameObject::GetComponentMesh()
+ComponentMesh * GameObject::GetComponentMesh() const 
 {
 	ComponentMesh* ret = nullptr;
 	//WILL ONLY FIND THE FIRST COMPONENT EQUAL TO TYPE OF EACH G0
-	for (std::vector<Component*>::iterator it = components.begin(); it != components.end(); it++)
+	for (std::vector<Component*>::const_iterator it = components.begin(); it != components.end(); it++)
 	{
 		if ((*it)->type == MESH)
 			return (ComponentMesh*)(*it);
@@ -307,16 +295,16 @@ ComponentMaterial * GameObject::GetComponentMaterial(const uuid UUID)
 	return nullptr;
 }
 
-bool GameObject::GetSelected()
+const bool GameObject::GetSelected() const
 {
 	return inspectorSelected;
 }
 
-ComponentMaterial * GameObject::GetComponentMaterial()
+ComponentMaterial * GameObject::GetComponentMaterial() const 
 {
 	ComponentMaterial* ret = nullptr;
 	//WILL ONLY FIND THE FIRST COMPONENT EQUAL TO TYPE OF EACH G0
-	for (std::vector<Component*>::iterator it = components.begin(); it != components.end(); it++)
+	for (std::vector<Component*>::const_iterator it = components.begin(); it != components.end(); it++)
 	{
 		if ((*it)->type == MATERIAL)
 			return (ComponentMaterial*)(*it);

@@ -16,7 +16,7 @@ public:
 	void Draw();
 	void ClearScenePopUp();
 
-	ImVec2 GetMouse() const;
+	const ImVec2 GetMouse() const;
 
 public:
 	ImTextureID img;

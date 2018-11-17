@@ -27,14 +27,16 @@ public:
 	void Pause();
 	void Stop();
 
-	float GetGameTimeSec()const { return gameClock; }
+	const float GetGameTimeSec()const { return gameClock; }
 	const float GetGameDeltaTime() const { return gameDeltaTime; }
 
-	float GetRealTimeSec() { return realTimeClock.ReadSec(); }
-	float GetRealTimeMs() { return realTimeClock.Read(); }
-	float* GetTimeScale()  { return &timeScale; }
-	bool IsPaused() const { return paused; }
-	bool IsPlaying() const { return playing; }
+	const float GetRealTimeSec() { return realTimeClock.ReadSec(); }
+	const float GetRealTimeMs() { return realTimeClock.Read(); }
+	const bool IsPaused() const { return paused; }
+	const bool IsPlaying() const { return playing; }
+
+	float* GetTimeScale() { return &timeScale; }
+
 private:
 	float timeScale = 1.0f;
 	float gameDeltaTime = 0.0f;

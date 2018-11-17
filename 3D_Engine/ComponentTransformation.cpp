@@ -75,8 +75,8 @@ void ComponentTransformation::setGlobalMatrix(float4x4 newGlobalMat)
 	globalMatrix = newGlobalMat;
 	if (myGO->parent != nullptr)
 	{
-		ComponentTransformation* parentTrans = myGO->GetTransformComponent();
-		float4x4 newlocalMatrix = parentTrans->globalMatrix * globalMatrix;
+		ComponentTransformation* parentTrans = myGO->parent->GetComponentTransform();
+		float4x4 newlocalMatrix = parentTrans->getGlobalMatrix().Inverted() * globalMatrix;
 		setLocalMatrix(newlocalMatrix);
 	}
 }
@@ -135,32 +135,32 @@ void ComponentTransformation::setRotEuler(float3 _newrot)
 	UpdateLocalMatrix();
 }
 
-float3 ComponentTransformation::getPos() const
+const float3 ComponentTransformation::getPos() const
 {
 	return transform.position;
 }
 
-float3 ComponentTransformation::getScale() const
+const float3 ComponentTransformation::getScale() const
 {
 	return transform.scale;
 }
 
-float3 ComponentTransformation::getEulerRot() const
+const float3 ComponentTransformation::getEulerRot() const
 {
 	return transform.rotEuler;
 }
 
-Quat ComponentTransformation::getQuatRot() const
+const Quat ComponentTransformation::getQuatRot() const
 {
 	return transform.rotationQuat;
 }
 
-float4x4 ComponentTransformation::getGlobalMatrix() const
+const float4x4 ComponentTransformation::getGlobalMatrix() const
 {
 	return globalMatrix;
 }
 
-float4x4 ComponentTransformation::getLocalMatrix() const
+const float4x4 ComponentTransformation::getLocalMatrix() const
 {
 	return localMatrix;
 }

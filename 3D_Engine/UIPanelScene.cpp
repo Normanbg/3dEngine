@@ -82,7 +82,7 @@ void UIPanelScene::ClearScenePopUp(){
 
 }
 
-ImVec2 UIPanelScene::GetMouse() const
+const ImVec2 UIPanelScene::GetMouse() const
 {
 	ImVec2 mousePos = ImGui::GetMousePos();
 

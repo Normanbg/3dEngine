@@ -110,7 +110,7 @@ void UIPanelInspector::DrawComponent(Component* compDraw)
 	case TRANSFORM:
 		if (ImGui::TreeNode("Transform"))
 		{
-			compDraw->myGO->GetTransformComponent()->DrawInspector();
+			compDraw->myGO->GetComponentTransform()->DrawInspector();
 			ImGui::TreePop();
 		}
 		break;

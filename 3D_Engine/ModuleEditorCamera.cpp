@@ -192,12 +192,12 @@ void ModuleEditorCamera::ConfigInfo(){
 }
 
 
-float ModuleEditorCamera::GetMouseSensit()
+const float ModuleEditorCamera::GetMouseSensit() const
 {
 	return mouseSensitivity;
 }
 
-float ModuleEditorCamera::GetScrollSensit()
+const float ModuleEditorCamera::GetScrollSensit() const
 {
 	return scrollWheelSensitivity;
 }
