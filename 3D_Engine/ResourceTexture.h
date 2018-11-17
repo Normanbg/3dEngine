@@ -33,9 +33,6 @@ public:
 	uint height = 0;
 	uint gpuID = 0;
 
-	uint depth = 0;
-	uint mips = 0;
-	uint bytes = 0;
 	
 	Format format = unknown;
 };

@@ -121,6 +121,19 @@ uuid ModuleResources::FindByPath(const char * fileInAssets, Resource::ResType ty
 	return 0;
 }
 
+uuid ModuleResources::FindByExportedFile(const char * name, Resource::ResType type) const
+{
+	std::string fileName = name;
+
+	for (std::map<uuid, Resource*>::const_iterator it = resources.begin(); it != resources.end(); it++) {
+		if (it->second->GetExportedFile() == fileName) {
+			if (type == Resource::ResType::None || type == it->second->GetType())
+				return it->first;
+		}
+	}
+	return 0;
+}
+
 uuid ModuleResources::FindByName(const char * fileInAssets, Resource::ResType type) const
 {
 	std::string fileName = fileInAssets;
@@ -277,14 +290,14 @@ void ModuleResources::RemoveResource(const char * metaPath)
 			res = Get(childUUID);
 			res->CleanUp();
 			resources.erase(res->GetUUID());
-			App->fileSys->RemoveFile(res->GetExportedFiles().c_str());
+			App->fileSys->RemoveFile(res->GetExportedFile().c_str());
 		}
 	}
 	else {		
 		res = Get(UUID);
 		resources.erase(res->GetUUID());
 		res->CleanUp();
-		App->fileSys->RemoveFile(res->GetExportedFiles().c_str());
+		App->fileSys->RemoveFile(res->GetExportedFile().c_str());
 	}
 
 	App->fileSys->RemoveFile(metaPath);

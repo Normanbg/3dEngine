@@ -610,6 +610,18 @@ void SceneImporter::LoadMeshPEI(const char* fileNamePEI, ResourceMesh* resource)
 	dataFile.close();
 }
 
+void SceneImporter::LoadMeshPEI(const char * fileNamePEI)
+{
+	std::string libPath= LIB_MODELS_PATH;
+	std::string peiName;	
+	App->fileSys->GetNameFromPath(fileNamePEI, nullptr, nullptr, &peiName, nullptr);
+	libPath += peiName;
+	uuid res =App->resources->FindByExportedFile(libPath.c_str(), Resource::ResType::Mesh);
+	GameObject* GO= App->scene->AddGameObject(peiName.c_str());
+	ComponentMesh* mesh = (ComponentMesh*) GO->AddComponent(MESH);
+	mesh->SetResource(res);
+}
+
 
 void SceneImporter::CleanUp()
 {

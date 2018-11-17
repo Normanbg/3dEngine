@@ -38,9 +38,8 @@ public:
 	ComponentMesh* ImportMeshToResource(aiMesh* mesh, const char* peiName); //loads a single mesh (1.2)
 
 	//void LoadMeshPEI(ComponentMesh* mesh);
-	void LoadMeshPEI(const char * fileNamePEI, ResourceMesh* resource); // loads a .pei into a resourceMesh (check if it is obsolete)
-
-
+	void LoadMeshPEI(const char * fileNamePEI, ResourceMesh* resource); // loads a .pei into a resourceMesh 
+	void LoadMeshPEI(const char * fileNamePEI); //loads a .pei and create a GameObject with it.
 	void CleanUp();
 
 private:

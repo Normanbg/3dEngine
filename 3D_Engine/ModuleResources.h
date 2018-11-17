@@ -26,27 +26,24 @@ public:
 	update_status PreUpdate(float dt) override;
 	bool CleanUp() override;
 
-	void CheckMetaFiles();
-
-	uuid FindByName(const char* name, Resource::ResType type = Resource::ResType::None) const;
-	uuid FindByPath(const char* fileInAssets, Resource::ResType type = Resource::ResType::None) const;
-	bool ImportFileAndGenerateMeta(const char* newFileInAssets);
-	uuid GenerateNewUUID();
-	const Resource* Get(uuid uuid) const;
-	Resource* Get(uuid uuid);
-
-	void LoadFiles(const char* filePath);
-	
-	std::map<uuid, Resource*> GetResourcesList() const { return resources; }
-	std::vector<Resource*> GetResourcesListType(Resource::ResType type, bool loaded = false); // gets resources ResourceType "type" & possibilty to only take the loaded ones.
-
 	Resource* CreateNewResource(Resource::ResType type, uuid forceUUID = 0);
 	void RemoveResource(const char* path);
 	void RemoveResource(uuid UUID);
-	void GenerateMetaFile(const char* assetFile, uuid ResourceUUID, std::vector<uuid> exportedUUIDs);
+
+	void ChangeResourceUUID(uuid formerUUID, uuid newUUID);
+	void LoadFiles(const char* filePath);
+	bool ImportFileAndGenerateMeta(const char* newFileInAssets);
+	
+	uuid FindByExportedFile(const char* name, Resource::ResType type = Resource::ResType::None) const;
+	uuid FindByName(const char* name, Resource::ResType type = Resource::ResType::None) const;
+	uuid FindByPath(const char* fileInAssets, Resource::ResType type = Resource::ResType::None) const;
+	const Resource* Get(uuid uuid) const;
+	Resource* Get(uuid uuid);	
+	std::map<uuid, Resource*> GetResourcesList() const { return resources; }
+	std::vector<Resource*> GetResourcesListType(Resource::ResType type, bool loaded = false); // gets resources ResourceType "type" & possibilty to only take the loaded ones.
 
 	const Resource::ResType GetResourceTypeFromExtension(const char * path) const;
-	void ChangeResourceUUID(uuid formerUUID, uuid newUUID);
+	
 
 private:
 
@@ -57,7 +54,8 @@ private:
 private:
 
 	bool ManageResourceWithMeta(const char* resource, const char* meta);
-	
+	void GenerateMetaFile(const char* assetFile, uuid ResourceUUID, std::vector<uuid> exportedUUIDs);
+	void CheckMetaFiles();
 };
 
 #endif // !__MODULE_RESOURCES_H__

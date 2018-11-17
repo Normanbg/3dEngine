@@ -90,7 +90,7 @@ update_status ModuleGui::Update(float dt)
 		if (ImGui::BeginMenu("File")) {
 			if (ImGui::MenuItem("Clear scene"))
 				clearScene = true;
-			if (ImGui::MenuItem("Load File..."))
+			if (ImGui::MenuItem("Load PEI File..."))
 				panelSceneInfo->wantToLoadFile = true;
 			if (ImGui::MenuItem("Save scene"))
 				App->scene->SaveScene();

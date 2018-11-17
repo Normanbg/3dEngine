@@ -7,6 +7,7 @@
 
 ResourceTexture::ResourceTexture(uuid UUID) : Resource(UUID, ResType::Texture)
 {
+	format = rgba;
 }
 
 ResourceTexture::~ResourceTexture()
@@ -35,6 +36,7 @@ void ResourceTexture::FreeInMemory()
 
 void ResourceTexture::Save(Config & config) const
 {
+	config.AddInt("Format", format);
 }
 
 void ResourceTexture::Load(const Config & config)
@@ -43,6 +45,7 @@ void ResourceTexture::Load(const Config & config)
 		exportedFile = LIB_TEXTURES_PATH + fileName + DDS_FORMAT;
 	
 	}
+	format = (ResourceTexture::Format) config.GetInt("Format", 0);
 }
 
 void ResourceTexture::CleanUp()

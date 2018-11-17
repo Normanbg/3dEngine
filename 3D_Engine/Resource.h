@@ -27,7 +27,7 @@ public:
 	inline uuid GetUUID() const { return UUID; }
 	inline const char* GetName() const { return fileName.c_str(); }
 	inline std::string GetNameStr() const { return fileName; }
-	inline std::string GetExportedFiles() const { return exportedFile; }
+	inline std::string GetExportedFile() const { return exportedFile; }
 	inline const char* GetPath() const { return path.c_str(); }
 	inline std::string GetPathStr() const { return path; }
 
