@@ -15,7 +15,7 @@ public:
 	void Init();
 	bool ImportToDDS(const char * texPath, const char* texName = nullptr, std::vector<std::string>* written = nullptr);
 
-	void LoadDroppedTexture(char * droppedFileDire);
+	void ManageDroppedTexture(char * droppedFileDire);
 		
 	GLuint LoadTexture(const char* path,  uint &texWidth, uint &texHeight);
 

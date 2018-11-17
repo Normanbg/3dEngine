@@ -7,7 +7,7 @@
 #include "Timer.h"
 #include "ModuleFileSystem.h"
 #include "ModuleRenderer3D.h"
-
+#include "GameObject.h"
 
 
 ModuleResources::ModuleResources() 
@@ -34,11 +34,15 @@ bool ModuleResources::Start()
 
 update_status ModuleResources::PreUpdate(float dt)
 {
-	if (lastCheck.Read() > MS_TO_CHECK_META) {
-		lastCheck.SetZero();
-		CheckMetaFiles();
+	if (!App->scene->inGame) {
+		if (lastCheck.Read() > MS_TO_CHECK_META) {
+			lastCheck.SetZero();
+			CheckMetaFiles();
+		}
 	}
-
+	else {
+		lastCheck.Stop();
+	}
 	return UPDATE_CONTINUE;
 }
 
@@ -67,7 +71,8 @@ void ModuleResources::CheckMetaFiles()
 		
 		bool hasComplementary = false;
 		for (std::map<std::string, uint>::iterator missFileIt = missingComplementary.begin(); missFileIt != missingComplementary.end(); missFileIt++) {
-			if (fileName == (*missFileIt).first) {
+			if (fileName == (*missFileIt).first) 
+			{
 				if (ManageResourceWithMeta(files[(*missFileIt).second].c_str(), (*fileIt).c_str())==false) {
 					ImportFileAndGenerateMeta(files[(*missFileIt).second].c_str());
 				}
@@ -84,7 +89,6 @@ void ModuleResources::CheckMetaFiles()
 		}
 	}
 	//----Meta / Resources Unmatched stored in metaChecker together 
-
 
 	if (missingComplementary.size() > 0) {
 		for (std::map<std::string, uint>::iterator fileIt = missingComplementary.begin(); fileIt != missingComplementary.end(); fileIt++) {
@@ -175,10 +179,6 @@ bool ModuleResources::ImportFileAndGenerateMeta(const char * newFileInAssets)
 	return ret;
 }
 
-uuid ModuleResources::GenerateNewUUID()
-{
-	return 0;
-}
 
 const Resource * ModuleResources::Get(uuid _uuid) const
 {
@@ -198,6 +198,23 @@ Resource * ModuleResources::Get(uuid _uuid)
 		}
 	}
 	return nullptr;
+}
+
+void ModuleResources::LoadFiles(const char * filePath)
+{
+	Resource::ResType type = GetResourceTypeFromExtension(filePath);
+	
+	switch (type) {
+	case Resource::ResType::Texture: {
+		std::string tName;
+			App->fileSys->GetNameFromPath(filePath, nullptr, &tName, nullptr, nullptr);
+		GameObject* GO;
+		GO = App->scene->AddGameObject(tName.c_str());
+		ComponentMaterial* mat = (ComponentMaterial*)GO->AddComponent(MATERIAL);
+		mat->SetResource(App->resources->FindByPath(filePath)); break; }
+	case Resource::ResType::Scene: {App->importer->LoadFBXScene(filePath); break; }
+	}
+
 }
 
 std::vector<Resource*> ModuleResources::GetResourcesListType(Resource::ResType type, bool loaded) 
@@ -401,5 +418,6 @@ bool ModuleResources::ManageResourceWithMeta(const char * resource, const char *
 		res->SetPath(resource);
 		res->Load(meta);
 	}
+	RELEASE_ARRAY(buffer);
 	return true;
 }

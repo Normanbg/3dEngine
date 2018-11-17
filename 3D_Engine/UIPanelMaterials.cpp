@@ -65,14 +65,14 @@ void UIPanelMaterials::DrawTextureChilds(std::vector<Resource*> materials)
 void UIPanelMaterials::DrawResourcesChilds(std::map<uuid, Resource*> resources)
 {
 	uint flags = 0;
+	flags |= ImGuiTreeNodeFlags_Leaf;
 	for (std::map<uuid, Resource*>::iterator goIterator = resources.begin(); goIterator != resources.end(); goIterator++)
 	{
 		Resource* res = (*goIterator).second;
-		flags |= ImGuiTreeNodeFlags_Leaf;
+		
 		std::string name = res->GetName();
 		if (ImGui::TreeNodeEx(name.c_str(), flags)) {
-			if (ImGui::IsItemHovered())
-			{
+			if (ImGui::IsItemHovered())	{
 				ImGui::BeginTooltip();
 				ImGui::Text("UUID: %d", res->GetUUID());
 				ImGui::Text("Directory: %s", res->GetPath());

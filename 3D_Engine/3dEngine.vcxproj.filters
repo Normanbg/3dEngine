@@ -405,6 +405,9 @@
     <ClInclude Include="ImGuizmo\ImGuizmo.h">
       <Filter>Sources\Tools\ImGuizmo</Filter>
     </ClInclude>
+    <ClInclude Include="UIPanelAssets.h">
+      <Filter>Sources\Modules\GuiPanels</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleInput.cpp">
@@ -652,6 +655,9 @@
     </ClCompile>
     <ClCompile Include="ImGuizmo\ImGuizmo.cpp">
       <Filter>Sources\Tools\ImGuizmo</Filter>
+    </ClCompile>
+    <ClCompile Include="UIPanelAssets.cpp">
+      <Filter>Sources\Modules\GuiPanels</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

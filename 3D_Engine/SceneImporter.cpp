@@ -610,6 +610,7 @@ void SceneImporter::LoadMeshPEI(const char* fileNamePEI, ResourceMesh* resource)
 	dataFile.close();
 }
 
+
 void SceneImporter::CleanUp()
 {
 	aiDetachAllLogStreams();

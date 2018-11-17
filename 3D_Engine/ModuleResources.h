@@ -34,6 +34,8 @@ public:
 	uuid GenerateNewUUID();
 	const Resource* Get(uuid uuid) const;
 	Resource* Get(uuid uuid);
+
+	void LoadFiles(const char* filePath);
 	
 	std::map<uuid, Resource*> GetResourcesList() const { return resources; }
 	std::vector<Resource*> GetResourcesListType(Resource::ResType type, bool loaded = false); // gets resources ResourceType "type" & possibilty to only take the loaded ones.

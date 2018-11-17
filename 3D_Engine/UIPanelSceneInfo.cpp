@@ -28,7 +28,7 @@ void UIPanelSceneInfo::Draw()
 
 		const char* fileName = CloseFileState();
 		if (fileName != nullptr)
-			//App->renderer3D->importer->LoadMeshPEI(fileName);
+			//App->renderer3D->LoadFile(fileName);
 			wantToLoadFile = false;
 
 	}

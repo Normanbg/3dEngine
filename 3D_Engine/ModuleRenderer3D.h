@@ -64,9 +64,9 @@ public:
 	inline bool GetRay() const { return _ray; }
 
 	/*vec GetAvgPosFromMeshes();*/
-	   
-	void LoadDroppedFBX(char* droppedFileDir);
-	void LoadDroppedPEI(char* droppedFileDir);
+	   ;
+	void ManageDroppedFBX(char* droppedFileDir);
+	//void ManageDroppedPEI(char* droppedFileDir);
 	
 	const uint GetFBOTexture();
 

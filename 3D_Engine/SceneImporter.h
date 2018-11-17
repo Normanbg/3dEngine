@@ -40,7 +40,7 @@ public:
 	//void LoadMeshPEI(ComponentMesh* mesh);
 	void LoadMeshPEI(const char * fileNamePEI, ResourceMesh* resource); // loads a .pei into a resourceMesh (check if it is obsolete)
 
-	
+
 	void CleanUp();
 
 private:
