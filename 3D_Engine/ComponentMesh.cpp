@@ -211,6 +211,8 @@ void ComponentMesh::Load(Config * data)
 	SetMaterial(myGO->GetComponentMaterial(data->GetUInt("TexUUID")));
 	resourceMesh = (ResourceMesh*) App->resources->Get(App->resources->FindByName(data->GetString("NamePEI"), Resource::ResType::Mesh));
 	resourceMesh->LoadInMemory();
+	CreateBBox();
+	myGO->SetLocalAABB(bbox);
 	//App->renderer3D->importer->LoadMeshPEI(this);
 }
 

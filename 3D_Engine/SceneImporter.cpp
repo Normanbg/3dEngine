@@ -362,98 +362,13 @@ ComponentMesh * SceneImporter::ImportMeshToResource(aiMesh * mesh, const char* p
 {
 
 	bool error = false;
-	ComponentMesh* newMesh = new ComponentMesh();
+	ComponentMesh* newMesh = nullptr;
 	uuid resourceUUID = App->resources->FindByName(peiName, Resource::ResType::Mesh);
 	if (resourceUUID != 0) {//checks if resource already exists
+		newMesh  = new ComponentMesh();
 		newMesh->SetResource(resourceUUID);
 		newMesh->CreateBBox();
-	}
-	else {/*
-		newMesh->num_vertex = mesh->mNumVertices; //-----------vertex
-		newMesh->vertex = new float3[newMesh->num_vertex];
-		memcpy(newMesh->vertex, mesh->mVertices, sizeof(float3) * newMesh->num_vertex);
-		OWN_LOG("Importing new mesh with %d vertices", newMesh->num_vertex);
-
-		//texMeshIDs[meshNum] = new_mesh->mMaterialIndex;
-		newMesh->CreateBBox(newMesh);
-
-		if (mesh->HasFaces()) { //------------indices
-			newMesh->num_index = mesh->mNumFaces * 3;
-			newMesh->index = new uint[newMesh->num_index]; // assume each face is a triangle
-			for (uint i = 0; i < mesh->mNumFaces; ++i) {
-				if (mesh->mFaces[i].mNumIndices != 3) {
-					OWN_LOG("WARNING, geometry face with != 3 indices!");
-					error = true;
-
-				}
-				else {
-					memcpy(&newMesh->index[i * 3], mesh->mFaces[i].mIndices, 3 * sizeof(uint));
-
-				}
-			}
-		}
-		if (mesh->HasNormals()) { //------------normals
-			newMesh->num_normals = newMesh->num_vertex;
-			newMesh->normals = new float3[newMesh->num_normals];
-			memcpy(newMesh->normals, mesh->mNormals, sizeof(float3) * newMesh->num_normals);
-		}
-		if (mesh->GetNumUVChannels() > 0) { //------------textureCoords
-			newMesh->num_textureCoords = newMesh->num_vertex;
-			newMesh->texturesCoords = new float2[newMesh->num_textureCoords];
-
-			for (int i = 0; i < (newMesh->num_textureCoords); i++) {
-				newMesh->texturesCoords[i].x = mesh->mTextureCoords[0][i].x;
-				newMesh->texturesCoords[i].y = mesh->mTextureCoords[0][i].y;
-			}
-		}
-
-		if (error) {
-			newMesh->CleanUp();
-			newMesh = nullptr;
-			return nullptr;
-		}
-		else {
-
-			std::string fileName = LIB_MODELS_PATH;
-			fileName += peiName;
-			fileName += OWN_FILE_FORMAT;
-			std::ofstream dataFile(fileName.c_str(), std::fstream::out | std::fstream::binary);
-			OWN_LOG("Importing file to PEI");
-
-			uint ranges[4] = { newMesh->num_index,newMesh->num_vertex, newMesh->num_normals, newMesh->num_textureCoords };
-			newMesh->num_faces = newMesh->num_index / 3;
-
-			uint size = sizeof(ranges) + sizeof(uint)*newMesh->num_index + sizeof(float3)*newMesh->num_vertex + sizeof(float3)*newMesh->num_normals + sizeof(float2) * newMesh->num_textureCoords; // numIndex + numVertex + index + vertex + normals + textureCoords
-
-			char* data = new char[size];
-			char* cursor = data;
-
-			uint bytes = sizeof(ranges);
-			memcpy(cursor, ranges, bytes);
-
-			cursor += bytes;
-			bytes = sizeof(uint)* newMesh->num_index;
-			memcpy(cursor, newMesh->index, bytes);
-
-			cursor += bytes;
-			bytes = sizeof(float3)* newMesh->num_vertex;
-			memcpy(cursor, newMesh->vertex, bytes);
-
-			cursor += bytes;
-			bytes = sizeof(float3)* newMesh->num_normals;
-			memcpy(cursor, newMesh->normals, bytes);
-
-			cursor += bytes;
-			bytes = sizeof(float2)* newMesh->num_textureCoords;
-			memcpy(cursor, newMesh->texturesCoords, bytes);
-
-			dataFile.write(data, size);
-
-			dataFile.close();
-			RELEASE_ARRAY(data);
-			cursor = nullptr;
-		}*/
-	}
+	}	
 	return newMesh;
 }
 /*
