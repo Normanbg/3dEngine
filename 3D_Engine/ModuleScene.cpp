@@ -291,33 +291,7 @@ void ModuleScene::MousePicking()
 		}
 	}
 }
-//switch (current_gizmo_operation)
-//{
-//case ImGuizmo::OPERATION::TRANSLATE:
-//{
-//	float4x4 new_trans = moved_transformation * (*it)->transform->GetGlobalTransform();
-//	(*it)->transform->SetGlobalTransform(new_trans);
-//}
-//break;
-//
-//case ImGuizmo::OPERATION::ROTATE:
-//{
-//	float4x4 new_trans = moved_transformation * (*it)->transform->GetGlobalTransform();
-//	(*it)->transform->SetGlobalTransform(new_trans);
-//}
-//break;
-//case ImGuizmo::OPERATION::SCALE:
-//{
-//	float4x4 save_trans = moved_transformation;
-//	moved_transformation = moved_transformation * last_moved_transformation.Inverted();
-//
-//	float4x4 new_trans = moved_transformation * (*it)->transform->GetGlobalTransform();
-//	(*it)->transform->SetGlobalTransform(new_trans);
-//
-//	last_moved_transformation = save_trans;
-//}
-//break;
-//}
+
 void ModuleScene::DrawGuizmo(ImGuizmo::OPERATION operation)
 {
 	ComponentTransformation* transform = gObjSelected->GetComponentTransform();
@@ -327,21 +301,20 @@ void ModuleScene::DrawGuizmo(ImGuizmo::OPERATION operation)
 		ImVec2 sceneSize = { App->gui->panelScene->width, App->gui->panelScene->height };
 
 		ImGuizmo::SetRect(pos.x, pos.y, sceneSize.x, sceneSize.y);
-		ImGuizmo::MODE mode;
 		float4x4 transMatr;
-		float t[16];
 
 		float4x4 viewMatrix, projectionMatrix;
 		glGetFloatv(GL_MODELVIEW_MATRIX, (float*)viewMatrix.v);
 		glGetFloatv(GL_PROJECTION_MATRIX, (float*)projectionMatrix.v);
-		transMatr = transform->localMatrix;
-		transMatr.Transpose();
-		ImGuizmo::SetOrthographic(false);
 
-		ImGuizmo::Manipulate((float*)viewMatrix.v, (float*)projectionMatrix.v, operation, ImGuizmo::LOCAL, transMatr.ptr(), t);
+		transMatr = transform->getGlobalMatrix().Transposed();
+
+		ImGuizmo::Manipulate((float*)viewMatrix.v, (float*)projectionMatrix.v, operation, ImGuizmo::WORLD, transMatr.ptr());
 		transMatr.Transpose();
+
 		if (ImGuizmo::IsUsing()) {
-			gObjSelected->transformComp->setLocalMatrix(transMatr);
+			//gObjSelected->transformComp->setLocalMatrix(transMatr);
+			transform->setGlobalMatrix(transMatr);
 			root->CalculateAllGlobalMatrix();
 		}
 	}

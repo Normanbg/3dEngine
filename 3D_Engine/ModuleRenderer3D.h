@@ -63,8 +63,6 @@ public:
 	inline const bool GetQuadTree() const { return _quadtree; }
 	inline const bool GetRay() const { return _ray; }
 
-	/*vec GetAvgPosFromMeshes();*/
-	   
 	void LoadDroppedFBX(char* droppedFileDir);
 	void LoadDroppedPEI(char* droppedFileDir);
 	

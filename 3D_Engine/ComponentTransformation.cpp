@@ -75,8 +75,8 @@ void ComponentTransformation::setGlobalMatrix(float4x4 newGlobalMat)
 	globalMatrix = newGlobalMat;
 	if (myGO->parent != nullptr)
 	{
-		ComponentTransformation* parentTrans = myGO->GetComponentTransform();
-		float4x4 newlocalMatrix = parentTrans->globalMatrix * globalMatrix;
+		ComponentTransformation* parentTrans = myGO->parent->GetComponentTransform();
+		float4x4 newlocalMatrix = parentTrans->getGlobalMatrix().Inverted() * globalMatrix;
 		setLocalMatrix(newlocalMatrix);
 	}
 }
