@@ -63,7 +63,7 @@ update_status ModuleScene::PreUpdate(float dt)
 update_status ModuleScene::Update(float dt) {
 
 	bool ret = true;
-	//root->CalculateAllGlobalMatrix();
+
 	if (drawRay && App->renderer3D->GetRay())
 		DebugDrawLine(line);
 
@@ -458,9 +458,14 @@ void ModuleScene::Draw() {
 	for (int i = 0; i < components.size(); i++) {
 		mesh = (ComponentMesh *)components[i];
 
-		if (App->camera->ContainsAaBox(mesh->myGO->globalAABB) == IS_IN || App->camera->ContainsAaBox(mesh->myGO->globalAABB) == INTERSECT) {//MISSING IF FRUSTUM CULLING ACTIVE!!!!!!---------------------------------------------------------
-			mesh->Draw();
+		//Frustum Culling 
+		if (App->camera->GetFrustumCulling())
+		{
+			if (App->camera->ContainsAaBox(mesh->myGO->globalAABB) != IS_OUT)
+				mesh->Draw();
 		}
+		else
+			mesh->Draw();
 	}
 	
 	if (!inGame && mainCamera != nullptr && rootQuadTree != nullptr) {

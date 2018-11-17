@@ -70,7 +70,7 @@ void ComponentTransformation::DrawInspector()
 	ImGui::Separator();
 }
 
-void ComponentTransformation::setGlobalMatrix(float4x4 newGlobalMat)
+void ComponentTransformation::setGlobalMatrix(const float4x4 newGlobalMat)
 {
 	globalMatrix = newGlobalMat;
 	if (myGO->parent != nullptr)
@@ -81,7 +81,7 @@ void ComponentTransformation::setGlobalMatrix(float4x4 newGlobalMat)
 	}
 }
 
-void ComponentTransformation::setLocalMatrix(float4x4 newLocalMat) {
+void ComponentTransformation::setLocalMatrix(const float4x4 newLocalMat) {
 	localMatrix = newLocalMat;
 	newLocalMat.Decompose(transform.position, transform.rotationQuat, transform.scale);
 	transform.rotEuler = transform.rotationQuat.ToEulerXYZ() * RADTODEG;
@@ -102,7 +102,7 @@ void ComponentTransformation::Load(Config * data)
 	UUID = data->GetUInt("UUID");
 }
 
-void ComponentTransformation::setPos(float3 _newpos)
+void ComponentTransformation::setPos(const float3 _newpos)
 {
 	transform.position = _newpos;
 	UpdateLocalMatrix();
@@ -121,14 +121,14 @@ void ComponentTransformation::setScale(float3 _newscale)
 	UpdateLocalMatrix();
 }
 
-void ComponentTransformation::setRotQuat(Quat qNewRot)
+void ComponentTransformation::setRotQuat(const Quat qNewRot)
 {
 	transform.rotationQuat = qNewRot;
 	transform.rotEuler = transform.rotationQuat.ToEulerXYZ() * RADTODEG;
 	UpdateLocalMatrix();
 }
 
-void ComponentTransformation::setRotEuler(float3 _newrot)
+void ComponentTransformation::setRotEuler(const float3 _newrot)
 {
 	transform.rotEuler = _newrot;
 	transform.rotationQuat = Quat::FromEulerXYZ(transform.rotEuler.x * DEGTORAD, transform.rotEuler.y * DEGTORAD, transform.rotEuler.z * DEGTORAD);

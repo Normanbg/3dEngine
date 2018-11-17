@@ -91,7 +91,6 @@ update_status ModuleEditorCamera::Update(float dt)
 			cameraComp->camRes->frustum.Translate(_pos);
 	}
 
-	//--------------------------------------------------------------------CHECK FOCUS TO GAME OBJECTS
 	if (App->input->GetKey(SDL_SCANCODE_F) == KEY_REPEAT) {
 		float3 dir = cameraComp->camRes->frustum.pos;
 		float dist = 10.f;
@@ -144,20 +143,6 @@ FrustumContained ModuleEditorCamera::ContainsAaBox(const AABB& refBox) const
 	return(INTERSECT);
 }
 
-void ModuleEditorCamera::UpdateProjMatrix()
-{
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	if (App->scene->inGame) {
-		ComponentCamera* mainCam = App->scene->mainCamera->GetComponentCamera();
-		glLoadMatrixf(mainCam->GetProjectionMatrix());
-	}
-	else
-		glLoadMatrixf(cameraComp->GetProjectionMatrix());
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-}
-
 void ModuleEditorCamera::ConfigInfo(){
 	float mouseS = GetMouseSensit();
 	float scrollS = GetScrollSensit();
@@ -165,7 +150,6 @@ void ModuleEditorCamera::ConfigInfo(){
 	float ar = cameraComp->camRes->GetAspectRatio();
 	float nearPl = cameraComp->camRes->frustum.nearPlaneDistance;
 	float farPl = cameraComp->camRes->frustum.farPlaneDistance;
-	bool projChanged = false;
 
 	if (ImGui::DragFloat("Mouse Speed", &mouseS, 0.01f))
 		mouseSensitivity = mouseS;
@@ -173,22 +157,24 @@ void ModuleEditorCamera::ConfigInfo(){
 		scrollWheelSensitivity = scrollS;
 	if (ImGui::DragFloat("Near Plane", &nearPl, 0.5f)) {
 		cameraComp->SetNearPlaneDistance(nearPl);
-		projChanged = true;
 	}
 	if (ImGui::DragFloat("Far Plane", &farPl, 0.5f)) {
 		cameraComp->SetFarPlaneDistance(farPl);
-		projChanged = true;
 	}
 	if (ImGui::SliderFloat("FOV", &fov, 30.f, 175.f)) {
-		cameraComp->camRes->SetFOV(fov);
-		projChanged = true;
+		cameraComp->camRes->SetFOV(fov);	
 	}
 	if (ImGui::SliderFloat("Aspect Ratio", &ar, 0.1f, 3.5f)) {
 		cameraComp->camRes->SetAspectRatio(ar);
-		projChanged = true;
 	}
-	if (projChanged)
-		UpdateProjMatrix();
+	ImVec2 size = ImGui::GetContentRegionAvail();
+	ImGui::PushStyleColor(ImGuiCol_Header, { DarkCyan.r, DarkCyan.g,DarkCyan.b, DarkCyan.a });
+	ImGui::PushStyleColor(ImGuiCol_HeaderHovered, { Cyan.r, Cyan.g,Cyan.b, Cyan.a });
+	if (ImGui::CollapsingHeader("Tools")) {
+		ImGui::Checkbox("Frustum Culling", &frustumCulling);
+	}
+	ImGui::PopStyleColor();
+	ImGui::PopStyleColor();
 }
 
 
@@ -200,6 +186,11 @@ const float ModuleEditorCamera::GetMouseSensit() const
 const float ModuleEditorCamera::GetScrollSensit() const
 {
 	return scrollWheelSensitivity;
+}
+
+const bool ModuleEditorCamera::GetFrustumCulling() const
+{
+	return frustumCulling;
 }
 
 

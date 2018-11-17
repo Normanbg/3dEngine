@@ -247,6 +247,7 @@ void UIPanelConfig::Draw() {
 	
 	if (ImGui::CollapsingHeader("Camera")) {
 		App->camera->ConfigInfo();
+		
 	}
 	ImGui::End();
 

@@ -8,7 +8,7 @@ struct Transform
 	float3 position = float3::zero;
 	float3 rotEuler = float3::zero;
 	float3 scale = float3::one;
-	Quat rotationQuat = Quat::identity; // should only be one and have functions to transform it 
+	Quat rotationQuat = Quat::identity; 
 };
 
 
@@ -22,12 +22,14 @@ public:
 	void CleanUp() override;
 	void DrawInspector() override;
 
-	void setGlobalMatrix(float4x4 newGlobalMat);
-	void setLocalMatrix(float4x4 newLocalMat);
-	void setPos(float3 _newpos);
+	void setGlobalMatrix(const float4x4 newGlobalMat);
+	void setLocalMatrix(const float4x4 newLocalMat);
+	void setPos(const float3 _newpos);
+	void setRotQuat(const Quat qNewRot);
+	void setRotEuler(const float3 _newrot);
+
 	void setScale(float3 _newscale);
-	void setRotQuat(Quat qNewRot);
-	void setRotEuler(float3 _newrot);
+
 	const float3 getPos() const;
 	const float3 getScale() const;
 	const float3 getEulerRot() const;

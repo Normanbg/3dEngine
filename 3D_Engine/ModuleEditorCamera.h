@@ -26,14 +26,15 @@ public:
 	bool CleanUp();
 
 	FrustumContained ContainsAaBox(const AABB & refBox) const;
-	void UpdateProjMatrix();
 	void ConfigInfo();
 
 	const float GetMouseSensit() const;
 	const float GetScrollSensit() const;
+	const bool GetFrustumCulling() const;
 
 public:
 	ComponentCamera* cameraComp;
+
 private:
 	void MouseMovement(float dt);
 	void Orbit(float dt);
@@ -41,6 +42,7 @@ private:
 private:
 	float mouseSensitivity = 0.25f;
 	float scrollWheelSensitivity = 10.0f;
+	bool frustumCulling = true;
 };
 
 #endif //__MODULE_EDITOR_CAM_H__
