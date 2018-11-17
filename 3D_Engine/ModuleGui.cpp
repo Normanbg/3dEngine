@@ -10,6 +10,7 @@
 #include "UIPanelConfig.h"
 #include "UIPanelConsole.h"
 #include "UIPanelInspector.h"
+#include "UIPanelAssets.h"
 #include "UIPanelHierarchy.h"
 #include "UIPanelMaterials.h"
 #include "UIPanelScene.h"
@@ -57,6 +58,7 @@ bool ModuleGui::Start()
 	uiPanels.push_back(panelMaterial = new UIPanelMaterials("Materials", 0, 399, 240, 406, true));
 	uiPanels.push_back(panelScene = new UIPanelScene("Scene", 0, 399, 240, 406, true));
 	uiPanels.push_back(panelSceneInfo = new UIPanelSceneInfo("Scene Info", 0, 399, 240, 406, true));
+	uiPanels.push_back(panelAssets = new UIPanelAssets("Assets", 0, 15, 250, 550, true));
 
 	ImGui::CreateContext();
 	demoShowcase = false;

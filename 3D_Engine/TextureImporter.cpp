@@ -161,34 +161,18 @@ bool TextureImporter::ImportToDDS( const char* texPath, const char* texName, std
 	return ret;
 }
 
-void TextureImporter::LoadDroppedTexture(char * droppedFileDire)
+void TextureImporter::ManageDroppedTexture(char * droppedFileDire)
 {
-
-
-	std::string texName;
-	std::string extension;
-
-	App->fileSys->GetNameFromPath(droppedFileDire, nullptr, &texName, nullptr, nullptr);
-	App->fileSys->GetNameFromPath(droppedFileDire, nullptr, nullptr, nullptr, &extension);
-	if (extension != DDS_FORMAT) {
-		App->texImporter->ImportToDDS(droppedFileDire, texName.c_str());
+	App->fileSys->NormalizePath(droppedFileDire);
+	if (App->fileSys->ExistsFile(droppedFileDire)) {
+		OWN_LOG("Texture already in Assets folder!")
 	}
-
-	//if (App->textures->CheckIfImageAlreadyLoaded(texName.c_str()) == -1) {
-	//	Material* mat = new Material;
-	//	if (extension == DDS_FORMAT) {
-	//		mat->textureID = App->renderer3D->texImporter->LoadTexture(droppedFileDire, mat);
-	//	}
-	//	else {
-	//		std::string texPath;
-
-	//		texPath = LIB_TEXTURES_PATH + texName + DDS_FORMAT;
-	//		mat->textureID = App->renderer3D->texImporter->LoadTexture(texPath.c_str(), mat);
-	//	}
-	//	mat->name = texName;
-	//	App->textures->AddMaterial(mat);
-	//}
 	else {
-		OWN_LOG("Material already loeaded");
+		std::string path = TEXTURES_PATH;
+		std::string name;
+		App->fileSys->GetNameFromPath(droppedFileDire, nullptr, nullptr, &name, nullptr);
+		path += name;
+		App->fileSys->Copy(droppedFileDire, path.c_str());
 	}
+	
 }

@@ -210,6 +210,30 @@ void ModuleFileSystem::GetNameFromPath(const char * full_path, std::string * pat
 
 }
 
+void ModuleFileSystem::ShiftPath(std::string* path)
+{
+	std::string fullpath = *path;
+	uint posSlash = fullpath.find_last_of("/");
+
+	if (fullpath.size() > posSlash) {
+		if (fullpath.size() - posSlash == 1) {
+			fullpath = fullpath.substr(0, posSlash).c_str();
+			posSlash = fullpath.find_last_of("/");	
+			if (posSlash > fullpath.size()) {
+				return;
+			}
+		}
+		*path = fullpath.substr(0, posSlash + 1).c_str();
+	}
+
+}
+
+ bool ModuleFileSystem::ExistsFile(const char * path) const {
+	
+	bool ret =  PHYSFS_exists(path);
+	return ret;
+}
+
 void ModuleFileSystem::NormalizePath(char * full_path, bool toLower) const
 {
 	uint len = strlen(full_path);
@@ -262,11 +286,11 @@ bool ModuleFileSystem::Copy(const char * source, const char * destination)
 	return ret;
 }
 
-bool ModuleFileSystem::IsMetaFile(std::string file)
+bool ModuleFileSystem::IsMetaFile(std::string file) const
 {
 	if (file.size() >5 ) {
-		file = file.substr(file.size() - 5);
-		if (file == META_FORMAT) {
+		
+		if (file.substr(file.size() - 5) == META_FORMAT) {
 			return true;
 		}
 	}
@@ -287,7 +311,7 @@ uint ModuleFileSystem::GetLastModification(const char * file) const
 
 
 //if recursive == true searches all files in directory including subfolders
-void ModuleFileSystem::GetFilesFromDir(const char* directory, std::vector<std::string> & files, std::vector<std::string> & directories, bool recursive) const
+void ModuleFileSystem::GetFilesFromDir(const char* directory, std::vector<std::string> & files, std::vector<std::string> & directories, bool recursive, bool ignoreMeta) const
 {
 	char **filesInDir = PHYSFS_enumerateFiles(directory);
 	char **filePointer;
@@ -296,28 +320,34 @@ void ModuleFileSystem::GetFilesFromDir(const char* directory, std::vector<std::s
 
 	for (filePointer = filesInDir; *filePointer != nullptr; filePointer++)
 	{
-		if (PHYSFS_isDirectory((dir + *filePointer).c_str()))
-			directories.push_back(*filePointer);
+		if (PHYSFS_isDirectory((dir + *filePointer).c_str())) {
+			std::string dire = *filePointer;
+			dire += "/";			
+			directories.push_back(dire);
+		}
 		else {
-			std::string dir = directory;
-			dir += *filePointer;
-			files.push_back(dir.c_str() );
+			std::string file = directory;
+			file += *filePointer;
+			if (ignoreMeta) {
+				if (IsMetaFile(file)) {
+					continue;
+				}
+			}
+			files.push_back(file.c_str() );
 		}
 	}
 	if (recursive && directories.size() > 0) {
 		std::vector<std::string> newDirs;
 		for (int i = 0; i < directories.size(); i++) {
-			std::string dir = directory + directories[i] + "/";
+			std::string dir = directory + directories[i] ;
 			GetFilesFromDir(dir.c_str(), files, newDirs);
 			if (newDirs.size() > 0) {
 				for (int j = newDirs.size()-1; j >=0 ; j--) {
-					directories.push_back(directories[i] + "/" + newDirs[j]);
+					directories.push_back(directories[i] + newDirs[j]);
 					newDirs.pop_back();
 				}
 			}
 		}
-		
-	
 	}
 	PHYSFS_freeList(filesInDir);
 }

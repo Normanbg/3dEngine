@@ -139,33 +139,33 @@ update_status ModuleInput::PreUpdate(float dt)
 					break;
 				case FBX:
 					OWN_LOG("Dropped .fbx file");
-					App->renderer3D->LoadDroppedFBX(dropped_filedir);
+					App->renderer3D->ManageDroppedFBX(dropped_filedir);
 					
 					break;
 				case PNG:
 					OWN_LOG("Dropped .png file");
-					App->texImporter->LoadDroppedTexture(dropped_filedir);
+					App->texImporter->ManageDroppedTexture(dropped_filedir);
 					
 					break;
 				case JPG:
 					OWN_LOG("Dropped .jpg file");
-					App->texImporter->LoadDroppedTexture(dropped_filedir);
+					App->texImporter->ManageDroppedTexture(dropped_filedir);
 
 					break;
 				case DDS:
 					OWN_LOG("Dropped .dds file");
 					
-					App->texImporter->LoadDroppedTexture(dropped_filedir);
+					App->texImporter->ManageDroppedTexture(dropped_filedir);
 					break;
 				case PEI:
 					OWN_LOG("Dropped .pei file");
-					App->renderer3D->LoadDroppedPEI(dropped_filedir);
+					//App->renderer3D->ManageDroppedPEI(dropped_filedir);
 					
 					break;
 				case TGA:
 					OWN_LOG("Dropped .tga file");
 
-					App->texImporter->LoadDroppedTexture(dropped_filedir);
+					App->texImporter->ManageDroppedTexture(dropped_filedir);
 					break;			
 				}
 			break;

@@ -50,6 +50,10 @@ public:
 	void SetRay(bool active) { _ray = active; };
 	void SetBoundingBox(bool active);
 
+
+	void ManageDroppedFBX(char* droppedFileDir);
+	//void ManageDroppedPEI(char* droppedFileDir);
+
 	inline const bool GetDepthTest() const { return _depthTest; }
 	inline const bool GetCullFace() const { return _cullFace; }
 	inline const bool GetLighting()const { return _lighting; }
@@ -62,9 +66,6 @@ public:
 	inline const bool GetGrid() const { return _grid; }
 	inline const bool GetQuadTree() const { return _quadtree; }
 	inline const bool GetRay() const { return _ray; }
-
-	void LoadDroppedFBX(char* droppedFileDir);
-	void LoadDroppedPEI(char* droppedFileDir);
 	
 	const uint GetFBOTexture();
 

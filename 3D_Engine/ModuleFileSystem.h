@@ -29,14 +29,16 @@ public:
 
 	bool Copy(const char * source, const char * destination);
 
-	bool IsMetaFile(std::string file);
+
+	bool IsMetaFile(std::string file) const;
 	uint GetLastModification(const char* file) const;
 	void GetUUID_PEI(const char* fullName, std::string * uuid, std::string * pei);
 
-	void GetFilesFromDir(const char * directory, std::vector<std::string>& fileList, std::vector<std::string>& directoryList, bool recursive = false) const;
+	void GetFilesFromDir(const char * directory, std::vector<std::string>& fileList, std::vector<std::string>& directoryList, bool recursive = false,bool ignoreMeta = false) const;
 
 	void GetNameFromPath(const char * full_path, std::string * path, std::string * file, std::string * fileWithExtension, std::string * extension) const;
-
+	void ShiftPath(std::string* path);
+	bool ExistsFile(const char* path) const;
 };
 
 #endif // __MODULE_FS_H__
