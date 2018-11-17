@@ -136,12 +136,14 @@ uuid ModuleResources::FindByExportedFile(const char * name, Resource::ResType ty
 
 uuid ModuleResources::FindByName(const char * fileInAssets, Resource::ResType type) const
 {
-	std::string fileName = fileInAssets;
+	if (fileInAssets != nullptr) {
+		std::string fileName = fileInAssets;
 
-	for (std::map<uuid, Resource*>::const_iterator it = resources.begin(); it != resources.end(); it++) {
-		if (it->second->GetNameStr() == fileName) {
-			if (type == Resource::ResType::None || type == it->second->GetType())
-			return it->first;
+		for (std::map<uuid, Resource*>::const_iterator it = resources.begin(); it != resources.end(); it++) {
+			if (it->second->GetNameStr() == fileName) {
+				if (type == Resource::ResType::None || type == it->second->GetType())
+					return it->first;
+			}
 		}
 	}
 	return 0;

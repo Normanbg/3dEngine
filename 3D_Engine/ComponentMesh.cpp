@@ -51,17 +51,19 @@ void ComponentMesh::CleanUp()
 void ComponentMesh::DrawInspector() {
 	ImGui::Separator();
 	ImGui::TextColored(ImVec4(0.25f, 0.25f, 0.25f, 1), "UUID: %i", GetUUID());
+	if(HasMesh()){
 	ImGui::Text("Resource UUID: %i", resourceMesh->GetUUID());
 	ImGui::Text("");
 	ImGui::Text("Vertices: %d", resourceMesh->num_index);
 	ImGui::Text("Triangles: %d", resourceMesh->num_faces);
 	ImGui::Text("Indices: %d", resourceMesh->num_index);
 	ImGui::Text("Normals: %d \n", resourceMesh->num_normals);
-
+	}
+	
 	const char* currentMaterial = NULL;
 	if (material != nullptr) {
 		currentMaterial = material->GetTextureName();
-	
+
 	}
 	if (ImGui::BeginCombo("Material", currentMaterial)) 
 	{
@@ -130,7 +132,10 @@ void ComponentMesh::Draw()
 	glMultMatrixf(myGO->transformComp->getGlobalMatrix().Transposed().ptr());
 	showWireframe ? glPolygonMode(GL_FRONT_AND_BACK, GL_LINE) : glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); // wireframe
 
+	
 	DrawMesh();
+	
+	
 
 	if (myGO->GetSelected()) {// It will redraw mesh with wireframe in blue if the gameObject is selected
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -139,7 +144,7 @@ void ComponentMesh::Draw()
 		DrawMesh();
 		drawWire = true;
 	}
-
+	
 	if (App->renderer3D->GetNormals()) {
 		for (int j = 0; j < resourceMesh->num_normals; j++) {
 			glBegin(GL_LINES);

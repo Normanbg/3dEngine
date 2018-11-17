@@ -49,7 +49,7 @@ void UIPanelInspector::Draw() {
 		for (std::vector<Component*>::iterator itComponents = componentsRecover.begin(); itComponents != componentsRecover.end(); itComponents++) {
 			DrawComponent((*itComponents));
 		}
-		if (ImGui::CollapsingHeader("ADD COMPONENT")) {
+		if (ImGui::CollapsingHeader("Add Component")) {
 		
 			if (!go->GetComponentCamera()) {
 				if (ImGui::Button("Camera")) {
@@ -57,11 +57,11 @@ void UIPanelInspector::Draw() {
 				}
 			}
 			///NOW IF WE USE THIS IT CRASHES BECAUSE WE ARE NOT ABLE TO SELECT ALL THE MESHES AND MATERIALS TO ADD
-			/*if (!go->GetComponentMaterial()) {
+			if (!go->GetComponentMaterial()) {
 				if (ImGui::Button("Material")) {
 					go->AddComponent(MATERIAL);
 				}
-			}
+			}/*
 			if (!go->GetComponentMesh()) {
 				if (ImGui::Button("Mesh")) {
 					go->AddComponent(MESH);

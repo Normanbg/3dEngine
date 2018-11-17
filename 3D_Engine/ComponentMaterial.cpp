@@ -31,14 +31,16 @@ void ComponentMaterial::DrawInspector()
 {
 	ImGui::Separator();
 	ImGui::TextColored(ImVec4(0.25f, 0.25f, 0.25f, 1), "UUID: %i", GetUUID());
-	ImGui::Text("Resource UUID: %i", resourceTexture->GetUUID());
+	
 	if (resourceTexture!= nullptr) {
+		ImGui::Text("Resource UUID: %i", resourceTexture->GetUUID());
 		ImGui::Text(resourceTexture->GetName());
 
 		ImGui::Text("Texture size:\nWidth: %dpx \nHeight: %dpx ", resourceTexture->width, resourceTexture->height);
 		float windowSize = ImGui::GetWindowContentRegionWidth();
 		ImGui::Image((void*)(resourceTexture->gpuID), ImVec2(windowSize, windowSize));
 	}
+
 	ImGui::Text("Color:");
 	ImGui::ColorPicker3("Color##2f", (float*)&colors);
 	ImGui::Separator();

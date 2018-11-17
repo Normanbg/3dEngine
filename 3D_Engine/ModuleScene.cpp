@@ -462,10 +462,13 @@ void ModuleScene::Draw() {
 		if (App->camera->GetFrustumCulling())
 		{
 			if (App->camera->ContainsAaBox(mesh->myGO->globalAABB) != IS_OUT)
-				mesh->Draw();
+				if (mesh->HasMesh()) { mesh->Draw(); }
 		}
 		else
-			mesh->Draw();
+			if (mesh->HasMesh()) {
+
+				mesh->Draw();
+			}
 	}
 	
 	if (!inGame && mainCamera != nullptr && rootQuadTree != nullptr) {
