@@ -53,7 +53,6 @@ public:
 	void SetQuadTree();
 	void MousePicking();
 
-	///-----------------------
 	void DrawGuizmo(ImGuizmo::OPERATION operation);
 public:
 
