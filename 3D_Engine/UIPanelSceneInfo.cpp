@@ -77,10 +77,12 @@ void UIPanelSceneInfo::Draw()
 	ImGui::PopStyleColor();
 
 
-
+	ImGui::SliderFloat("Time Scale", App->time->GetTimeScale(), 0, 3.0f, "%.1f");
+	if (ImGui::SmallButton("Reset")) { App->time->SetTimeScale(1.0f); }
+	ImGui::Text("");
 	ImGui::Text("Real Time: %.1f", App->time->GetRealTimeSec());
 	ImGui::Text("Game Time: %.1f", App->time->GetGameTimeSec());
-	ImGui::SliderFloat("Time Scale", App->time->GetTimeScale(), 0, 3.0f, "%.1f");
+	
 	ImGui::Text("");
 	ImGui::Text("Game dt: %.3f", App->time->GetGameDeltaTime());
 	ImGui::End();

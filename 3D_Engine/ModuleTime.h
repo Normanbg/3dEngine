@@ -35,8 +35,8 @@ public:
 	const bool IsPaused() const { return paused; }
 	const bool IsPlaying() const { return playing; }
 
-	float* GetTimeScale() { return &timeScale; }
-
+	float* GetTimeScale()  { return &timeScale; }
+	void SetTimeScale(float val) { timeScale = val; }
 private:
 	float timeScale = 1.0f;
 	float gameDeltaTime = 0.0f;
