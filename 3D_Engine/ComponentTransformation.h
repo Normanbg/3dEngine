@@ -35,7 +35,8 @@ public:
 	float4x4 getGlobalMatrix() const;
 	float4x4 getLocalMatrix() const;
 
-	void UpdateLocalMatrix();
+	void UpdateLocalMatrixfromTrans();
+	void UpdateLocalMatrixfromGlobal();
 	void Save(Config& data) const;
 	void Load(Config* data);
 

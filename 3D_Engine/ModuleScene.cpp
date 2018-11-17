@@ -323,28 +323,27 @@ void ModuleScene::DrawGuizmo(ImGuizmo::OPERATION operation)
 	ComponentTransformation* transform = gObjSelected->GetTransformComponent();
 	if (transform) {
 		ImGuizmo::Enable(true);
-		ImVec2 pos = { App->gui->panelScene->positionX,App->gui->panelScene->positionY };
-		ImVec2 sceneSize = { App->gui->panelScene->width,App->gui->panelScene->height };
+		ImVec2 pos = { App->gui->panelScene->positionX, App->gui->panelScene->positionY };
+		ImVec2 sceneSize = { App->gui->panelScene->width, App->gui->panelScene->height };
 
 		ImGuizmo::SetRect(pos.x, pos.y, sceneSize.x, sceneSize.y);
 		ImGuizmo::MODE mode;
-		float4x4* transMatr;
+		float4x4 transMatr;
 		float t[16];
 
 		float4x4 viewMatrix, projectionMatrix;
 		glGetFloatv(GL_MODELVIEW_MATRIX, (float*)viewMatrix.v);
 		glGetFloatv(GL_PROJECTION_MATRIX, (float*)projectionMatrix.v);
-		transMatr = &transform->localMatrix;
-		transMatr->Transpose();
+		transMatr = transform->localMatrix;
+		transMatr.Transpose();
 		ImGuizmo::SetOrthographic(false);
 
-		ImGuizmo::Manipulate((float*)viewMatrix.v, (float*)projectionMatrix.v, operation, ImGuizmo::LOCAL, (float*)transMatr, t);
-		transMatr->Transpose();
-
+		ImGuizmo::Manipulate((float*)viewMatrix.v, (float*)projectionMatrix.v, operation, ImGuizmo::LOCAL, transMatr.ptr(), t);
+		transMatr.Transpose();
 		if (ImGuizmo::IsUsing()) {
+			gObjSelected->transformComp->setLocalMatrix(transMatr);
 			root->CalculateAllGlobalMatrix();
 		}
-
 	}
 }
 
