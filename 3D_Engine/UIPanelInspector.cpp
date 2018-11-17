@@ -67,12 +67,18 @@ void UIPanelInspector::Draw() {
 					mat = nullptr;
 					m = nullptr;
 				}
-			}/*
+			}
 			if (!go->GetComponentMesh()) {
 				if (ImGui::Button("Mesh")) {
-					go->AddComponent(MESH);
+					ComponentMesh* m =(ComponentMesh*) go->AddComponent(MESH);
+					ComponentMaterial* mat = go->GetComponentMaterial();
+					if (mat) {
+						m->SetMaterial(mat);
+					}
+					mat = nullptr;
+					m = nullptr;
 				}
-			}*/
+			}
 		}
 
 
