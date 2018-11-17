@@ -1,6 +1,7 @@
 #include "ComponentMaterial.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleResources.h"
+#include "GameObject.h"
 
 #include "mmgr/mmgr.h"
 
@@ -32,6 +33,36 @@ void ComponentMaterial::DrawInspector()
 	ImGui::Separator();
 	ImGui::TextColored(ImVec4(0.25f, 0.25f, 0.25f, 1), "UUID: %i", GetUUID());
 	
+	const char* currentMaterial = NULL;
+	if (resourceTexture != nullptr) {
+		currentMaterial = resourceTexture->GetName();
+	}
+	if (ImGui::BeginCombo("Material", currentMaterial))
+	{
+		std::vector<Resource*> mat = App->resources->GetResourcesListType(Resource::ResType::Texture);
+
+		for (int i = 0; i < mat.size(); i++)
+		{
+			bool is_selected = false;
+			if (currentMaterial != nullptr) {
+				bool is_selected = (strcmp(currentMaterial, mat[i]->GetName()) == 0);
+			}
+			if (ImGui::Selectable(mat[i]->GetName(), is_selected)) {
+				currentMaterial = mat[i]->GetName();
+				SetResource(App->resources->FindByName(mat[i]->GetName(), Resource::ResType::Texture));
+								
+				if (is_selected) {
+					ImGui::SetItemDefaultFocus();
+				}
+
+			}
+
+
+		}
+		ImGui::EndCombo();
+	}
+	currentMaterial = nullptr;
+	ImGui::Separator();
 	if (resourceTexture!= nullptr) {
 		ImGui::Text("Resource UUID: %i", resourceTexture->GetUUID());
 		ImGui::Text(resourceTexture->GetName());
@@ -41,7 +72,15 @@ void ComponentMaterial::DrawInspector()
 		ImGui::Image((void*)(resourceTexture->gpuID), ImVec2(windowSize, windowSize));
 	}
 
-	ImGui::Text("Color:");
+	ImGui::Text("Color:"); ImGui::SameLine();
+	ImGui::TextDisabled("(?)");
+	if (ImGui::IsItemHovered())	{//ImguiTip
+		ImGui::BeginTooltip();
+		ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+		ImGui::TextUnformatted("Color is only shown if no texture is drawn");
+		ImGui::PopTextWrapPos();
+		ImGui::EndTooltip();
+	}
 	ImGui::ColorPicker3("Color##2f", (float*)&colors);
 	ImGui::Separator();
 }
@@ -95,5 +134,11 @@ void ComponentMaterial::Load(Config * data)
 	if (matName != "NoName") {
 		resourceTexture =(ResourceTexture*) App->resources->Get(App->resources->FindByName(matName.c_str(), Resource::ResType::Texture));
 		resourceTexture->LoadInMemory();
+	}
+	ComponentMesh* linkMesh = nullptr;
+	if (linkMesh = myGO->GetComponentMesh()) {
+		if (linkMesh->HasMaterial() == false) {
+			linkMesh->SetMaterial(this);
+		}
 	}
 }

@@ -48,6 +48,7 @@ public:
 	ResourceMesh* GetResourceMesh() const{ return resourceMesh; }
 
 	const bool HasMesh() const;
+	const bool HasMaterial() const;
 	
 	void Draw();
 

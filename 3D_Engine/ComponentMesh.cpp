@@ -60,46 +60,33 @@ void ComponentMesh::DrawInspector() {
 	ImGui::Text("Normals: %d \n", resourceMesh->num_normals);
 	}
 	
-	const char* currentMaterial = NULL;
-	if (material != nullptr) {
-		currentMaterial = material->GetTextureName();
+	const char* currentMesh = NULL;
+	if (resourceMesh != nullptr) {
+		currentMesh = resourceMesh->GetName();
 
 	}
-	if (ImGui::BeginCombo("Material", currentMaterial)) 
+	if (ImGui::BeginCombo("Mesh PEI", currentMesh))
 	{
-		std::vector<Resource*> mat = App->resources->GetResourcesListType(Resource::ResType::Texture);
+		std::vector<Resource*> mesh = App->resources->GetResourcesListType(Resource::ResType::Mesh);
 			
 		// change by GetMaterials List to initiate it with label NO TEXTURE
-		for (int i = 0; i < mat.size(); i++)
+		for (int i = 0; i < mesh.size(); i++)
 		{
 			bool is_selected = false;
-			if (currentMaterial != nullptr) {
-				bool is_selected = (strcmp(currentMaterial, mat[i]->GetName()) == 0);
+			if (currentMesh != nullptr) {
+				bool is_selected = (strcmp(currentMesh, mesh[i]->GetName()) == 0);
 			}
-			if (ImGui::Selectable(mat[i]->GetName(), is_selected)) {
-				currentMaterial = mat[i]->GetName();
-				ComponentMaterial* compMat = myGO->GetComponentMaterial();
-
-				if (compMat == nullptr) { //if the GO has already a component Material
-					compMat = (ComponentMaterial*)myGO->AddComponent(MATERIAL);
-				}
-
-				//compMat->texture = App->textures->GetMaterialsFromName(currentMaterial);
-				compMat->SetResource(App->resources->FindByName(mat[i]->GetName(), Resource::ResType::Texture));
-				SetMaterial(compMat);
-				
-				compMat = nullptr;
+			if (ImGui::Selectable(mesh[i]->GetName(), is_selected)) {
+				currentMesh = mesh[i]->GetName();
+				SetResource(App->resources->FindByName(mesh[i]->GetName(), Resource::ResType::Mesh));				
 				if (is_selected) {
 					ImGui::SetItemDefaultFocus();
 				}
-
-			}
-		
-			
+			}					
 		}
 		ImGui::EndCombo();
 	}
-	currentMaterial = nullptr;
+	currentMesh = nullptr;
 	ImGui::Separator();
 }
 /*
@@ -124,6 +111,13 @@ const bool ComponentMesh::HasMesh() const
 	resourceMesh ? ret = true : ret = false;
 	return ret;
 
+}
+
+const bool ComponentMesh::HasMaterial() const
+{
+	bool ret;
+	material ? ret = true : ret = false;
+	return ret;
 }
 
 void ComponentMesh::Draw()
@@ -218,6 +212,7 @@ void ComponentMesh::Load(Config * data)
 	resourceMesh->LoadInMemory();
 	CreateBBox();
 	myGO->SetLocalAABB(bbox);
+	
 	//App->renderer3D->importer->LoadMeshPEI(this);
 }
 

@@ -59,7 +59,13 @@ void UIPanelInspector::Draw() {
 			///NOW IF WE USE THIS IT CRASHES BECAUSE WE ARE NOT ABLE TO SELECT ALL THE MESHES AND MATERIALS TO ADD
 			if (!go->GetComponentMaterial()) {
 				if (ImGui::Button("Material")) {
-					go->AddComponent(MATERIAL);
+					ComponentMaterial* mat =(ComponentMaterial*) go->AddComponent(MATERIAL);
+					ComponentMesh* m =go->GetComponentMesh();
+					if (m) {
+						m->SetMaterial(mat);
+					}
+					mat = nullptr;
+					m = nullptr;
 				}
 			}/*
 			if (!go->GetComponentMesh()) {
