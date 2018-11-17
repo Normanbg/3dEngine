@@ -320,7 +320,7 @@ void ModuleScene::MousePicking()
 //}
 void ModuleScene::DrawGuizmo(ImGuizmo::OPERATION operation)
 {
-	ComponentTransformation* transform = gObjSelected->GetTransformComponent();
+	ComponentTransformation* transform = gObjSelected->GetComponentTransform();
 	if (transform) {
 		ImGuizmo::Enable(true);
 		ImVec2 pos = { App->gui->panelScene->positionX, App->gui->panelScene->positionY };

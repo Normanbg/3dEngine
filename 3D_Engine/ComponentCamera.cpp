@@ -97,7 +97,7 @@ void ComponentCamera::DebugDraw(){
 		camRes->DebugDraw();
 }
 
-float * ComponentCamera::GetViewMatrix() const
+const float * ComponentCamera::GetViewMatrix() const
 {
 	static float4x4 m;
 
@@ -107,7 +107,7 @@ float * ComponentCamera::GetViewMatrix() const
 	return (float*)m.v;
 }
 
-float * ComponentCamera::GetProjectionMatrix() const
+const float * ComponentCamera::GetProjectionMatrix() const
 {
 	static float4x4 m;
 
@@ -116,7 +116,7 @@ float * ComponentCamera::GetProjectionMatrix() const
 
 }
 
-Frustum ComponentCamera::GetFrustum() const
+const Frustum ComponentCamera::GetFrustum() const
 {
 	return camRes->frustum;
 }

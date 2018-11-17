@@ -29,8 +29,8 @@ public:
 	void UpdateProjMatrix();
 	void ConfigInfo();
 
-	float GetMouseSensit();
-	float GetScrollSensit();
+	const float GetMouseSensit() const;
+	const float GetScrollSensit() const;
 
 public:
 	ComponentCamera* cameraComp;

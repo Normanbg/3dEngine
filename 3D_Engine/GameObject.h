@@ -50,14 +50,15 @@ public:
 	void GetComponents(ComponentType type, std::vector<Component*>& components);	
 	void SetParent(GameObject* parent);
 	
-	ComponentTransformation* GetTransformComponent();
-	ComponentCamera* GetComponentCamera();
-	ComponentMaterial * GetComponentMaterial();
-	ComponentMesh * GetComponentMesh();
+	//DO NOT USE CONST FOR COMPONENTS AS THEY HAVE TO INITIALIZE OTHER COMPONENTS, ONLY FOR THE FUNCTION
+	ComponentTransformation* GetComponentTransform() const;
+	ComponentCamera* GetComponentCamera() const;
+	ComponentMaterial * GetComponentMaterial() const;
+	ComponentMesh * GetComponentMesh() const;
 
 	ComponentMaterial* GetComponentMaterial(const uuid UUID);
 
-	bool GetSelected();
+	const bool GetSelected() const;
 
 
 	inline const uuid GetUUID() { return UUID; }

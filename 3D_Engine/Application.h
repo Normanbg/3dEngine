@@ -128,18 +128,18 @@ public:
 	Uint32 last_frame_ms;
 	Uint32 frames_on_last_update;
 
-	float GetTimeScale()const;
+	const float GetTimeScale()const;
 	void SetTimeScale(float ts, int frameNumber = -1);
 	void PauseGame(bool pause);
 
 	
-	inline float GetTotalVideoMem() const {return totalVideoMemF; }
-	inline float GetCurrentVideoMem() const { return currentVideoMemF; }
-	inline float GetAvaliableVideoMem() const { return availableVideoMemF; }
-	inline float GetReservedVideoMem() const { return reservedVideoMemF; }
+	inline const float GetTotalVideoMem() const {return totalVideoMemF; }
+	inline const float GetCurrentVideoMem() const { return currentVideoMemF; }
+	inline const float GetAvaliableVideoMem() const { return availableVideoMemF; }
+	inline const float GetReservedVideoMem() const { return reservedVideoMemF; }
 
 	void SetOrganization(const char* newName);
-	std::string GetOrganization() const;
+	const std::string GetOrganization() const;
 
 private:
 

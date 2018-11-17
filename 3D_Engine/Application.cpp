@@ -275,7 +275,7 @@ void Application::SetFramerateCap(Uint32 cap, int frames)
 	frames_to_framerate_reset = frames;
 }
 
-float Application::GetTimeScale() const
+const float Application::GetTimeScale() const
 {
 	return time_scale;
 }
@@ -298,7 +298,7 @@ void Application::SetOrganization(const char* newName)
 
 
 
- std::string Application::GetOrganization() const
+ const std::string Application::GetOrganization() const
 {
 	return _organization;
 }
