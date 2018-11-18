@@ -23,9 +23,10 @@ bool ComponentMaterial::Update()
 void ComponentMaterial::CleanUp()
 {
 	if (HasTexture()) {
-		resourceTexture->FreeInMemory();
+		resourceTexture->CleanUp();
 	}
 	resourceTexture = nullptr;
+	myGO = nullptr;
 }
 
 void ComponentMaterial::DrawInspector()
@@ -89,6 +90,7 @@ void ComponentMaterial::SetResource(uuid resource)
 {
 	resourceTexture = (ResourceTexture*)App->resources->Get(resource);
 	resourceTexture->LoadInMemory();
+	resourceUUID = resource;
 }
 
 const uint ComponentMaterial::GetTexID() const

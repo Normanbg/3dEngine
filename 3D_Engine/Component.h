@@ -21,10 +21,7 @@ public:
 	Component() { 
 		UUID = App->scene->GetRandomUUID();
 	}
-	~Component() {
-		delete myGO;
-		myGO = nullptr;		
-	}
+	~Component() {	}
 
 	virtual void Enable() { active = true; }
 	virtual bool PreUpdate() { return true; }

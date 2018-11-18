@@ -1,6 +1,9 @@
 #include "ModuleTime.h"
 #include "ModuleScene.h"
 
+
+#include "mmgr/mmgr.h"
+
 ModuleTime::ModuleTime(bool start_enabled) : Module(start_enabled) {
 	
 }
@@ -59,5 +62,6 @@ void ModuleTime::Stop()
 	realTimeClock.SetZero();
 	playing = false;
 	gameClock = 0;
+	gameDeltaTime = 0;
 }
 

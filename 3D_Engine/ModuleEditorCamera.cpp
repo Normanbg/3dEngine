@@ -45,7 +45,8 @@ bool ModuleEditorCamera::Start()
 bool ModuleEditorCamera::CleanUp()
 {
 	OWN_LOG("Cleaning camera");
-
+	cameraComp->CleanUp();
+	RELEASE(cameraComp);
 	return true;
 }
 

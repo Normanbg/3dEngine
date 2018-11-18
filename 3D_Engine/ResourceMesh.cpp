@@ -3,6 +3,8 @@
 #include "Config.h"
 
 
+#include "mmgr/mmgr.h"
+
 #pragma comment (lib, "glu32.lib")
 #pragma comment (lib, "opengl32.lib") 
 #pragma comment (lib, "Glew/libx86/glew32.lib")  
@@ -43,10 +45,10 @@ void ResourceMesh::FreeInMemory()
 			glDeleteBuffers(1, &id_normals);
 			id_normals = -1;
 		}
-		index = nullptr;
-		vertex = nullptr;
-		normals = nullptr;
-		texturesCoords = nullptr;
+		RELEASE_ARRAY(index);
+		RELEASE_ARRAY(vertex);
+		RELEASE_ARRAY(normals);
+		RELEASE_ARRAY(texturesCoords);
 
 		loaded = false;
 	}
@@ -63,9 +65,9 @@ void ResourceMesh::Load(const Config & config)
 
 void ResourceMesh::CleanUp()
 {	
-	FreeInMemory();
-	
-
+	if (loaded) {
+		FreeInMemory();
+	}
 }
 
 void ResourceMesh::GenerateBuffersGPU()

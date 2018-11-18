@@ -2,6 +2,10 @@
 #include "ModuleGUI.h"
 #include "Application.h"
 #include "Globals.h"
+
+
+#include "mmgr/mmgr.h"
+
 void log(const char file[], int line, const char* format, ...)
 {
 	static char tmp_string[4096];

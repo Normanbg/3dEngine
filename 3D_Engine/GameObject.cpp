@@ -88,6 +88,7 @@ void GameObject::CleanUp(){
 	if (components.empty() == false) {
 		for (int i = components.size() - 1; i >= 0; i--) {
 			components[i]->CleanUp();
+			RELEASE(components[i]);
 		}
 	}
 	components.clear();
@@ -95,6 +96,7 @@ void GameObject::CleanUp(){
 	if (childrens.empty() == false) {
 		for (int i = childrens.size() - 1; i >= 0; i--) {
 			childrens[i]->CleanUp();
+			RELEASE(childrens[i]);
 		}
 	}
 	childrens.clear();

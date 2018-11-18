@@ -92,18 +92,18 @@ uint ModuleFileSystem::readFile(const char * fileName, char** data)
 			if (readed != size)
 			{
 				OWN_LOG("File System error while reading from file %s: %s\n", file, PHYSFS_getLastError());
-				
+				PHYSFS_close(file);
 				return ret;
 			}
 			else
 				
 				ret = readed;
 		}
-		PHYSFS_close(file);
+		
 	}
 	else
 		OWN_LOG("File System error while opening file %s: %s\n", file, PHYSFS_getLastError());
-
+	PHYSFS_close(file);
 	return ret;
 }
 

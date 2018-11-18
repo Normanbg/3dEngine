@@ -13,6 +13,7 @@ ComponentCamera::ComponentCamera()
 
 ComponentCamera::~ComponentCamera()
 {
+	
 }
 
 bool ComponentCamera::Update()
@@ -28,6 +29,8 @@ bool ComponentCamera::Update()
 
 void ComponentCamera::CleanUp()
 {
+	myGO = nullptr;
+	RELEASE(camRes);
 }
 
 void ComponentCamera::DrawInspector() {

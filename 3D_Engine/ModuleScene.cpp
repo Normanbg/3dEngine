@@ -96,8 +96,9 @@ update_status ModuleScene::PostUpdate(float dt) {
 
 bool ModuleScene::CleanUp()
 {
-	ClearScene();
 
+	ClearScene();
+	root->CleanUp();
 	RELEASE(root);
 	RELEASE(rootQuadTree);
 
@@ -219,6 +220,7 @@ void ModuleScene::LoadScene(const char*file)
 	if (size < 0) {
 		OWN_LOG("Error loading file %s. All data not loaded.", fileName)
 		fileName = nullptr;
+		RELEASE_ARRAY(buffer);
 		return;
 	}
 	fileName = nullptr;
@@ -230,8 +232,8 @@ void ModuleScene::LoadScene(const char*file)
 		GameObject* go = new GameObject();
 		go->Load(&elem);
 	}
-	OWN_LOG("Loading new scene.")
-		RELEASE_ARRAY(buffer);
+	OWN_LOG("Loading new scene.");
+	RELEASE_ARRAY(buffer);
 
 }
 

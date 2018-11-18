@@ -41,10 +41,12 @@ bool ComponentMesh::Update()
 
 void ComponentMesh::CleanUp()
 {
-	resourceMesh->FreeInMemory();
-	resourceMesh = nullptr;
-
+	if (HasMesh()) {
+		resourceMesh->CleanUp();
+		resourceMesh = nullptr;
+	}
 	material = nullptr;
+	myGO = nullptr;
 
 }
 
@@ -101,6 +103,7 @@ void ComponentMesh::SetResource(uuid resource)
 {
 	resourceMesh = (ResourceMesh*) App->resources->Get(resource);
 	resourceMesh->LoadInMemory();
+	resourceUUID = resource;
 }
 
 

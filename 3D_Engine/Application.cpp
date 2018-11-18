@@ -47,9 +47,10 @@ Application::Application()
 	AddModule(input);
 	AddModule(fileSys);
 	AddModule(audio);
+	AddModule(resources);
 	AddModule(scene);
 	AddModule(time);
-	AddModule(resources);
+	
 	
 
 	AddModule(gui);
@@ -319,13 +320,15 @@ void Application::SetOrganization(const char* newName)
 	 
 	 char* buffer = nullptr;
 	 uint size = App->fileSys->readFile(CONFIG_FILE, &buffer);
+	 
 
 	 if (size < 0) {
 		 OWN_LOG("Error loading file %s. All data not loaded.", CONFIG_FILE)
 			 return ret;
 	 }
 	 Config conf(buffer);
-	 
+	 RELEASE_ARRAY(buffer);
+
 	 Config appdata = conf.GetArray("App", 0);
 	 std::string name = appdata.GetString("Name", "NoName");
 	 window->SetTitle(name.c_str());
@@ -378,7 +381,7 @@ void Application::SetOrganization(const char* newName)
 
 	 App->fileSys->writeFile(CONFIG_FILE, buffer, size);
 	 OWN_LOG("Saving config.")
-	 RELEASE_ARRAY(buffer);
+	
 	
 	 want_to_save = false;
 	 return ret;

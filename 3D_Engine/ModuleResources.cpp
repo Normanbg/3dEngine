@@ -10,6 +10,8 @@
 #include "GameObject.h"
 
 
+#include "mmgr/mmgr.h"
+
 ModuleResources::ModuleResources() 
 {
 }
@@ -48,6 +50,14 @@ update_status ModuleResources::PreUpdate(float dt)
 
 bool ModuleResources::CleanUp()
 {
+	for (std::map<uuid, Resource*>::const_reverse_iterator it = resources.rbegin(); it != resources.rend(); it++) {
+		
+		Resource* res = Get(it->first);
+		res->CleanUp();
+		RELEASE(res);
+		
+	}
+	resources.clear();
 	return true;
 }
 
@@ -186,6 +196,7 @@ bool ModuleResources::ImportFileAndGenerateMeta(const char * newFileInAssets)
 				res->SetName(pei.c_str());
 				uuids.push_back(res->GetUUID());
 			}
+			res = nullptr;
 		}		
 			
 		GenerateMetaFile(newFileInAssets, resourceUUID, uuids );
@@ -272,6 +283,7 @@ Resource * ModuleResources::CreateNewResource(Resource::ResType type, uuid force
 	if (res != nullptr) {
 		resources[uuid] = res;
 	}
+	
 	return res;
 }
 
@@ -304,6 +316,7 @@ void ModuleResources::RemoveResource(const char * metaPath)
 
 	App->fileSys->RemoveFile(metaPath);
 	res = nullptr;
+	RELEASE_ARRAY(buffer);
 }
 
 void ModuleResources::RemoveResource(uuid UUID)
@@ -382,10 +395,11 @@ bool ModuleResources::ManageResourceWithMeta(const char * resource, const char *
 		return false;
 	}
 	Config meta(buffer);
+	RELEASE_ARRAY(buffer);
 
 	uint lastMetaMod = meta.GetUInt("TimeStamp", 0);
 	if (lastMetaMod != resourceLastMod) { // file is modified
-		RELEASE_ARRAY(buffer);
+		
 		return false;
 	}
 
@@ -433,6 +447,6 @@ bool ModuleResources::ManageResourceWithMeta(const char * resource, const char *
 		res->SetPath(resource);
 		res->Load(meta);
 	}
-	RELEASE_ARRAY(buffer);
+	
 	return true;
 }

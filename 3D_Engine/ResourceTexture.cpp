@@ -2,8 +2,7 @@
 #include "Config.h"
 #include "ModuleRenderer3D.h"
 
-
-
+#include "mmgr/mmgr.h"
 
 ResourceTexture::ResourceTexture(uuid UUID) : Resource(UUID, ResType::Texture)
 {
@@ -28,9 +27,9 @@ void ResourceTexture::FreeInMemory()
 {
 	references--;
 	if (references == 0) {
-	if(gpuID!=-1)
-	glDeleteBuffers(1, &gpuID);
-	loaded = false;
+		if (gpuID != -1)
+			glDeleteBuffers(1, &gpuID);
+		loaded = false;
 	}
 }
 
@@ -50,4 +49,7 @@ void ResourceTexture::Load(const Config & config)
 
 void ResourceTexture::CleanUp()
 {
+	if (loaded) {
+		FreeInMemory();
+	}	
 }
