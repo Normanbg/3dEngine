@@ -7,6 +7,7 @@
 
 class GameObject;
 class ComponentCamera;
+class Quadtree;
 
 enum FrustumContained {
 	IS_OUT = 0,
@@ -26,6 +27,8 @@ public:
 	bool CleanUp();
 
 	FrustumContained ContainsAaBox(const AABB & refBox) const;
+	FrustumContained ContainsAaBox(const Quadtree & qt) const;
+
 	void ConfigInfo();
 
 	const float GetMouseSensit() const;

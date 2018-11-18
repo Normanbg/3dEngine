@@ -8,6 +8,7 @@
 #include "GameObject.h"
 #include "Camera.h"
 #include "ComponentCamera.h"
+#include "Quadtree.h"
 #include "ModuleGui.h"
 #include "Brofiler/Brofiler.h"
 
@@ -34,9 +35,9 @@ bool ModuleEditorCamera::Start()
 {
 	OWN_LOG("Setting up the camera");
 	bool ret = true;
-	cameraComp->camRes->frustum.pos = { -35, 8, 0 };
-	cameraComp->camRes->SetFOV(60);
-	cameraComp->camRes->SetAspectRatio(1.f);
+	cameraComp->SetPos({ -35, 8, 0 });
+	cameraComp->SetFOV(60);
+	cameraComp->SetAspectRatio(1.f);
 	cameraComp->LookAt(float3(0,0,0));	
 	return ret;
 }
@@ -103,7 +104,7 @@ update_status ModuleEditorCamera::Update(float dt)
 			dir -= center;
 			dist = GO->globalAABB.Size().Length();
 		}
-		cameraComp->camRes->frustum.pos = (dir.Normalized() * dist);
+		cameraComp->SetPos(dir.Normalized() * dist);
 		cameraComp->LookAt(center);
 	}
 
@@ -125,7 +126,7 @@ FrustumContained ModuleEditorCamera::ContainsAaBox(const AABB& refBox) const
 		int iPtIn = 1;
 		for (int i = 0; i < 8; ++i) {
 			// test this point against the planes
-			if (cameraComp->camRes->frustum.GetPlane(p).IsOnPositiveSide(vCorner[i]))
+			if (cameraComp->GetFrustum().GetPlane(p).IsOnPositiveSide(vCorner[i]))
 			{
 				iPtIn = 0;
 				--iInCount;
@@ -133,6 +134,39 @@ FrustumContained ModuleEditorCamera::ContainsAaBox(const AABB& refBox) const
 		}
 		// were all the points outside of plane p?
 		if(iInCount == 0)
+			return(IS_OUT);
+		// check if they were all on the right side of the plane
+		iTotalIn += iPtIn;
+	}
+	// so if iTotalIn is 6, then all are inside the view
+	if (iTotalIn == 6)
+		return(IS_IN);
+	// we must be partly in then otherwise
+	return(INTERSECT);
+}
+
+FrustumContained ModuleEditorCamera::ContainsAaBox(const Quadtree& qt) const
+{
+	float3 vCorner[8];
+	int iTotalIn = 0;
+	qt.quadTreeBox.GetCornerPoints(vCorner); // get the corners of the box into the vCorner array
+
+	// test all 8 corners against the 6 sides
+	// if all points are behind 1 specific plane, we are out
+	// if we are in with all points, then we are fully in
+	for (int p = 0; p < 6; ++p) {
+		int iInCount = 8;
+		int iPtIn = 1;
+		for (int i = 0; i < 8; ++i) {
+			// test this point against the planes
+			if (cameraComp->GetFrustum().GetPlane(p).IsOnPositiveSide(vCorner[i]))
+			{
+				iPtIn = 0;
+				--iInCount;
+			}
+		}
+		// were all the points outside of plane p?
+		if (iInCount == 0)
 			return(IS_OUT);
 		// check if they were all on the right side of the plane
 		iTotalIn += iPtIn;
