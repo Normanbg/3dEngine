@@ -31,8 +31,11 @@ Decompress the .zip file in any directory and execute the executable inside the 
 
 **Mouse Drag** for changing components like Transform.
 
-### How to change models or textures:
-Drag and drop the file directly to the engine. Only FBX, DDS, PNG or JPG supported. 
+### How to load textures:
+Drag and drop the file directly to the engine. Only TGA, DDS, PNG or JPG/JPEG supported. 
+
+### How to load models:
+Drag and drop the file directly to the engine and will be loaded directly. Only FBX. 
 
 ### Link to the repository:
 [https://github.com/Normanbg/3dEngine](https://github.com/Normanbg/3dEngine)

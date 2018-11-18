@@ -34,6 +34,7 @@ public:
 	void SetBoundingBox(bool active);
 	void SetWireframe(bool active);
 
+
 	void Draw();
 
 	GameObject* AddGameObject();
@@ -43,10 +44,12 @@ public:
 	GameObject* GetGameObjectByUUID(uuid UUID) const;
 	GameObject* GetGameObjectUUIDRecursive(uuid UUID, GameObject* go) const;
 
+	void SetMainCamera(GameObject* camera);
 	void ChangeRootGO(GameObject* newRoot){ root = newRoot; }
 	uuid GetRandomUUID();
 
 	void ClearScene()const;
+	void ClearSceneCompletely() ;
 	void SaveScene(const char* file = nullptr);
 	void LoadScene(const char* file= nullptr);
 
