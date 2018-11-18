@@ -104,7 +104,7 @@ void GameObject::CleanUp(){
 	if (parent) {
 		parent = nullptr;
 	}
-	
+	transformComp = nullptr;
 }
 
 void GameObject::CalculateAllGlobalMatrix(){
@@ -447,6 +447,9 @@ void GameObject::Load(Config* data)
 	name = data->GetString("Name", "NoName");
 	if (strcmp(name.c_str(), "root")==0) {
 		App->scene->ChangeRootGO( this);
+	}
+	if (strcmp(name.c_str(), "Main Camera") == 0) {
+		App->scene->SetMainCamera(this);
 	}
 	transformComp->setPos(data->GetFloat3("Translation", {0,0,0}));
 	transformComp->setRotEuler(data->GetFloat3("Rotation", { 0,0,0 }));

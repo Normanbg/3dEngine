@@ -135,7 +135,7 @@ update_status ModuleInput::PreUpdate(float dt)
 				switch (FileType file = ObtainDroppedFileType(dropped_filedirStr))
 				{
 				case CANT_LOAD:
-					OWN_LOG("File not supported, try FBX, PNG, JPG or DDS")
+					OWN_LOG("File not supported, try FBX, PNG, JPG, TGA or DDS")
 					break;
 				case FBX:
 					OWN_LOG("Dropped .fbx file");
@@ -192,17 +192,19 @@ bool ModuleInput::CleanUp()
 FileType ModuleInput::ObtainDroppedFileType(std::string droppedFileDir){
 	std::string dFile = droppedFileDir;
 	if (dFile.length() > 4) {
-		std::string formatStr = dFile.substr(dFile.length() - 3);
-		if (formatStr == "fbx" || formatStr == "FBX")
+		std::string formatStr = dFile.substr(dFile.length() - 4);
+		if (formatStr == FBX_FORMAT || formatStr == FBX_FORMAT_CAP)
 			return FBX;
-		else if (formatStr == "png" || formatStr == "PNG")
+		else if (formatStr == PNG_FORMAT || formatStr == PNG_FORMAT_CAP)
 			return PNG;
-		else if (formatStr == "jpg" || formatStr == "JPG")
+		else if (formatStr == JPG_FORMAT || formatStr == JPG_FORMAT_CAP || formatStr == JPEG_FORMAT || formatStr == JPEG_FORMAT_CAP)
 			return JPG;
-		else if (formatStr == "dds" || formatStr == "DDS")
+		else if (formatStr == DDS_FORMAT || formatStr == DDS_FORMAT_CAP )
 			return DDS;
-		else if (formatStr == "pei" || formatStr == "PEI")
+		else if (formatStr == OWN_FILE_FORMAT || formatStr == OWN_FILE_FORMAT_CAP)
 			return PEI;
+		else if (formatStr == TGA_FORMAT || formatStr == TGA_FORMAT_CAP)
+			return TGA;
 	}
 	else
 		OWN_LOG("Cannot load %s file.  Format not recognized", droppedFileDir)

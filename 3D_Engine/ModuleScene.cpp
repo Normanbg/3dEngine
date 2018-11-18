@@ -107,8 +107,8 @@ update_status ModuleScene::PostUpdate(float dt) {
 
 bool ModuleScene::CleanUp()
 {
-
-	ClearScene();
+	
+	ClearSceneCompletely();
 	root->CleanUp();
 	RELEASE(root);
 	RELEASE(rootQuadTree);
@@ -140,6 +140,11 @@ GameObject * ModuleScene::GetGameObjectUUIDRecursive(uuid UUID, GameObject * go)
 	return nullptr;
 }
 
+void ModuleScene::SetMainCamera(GameObject * camera)
+{
+	mainCamera = camera;
+}
+
 uuid ModuleScene::GetRandomUUID()
 {
 	return pcg32_random_r(&rng);
@@ -147,7 +152,7 @@ uuid ModuleScene::GetRandomUUID()
 
 void ModuleScene::ClearScene() const
 {
-	OWN_LOG("Clearing scene")
+	OWN_LOG("Clearing scene");
 	for (int i = root->childrens.size() - 1; i > 0; i--) {
 		if (root->childrens[i] == mainCamera)
 			continue;
@@ -157,6 +162,20 @@ void ModuleScene::ClearScene() const
 	for (int i = root->components.size() - 1; i > 0; i--) {
 		root->RemoveComponent(root->components[i]);
 	}
+	App->scene->DeselectAll();
+	rootQuadTree->Clear();
+}
+
+void ModuleScene::ClearSceneCompletely() 
+{
+	OWN_LOG("Clearing scene");
+	for (int i = root->childrens.size() - 1; i >= 0; i--) {
+		root->RemoveChildren(root->childrens[i]);
+	}
+	for (int i = root->components.size() - 1; i >= 0; i--) {
+		root->RemoveComponent(root->components[i]);
+	}
+	mainCamera = nullptr;
 	App->scene->DeselectAll();
 	rootQuadTree->Clear();
 }
@@ -184,7 +203,7 @@ void ModuleScene::SaveScene(const char* file)
 void ModuleScene::LoadScene(const char*file) 
 {
 
-	ClearScene();
+	ClearSceneCompletely();
 
 	char* buffer = nullptr;
 	const char* fileName = nullptr;
@@ -579,11 +598,14 @@ void ModuleScene::Draw() {
 				mesh->Draw();
 			}
 	}
-	
-	if (!inGame && mainCamera != nullptr && rootQuadTree != nullptr) {
-		mainCamera->GetComponentCamera()->DebugDraw();
-		if (App->renderer3D->GetQuadTree())
-			rootQuadTree->DebugDraw();
+	if (!inGame) {
+		if (mainCamera != nullptr) {
+			mainCamera->GetComponentCamera()->DebugDraw();
+		}
+		if (rootQuadTree != nullptr) {
+			if (App->renderer3D->GetQuadTree())
+				rootQuadTree->DebugDraw();
+		}
 	}
 	iterator = nullptr;
 	mesh = nullptr;

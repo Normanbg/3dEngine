@@ -280,7 +280,7 @@ GameObject * SceneImporter::ImportNodeRecursive(aiNode * node, const aiScene * s
 						nodeGO->AddComponent(compMat, MATERIAL);						
 					}
 					else {
-						delete compMat;
+						RELEASE(compMat);
 					}
 				}
 								
@@ -291,11 +291,17 @@ GameObject * SceneImporter::ImportNodeRecursive(aiNode * node, const aiScene * s
 					nodeGO->AddComponent(compMesh, MESH);
 					nodeGO->SetLocalAABB(compMesh->bbox);
 					//compMesh->GenerateBuffer();
-				}				
-				if (compMesh&&compMat) {
-					compMesh->SetMaterial(compMat);
+					if (compMat) {
+						compMesh->SetMaterial(compMat);
+					}
 				}
-								
+				else {
+					RELEASE(compMesh);
+				}
+				compMat = nullptr;
+				compMesh = nullptr;
+				mesh = nullptr;
+				material = nullptr;
 			}
 		}
 	}	

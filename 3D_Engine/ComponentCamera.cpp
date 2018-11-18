@@ -180,6 +180,8 @@ void ComponentCamera::Save(Config & data) const
 		data.AddFloat3("Frustum Position", GetPos());
 		data.AddFloat("FOV", GetFOV());
 		data.AddFloat("Aspect Ratio", GetAspectRatio());
+		data.AddFloat("Near Plane", GetNearPlane());
+		data.AddFloat("Far Plane", GetFarPlane());
 	}
 }
 
@@ -192,4 +194,6 @@ void ComponentCamera::Load(Config * data)
 	SetPos(data->GetFloat3("Frustum Position", { 0,0,0 }));
 	SetFOV(data->GetFloat("FOV", 0));
 	SetAspectRatio(data->GetFloat("Aspect Ratio", 0));
+	SetNearPlaneDistance(data->GetFloat("Near Plane", 0));
+	SetFarPlaneDistance(data->GetFloat("Far Plane", 0));
 }
