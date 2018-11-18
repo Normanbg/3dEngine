@@ -26,9 +26,9 @@ void UIPanelInspector::Draw() {
 	if (App->scene->gObjSelected != nullptr) {
 
 		GameObject* go = App->scene->gObjSelected;
-		ImGui::Checkbox("Active", &go->active);
-		ImGui::SameLine();
-		ImGui::Text("| Name:");
+		/*ImGui::Checkbox("Active", &go->active);
+		ImGui::SameLine();*/
+		ImGui::Text("Name:");
 		ImGui::SameLine();
 		ImGui::TextColored(ImVec4(1, 0, 0, 1), go->name.c_str());
 		ImGui::SameLine();
@@ -56,7 +56,7 @@ void UIPanelInspector::Draw() {
 					go->AddComponent(CAMERA);
 				}
 			}
-			///NOW IF WE USE THIS IT CRASHES BECAUSE WE ARE NOT ABLE TO SELECT ALL THE MESHES AND MATERIALS TO ADD
+			
 			if (!go->GetComponentMaterial()) {
 				if (ImGui::Button("Material")) {
 					ComponentMaterial* mat =(ComponentMaterial*) go->AddComponent(MATERIAL);

@@ -23,19 +23,23 @@ Decompress the .zip file in any directory and execute the executable inside the 
 
 **F** focus the camera around the geometry.
 
+## Controls Guizmo:
+**W** to translate.
+
+**E** to rotate.
+
+**R** to scale.
+
 ### Controls on panels:
 
-**Mouse Left click** for selecting Game Objects / Materials.
+**Mouse Left click** for selecting.
 
 **Double Mouse Left Click** inside hierarchy or materials to deselect a game object.
 
 **Mouse Drag** for changing components like Transform.
 
-### How to load textures:
-Drag and drop the file directly to the engine. Only TGA, DDS, PNG or JPG/JPEG supported. 
-
-### How to load models:
-Drag and drop the file directly to the engine and will be loaded directly. Only FBX. 
+### Load Objects:
+On assets panel there are all the files to load, click on one and select "Load file". Also it is possible to drag & drop files.
 
 ### Link to the repository:
 [https://github.com/Normanbg/3dEngine](https://github.com/Normanbg/3dEngine)
