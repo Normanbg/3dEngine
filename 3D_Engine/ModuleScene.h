@@ -13,11 +13,6 @@ class GameObject;
 class Quadtree;
 class Resource;
 
-enum FrustumContained {
-	IS_OUT = 0,
-	IS_IN,
-	INTERSECT
-};
 
 
 class ModuleScene : public Module
@@ -93,7 +88,7 @@ public:
 	//--------------------
 	std::list<GameObject*> staticObjsToDraw;
 
-
+	uint intersections = 0;
 private:
 	void GetAllStaticGOs(GameObject* go);
 	void GetDynamicGOs(GameObject* go);

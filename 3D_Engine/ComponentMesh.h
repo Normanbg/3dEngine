@@ -60,7 +60,7 @@ public:
 	bool showBBox = false;
 	bool showWireframe = false;
 
-	bool staticCulled = true;
+	FrustumContained frustumContained = IS_OUT;
 
 private:
 	void DrawMesh();

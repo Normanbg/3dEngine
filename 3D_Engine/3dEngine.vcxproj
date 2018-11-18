@@ -191,6 +191,7 @@
     <ClInclude Include="UIPanelConsole.h" />
     <ClInclude Include="UIPanelHierarchy.h" />
     <ClInclude Include="UIPanelInspector.h" />
+    <ClInclude Include="UIPanelOptimization.h" />
     <ClInclude Include="UIPanelScene.h" />
     <ClInclude Include="UIPanelMaterials.h" />
     <ClInclude Include="UIPanelSceneInfo.h" />
@@ -276,6 +277,7 @@
     <ClCompile Include="UIPanelConsole.cpp" />
     <ClCompile Include="UIPanelHierarchy.cpp" />
     <ClCompile Include="UIPanelInspector.cpp" />
+    <ClCompile Include="UIPanelOptimization.cpp" />
     <ClCompile Include="UIPanelScene.cpp" />
     <ClCompile Include="UIPanelMaterials.cpp" />
     <ClCompile Include="UIPanelSceneInfo.cpp" />

@@ -4,12 +4,14 @@
 #include "Math.h"
 
 #include <map>
+#include <list>
 
 constexpr auto QT_MAX_ELEMS = 1;
-constexpr auto MAX_SUBDIVISIONS = 3;
+constexpr auto MAX_SUBDIVISIONS = 2;
 
 class GameObject;
 class vector;
+//class list;
 
 class Quadtree
 {
@@ -23,6 +25,8 @@ public:
 
 	void Intersect(std::vector<GameObject*>& gameobjects, const AABB& bBox) const;
 	void Intersect(std::map<float, GameObject*>& objects, const Ray& bBox) const;
+
+	void Intersects(std::list<uuid>& inter_list, Frustum frustum);
 
 	void Subdivide();
 

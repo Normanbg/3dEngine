@@ -54,11 +54,11 @@ update_status ModuleScene::PreUpdate(float dt)
 			ret &= root->childrens[i]->PreUpdate();
 		}
 	}
-	if (rootQuadTree->quadTreeBox.IsFinite()) {
+	/*if (rootQuadTree->quadTreeBox.IsFinite()) {
 		QTContainsAaBox(rootQuadTree);
 		SetStaticsCulled();
 	}
-
+*/
 	if (gObjSelected)
 		UpdateGuizmoOp();
 
@@ -82,6 +82,26 @@ update_status ModuleScene::Update(float dt) {
 			ret &= root->childrens[i]->Update();
 		}
 	}
+
+	if (rootQuadTree->quadTreeBox.IsFinite()) {
+		std::list<uuid> uuidList;
+		if (inGame)
+			rootQuadTree->Intersects(uuidList, mainCamera->GetComponentCamera()->GetFrustum());
+		else
+			rootQuadTree->Intersects(uuidList, App->camera->cameraComp->GetFrustum());
+		uuidList.sort();
+		uuidList.unique();
+
+		intersections = uuidList.size();
+
+		for (auto it : uuidList) {
+			ComponentMesh* mesh = GetGameObjectByUUID(it)->GetComponentMesh();
+			if (mesh) {
+				mesh->frustumContained = ContainsAaBox(mesh->bbox);
+			}
+		}
+	}
+
 	update_status retUS;
 	ret ? retUS = UPDATE_CONTINUE : retUS = UPDATE_ERROR;
 	return retUS;
@@ -360,75 +380,75 @@ FrustumContained ModuleScene::ContainsAaBox(const AABB& refBox) const
 	// we must be partly in then otherwise
 	return(INTERSECT);
 }
+//
+//void ModuleScene::QTContainsAaBox(Quadtree* qt)
+//{
+//	float3 vCorner[8];
+//	int iTotalIn = 0;
+//	qt->quadTreeBox.GetCornerPoints(vCorner); // get the corners of the box into the vCorner array
+//
+//	if (qt == rootQuadTree)
+//		staticObjsToDraw.clear();
+//
+//	// test all 8 corners against the 6 sides
+//	// if all points are behind 1 specific plane, we are out
+//	// if we are in with all points, then we are fully in
+//	for (int p = 0; p < 6; ++p) {
+//		int iInCount = 8;
+//		int iPtIn = 1;
+//		for (int i = 0; i < 8; ++i) {
+//			// test this point against the planes
+//			if (inGame) {
+//				if (mainCamera->GetComponentCamera()->GetFrustum().GetPlane(p).IsOnPositiveSide(vCorner[i]))
+//				{
+//					iPtIn = 0;
+//					--iInCount;
+//				}
+//			}
+//			else {
+//				if (App->camera->cameraComp->GetFrustum().GetPlane(p).IsOnPositiveSide(vCorner[i]))
+//				{
+//					iPtIn = 0;
+//					--iInCount;
+//				}
+//			}
+//		}
+//		// were all the points outside of plane p?
+//		if (iInCount == 0) {
+//			for (auto it : qt->gameobjs) {
+//				it->GetComponentMesh()->staticCulled = true;
+//				break;
+//			}
+//		}
+//		// check if they were all on the right side of the plane
+//		iTotalIn += iPtIn;
+//	}
+//	if (!qt->quTrChilds.empty()) {
+//		for (int i = 0; i < 4; i++) {
+//			Quadtree* childQT = qt->quTrChilds[i];
+//			QTContainsAaBox(childQT);
+//		}
+//
+//	}
+//	else {
+//		for (auto it : qt->gameobjs) {
+//			staticObjsToDraw.push_back(it);
+//		}
+//	}
+//
+//}
 
-void ModuleScene::QTContainsAaBox(Quadtree* qt)
-{
-	float3 vCorner[8];
-	int iTotalIn = 0;
-	qt->quadTreeBox.GetCornerPoints(vCorner); // get the corners of the box into the vCorner array
-
-	if (qt == rootQuadTree)
-		staticObjsToDraw.clear();
-
-	// test all 8 corners against the 6 sides
-	// if all points are behind 1 specific plane, we are out
-	// if we are in with all points, then we are fully in
-	for (int p = 0; p < 6; ++p) {
-		int iInCount = 8;
-		int iPtIn = 1;
-		for (int i = 0; i < 8; ++i) {
-			// test this point against the planes
-			if (inGame) {
-				if (mainCamera->GetComponentCamera()->GetFrustum().GetPlane(p).IsOnPositiveSide(vCorner[i]))
-				{
-					iPtIn = 0;
-					--iInCount;
-				}
-			}
-			else {
-				if (App->camera->cameraComp->GetFrustum().GetPlane(p).IsOnPositiveSide(vCorner[i]))
-				{
-					iPtIn = 0;
-					--iInCount;
-				}
-			}
-		}
-		// were all the points outside of plane p?
-		if (iInCount == 0) {
-			for (auto it : qt->gameobjs) {
-				it->GetComponentMesh()->staticCulled = true;
-				break;
-			}
-		}
-		// check if they were all on the right side of the plane
-		iTotalIn += iPtIn;
-	}
-	if (!qt->quTrChilds.empty()) {
-		for (int i = 0; i < 4; i++) {
-			Quadtree* childQT = qt->quTrChilds[i];
-			QTContainsAaBox(childQT);
-		}
-
-	}
-	else {
-		for (auto it : qt->gameobjs) {
-			staticObjsToDraw.push_back(it);
-		}
-	}
-
-}
-
-void ModuleScene::SetStaticsCulled()
-{
-	/*staticObjsToDraw.sort();
-	staticObjsToDraw.unique();*/
-	for (auto it : staticObjsToDraw) {
-		if (it->GetComponentMesh())
-		{
-			it->GetComponentMesh()->staticCulled = false;
-		}
-	}
-}
+//void ModuleScene::SetStaticsCulled()
+//{
+//	staticObjsToDraw.sort();
+//	staticObjsToDraw.unique();
+//	for (auto it : staticObjsToDraw) {
+//		if (it->GetComponentMesh())
+//		{
+//			it->GetComponentMesh()->staticCulled = false;
+//		}
+//	}
+//}
 
 void ModuleScene::GetAllStaticGOs(GameObject* go)
 {
@@ -439,17 +459,17 @@ void ModuleScene::GetAllStaticGOs(GameObject* go)
 	}
 }
 
-void ModuleScene::GetStaticObjsCulled(int& stCulled)
-{
-	staticOBjs.clear();
-	GetAllStaticGOs(root);
-	int i = 0;
-	for (auto it : staticOBjs) {
-		if (it->GetComponentMesh() && it->GetComponentMesh()->staticCulled)
-			i++;
-	}
-	stCulled = i;
-}
+//void ModuleScene::GetStaticObjsCulled(int& stCulled)
+//{
+//	staticOBjs.clear();
+//	GetAllStaticGOs(root);
+//	int i = 0;
+//	for (auto it : staticOBjs) {
+//		if (it->GetComponentMesh() && it->GetComponentMesh()->staticCulled)
+//			i++;
+//	}
+//	stCulled = i;
+//}
 
 void ModuleScene::GetDynamicGOs(GameObject * go)
 {
@@ -582,13 +602,14 @@ void ModuleScene::Draw() {
 		if (App->camera->GetFrustumCulling())
 		{
 			if (!iterator->staticGO) {
-				if (ContainsAaBox(mesh->myGO->globalAABB) != IS_OUT) {
+				mesh->frustumContained = ContainsAaBox(mesh->myGO->globalAABB);
+				if (mesh->frustumContained != IS_OUT) {
 					if (mesh->HasMesh()) { mesh->Draw(); }
 				}
 			}
 			else {
-				if (!mesh->staticCulled) {
-					if (mesh->HasMesh()) { mesh->Draw(); }
+				if (mesh->frustumContained != IS_OUT){
+					mesh->Draw();
 				}
 			}
 		}

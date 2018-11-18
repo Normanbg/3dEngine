@@ -29,6 +29,12 @@ enum update_status
 	UPDATE_ERROR
 };
 
+enum FrustumContained {
+	IS_OUT = 0,
+	IS_IN,
+	INTERSECT
+};
+
 // Deletes a buffer
 #define RELEASE( x )\
     {\

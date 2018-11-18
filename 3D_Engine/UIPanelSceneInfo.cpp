@@ -22,8 +22,6 @@ void UIPanelSceneInfo::Draw()
 	uint flags = ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse;
 	ImGui::Begin("Scene Info", &active, flags);
 
-	//THAT WAS ON SCENE DIRECTLY BEFORE
-
 	if (wantToLoadFile && FileState(OWN_FILE_FORMAT)) {
 
 		const char* fileName = CloseFileState();
@@ -85,13 +83,6 @@ void UIPanelSceneInfo::Draw()
 	
 	ImGui::Text("");
 	ImGui::Text("Game dt: %.3f", App->time->GetGameDeltaTime());
-
-	if (ImGui::CollapsingHeader("Info")) {
-		int i = 0;
-		App->scene->GetStaticObjsCulled(i);
-		ImGui::Text("Static Game Objects: %d", App->scene->staticsGObjs);
-		ImGui::Text("Static Game Objects Culled: %d", i);
-	}
 
 	ImGui::End();
 }

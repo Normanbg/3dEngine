@@ -102,6 +102,33 @@ void Quadtree::Intersect(std::map<float, GameObject*>& objects, const Ray & ray)
 	}
 }
 
+void Quadtree::Intersects(std::list<uuid>& inter_list, Frustum frustum)
+{
+	if (quadTreeBox.Intersects(frustum))
+	{
+		for (auto it = gameobjs.begin(); it != gameobjs.end(); ++it)
+		{
+			if ((*it) != nullptr)
+			{
+				ComponentMesh* mesh = (*it)->GetComponentMesh();
+
+				if (frustum.Intersects(mesh->bbox)) {
+					inter_list.push_back((*it)->GetUUID());
+				}
+			}
+		}
+
+		if (!quTrChilds.empty())
+		{
+			for (int i = 0; i < 4; i++)
+			{
+				quTrChilds[i]->Intersects(inter_list, frustum);
+			}
+		}
+	}
+}
+
+
 void Quadtree::Subdivide(){
 
 	float x = quadTreeBox.Size().x;
