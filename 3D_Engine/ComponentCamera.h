@@ -19,9 +19,11 @@ public:
 
 	void LookAt(const float3 & Spot);
 
-	void SetNearPlaneDistance(float nearPlaneDist);
-	void SetFarPlaneDistance(float farPlaneDist);
-	void SetPos(float3 pos);
+	void SetNearPlaneDistance(const float nearPlaneDist);
+	void SetFarPlaneDistance(const float farPlaneDist);
+	void SetPos(const float3 pos);
+	void SetFOV(const float _fov);
+	void SetAspectRatio(const float new_ar);
 
 	void DebugDraw();
 

@@ -63,7 +63,7 @@ void ComponentCamera::LookAt(const float3 &Spot)
 	camRes->frustum.up = matrix.MulDir(camRes->frustum.up).Normalized();
 }
 
-void ComponentCamera::SetNearPlaneDistance(float nearPlaneDist) {
+void ComponentCamera::SetNearPlaneDistance(const float nearPlaneDist) {
 	if (nearPlaneDist > camRes->frustum.farPlaneDistance) {
 		OWN_LOG("ERROR: Near plane distance cannot be greater than far plane distance");
 	}
@@ -75,7 +75,7 @@ void ComponentCamera::SetNearPlaneDistance(float nearPlaneDist) {
 	}
 }
 
-void ComponentCamera::SetFarPlaneDistance(float farPlaneDist) {
+void ComponentCamera::SetFarPlaneDistance(const float farPlaneDist) {
 	if (farPlaneDist < camRes->frustum.nearPlaneDistance) {
 		OWN_LOG("ERROR: Far plane distance cannot be smaller than near plane distance");
 	}
@@ -87,9 +87,19 @@ void ComponentCamera::SetFarPlaneDistance(float farPlaneDist) {
 	}
 }
 
-void ComponentCamera::SetPos(float3 pos)
+void ComponentCamera::SetPos(const float3 pos)
 {
 	camRes->SetPos(pos);
+}
+
+void ComponentCamera::SetFOV(const float _fov)
+{
+	camRes->SetFOV(_fov);
+}
+
+void ComponentCamera::SetAspectRatio(const float new_ar)
+{
+	camRes->SetAspectRatio(new_ar);
 }
 
 void ComponentCamera::DebugDraw(){
