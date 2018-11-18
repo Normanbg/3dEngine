@@ -20,8 +20,7 @@ bool ComponentCamera::Update()
 {
 	if (myGO)
 	{
-		SetPos(myGO->transformComp->getPos());
-		/*camRes->frustum.SetWorldMatrix(myGO->transformComp->globalMatrix);*/
+		camRes->frustum.SetWorldMatrix(myGO->transformComp->globalMatrix.Float3x4Part());
 		if (myGO->GetSelected())
 			camRes->DebugDraw();
 	}
@@ -104,6 +103,16 @@ void ComponentCamera::SetFOV(const float _fov)
 void ComponentCamera::SetAspectRatio(const float new_ar)
 {
 	camRes->SetAspectRatio(new_ar);
+}
+
+void ComponentCamera::SetFrustumUp(const float3 up)
+{
+	camRes->frustum.up = up;
+}
+
+void ComponentCamera::SetFrustumFront(const float3 front)
+{
+	camRes->frustum.front = front;
 }
 
 void ComponentCamera::DebugDraw(){

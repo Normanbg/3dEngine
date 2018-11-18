@@ -310,6 +310,7 @@ void ModuleScene::DrawGuizmo(ImGuizmo::OPERATION operation)
 
 		ImGuizmo::SetRect(pos.x, pos.y, sceneSize.x, sceneSize.y);
 		float4x4 transMatr;
+		ImGuizmo::MODE mode = ImGuizmo::LOCAL;
 
 		float4x4 viewMatrix, projectionMatrix;
 		glGetFloatv(GL_MODELVIEW_MATRIX, (float*)viewMatrix.v);
@@ -317,7 +318,7 @@ void ModuleScene::DrawGuizmo(ImGuizmo::OPERATION operation)
 
 		transMatr = transform->getGlobalMatrix().Transposed();
 
-		ImGuizmo::Manipulate((float*)viewMatrix.v, (float*)projectionMatrix.v, operation, ImGuizmo::WORLD, transMatr.ptr());
+		ImGuizmo::Manipulate((float*)viewMatrix.v, (float*)projectionMatrix.v, operation, mode, transMatr.ptr());
 		transMatr.Transpose();
 
 		if (ImGuizmo::IsUsing()) {
@@ -410,7 +411,6 @@ void ModuleScene::ShowTextureResourceInspector(uuid newResource)
 
 void ModuleScene::DeselectAll()
 {	
-
 	if (gObjSelected != nullptr)
 		gObjSelected->ToggleSelected();
 	gObjSelected = nullptr;
