@@ -60,7 +60,7 @@ public:
 	bool showBBox = false;
 	bool showWireframe = false;
 
-
+	bool staticCulled = true;
 
 private:
 	void DrawMesh();

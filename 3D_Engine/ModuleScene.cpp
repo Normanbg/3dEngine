@@ -13,6 +13,7 @@
 #include "mmgr/mmgr.h"
 
 #include <vector>
+#include <list>
 
 ModuleScene::ModuleScene(bool start_enabled) : Module(start_enabled){
 
@@ -38,6 +39,8 @@ bool ModuleScene::Init(JSON_Object * obj)
 	rootAABB.SetNegativeInfinity();
 	rootQuadTree = new Quadtree(rootAABB, 0);
 
+	ImGuizmo::Enable(false);
+
 	return true;
 }
 
@@ -50,6 +53,10 @@ update_status ModuleScene::PreUpdate(float dt)
 		for (int i = 0; i < root->childrens.size(); i++) {
 			ret &= root->childrens[i]->PreUpdate();
 		}
+	}
+	if (rootQuadTree->quadTreeBox.IsFinite()) {
+		QTContainsAaBox(rootQuadTree);
+		SetStaticsCulled();
 	}
 
 	if (gObjSelected)
@@ -109,42 +116,6 @@ bool ModuleScene::CleanUp()
 	return true;
 }
 
-/*
-GameObject * ModuleScene::CreateCube()
-{
-	GameObject* ret = nullptr;
-	if (numCubes == 0)
-	{
-		ret = App->scene->AddGameObject("Cube");
-	}
-	else
-	{
-		char cubeNumb[30];
-		sprintf_s(cubeNumb, 30, "Cube_%d", App->scene->numCubes);
-		ret = App->scene->AddGameObject(cubeNumb);
-	}
-	App->scene->numCubes++;
-	ret->AddComponent(MESH);
-
-	std::vector<float3> cubeVertex = { float3{.0f,.0f,.0f},  {1.0f,.0f,.0f} ,{.0f,1.0f,.0f} , {1.0f,1.0f,.0f} , {.0f,.0f,1.0f} , {1.0f,.0f,1.0f} , {.0f,1.0f,1.0f}  ,  {1.0f,1.0f,1.0f} };
-	std::vector<uint> cubeIndices = { 0,1,2 , 1,3,2 , 3,1,5 , 5,7,3 , 7,5,4 , 6,7,4 , 6,4,0, 0,2,6  , 6,2,3 , 6,3,7 , 0,4,5 , 0,5,1 };
-	
-	ComponentMesh* mesh = ret->GetComponentMesh();
-	
-	mesh->vertex = new float3[8];
-	mesh->index = new uint[36];
-
-	memcpy(mesh->vertex, &cubeVertex[0], sizeof(float3) * 8);
-	memcpy(mesh->index, &cubeIndices[0], sizeof(uint) * 36);
-		
-	mesh->num_vertex = cubeVertex.size();
-	mesh->num_index = cubeIndices.size();
-	mesh->GenerateBuffer();
-	mesh->CreateBBox();
-	ret->SetLocalAABB(mesh->bbox);
-	return ret;
-}
-*/
 GameObject * ModuleScene::GetGameObjectByUUID(uuid UUID) const
 {
 	GameObject* ret= nullptr;
@@ -329,6 +300,117 @@ void ModuleScene::DrawGuizmo(ImGuizmo::OPERATION operation)
 	}
 }
 
+FrustumContained ModuleScene::ContainsAaBox(const AABB& refBox) const
+{
+	float3 vCorner[8];
+	int iTotalIn = 0;
+	refBox.GetCornerPoints(vCorner); // get the corners of the box into the vCorner array
+
+	// test all 8 corners against the 6 sides
+	// if all points are behind 1 specific plane, we are out
+	// if we are in with all points, then we are fully in
+	for (int p = 0; p < 6; ++p) {
+		int iInCount = 8;
+		int iPtIn = 1;
+		for (int i = 0; i < 8; ++i) {
+			// test this point against the planes
+			if (inGame) {
+				if (mainCamera->GetComponentCamera()->GetFrustum().GetPlane(p).IsOnPositiveSide(vCorner[i]))
+				{
+					iPtIn = 0;
+					--iInCount;
+				}
+			}
+			else {
+				if (App->camera->cameraComp->GetFrustum().GetPlane(p).IsOnPositiveSide(vCorner[i]))
+				{
+					iPtIn = 0;
+					--iInCount;
+				}
+			}
+		}
+		// were all the points outside of plane p?
+		if (iInCount == 0)
+			return(IS_OUT);
+		// check if they were all on the right side of the plane
+		iTotalIn += iPtIn;
+	}
+	// so if iTotalIn is 6, then all are inside the view
+	if (iTotalIn == 6)
+		return(IS_IN);
+	// we must be partly in then otherwise
+	return(INTERSECT);
+}
+
+void ModuleScene::QTContainsAaBox(Quadtree* qt)
+{
+	float3 vCorner[8];
+	int iTotalIn = 0;
+	qt->quadTreeBox.GetCornerPoints(vCorner); // get the corners of the box into the vCorner array
+
+	if (qt == rootQuadTree)
+		staticObjsToDraw.clear();
+
+	// test all 8 corners against the 6 sides
+	// if all points are behind 1 specific plane, we are out
+	// if we are in with all points, then we are fully in
+	for (int p = 0; p < 6; ++p) {
+		int iInCount = 8;
+		int iPtIn = 1;
+		for (int i = 0; i < 8; ++i) {
+			// test this point against the planes
+			if (inGame) {
+				if (mainCamera->GetComponentCamera()->GetFrustum().GetPlane(p).IsOnPositiveSide(vCorner[i]))
+				{
+					iPtIn = 0;
+					--iInCount;
+				}
+			}
+			else {
+				if (App->camera->cameraComp->GetFrustum().GetPlane(p).IsOnPositiveSide(vCorner[i]))
+				{
+					iPtIn = 0;
+					--iInCount;
+				}
+			}
+		}
+		// were all the points outside of plane p?
+		if (iInCount == 0) {
+			for (auto it : qt->gameobjs) {
+				it->GetComponentMesh()->staticCulled = true;
+				break;
+			}
+		}
+		// check if they were all on the right side of the plane
+		iTotalIn += iPtIn;
+	}
+	if (!qt->quTrChilds.empty()) {
+		for (int i = 0; i < 4; i++) {
+			Quadtree* childQT = qt->quTrChilds[i];
+			QTContainsAaBox(childQT);
+		}
+
+	}
+	else {
+		for (auto it : qt->gameobjs) {
+			staticObjsToDraw.push_back(it);
+		}
+	}
+
+}
+
+void ModuleScene::SetStaticsCulled()
+{
+	/*staticObjsToDraw.sort();
+	staticObjsToDraw.unique();*/
+	for (auto it : staticObjsToDraw) {
+		if (it->GetComponentMesh())
+		{
+			it->GetComponentMesh()->staticCulled = false;
+		}
+	}
+}
+
 void ModuleScene::GetAllStaticGOs(GameObject* go)
 {
 	if (go != root && go->staticGO)
@@ -336,6 +418,18 @@ void ModuleScene::GetAllStaticGOs(GameObject* go)
 	for (auto it : go->childrens) {
 		GetAllStaticGOs(it);
 	}
+}
+
+void ModuleScene::GetStaticObjsCulled(int& stCulled)
+{
+	staticOBjs.clear();
+	GetAllStaticGOs(root);
+	int i = 0;
+	for (auto it : staticOBjs) {
+		if (it->GetComponentMesh() && it->GetComponentMesh()->staticCulled)
+			i++;
+	}
+	stCulled = i;
 }
 
 void ModuleScene::GetDynamicGOs(GameObject * go)
@@ -388,7 +482,6 @@ void ModuleScene::SetQTSize(GameObject* go) {
 		}
 	}
 }
-
 
 void ModuleScene::ShowGameObjectInspector(GameObject* newSelected)
 {
@@ -469,8 +562,16 @@ void ModuleScene::Draw() {
 		//Frustum Culling 
 		if (App->camera->GetFrustumCulling())
 		{
-			if (App->camera->ContainsAaBox(mesh->myGO->globalAABB) != IS_OUT)
-				if (mesh->HasMesh()) { mesh->Draw(); }
+			if (!iterator->staticGO) {
+				if (ContainsAaBox(mesh->myGO->globalAABB) != IS_OUT) {
+					if (mesh->HasMesh()) { mesh->Draw(); }
+				}
+			}
+			else {
+				if (!mesh->staticCulled) {
+					if (mesh->HasMesh()) { mesh->Draw(); }
+				}
+			}
 		}
 		else
 			if (mesh->HasMesh()) {
@@ -482,7 +583,7 @@ void ModuleScene::Draw() {
 	if (!inGame && mainCamera != nullptr && rootQuadTree != nullptr) {
 		mainCamera->GetComponentCamera()->DebugDraw();
 		if (App->renderer3D->GetQuadTree())
-		rootQuadTree->DebugDraw();
+			rootQuadTree->DebugDraw();
 	}
 	iterator = nullptr;
 	mesh = nullptr;

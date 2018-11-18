@@ -13,6 +13,13 @@ class GameObject;
 class Quadtree;
 class Resource;
 
+enum FrustumContained {
+	IS_OUT = 0,
+	IS_IN,
+	INTERSECT
+};
+
+
 class ModuleScene : public Module
 {
 public:
@@ -39,7 +46,6 @@ public:
 	GameObject* AddGameObject();
 	GameObject* AddGameObject(const char* name);	
 	GameObject* AddGameObject(const char* name, GameObject* parent);
-	GameObject* CreateCube();///--------------------------------------------------------------------------REMOVEEEEEE MEEE!!!!!!!!!!!!!!!!!
 	GameObject* GetGameObjectByUUID(uuid UUID) const;
 	GameObject* GetGameObjectUUIDRecursive(uuid UUID, GameObject* go) const;
 
@@ -54,6 +60,14 @@ public:
 	void MousePicking();
 
 	void DrawGuizmo(ImGuizmo::OPERATION operation);
+
+	//-----------------------
+
+	FrustumContained ContainsAaBox(const AABB & refBox) const;
+	void QTContainsAaBox(Quadtree* qt);
+	void SetStaticsCulled();
+
+	void GetStaticObjsCulled(int& stCulled);
 public:
 
 	GameObject* root;
@@ -73,6 +87,9 @@ public:
 	LineSegment line;
 
 	ImGuizmo::OPERATION guizmoOp = ImGuizmo::TRANSLATE;
+	//--------------------
+	std::list<GameObject*> staticObjsToDraw;
+
 
 private:
 	void GetAllStaticGOs(GameObject* go);

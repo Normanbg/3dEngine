@@ -27,10 +27,6 @@ void UIPanelHierarchy::Draw()
 			if (ImGui::MenuItem("Game Object")) {
 				App->scene->AddGameObject("newGameObject");
 			}
-			if (ImGui::MenuItem("Cube")) {
-				//App->scene->CreateCube();
-			}
-			//if (ImGui::MenuItem("Load")) { App->LoadGame(); }
 			ImGui::EndMenu();
 		}
 		ImGui::EndMenuBar();

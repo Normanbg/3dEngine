@@ -28,12 +28,12 @@ public:
 
 	void DebugDraw();
 public:
-
-	AABB quadTreeBox;
-
-private:
-	uint subdivisions = 0;
+	
 	std::vector<GameObject*> gameobjs;
 	std::vector<Quadtree*> quTrChilds;
+	AABB quadTreeBox;
+ 
+private:
+	uint subdivisions = 0;
 };
 #endif // !__QUADTREE_H__

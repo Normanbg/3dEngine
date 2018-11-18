@@ -8,12 +8,7 @@
 class GameObject;
 class ComponentCamera;
 class Quadtree;
-
-enum FrustumContained {
-	IS_OUT = 0,
-	IS_IN,
-	INTERSECT
-};
+class list;
 
 class ModuleEditorCamera : public Module
 {
@@ -26,8 +21,8 @@ public:
 	update_status Update(float dt);
 	bool CleanUp();
 
-	FrustumContained ContainsAaBox(const AABB & refBox) const;
-	FrustumContained ContainsAaBox(const Quadtree & qt) const;
+	//FrustumContained ContainsAaBox(const AABB & refBox) const;
+	//void QTContainsAaBox(Quadtree* qt);
 
 	void ConfigInfo();
 
