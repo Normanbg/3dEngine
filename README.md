@@ -77,12 +77,18 @@ Resources & Fyle System-> Carles
 
 Guizmos-> Norman
 
-Panels:
+**Panels:**
+
 Assets-> Carles
+
 Hierarchy-> Both
+
 Inspector-> Both
+
 Optimization-> Norman
+
 Scene-> Norman
+
 Scene Info-> Both
 
 
