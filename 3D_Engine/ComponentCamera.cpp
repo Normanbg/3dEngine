@@ -21,6 +21,7 @@ bool ComponentCamera::Update()
 	if (myGO)
 	{
 		SetPos(myGO->transformComp->getPos());
+		/*camRes->frustum.SetWorldMatrix(myGO->transformComp->globalMatrix);*/
 		if (myGO->GetSelected())
 			camRes->DebugDraw();
 	}
@@ -34,10 +35,10 @@ void ComponentCamera::CleanUp()
 }
 
 void ComponentCamera::DrawInspector() {
-	float fov = camRes->GetFOV();
-	float ar = camRes->GetAspectRatio();
-	float nearPl = camRes->frustum.nearPlaneDistance;
-	float farPl = camRes->frustum.farPlaneDistance;
+	float fov = GetFOV();
+	float ar = GetAspectRatio();
+	float nearPl = GetNearPlane();
+	float farPl = GetFarPlane();
 	ImGui::Separator();
 	ImGui::TextColored(ImVec4(0.25f, 0.25f, 0.25f, 1), "UUID: %i", GetUUID());
 	if (ImGui::DragFloat("Near Plane", &nearPl, 0.5f)) {
@@ -47,10 +48,10 @@ void ComponentCamera::DrawInspector() {
 		SetFarPlaneDistance(farPl);
 	}
 	if (ImGui::SliderFloat("FOV", &fov, 30.f, 175.f)) {
-		camRes->SetFOV(fov);
+		SetFOV(fov);
 	}
 	if (ImGui::SliderFloat("Aspect Ratio", &ar, 0.1f, 3.5f)) {
-		camRes->SetAspectRatio(ar);
+		SetAspectRatio(ar);
 	}
 	ImGui::Separator();
 }
@@ -58,12 +59,12 @@ void ComponentCamera::DrawInspector() {
 // -----------------------------------------------------------------
 void ComponentCamera::LookAt(const float3 &Spot)
 {
-	float3 direction = Spot - camRes->frustum.pos;
+	float3 direction = Spot - GetPos();
 
-	float3x3 matrix = float3x3::LookAt(camRes->frustum.front, direction.Normalized(), camRes->frustum.up, float3::unitY);
+	float3x3 matrix = float3x3::LookAt(GetFrustum().front, direction.Normalized(), GetFrustum().up, float3::unitY);
 
-	camRes->frustum.front = matrix.MulDir(camRes->frustum.front).Normalized();
-	camRes->frustum.up = matrix.MulDir(camRes->frustum.up).Normalized();
+	camRes->frustum.front = matrix.MulDir(GetFrustum().front).Normalized();
+	camRes->frustum.up = matrix.MulDir(GetFrustum().up).Normalized();
 }
 
 void ComponentCamera::SetNearPlaneDistance(const float nearPlaneDist) {
@@ -167,9 +168,9 @@ void ComponentCamera::Save(Config & data) const
 {
 	data.AddUInt("UUID", UUID);
 	if (camRes) {
-		data.AddFloat3("Frustum Position", camRes->GetPos());
-		data.AddFloat("FOV", camRes->GetFOV());
-		data.AddFloat("Aspect Ratio", camRes->GetAspectRatio());
+		data.AddFloat3("Frustum Position", GetPos());
+		data.AddFloat("FOV", GetFOV());
+		data.AddFloat("Aspect Ratio", GetAspectRatio());
 	}
 }
 
@@ -179,7 +180,7 @@ void ComponentCamera::Load(Config * data)
 	if (camRes==nullptr) {
 		camRes = new Camera();		
 	}
-	camRes->SetPos(data->GetFloat3("Frustum Position", { 0,0,0 }));
-	camRes->SetFOV(data->GetFloat("FOV", 0));
-	camRes->SetAspectRatio(data->GetFloat("Aspect Ratio", 0));
+	SetPos(data->GetFloat3("Frustum Position", { 0,0,0 }));
+	SetFOV(data->GetFloat("FOV", 0));
+	SetAspectRatio(data->GetFloat("Aspect Ratio", 0));
 }

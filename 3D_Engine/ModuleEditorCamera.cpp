@@ -258,7 +258,7 @@ void ModuleEditorCamera::Orbit(float dt)
 {
 	float dx = -App->input->GetMouseXMotion() * GetMouseSensit() * dt;
 	float dy = -App->input->GetMouseYMotion() * GetMouseSensit() * dt;
-	float3 distance = cameraComp->GetFrustum().pos;
+	float3 distance = cameraComp->GetPos();
 	Quat X(cameraComp->GetFrustum().WorldRight(), dy);
 	Quat Y(cameraComp->GetFrustum().up, dx);
 
