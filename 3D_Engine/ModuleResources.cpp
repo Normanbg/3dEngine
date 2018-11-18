@@ -302,16 +302,20 @@ void ModuleResources::RemoveResource(const char * metaPath)
 			std::string uuidNum = "UUID_" + std::to_string(i);
 			uint childUUID = meta.GetUInt(uuidNum.c_str(), 0);
 			res = Get(childUUID);
-			res->CleanUp();
-			resources.erase(res->GetUUID());
-			App->fileSys->RemoveFile(res->GetExportedFile().c_str());
+			if (res != nullptr) {
+				res->CleanUp();
+				resources.erase(res->GetUUID());
+				App->fileSys->RemoveFile(res->GetExportedFile().c_str());
+			}
 		}
 	}
 	else {		
 		res = Get(UUID);
-		resources.erase(res->GetUUID());
-		res->CleanUp();
-		App->fileSys->RemoveFile(res->GetExportedFile().c_str());
+		if (res != nullptr) {
+			resources.erase(res->GetUUID());
+			res->CleanUp();
+			App->fileSys->RemoveFile(res->GetExportedFile().c_str());
+		}
 	}
 
 	App->fileSys->RemoveFile(metaPath);

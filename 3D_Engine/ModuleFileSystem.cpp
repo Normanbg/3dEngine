@@ -119,7 +119,10 @@ bool ModuleFileSystem::CopyDDStoLib(const char * path, std::vector<std::string>*
 	GetNameFromPath(path, nullptr, &ddsName, nullptr, nullptr);
 
 	std::string libpath = LIB_TEXTURES_PATH +  ddsName + DDS_FORMAT;
+
 	if (written) { (*written).push_back(libpath); }
+	if (ExistsFile(libpath.c_str())) {
+		return true; }
 	ret = Copy(path, libpath.c_str());
 	return ret;
 }
@@ -135,7 +138,7 @@ bool ModuleFileSystem::CopyPEItoLib(const char * path, std::vector<std::string>*
 
 	std::string libpath = LIB_MODELS_PATH +uuid+ peiName + DDS_FORMAT;
 	if (written) { (*written).push_back(libpath); }
-
+	if (ExistsFile(libpath.c_str())) { return true; }
 	ret = Copy(path, libpath.c_str());
 
 	return ret;
@@ -148,6 +151,7 @@ bool ModuleFileSystem::CopyAudioToLib(const char * path, std::vector<std::string
 
 	std::string libpath = LIB_AUDIO_PATH + auName ;
 	if (written) { (*written).push_back(libpath); }
+	if (ExistsFile(libpath.c_str())) { return true; }
 	ret = Copy(path, libpath.c_str());
 
 	return ret;
@@ -260,21 +264,26 @@ void ModuleFileSystem::NormalizePath(std::string & full_path, bool toLower) cons
 	}
 }
 
-bool ModuleFileSystem::Copy(const char * source, const char * destination)
+
+
+bool ModuleFileSystem::Copy(const char * source, const char * destination) //copy outside virtual filesystem
 {
 	bool ret = false;
-	char buf[8192];
+	const uint def_size = 8192;
+	char buf[def_size];
 
-	PHYSFS_file* src = PHYSFS_openRead(source);
+
+	FILE* src = nullptr;
+	fopen_s(&src, source, "rb");
 	PHYSFS_file* dest = PHYSFS_openWrite(destination);
 
 	PHYSFS_sint32 size;
-	if (src && dest){
+	if (src && dest) {
 
-		while (size = (PHYSFS_sint32)PHYSFS_read(src, buf, 1, 8192))
+		while (size = fread_s(buf, def_size,1, def_size,src))
 			PHYSFS_write(dest, buf, 1, size);
 
-		PHYSFS_close(src);
+		fclose(src);
 		PHYSFS_close(dest);
 		ret = true;
 
