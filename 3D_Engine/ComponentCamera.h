@@ -24,6 +24,8 @@ public:
 	void SetPos(const float3 pos);
 	void SetFOV(const float _fov);
 	void SetAspectRatio(const float new_ar);
+	void SetFrustumUp(const float3 up);
+	void SetFrustumFront(const float3 front);
 
 	void DebugDraw();
 

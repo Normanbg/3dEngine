@@ -239,8 +239,10 @@ void ModuleEditorCamera::MouseMovement(float dt)
 	if (dx != 0)
 	{
 		Quat rotationX = Quat::RotateY(dx);
-		cameraComp->GetFrustum().front = rotationX.Mul(cameraComp->GetFrustum().front).Normalized();
-		cameraComp->GetFrustum().up = rotationX.Mul(cameraComp->GetFrustum().up).Normalized();
+		float3 front = rotationX.Mul(cameraComp->GetFrustum().front).Normalized();
+		float3 up = rotationX.Mul(cameraComp->GetFrustum().up).Normalized();
+		cameraComp->SetFrustumFront(front);
+		cameraComp->SetFrustumUp(up);
 	}
 	if (dy != 0)
 	{
@@ -248,8 +250,9 @@ void ModuleEditorCamera::MouseMovement(float dt)
 		float3 _up = rotationY.Mul(cameraComp->GetFrustum().up).Normalized();
 		if (_up.y > 0.0f)
 		{
-			cameraComp->GetFrustum().up = _up;
-			cameraComp->GetFrustum().front = rotationY.Mul(cameraComp->GetFrustum().front).Normalized();
+			float3 _front = rotationY.Mul(cameraComp->GetFrustum().front).Normalized();
+			cameraComp->SetFrustumUp(_up);
+			cameraComp->SetFrustumFront(_front);
 		}
 	}
 }
