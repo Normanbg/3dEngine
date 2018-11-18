@@ -88,6 +88,10 @@ update_status ModuleScene::PostUpdate(float dt) {
 			ret &= root->childrens[i]->PostUpdate();
 		}
 	}
+	if (objectMoved) {
+		SetQuadTree();
+		objectMoved = false;
+	}
 
 	update_status retUS;
 	ret ? retUS = UPDATE_CONTINUE : retUS = UPDATE_ERROR;
@@ -239,6 +243,7 @@ void ModuleScene::LoadScene(const char*file)
 
 void ModuleScene::SetQuadTree()
 {
+	staticOBjs.clear();
 	rootQuadTree->Clear();
 	GetAllStaticGOs(root);
 
@@ -316,9 +321,9 @@ void ModuleScene::DrawGuizmo(ImGuizmo::OPERATION operation)
 		transMatr.Transpose();
 
 		if (ImGuizmo::IsUsing()) {
-			//gObjSelected->transformComp->setLocalMatrix(transMatr);
 			transform->setGlobalMatrix(transMatr);
 			root->CalculateAllGlobalMatrix();
+			objectMoved = true;
 		}
 	}
 }

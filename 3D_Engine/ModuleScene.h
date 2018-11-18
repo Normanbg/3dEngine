@@ -39,7 +39,7 @@ public:
 	GameObject* AddGameObject();
 	GameObject* AddGameObject(const char* name);	
 	GameObject* AddGameObject(const char* name, GameObject* parent);
-	GameObject* CreateCube();
+	GameObject* CreateCube();///--------------------------------------------------------------------------REMOVEEEEEE MEEE!!!!!!!!!!!!!!!!!
 	GameObject* GetGameObjectByUUID(uuid UUID) const;
 	GameObject* GetGameObjectUUIDRecursive(uuid UUID, GameObject* go) const;
 
@@ -62,15 +62,14 @@ public:
 	uuid TextureResourceSelected = 0;
 	
 	bool inGame = false;
-	
+	bool drawRay = false;
+	bool objectMoved = false;
+
 	int numCubes = 0;	
 
 	uint staticsGObjs = 0;
 	Quadtree* rootQuadTree = nullptr;
 
-
-	//-----------------------------------
-	bool drawRay = false;
 	LineSegment line;
 
 	ImGuizmo::OPERATION guizmoOp = ImGuizmo::TRANSLATE;

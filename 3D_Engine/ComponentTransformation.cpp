@@ -39,33 +39,35 @@ void ComponentTransformation::DrawInspector()
 	float3 _scale = getScale();
 
 	GameObject* selectedRecover = App->scene->gObjSelected;
-	bool moved = false;
+	//bool moved = false;
 	if (selectedRecover != nullptr)//SETTING THIS BECAUSE WE ONLY ALLOW TO MOVE ONE GAMEOBJECT (ONLY 1 COMP. TRANSFORM DRAWED)-------
 	{
 		if (ImGui::DragFloat3("Position", (float*)&_pos, 0.1f))
 		{
 			selectedRecover->transformComp->setPos(_pos);
-			moved = true;
+			if (selectedRecover->staticGO)
+				App->scene->objectMoved = true;
 		}
 		if (ImGui::DragFloat3("Rotation", (float*)&_rot, 0.1f)) {
 
 			selectedRecover->transformComp->setRotEuler(_rot);
-			moved = true;
+			if (selectedRecover->staticGO)
+				App->scene->objectMoved = true;
 		}
 		if (ImGui::DragFloat3("Scale", (float*)&_scale, 0.1f, 0.0f)) {
 			
 			selectedRecover->transformComp->setScale(_scale);
-			moved = true;
+			if (selectedRecover->staticGO)
+				App->scene->objectMoved = true;
 		}
 		if (ImGui::SmallButton("Reset"))
 		{			
 			selectedRecover->transformComp->setPos(float3::zero);
 			selectedRecover->transformComp->setRotEuler(float3::zero);
 			selectedRecover->transformComp->setScale(float3::one);
-			moved = true;
+			if (selectedRecover->staticGO)
+				App->scene->objectMoved = true;
 		}
-		if (moved)
-			App->scene->SetQuadTree();
 	}
 	ImGui::Separator();
 }
