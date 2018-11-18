@@ -46,6 +46,15 @@
     <Filter Include="Sources\Objects &amp; Components\Components">
       <UniqueIdentifier>{ad85996c-8a64-4f36-acd6-9a0255ab8702}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Resources">
+      <UniqueIdentifier>{2faae09d-9319-4fa7-9023-2dbcac47262d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Tools\mmgr">
+      <UniqueIdentifier>{b97f3e15-7d0f-41c3-9144-899f73306c31}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Tools\ImGuizmo">
+      <UniqueIdentifier>{19af97b0-e4f1-4188-b804-93d7810b1ef2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -60,17 +69,8 @@
     <ClInclude Include="ModuleWindow.h">
       <Filter>Sources\Modules</Filter>
     </ClInclude>
-    <ClInclude Include="glmath.h">
-      <Filter>Sources\Containers</Filter>
-    </ClInclude>
     <ClInclude Include="Color.h">
       <Filter>Sources\Containers</Filter>
-    </ClInclude>
-    <ClInclude Include="Light.h">
-      <Filter>Sources\Helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="Timer.h">
-      <Filter>Sources\Tools</Filter>
     </ClInclude>
     <ClInclude Include="MathGeoLib\Geometry\AABB.h">
       <Filter>Sources\Tools\MathGeolib</Filter>
@@ -324,9 +324,6 @@
     <ClInclude Include="ComponentTransformation.h">
       <Filter>Sources\Objects &amp; Components\Components</Filter>
     </ClInclude>
-    <ClInclude Include="ModuleTextures.h">
-      <Filter>Sources\Modules</Filter>
-    </ClInclude>
     <ClInclude Include="SceneImporter.h">
       <Filter>Sources\Tools</Filter>
     </ClInclude>
@@ -348,6 +345,9 @@
     <ClInclude Include="UIPanelInspector.h">
       <Filter>Sources\Modules\GuiPanels</Filter>
     </ClInclude>
+    <ClInclude Include="ComponentCamera.h">
+      <Filter>Sources\Objects &amp; Components\Components</Filter>
+    </ClInclude>
     <ClInclude Include="Math.h">
       <Filter>Sources\Tools</Filter>
     </ClInclude>
@@ -357,12 +357,58 @@
     <ClInclude Include="UIPanelMaterials.h">
       <Filter>Sources\Modules\GuiPanels</Filter>
     </ClInclude>
-    <ClInclude Include="ComponentCamera.h">
-      <Filter>Sources\Objects &amp; Components\Components</Filter>
+    <ClInclude Include="Config.h">
+      <Filter>Sources\Tools</Filter>
     </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>Sources\Containers</Filter>
     </ClInclude>
+    <ClInclude Include="Quadtree.h">
+      <Filter>Sources\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="Light.h">
+      <Filter>Sources\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleTime.h">
+      <Filter>Sources\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentWithResource.h">
+      <Filter>Sources\Objects &amp; Components\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleResources.h">
+      <Filter>Sources\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>Sources\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceTexture.h">
+      <Filter>Sources\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceAudio.h">
+      <Filter>Sources\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceMesh.h">
+      <Filter>Sources\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="mmgr\mmgr.h">
+      <Filter>Sources\Tools\mmgr</Filter>
+    </ClInclude>
+    <ClInclude Include="FBO.h">
+      <Filter>Sources\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="Timer.h">
+      <Filter>Sources\Tools\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="UIPanelSceneInfo.h">
+      <Filter>Sources\Modules\GuiPanels</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGuizmo\ImGuizmo.h">
+      <Filter>Sources\Tools\ImGuizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="UIPanelAssets.h">
+      <Filter>Sources\Modules\GuiPanels</Filter>
+    </ClInclude>
+    <ClInclude Include="UIPanelOptimization.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleInput.cpp">
@@ -379,9 +425,6 @@
     </ClCompile>
     <ClCompile Include="Timer.cpp">
       <Filter>Sources\Tools</Filter>
-    </ClCompile>
-    <ClCompile Include="glmath.cpp">
-      <Filter>Sources\Containers</Filter>
     </ClCompile>
     <ClCompile Include="Color.cpp">
       <Filter>Sources\Containers</Filter>
@@ -545,9 +588,6 @@
     <ClCompile Include="ComponentTransformation.cpp">
       <Filter>Sources\Objects &amp; Components\Components</Filter>
     </ClCompile>
-    <ClCompile Include="ModuleTextures.cpp">
-      <Filter>Sources\Modules</Filter>
-    </ClCompile>
     <ClCompile Include="SceneImporter.cpp">
       <Filter>Sources\Tools</Filter>
     </ClCompile>
@@ -559,6 +599,9 @@
     </ClCompile>
     <ClCompile Include="UIPanelHierarchy.cpp">
       <Filter>Sources\Modules\GuiPanels</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentCamera.cpp">
+      <Filter>Sources\Objects &amp; Components\Components</Filter>
     </ClCompile>
     <ClCompile Include="Math.cpp">
       <Filter>Sources\Tools</Filter>
@@ -572,12 +615,52 @@
     <ClCompile Include="UIPanelMaterials.cpp">
       <Filter>Sources\Modules\GuiPanels</Filter>
     </ClCompile>
-    <ClCompile Include="ComponentCamera.cpp">
-      <Filter>Sources\Objects &amp; Components\Components</Filter>
+    <ClCompile Include="Config.cpp">
+      <Filter>Sources\Tools</Filter>
     </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>Sources\Containers</Filter>
     </ClCompile>
+    <ClCompile Include="Quadtree.cpp">
+      <Filter>Sources\Containers</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleTime.cpp">
+      <Filter>Sources\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentWithResource.cpp">
+      <Filter>Sources\Objects &amp; Components\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleResources.cpp">
+      <Filter>Sources\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource.cpp">
+      <Filter>Sources\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceTexture.cpp">
+      <Filter>Sources\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceAudio.cpp">
+      <Filter>Sources\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceMesh.cpp">
+      <Filter>Sources\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="mmgr\mmgr.cpp">
+      <Filter>Sources\Tools\mmgr</Filter>
+    </ClCompile>
+    <ClCompile Include="FBO.cpp">
+      <Filter>Sources\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="UIPanelSceneInfo.cpp">
+      <Filter>Sources\Modules\GuiPanels</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGuizmo\ImGuizmo.cpp">
+      <Filter>Sources\Tools\ImGuizmo</Filter>
+    </ClCompile>
+    <ClCompile Include="UIPanelAssets.cpp">
+      <Filter>Sources\Modules\GuiPanels</Filter>
+    </ClCompile>
+    <ClCompile Include="UIPanelOptimization.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="MathGeoLib\Geometry\KDTree.inl">

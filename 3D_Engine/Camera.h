@@ -10,14 +10,18 @@ public:
 	~Camera();
 
 	void SetFOV(float _fov);
-
 	void SetAspectRatio(float new_ar);
+	void SetPos(float3 pos);
+	const float3 GetPos() const;
+	const float GetFOV() const;
+	const float GetAspectRatio() const;
 
-	float* GetProjMatrix();
-
+	void DebugDraw();
 public:
 	Frustum frustum;
 
+private:
+	float fov = 0.f;
 };
 
 #endif // !__CAMERA_H__

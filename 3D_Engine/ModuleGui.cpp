@@ -4,19 +4,26 @@
 #include "ImGui/imgui_impl_sdl.h"
 #include "ImGui/imgui_impl_opengl2.h"
 #include "MathGeoLib/Geometry/GeometryAll.h"
+#include "ImGuizmo/ImGuizmo.h"
 #include "UIPanel.h"
 #include "UIPanelAbout.h"
 #include "UIPanelConfig.h"
 #include "UIPanelConsole.h"
 #include "UIPanelInspector.h"
+#include "UIPanelAssets.h"
 #include "UIPanelHierarchy.h"
 #include "UIPanelMaterials.h"
+#include "UIPanelScene.h"
+#include "UIPanelSceneInfo.h"
+#include "UIPanelOptimization.h"
 #include "ModuleWindow.h"
 #include "ModuleInput.h"
 #include "ModuleAudio.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleEditorCamera.h"
 #include "Brofiler/Brofiler.h"
+
+#include "mmgr/mmgr.h"
 
 #include <list>
 
@@ -39,10 +46,10 @@ bool ModuleGui::Start()
 {
 	BROFILER_CATEGORY("GUI_Start", Profiler::Color::Chartreuse);
 	
-	dropFX = App->audio->LoadFx("fx/drop.wav");
-	closeFX = App->audio->LoadFx("fx/close.wav");
-	openFX = App->audio->LoadFx("fx/open.wav");
-	searchingFX = App->audio->LoadFx("fx/searching.wav");
+	dropFX = App->audio->LoadFx("drop.wav");
+	closeFX = App->audio->LoadFx("close.wav");
+	openFX = App->audio->LoadFx("open.wav");
+	searchingFX = App->audio->LoadFx("searching.wav");
 
 	uiPanels.push_back(panelAbout = new UIPanelAbout("About", 150, 150, 350, 350));
 	uiPanels.push_back(panelConfig = new UIPanelConfig("Configuration", 1025, 15, 250, 550, true));
@@ -50,6 +57,10 @@ bool ModuleGui::Start()
 	uiPanels.push_back(panelInspector = new UIPanelInspector("Inspector", 775, 15, 250, 550, true));
 	uiPanels.push_back(panelHierarchy = new UIPanelHierarchy("Hierarchy", 0, 15, 250, 550, true));
 	uiPanels.push_back(panelMaterial = new UIPanelMaterials("Materials", 0, 399, 240, 406, true));
+	uiPanels.push_back(panelScene = new UIPanelScene("Scene", 0, 399, 240, 406, true));
+	uiPanels.push_back(panelSceneInfo = new UIPanelSceneInfo("Scene Info", 0, 399, 240, 406, true));
+	uiPanels.push_back(panelAssets = new UIPanelAssets("Assets", 0, 15, 250, 550, true));
+	uiPanels.push_back(panelOptim = new UIPanelOptimization("Optimization", 0, 15, 250, 550, true));
 
 	ImGui::CreateContext();
 	demoShowcase = false;
@@ -70,6 +81,7 @@ update_status ModuleGui::PreUpdate(float dt)
 	ImGui_ImplOpenGL2_NewFrame();
 	ImGui_ImplSDL2_NewFrame(App->window->window);
 	ImGui::NewFrame();
+	ImGuizmo::BeginFrame();
 	return UPDATE_CONTINUE;
 }
 
@@ -78,6 +90,14 @@ update_status ModuleGui::Update(float dt)
 	BROFILER_CATEGORY("GUI_Update", Profiler::Color::Chartreuse);
 	if (ImGui::BeginMainMenuBar()) {
 		if (ImGui::BeginMenu("File")) {
+			if (ImGui::MenuItem("Clear scene"))
+				clearScene = true;
+			if (ImGui::MenuItem("Load PEI File..."))
+				panelSceneInfo->wantToLoadFile = true;
+			if (ImGui::MenuItem("Save scene"))
+				App->scene->SaveScene();
+			if (ImGui::MenuItem("Load scene"))
+				App->scene->LoadScene();			
 			if (ImGui::MenuItem("Quit", "ESC"))
 				return UPDATE_STOP;
 			ImGui::EndMenu();
@@ -155,10 +175,27 @@ update_status ModuleGui::Update(float dt)
 					App->audio->PlayFx(openFX);
 				panelMaterial->ChangeActive();
 			}
+			if (ImGui::MenuItem("Scene", NULL, panelScene->isEnabled())) {
+				if (panelScene->isEnabled()) {
+					App->audio->PlayFx(closeFX);
+				}
+				else
+					App->audio->PlayFx(openFX);
+				panelScene->ChangeActive();
+			}
+			if (ImGui::MenuItem("Scene Info", NULL, panelSceneInfo->isEnabled())) {
+				if (panelSceneInfo->isEnabled()) {
+					App->audio->PlayFx(closeFX);
+				}
+				else
+					App->audio->PlayFx(openFX);
+				panelSceneInfo->ChangeActive();
+			}
 			ImGui::EndMenu();
 		}
 		ImGui::EndMainMenuBar();
 	}
+	
 	return UPDATE_CONTINUE;
 }
 
@@ -209,8 +246,13 @@ void ModuleGui::ImplGuiInputs(SDL_Event * e) const{
 	ImGui_ImplSDL2_ProcessEvent(e);
 }
 
-bool ModuleGui::MouseOnGui() const {
-	return ImGui::GetIO().WantCaptureMouse;
+bool ModuleGui::isMouseOnScene() const {
+	return mouseOnScene;
+}
+
+void ModuleGui::MouseOnScene(bool mouseScene)
+{
+	mouseOnScene = mouseScene;
 }
 
 void ModuleGui::SetWinDockInv(){	

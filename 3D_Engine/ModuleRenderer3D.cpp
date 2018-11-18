@@ -7,10 +7,13 @@
 #include "GameObject.h"
 #include "ComponentCamera.h"
 #include "Camera.h"
+#include "Config.h"
 #include "ModuleGui.h"
 #include "ModuleScene.h"
 #include "Brofiler/Brofiler.h"
+#include "FBO.h"
 
+#include "mmgr/mmgr.h"
 
 
 
@@ -27,9 +30,7 @@ ModuleRenderer3D::ModuleRenderer3D(bool start_enabled) : Module(start_enabled)
 
 // Destructor
 ModuleRenderer3D::~ModuleRenderer3D(){
-
-	delete texImporter;
-	delete importer;
+		
 }
 
 // Called before render is available
@@ -39,9 +40,7 @@ bool ModuleRenderer3D::Init(JSON_Object* obj)
 	OWN_LOG("Creating 3D Renderer context");
 	bool ret = true;
 	
-	if (obj != nullptr) {
-		SetDataFromJson(obj);
-	}
+	
 	
 	//Create OGL context 
 	context = SDL_GL_CreateContext(App->window->window); 
@@ -71,6 +70,7 @@ bool ModuleRenderer3D::Init(JSON_Object* obj)
 		if(_vSync && SDL_GL_SetSwapInterval(1) < 0)
 			OWN_LOG("Warning: Unable to set VSync! SDL Error: %s\n", SDL_GetError());
 
+
 		//Initialize Projection Matrix as identity
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
@@ -82,6 +82,11 @@ bool ModuleRenderer3D::Init(JSON_Object* obj)
 			OWN_LOG("Error initializing OpenGL! %s\n", gluErrorString(error));
 			ret = false;
 		}
+
+		fboTex = new FBO();
+		int w, h;
+		App->window->GetSize(w, h);
+		fboTex->Create(w , h);
 
 		//Initialize Modelview Matrix
 		glMatrixMode(GL_MODELVIEW);
@@ -133,16 +138,8 @@ bool ModuleRenderer3D::Init(JSON_Object* obj)
 		SetColorMaterial(true);
 		SetTexture2D(true);
 	}
-	// Projection matrix for
-	//OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);//-----------------------------------------------------------------------------
 
-	importer = new SceneImporter();
-	texImporter = new TextureImporter();	
-
-	importer->Init();
-	texImporter->Init();
 	
-	json_object_clear(obj);//clear obj to free memory
 	return ret;
 }
 
@@ -150,7 +147,7 @@ bool ModuleRenderer3D::Start() {
 	BROFILER_CATEGORY("Renderer3D_Start", Profiler::Color::HotPink);
 
 	bool ret = true;
-	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
+
 	return ret;
 }
 
@@ -158,14 +155,29 @@ bool ModuleRenderer3D::Start() {
 update_status ModuleRenderer3D::PreUpdate(float dt)
 {
 	BROFILER_CATEGORY("Renderer3D_PreUpdate", Profiler::Color::HotPink);
+	fboTex->BindFBO();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	if (App->scene->inGame) {
+		ComponentCamera* mainCam = App->scene->mainCamera->GetComponentCamera();
+		glLoadMatrixf(mainCam->GetProjectionMatrix());
+	}
+	else
+		glLoadMatrixf(App->camera->cameraComp->GetProjectionMatrix());
+
 	glMatrixMode(GL_MODELVIEW);
-	glLoadMatrixf(App->camera->cameraComp->GetViewMatrix());
+	if (App->scene->inGame) {
+		ComponentCamera* mainCam = App->scene->mainCamera->GetComponentCamera();
+		glLoadMatrixf(mainCam->GetViewMatrix());
+	}
+	else
+		glLoadMatrixf(App->camera->cameraComp->GetViewMatrix());
 
 	// light 0 on cam pos
-	lights[0].SetPos(App->camera->Position.x, App->camera->Position.y, App->camera->Position.z);
+	lights[0].SetPos(App->camera->cameraComp->GetPos().x, App->camera->cameraComp->GetPos().y, App->camera->cameraComp->GetPos().z);
 
 	for(uint i = 0; i < MAX_LIGHTS; ++i)
 		lights[i].Render();
@@ -181,12 +193,13 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
 	BROFILER_CATEGORY("Renderer3D_PostUpdate", Profiler::Color::HotPink);
-
 	glBindBuffer(GL_ARRAY_BUFFER, 0); ///
-
+	
 
 	//DrawMeshes();
-	App->scene->DrawMeshes();
+	App->scene->Draw();
+	fboTex->UnBindFBO();
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	App->gui->Draw();	
 
@@ -200,20 +213,22 @@ bool ModuleRenderer3D::CleanUp()
 	BROFILER_CATEGORY("Renderer3D_CleanUp", Profiler::Color::HotPink);
 	OWN_LOG("Destroying 3D Renderer");
 
-	importer->CleanUp();
 		
+	fboTex->UnBindFBO();
+	RELEASE(fboTex);
+
 	SDL_GL_DeleteContext(context); 
 	return true;
 }
 
-
 void ModuleRenderer3D::OnResize(const int width, const int height)
 {
-	glViewport(0, 0, width, height);
-	glMatrixMode(GL_PROJECTION);
-	glLoadMatrixf(App->camera->cameraComp->GetProjectionMatrix());
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
+	if (App->scene->inGame) {
+		ComponentCamera* mainCam = App->scene->mainCamera->GetComponentCamera();
+		mainCam->SetAspectRatio((float)width / (float)height);
+	}
+	else
+		App->camera->cameraComp->SetAspectRatio((float)width / (float)height);
 }
 
 char* ModuleRenderer3D::GetGraphicsModel() const
@@ -226,23 +241,16 @@ char * ModuleRenderer3D::GetGraphicsVendor() const
 	return (char*)glGetString(GL_VENDOR);;
 }
 
-void ModuleRenderer3D::SetDataFromJson(JSON_Object* data) {
 
-	_vSync = json_object_dotget_boolean(data, "VSync");
 
-}
+bool ModuleRenderer3D::LoadSettings(Config* data) {
 
-bool ModuleRenderer3D::Load(JSON_Object* data) {
-
-	SetDataFromJson(data);
-
-	//Set Vsync to change it in game
+	data->GetBool("VSync", false);
 
 	return true;
 }
-bool ModuleRenderer3D::Save(JSON_Object* data)const {
-	json_object_dotset_boolean(data, "Render.VSync", _vSync);
-	
+bool ModuleRenderer3D::SaveSettings(Config* data)const {
+	data->AddBool("VSync", _vSync);
 	return true;
 }
 
@@ -275,47 +283,14 @@ void ModuleRenderer3D::SetBoundingBox(bool active){
 	App->scene->SetBoundingBox(active);
 }
 
+void ModuleRenderer3D::ManageDroppedFBX(char * droppedFileDir){
+	App->importer->LoadFBXScene(droppedFileDir);	
+}
 
-/*
-float3 ModuleRenderer3D::GetAvgPosFromMeshes() 
-
+const uint ModuleRenderer3D::GetFBOTexture()
 {
-	float3 sumPoints = float3(0,0,0);
-	
-	for (int i = 0; i < meshes.size(); i++) {
-		sumPoints += meshes[i].getMiddlePoint();
-	}
-	return { sumPoints.x / meshes.size(), sumPoints.y / meshes.size(), sumPoints.z / meshes.size() };
+	return fboTex->texture;
 }
-void ModuleRenderer3D::AddMesh(Mesh*  mesh)
-{
-	meshes.push_back(*mesh);
-}
-
-*/
-
-
-void ModuleRenderer3D::LoadDroppedFBX(char * droppedFileDir){
-	//ClearSceneMeshes();
-	importer->ImportFBXandLoad(droppedFileDir);	
-	//App->camera->FocusToMeshes();
-}
-
-
-
-/*
-void ModuleRenderer3D::ClearSceneMeshes() {
-
-	/*OWN_LOG("Clearing meshes in scene")
-		for (int i = meshes.size() - 1; i >= 0; i--) {
-			meshes[i].CleanUp();
-		}
-	meshes.clear();
-	for (int i = textures.size() - 1; i >= 0; i--) {
-		textures[i].CleanUp();
-	}
-	textures.clear();
-}*/
 
 
 void ModuleRenderer3D::ShowAxis() {

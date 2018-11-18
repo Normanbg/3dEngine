@@ -1,11 +1,12 @@
-
+﻿
 # 3dEngine
 This 3D engine is created for the subject "3D Engines" of [Bachelor’s Degree in Video Games by UPC at CITM](https://www.citm.upc.edu/ing/estudis/graus-videojocs/) by [Norman Benet](https://github.com/Normanbg) & [Carles Margelí](https://github.com/Margeli).
 
 ## Installation:
 Decompress the .zip file in any directory and execute the executable inside the decompressed folder.
 
-### Controls:
+### Camera Controls on Scene:
+
 **Mouse Wheel** to zoom in and out.
 
 **Mouse Right click** for free look around.
@@ -18,12 +19,27 @@ Decompress the .zip file in any directory and execute the executable inside the 
 
 **Holding SHIFT** duplicates movement speed.
 
-**Alt + Mouse Left click** to orbit an object.
+**Alt + Mouse Right click** to orbit an object.
 
 **F** focus the camera around the geometry.
 
-### How to change models or textures:
-Drag and drop the file directly to the engine. Only FBX, DDS, PNG or JPG supported. 
+## Controls Guizmo:
+**W** to translate.
+
+**E** to rotate.
+
+**R** to scale.
+
+### Controls on panels:
+
+**Mouse Left click** for selecting.
+
+**Double Mouse Left Click** inside hierarchy or materials to deselect a game object.
+
+**Mouse Drag** for changing components like Transform.
+
+### Load Objects:
+On assets panel there are all the files to load, click on one and select "Load file". Also it is possible to drag & drop files.
 
 ### Link to the repository:
 [https://github.com/Normanbg/3dEngine](https://github.com/Normanbg/3dEngine)
@@ -32,9 +48,9 @@ Drag and drop the file directly to the engine. Only FBX, DDS, PNG or JPG support
 [https://github.com/Normanbg/3dEngine/releases](https://github.com/Normanbg/3dEngine/releases)
 
 ### Innovation:
-For this delivery the 3d Engine has the innovation feature of Anisotropic Filtering that is already active. 
-Another aspect of innovation is the Audio, there are sound when open/close window from the main menu, when open a link & also when a file is dropped.  
-In addition, is able to load textures in JPG format. In assets there is a .jpg texture to test it.
+For this delivery we are able to render directly the scene on a window, using a Frame Buffer Object to get the texture and let ImGui Image to render it.
+
+Also, we have our fyle system that uses the library physfs.
 
 ### License:
 MIT License

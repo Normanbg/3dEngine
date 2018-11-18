@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "ImGui/imgui.h"
+#include "ImGuizmo/ImGuizmo.h"
 #include "SDL/include/SDL.h"
 #include "Globals.h"
 #include "PerfTimer.h"
@@ -28,8 +29,11 @@ class ModuleRenderer3D;
 class ModuleEditorCamera;
 class ModuleGui;
 class ModuleScene;
-class ModuleTextures;
 class ModuleFileSystem;
+class ModuleTime;
+class ModuleResources;
+class SceneImporter;
+class TextureImporter;
 
 class Application
 {
@@ -40,9 +44,14 @@ public:
 	ModuleRenderer3D* renderer3D;
 	ModuleEditorCamera* camera;
 	ModuleScene* scene;
-	ModuleTextures* textures;
 	ModuleFileSystem* fileSys;
 	ModuleGui* gui;
+	ModuleTime* time;
+	ModuleResources* resources;
+
+
+	SceneImporter* importer;
+	TextureImporter* texImporter;
 
 private:
 
@@ -119,18 +128,18 @@ public:
 	Uint32 last_frame_ms;
 	Uint32 frames_on_last_update;
 
-	float GetTimeScale()const;
+	const float GetTimeScale()const;
 	void SetTimeScale(float ts, int frameNumber = -1);
 	void PauseGame(bool pause);
 
 	
-	inline float GetTotalVideoMem() const {return totalVideoMemF; }
-	inline float GetCurrentVideoMem() const { return currentVideoMemF; }
-	inline float GetAvaliableVideoMem() const { return availableVideoMemF; }
-	inline float GetReservedVideoMem() const { return reservedVideoMemF; }
+	inline const float GetTotalVideoMem() const {return totalVideoMemF; }
+	inline const float GetCurrentVideoMem() const { return currentVideoMemF; }
+	inline const float GetAvaliableVideoMem() const { return availableVideoMemF; }
+	inline const float GetReservedVideoMem() const { return reservedVideoMemF; }
 
-	void SetOrganization(char* newName);
-	std::string GetOrganization() const;
+	void SetOrganization(const char* newName);
+	const std::string GetOrganization() const;
 
 private:
 
@@ -140,8 +149,7 @@ private:
 	void PrepareUpdate();
 	void FinishUpdate();
 
-	void SetDataFromJson(JSON_Object* data);
-
+	
 
 };
 

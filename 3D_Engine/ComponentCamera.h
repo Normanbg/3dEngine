@@ -17,30 +17,36 @@ public:
 	void CleanUp() override;
 	void DrawInspector() override;
 
-	void Look(const float3 & Position, const float3 & Reference, bool RotateAroundReference);
 	void LookAt(const float3 & Spot);
 
-	void CalculateViewMatrix();
-	float * GetViewMatrix();
-	float * GetProjectionMatrix();
-	float GetMouseSensit();
-	float GetScroolSensit();
+	void SetNearPlaneDistance(const float nearPlaneDist);
+	void SetFarPlaneDistance(const float farPlaneDist);
+	void SetPos(const float3 pos);
+	void SetFOV(const float _fov);
+	void SetAspectRatio(const float new_ar);
+	void SetFrustumUp(const float3 up);
+	void SetFrustumFront(const float3 front);
 
-public:
-	GameObject* myGo;
-	Camera* camRes;
-	Frustum frustum;
+	void DebugDraw();
 
-	float3 X, Y, Z, Position, Reference;
+	void Save(Config& data) const;
+	void Load(Config* data);
+
+	const float * GetViewMatrix() const;
+	const float * GetProjectionMatrix() const;
+	const float GetFOV() const;
+	const float GetAspectRatio() const;
+	const float GetNearPlane() const;
+	const float GetFarPlane() const;
+	const float3 GetPos() const;
+
+	Frustum GetFrustum() const;
+
+	void Translate(const float3 trans);
 
 private:
+	Camera* camRes = nullptr;
 
-private:
-	float4x4 ViewMatrix, ViewMatrixInverse;
-	float mouseSensitivity = 0.25f;
-	float scroolWheelSensitivity = 10.0f;
-
-	
 };
 
 #endif // !__COMPONENTCAMERA_H__

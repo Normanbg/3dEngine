@@ -6,8 +6,9 @@
 #include <list>
 #include <vector>
 
-
 #include "RandomGenerator/pcg_variants.h"
+
+
 
 struct ImGuiIO;
 union SDL_Event;
@@ -20,6 +21,9 @@ class UIPanelInspector;
 class UIPanelHierarchy;
 class UIPanelScene;
 class UIPanelMaterials;
+class UIPanelSceneInfo;
+class UIPanelAssets;
+class UIPanelOptimization;
 
 class ModuleGui : public Module
 {
@@ -39,11 +43,12 @@ public:
 
 	void AddConsoleLogs(const char* log) ;
 	void ImplGuiInputs(SDL_Event* e)const;
-	bool MouseOnGui() const;
-
+	bool isMouseOnScene() const;
+	void MouseOnScene(bool mouseScene);
 
 public:
 	bool demoShowcase = false;
+	
 
 	std::list<UIPanel*> uiPanels;
 	UIPanelAbout*		panelAbout		= nullptr;
@@ -53,6 +58,10 @@ public:
 	UIPanelHierarchy*	panelHierarchy	= nullptr;
 	UIPanelScene*		panelScene		= nullptr;
 	UIPanelMaterials*	panelMaterial	= nullptr;
+	UIPanelSceneInfo*	panelSceneInfo  = nullptr;
+	UIPanelAssets*		panelAssets		= nullptr;
+	UIPanelOptimization*panelOptim		= nullptr;
+
 	std::vector<std::string> logsBuffer;
 	uint ilVersion = 0;
 
@@ -62,8 +71,15 @@ public:
 	uint searchingFX = 0; //Used when open an URL
 	ImGuiIO* io;
 
+	bool draw_menu = true;
+	bool clearScene = false;
+	bool loadFile = false;
 private:
+
 	void SetWinDockInv();
+private:
+	bool mouseOnScene = false;
+
 };
 
 #endif 

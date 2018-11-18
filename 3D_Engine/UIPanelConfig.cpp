@@ -4,6 +4,9 @@
 #include "ImGui/imgui.h"
 #include "ModuleWindow.h"
 #include "ModuleInput.h"
+#include "ModuleEditorCamera.h"
+
+#include "mmgr/mmgr.h"
 
 UIPanelConfig::UIPanelConfig(const char * name, float positionX, float positionY, float width, float height, bool active) : UIPanel(name, positionX, positionY, width, height, active)
 {
@@ -168,7 +171,23 @@ void UIPanelConfig::Draw() {
 
 		ImGui::Text("VRAM Reserved: "); ImGui::SameLine();
 		ImGui::TextColored(yellow, "%.2f Mb", App->GetReservedVideoMem());
+		
+		updates++;
 
+		sMStats stats = m_getMemoryStatistics();
+
+		if (updates > MEMORY_UPDATE_READING)
+		{			
+			updates = 0;
+			if (memory.size() > MAX_FPS_LOG) {			
+				memory.erase(memory.begin());				
+			}
+			memory.push_back(stats.totalReportedMemory);
+		}
+
+		char title[20];
+		sprintf_s(title, 20, "Memory Consumption");
+		ImGui::PlotHistogram("##memory", &memory[0], memory.size(), 0, title, 0.0f, stats.peakReportedMemory * 1.5f, ImVec2(310, 100));
 	}
 	if (ImGui::CollapsingHeader("Render")) {
 		bool depthTest = App->renderer3D->GetDepthTest();
@@ -215,27 +234,21 @@ void UIPanelConfig::Draw() {
 		if (ImGui::Checkbox("Bounding Box", &bBox)) {
 			App->renderer3D->SetBoundingBox(bBox);
 		}
-		bool FBXtest = App->renderer3D->GetLoadFBXTest();
-		if (ImGui::Checkbox("Test Load FBX", &FBXtest)) {
-			App->renderer3D->SetLoadFBXTest(FBXtest);
+		ImGui::SameLine();
+		bool quadtree = App->renderer3D->GetQuadTree();
+		if (ImGui::Checkbox("Quadtree", &quadtree)) {
+			App->renderer3D->SetQuadTree(quadtree);
+		}
+		bool ray = App->renderer3D->GetRay();
+		if (ImGui::Checkbox("Mouse Ray", &ray)) {
+			App->renderer3D->SetRay(ray);
 		}
 	}
-	/*
-	if (ImGui::CollapsingHeader("Textures")) {
-		std::vector<Texture>* tex = App->renderer3D->GetTexturesList(); int j = 0;
-		for (std::vector<Texture>::iterator texIterator = (*tex).begin(); texIterator != (*tex).end(); j++, texIterator++) {
-			ImGui::PushID("Texture" + j);
-			char textNumber[30];
-			sprintf_s(textNumber, 30, "Texture %d", j + 1);
-			if (ImGui::TreeNode(textNumber)) {
-				ImGui::Text("Texture size:\n Width: %dpx \n Height: %dpx \n Texture ID: %d", texIterator->texWidth, texIterator->texHeight, (*texIterator).textureID);
-				float windowSize = ImGui::GetWindowContentRegionWidth();
-				ImGui::Image((void*)(texIterator._Ptr->textureID), ImVec2(windowSize, windowSize));
-				ImGui::TreePop();
-			}
-			ImGui::PopID();
-		}
-	}*/
+	
+	if (ImGui::CollapsingHeader("Camera")) {
+		App->camera->ConfigInfo();
+		
+	}
 	ImGui::End();
 
 }

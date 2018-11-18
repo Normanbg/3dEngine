@@ -13,15 +13,20 @@ public:
 
 	void Start();
 	void Stop();
+	void Resume();
 
-	Uint32 Read();
+	UINT32 Read();
 	float ReadSec();
+
+	bool isPaused();
+	void SetZero();
 
 private:
 
 	bool	running;
 	float	started_at;
 	float	stopped_at;
+	float	resumed_at;
 };
 
 #endif //__TIMER_H__

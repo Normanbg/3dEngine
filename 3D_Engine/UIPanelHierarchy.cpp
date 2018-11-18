@@ -7,6 +7,8 @@
 #include "ModuleScene.h"
 #include "ModuleInput.h"
 
+#include "mmgr/mmgr.h"
+
 UIPanelHierarchy::UIPanelHierarchy(const char * name, float positionX, float positionY, float width, float height, bool active) : UIPanel(name, positionX, positionY, width, height, active)
 {
 }
@@ -22,13 +24,16 @@ void UIPanelHierarchy::Draw()
 	{
 		if (ImGui::BeginMenu("Create"))
 		{
-			if (ImGui::MenuItem("Cube")) {
-				App->scene->CreateCube();
+			if (ImGui::MenuItem("Game Object")) {
+				App->scene->AddGameObject("newGameObject");
 			}
-			//if (ImGui::MenuItem("Load")) { App->LoadGame(); }
 			ImGui::EndMenu();
 		}
 		ImGui::EndMenuBar();
+	}
+	//FOR DESELECTING GAME OBJECTS
+	if (ImGui::IsMouseDoubleClicked(0) && ImGui::IsMouseHoveringWindow()) {
+		App->scene->DeselectAll();
 	}
 	DrawChilds(App->scene->root->childrens);
 	ImGui::End();
@@ -42,8 +47,13 @@ void UIPanelHierarchy::DrawChilds(std::vector<GameObject*> childs){
 			flags |= ImGuiTreeNodeFlags_Selected;
 		if ((*goIterator)->childrens.empty())
 			flags |= ImGuiTreeNodeFlags_Leaf;
+
 		//TODO::COLOR IF IS ACTIVE--------------
+
+		ImGui::PushID((*goIterator)->GetUUID());
 		bool treeNodeOpened = ImGui::TreeNodeEx((*goIterator)->name.c_str(), flags);
+		ImGui::PopID();
+		
 		if (ImGui::IsItemClicked(0) || ImGui::IsItemClicked(1))
 		{
 			//CTRL pressed = addselectedG0

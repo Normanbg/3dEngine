@@ -7,12 +7,8 @@
 
 class GameObject;
 class ComponentCamera;
-
-enum FrustumContained {
-	IS_OUT = 0,
-	IS_IN,
-	INTERSECT
-};
+class Quadtree;
+class list;
 
 class ModuleEditorCamera : public Module
 {
@@ -20,37 +16,31 @@ public:
 	ModuleEditorCamera(bool start_enabled = true);
 	~ModuleEditorCamera();
 
+	bool Init(JSON_Object* data) override;
 	bool Start();
 	update_status Update(float dt);
 	bool CleanUp();
 
-	FrustumContained ContainsAaBox(const AABB & refBox) const;
+	//FrustumContained ContainsAaBox(const AABB & refBox) const;
+	//void QTContainsAaBox(Quadtree* qt);
 
-	void Look(const vec3 &Position, const vec3 &Reference, bool RotateAroundReference = false);
-	void LookAt(const vec3 &Spot);
-	void Move(const vec3 &Movement);
-	void MoveTo(const vec3 Movement);
-	float* GetViewMatrix() ;
-	void FocusToMeshes();
+	void ConfigInfo();
+
+	const float GetMouseSensit() const;
+	const float GetScrollSensit() const;
+	const bool GetFrustumCulling() const;
 
 public:
-
-	bool free_camera = false;
-
-	vec3 X, Y, Z, Position, Reference;
-
-	//---------
 	ComponentCamera* cameraComp;
+
 private:
 	void MouseMovement(float dt);
 	void Orbit(float dt);
-	void CalculateViewMatrix();
 
 private:
-	bool debug = false;
-	vec3 offset_to_player;
-	mat4x4 ViewMatrix, ViewMatrixInverse;
-
+	float mouseSensitivity = 0.25f;
+	float scrollWheelSensitivity = 10.0f;
+	bool frustumCulling = true;
 };
 
 #endif //__MODULE_EDITOR_CAM_H__

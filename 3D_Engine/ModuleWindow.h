@@ -5,6 +5,7 @@
 #include "SDL/include/SDL.h"
 
 class Application;
+struct Config;
 
 class ModuleWindow : public Module
 {
@@ -17,10 +18,10 @@ public:
 
 	bool Init(JSON_Object* obj);
 	bool CleanUp();
-	bool Load(JSON_Object* data)override ;
-	bool Save(JSON_Object* data) const;
+	bool LoadSettings(Config* data)override ;
+	bool SaveSettings(Config* data) const override;
 
-	void SetTitle(char* title);
+	void SetTitle(const char* title);
 
 	void SetBorderless(bool borderless);
 	void SetResizable(bool resizable);
@@ -28,13 +29,14 @@ public:
 	void SetFullscreenDesktop(bool fullsdesktop);
 	void SetSize(uint w, uint h);
 
-	bool IsFullscreen() const { return _fullscreen; }
-	bool IsBorderless() const { return _borderless; }
-	bool IsResizable() const { return _resizable; }
-	bool IsFullscreenDesktop() const{ return _fullDesktop; }
-	float GetBrightness() const { return _brightness; }
-	std::string GetWindowTitle() const { return _title; }
+	const bool IsFullscreen() const { return _fullscreen; }
+	const bool IsBorderless() const { return _borderless; }
+	const bool IsResizable() const { return _resizable; }
+	const bool IsFullscreenDesktop() const{ return _fullDesktop; }
+	const float GetBrightness() const { return _brightness; }
+	const std::string GetWindowTitle() const { return _title; }
 	void GetSize(int &h, int &w)const;
+	const float2 GetSize();
 
 	void SetBrightness(float bright);
 
@@ -52,7 +54,7 @@ private:
 	bool _resizable;
 	bool _borderless;
 	bool _fullDesktop;
-	int _brightness = DEFAULT_BRIGHTNESS;
+	float _brightness = DEFAULT_BRIGHTNESS;
 	std::string _title  = TITLE;
 
 	uint _w;

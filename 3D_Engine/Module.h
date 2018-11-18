@@ -2,6 +2,7 @@
 #define __MODULE_H__
 
 #include "./JSON/parson.h"
+#include "Config.h"
 #include <string>
 
 class Application;
@@ -52,12 +53,12 @@ public:
 		return true;
 	}
 
-	virtual bool Load(JSON_Object* data)
+	virtual bool LoadSettings(Config* data)
 	{
 		return true;
 	}
 
-	virtual bool Save(JSON_Object* data) const
+	virtual bool SaveSettings(Config* data) const
 	{
 		return true;
 	}

@@ -20,6 +20,7 @@ void log(const char file[], int line, const char* format, ...);
 
 
 typedef unsigned int uint;
+typedef unsigned long long uuid;
 
 enum update_status
 {
@@ -27,6 +28,32 @@ enum update_status
 	UPDATE_STOP,
 	UPDATE_ERROR
 };
+
+enum FrustumContained {
+	IS_OUT = 0,
+	IS_IN,
+	INTERSECT
+};
+
+// Deletes a buffer
+#define RELEASE( x )\
+    {\
+       if( x != nullptr )\
+       {\
+         delete x;\
+	     x = nullptr;\
+       }\
+    }
+
+// Deletes an array of buffers
+#define RELEASE_ARRAY( x )\
+	{\
+       if( x != nullptr )\
+       {\
+           delete[] x;\
+	       x = nullptr;\
+		 }\
+	 }
 
 // Configuration -----------
 #define SCREEN_WIDTH 1280
@@ -40,17 +67,42 @@ enum update_status
 #define VSYNC true
 #define TITLE "3D_Engine"
 #define ORGANIZATION "UPC CITM"
-#define CONFIG_FILE "config.JSON"
+#define CONFIG_FILE "Settings/config.JSON"
+#define SCENE_FILE "Scenes/scene.JSON"
+#define TEMP_SCENE_FILE "Scenes/scene_temp.JSON"
+#define ENGINE_FX_PATH "Engine/Audio/Fx/"
 #define CAMERA_SPEED 10.0f
 
-#define NUM_PATHS 6
+#define NUM_PATHS 8
 #define TEXTURES_PATH "Assets/Textures/"
 #define MODELS_PATH "Assets/3DModels/"
 #define AUDIO_PATH "Assets/Audio/"
 #define LIB_TEXTURES_PATH "Library/Textures/"
 #define LIB_MODELS_PATH "Library/3DModels/"
+#define LIB_AUDIO_PATH "Library/Audio/"
 #define SETTINGS_PATH "Settings/"
+#define SCENES_PATH "Scenes/"
+#define ASSETS_PATH "Assets/"
 #define OWN_FILE_FORMAT ".pei"
+#define OWN_FILE_FORMAT_CAP ".PEI"
 #define DDS_FORMAT ".dds"
+#define DDS_FORMAT_CAP ".DDS"
 #define FBX_FORMAT ".fbx"
+#define FBX_FORMAT_CAP ".FBX"
+#define PNG_FORMAT ".png"
+#define PNG_FORMAT_CAP ".PNG"
+#define TGA_FORMAT ".tga"
+#define TGA_FORMAT_CAP ".TGA"
+#define JPG_FORMAT ".jpg"
+#define JPG_FORMAT_CAP ".JPG"
+#define JPEG_FORMAT ".jpeg"
+#define JPEG_FORMAT_CAP ".JPEG"
+#define WAV_FORMAT ".wav"
+#define WAV_FORMAT_CAP ".WAV"
+#define OGG_FORMAT ".ogg"
+#define OGG_FORMAT_CAP ".OGG"
+#define META_FORMAT ".meta"
+
+
+
 #endif // !__GLOBALS_H__

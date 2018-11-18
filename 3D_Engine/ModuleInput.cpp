@@ -8,6 +8,9 @@
 #include "ModuleGui.h"
 #include "Brofiler/Brofiler.h"
 
+#include "mmgr/mmgr.h"
+
+
 #define MAX_KEYS 300
 
 ModuleInput::ModuleInput(bool start_enabled) : Module(start_enabled)
@@ -36,8 +39,7 @@ bool ModuleInput::Init(JSON_Object* obj)
 	{
 		OWN_LOG("SDL_EVENTS could not initialize! SDL_Error: %s\n", SDL_GetError());
 		ret = false;
-	}
-	json_object_clear(obj);//clear obj to free memory
+	}	
 	SDL_EventState(SDL_DROPFILE, SDL_ENABLE);
 
 	return ret;
@@ -104,8 +106,7 @@ update_status ModuleInput::PreUpdate(float dt)
 		{
 			case SDL_MOUSEWHEEL:
 
-				if (!App->gui->MouseOnGui())
-
+				if (App->gui->isMouseOnScene())
 					mouse_z = e.wheel.y;
 			break;
 
@@ -122,8 +123,10 @@ update_status ModuleInput::PreUpdate(float dt)
 			break;
 
 			case SDL_WINDOWEVENT:
-			if(e.window.event == SDL_WINDOWEVENT_RESIZED)
-			App->renderer3D->OnResize(e.window.data1, e.window.data2);
+				if (e.window.event == SDL_WINDOWEVENT_RESIZED) {
+					//App->renderer3D->OnResize(e.window.data1, e.window.data2);	
+					App->window->SetSize(e.window.data1, e.window.data2);
+				}
 			break;
 			case SDL_DROPFILE:
 				dropped_filedir = e.drop.file;
@@ -132,35 +135,38 @@ update_status ModuleInput::PreUpdate(float dt)
 				switch (FileType file = ObtainDroppedFileType(dropped_filedirStr))
 				{
 				case CANT_LOAD:
-					OWN_LOG("File not supported, try FBX, PNG, JPG or DDS")
+					OWN_LOG("File not supported, try FBX, PNG, JPG, TGA or DDS")
 					break;
 				case FBX:
 					OWN_LOG("Dropped .fbx file");
-					App->renderer3D->LoadDroppedFBX(dropped_filedir);
+					App->renderer3D->ManageDroppedFBX(dropped_filedir);
 					
 					break;
 				case PNG:
 					OWN_LOG("Dropped .png file");
-					App->textures->LoadDroppedTexture(dropped_filedir);
+					App->texImporter->ManageDroppedTexture(dropped_filedir);
 					
 					break;
 				case JPG:
 					OWN_LOG("Dropped .jpg file");
-					App->textures->LoadDroppedTexture(dropped_filedir);
+					App->texImporter->ManageDroppedTexture(dropped_filedir);
 
 					break;
 				case DDS:
 					OWN_LOG("Dropped .dds file");
 					
-					App->textures->LoadDroppedTexture(dropped_filedir);
+					App->texImporter->ManageDroppedTexture(dropped_filedir);
 					break;
 				case PEI:
 					OWN_LOG("Dropped .pei file");
-					App->renderer3D->importer->LoadPEI(dropped_filedir);
+					//App->renderer3D->ManageDroppedPEI(dropped_filedir);
+					
+					break;
+				case TGA:
+					OWN_LOG("Dropped .tga file");
 
-					break;
-				default:
-					break;
+					App->texImporter->ManageDroppedTexture(dropped_filedir);
+					break;			
 				}
 			break;
 		}
@@ -186,17 +192,19 @@ bool ModuleInput::CleanUp()
 FileType ModuleInput::ObtainDroppedFileType(std::string droppedFileDir){
 	std::string dFile = droppedFileDir;
 	if (dFile.length() > 4) {
-		std::string formatStr = dFile.substr(dFile.length() - 3);
-		if (formatStr == "fbx" || formatStr == "FBX")
+		std::string formatStr = dFile.substr(dFile.length() - 4);
+		if (formatStr == FBX_FORMAT || formatStr == FBX_FORMAT_CAP)
 			return FBX;
-		else if (formatStr == "png" || formatStr == "PNG")
+		else if (formatStr == PNG_FORMAT || formatStr == PNG_FORMAT_CAP)
 			return PNG;
-		else if (formatStr == "jpg" || formatStr == "JPG")
+		else if (formatStr == JPG_FORMAT || formatStr == JPG_FORMAT_CAP || formatStr == JPEG_FORMAT || formatStr == JPEG_FORMAT_CAP)
 			return JPG;
-		else if (formatStr == "dds" || formatStr == "DDS")
+		else if (formatStr == DDS_FORMAT || formatStr == DDS_FORMAT_CAP )
 			return DDS;
-		else if (formatStr == "pei" || formatStr == "PEI")
+		else if (formatStr == OWN_FILE_FORMAT || formatStr == OWN_FILE_FORMAT_CAP)
 			return PEI;
+		else if (formatStr == TGA_FORMAT || formatStr == TGA_FORMAT_CAP)
+			return TGA;
 	}
 	else
 		OWN_LOG("Cannot load %s file.  Format not recognized", droppedFileDir)
