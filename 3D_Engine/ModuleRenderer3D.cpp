@@ -177,7 +177,7 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 		glLoadMatrixf(App->camera->cameraComp->GetViewMatrix());
 
 	// light 0 on cam pos
-	lights[0].SetPos(App->camera->cameraComp->camRes->frustum.pos.x, App->camera->cameraComp->camRes->frustum.pos.y, App->camera->cameraComp->camRes->frustum.pos.z);
+	lights[0].SetPos(App->camera->cameraComp->GetPos().x, App->camera->cameraComp->GetPos().y, App->camera->cameraComp->GetPos().z);
 
 	for(uint i = 0; i < MAX_LIGHTS; ++i)
 		lights[i].Render();
@@ -225,10 +225,10 @@ void ModuleRenderer3D::OnResize(const int width, const int height)
 {
 	if (App->scene->inGame) {
 		ComponentCamera* mainCam = App->scene->mainCamera->GetComponentCamera();
-		mainCam->camRes->SetAspectRatio((float)width / (float)height);
+		mainCam->SetAspectRatio((float)width / (float)height);
 	}
 	else
-		App->camera->cameraComp->camRes->SetAspectRatio((float)width / (float)height);
+		App->camera->cameraComp->SetAspectRatio((float)width / (float)height);
 }
 
 char* ModuleRenderer3D::GetGraphicsModel() const
