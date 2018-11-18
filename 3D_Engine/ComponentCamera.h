@@ -32,11 +32,19 @@ public:
 
 	const float * GetViewMatrix() const;
 	const float * GetProjectionMatrix() const;
-	const Frustum GetFrustum() const;
+	const float GetFOV() const;
+	const float GetAspectRatio() const;
+	const float GetNearPlane() const;
+	const float GetFarPlane() const;
+	const float3 GetPos() const;
 
-public:
+	Frustum GetFrustum() const;
 
+	void Translate(const float3 trans);
+
+private:
 	Camera* camRes = nullptr;
+
 };
 
 #endif // !__COMPONENTCAMERA_H__

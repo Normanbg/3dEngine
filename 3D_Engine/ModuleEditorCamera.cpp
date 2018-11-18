@@ -56,58 +56,61 @@ update_status ModuleEditorCamera::Update(float dt)
 {
 	BROFILER_CATEGORY("Camera3D_Update", Profiler::Color::Chartreuse);
 
-	////Alt+Left click should orbit the object
-	if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_LALT)) {
-		Orbit(dt);
-	}
-	
-	////While Right clicking, WASDRT fps-like movement & free look enabled
-	if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT && !App->input->GetKey(SDL_SCANCODE_LALT)) {
-		float3 _pos(0, 0, 0);
-		float speed = CAMERA_SPEED * dt;
-		if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT)
-			speed *= 5.0f;
-		if (App->input->GetKey(SDL_SCANCODE_R) == KEY_REPEAT) _pos.y += speed;
-		if (App->input->GetKey(SDL_SCANCODE_T) == KEY_REPEAT) _pos.y -= speed;
-		if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) _pos += cameraComp->camRes->frustum.front * speed;
-		if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) _pos -= cameraComp->camRes->frustum.front * speed;
-		if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) _pos -= cameraComp->camRes->frustum.WorldRight() * speed;
-		if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) _pos += cameraComp->camRes->frustum.WorldRight() * speed;
-
-		if (!_pos.IsZero())
-			cameraComp->camRes->frustum.Translate(_pos);	
-
-		MouseMovement(dt);
-	}
-
-	//Zoom
-	if (App->input->GetMouseZ() != 0) {
-		float3 _pos(0, 0, 0);
-		float mSpeed = GetScrollSensit();
-		if (App->input->GetMouseZ() < 0)
-			_pos -= cameraComp->camRes->frustum.front * mSpeed;
-		else
-			_pos += cameraComp->camRes->frustum.front * mSpeed;
-
-		if (!_pos.IsZero())
-			cameraComp->camRes->frustum.Translate(_pos);
-	}
-
-	if (App->input->GetKey(SDL_SCANCODE_F) == KEY_REPEAT) {
-		float3 dir = cameraComp->camRes->frustum.pos;
-		float dist = 10.f;
-		float3 center = float3::zero;
-
-		if (App->scene->gObjSelected && App->scene->gObjSelected->GetComponentMesh()) {
-			GameObject* GO = App->scene->gObjSelected;
-			center = GO->globalAABB.CenterPoint();
-			dir -= center;
-			dist = GO->globalAABB.Size().Length();
+	//CAMERA MOVEMENT
+	if (!App->scene->inGame) {
+		////Alt+Left click should orbit the object
+		if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_LALT)) {
+			Orbit(dt);
 		}
-		cameraComp->SetPos(dir.Normalized() * dist);
-		cameraComp->LookAt(center);
-	}
 
+		////While Right clicking, WASDRT fps-like movement & free look enabled
+		if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT && !App->input->GetKey(SDL_SCANCODE_LALT)) {
+			float3 _pos(0, 0, 0);
+			float speed = CAMERA_SPEED * dt;
+			if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT)
+				speed *= 5.0f;
+			if (App->input->GetKey(SDL_SCANCODE_R) == KEY_REPEAT) _pos.y += speed;
+			if (App->input->GetKey(SDL_SCANCODE_T) == KEY_REPEAT) _pos.y -= speed;
+			if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) _pos += cameraComp->GetFrustum().front * speed;
+			if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) _pos -= cameraComp->GetFrustum().front * speed;
+			if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) _pos -= cameraComp->GetFrustum().WorldRight() * speed;
+			if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) _pos += cameraComp->GetFrustum().WorldRight() * speed;
+
+			if (!_pos.IsZero())
+				cameraComp->Translate(_pos);
+
+			MouseMovement(dt);
+		}
+
+		//Zoom
+		if (App->input->GetMouseZ() != 0) {
+			float3 _pos(0, 0, 0);
+			float mSpeed = GetScrollSensit();
+			if (App->input->GetMouseZ() < 0)
+				_pos -= cameraComp->GetFrustum().front * mSpeed;
+			else
+				_pos += cameraComp->GetFrustum().front * mSpeed;
+
+			if (!_pos.IsZero())
+				cameraComp->Translate(_pos);
+		}
+
+		//Focus
+		if (App->input->GetKey(SDL_SCANCODE_F) == KEY_REPEAT) {
+			float3 dir = cameraComp->GetFrustum().pos;
+			float dist = 10.f;
+			float3 center = float3::zero;
+
+			if (App->scene->gObjSelected && App->scene->gObjSelected->GetComponentMesh()) {
+				GameObject* GO = App->scene->gObjSelected;
+				center = GO->globalAABB.CenterPoint();
+				dir -= center;
+				dist = GO->globalAABB.Size().Length();
+			}
+			cameraComp->SetPos(dir.Normalized() * dist);
+			cameraComp->LookAt(center);
+		}
+	}
 	return UPDATE_CONTINUE;
 }
 
@@ -181,10 +184,10 @@ FrustumContained ModuleEditorCamera::ContainsAaBox(const Quadtree& qt) const
 void ModuleEditorCamera::ConfigInfo(){
 	float mouseS = GetMouseSensit();
 	float scrollS = GetScrollSensit();
-	float fov = cameraComp->camRes->GetFOV();
-	float ar = cameraComp->camRes->GetAspectRatio();
-	float nearPl = cameraComp->camRes->frustum.nearPlaneDistance;
-	float farPl = cameraComp->camRes->frustum.farPlaneDistance;
+	float fov = cameraComp->GetFOV();
+	float ar = cameraComp->GetAspectRatio();
+	float nearPl = cameraComp->GetNearPlane();
+	float farPl = cameraComp->GetFarPlane();
 
 	if (ImGui::DragFloat("Mouse Speed", &mouseS, 0.01f))
 		mouseSensitivity = mouseS;
@@ -197,10 +200,10 @@ void ModuleEditorCamera::ConfigInfo(){
 		cameraComp->SetFarPlaneDistance(farPl);
 	}
 	if (ImGui::SliderFloat("FOV", &fov, 30.f, 175.f)) {
-		cameraComp->camRes->SetFOV(fov);	
+		cameraComp->SetFOV(fov);	
 	}
 	if (ImGui::SliderFloat("Aspect Ratio", &ar, 0.1f, 3.5f)) {
-		cameraComp->camRes->SetAspectRatio(ar);
+		cameraComp->SetAspectRatio(ar);
 	}
 	ImVec2 size = ImGui::GetContentRegionAvail();
 	ImGui::PushStyleColor(ImGuiCol_Header, { DarkCyan.r, DarkCyan.g,DarkCyan.b, DarkCyan.a });
@@ -236,17 +239,17 @@ void ModuleEditorCamera::MouseMovement(float dt)
 	if (dx != 0)
 	{
 		Quat rotationX = Quat::RotateY(dx);
-		cameraComp->camRes->frustum.front = rotationX.Mul(cameraComp->camRes->frustum.front).Normalized();
-		cameraComp->camRes->frustum.up = rotationX.Mul(cameraComp->camRes->frustum.up).Normalized();
+		cameraComp->GetFrustum().front = rotationX.Mul(cameraComp->GetFrustum().front).Normalized();
+		cameraComp->GetFrustum().up = rotationX.Mul(cameraComp->GetFrustum().up).Normalized();
 	}
 	if (dy != 0)
 	{
-		Quat rotationY = Quat::RotateAxisAngle(cameraComp->camRes->frustum.WorldRight(), dy);
-		float3 _up = rotationY.Mul(cameraComp->camRes->frustum.up).Normalized();
+		Quat rotationY = Quat::RotateAxisAngle(cameraComp->GetFrustum().WorldRight(), dy);
+		float3 _up = rotationY.Mul(cameraComp->GetFrustum().up).Normalized();
 		if (_up.y > 0.0f)
 		{
-			cameraComp->camRes->frustum.up = _up;
-			cameraComp->camRes->frustum.front = rotationY.Mul(cameraComp->camRes->frustum.front).Normalized();
+			cameraComp->GetFrustum().up = _up;
+			cameraComp->GetFrustum().front = rotationY.Mul(cameraComp->GetFrustum().front).Normalized();
 		}
 	}
 }
@@ -255,14 +258,14 @@ void ModuleEditorCamera::Orbit(float dt)
 {
 	float dx = -App->input->GetMouseXMotion() * GetMouseSensit() * dt;
 	float dy = -App->input->GetMouseYMotion() * GetMouseSensit() * dt;
-	float3 distance = cameraComp->camRes->frustum.pos;
-	Quat X(cameraComp->camRes->frustum.WorldRight(), dy);
-	Quat Y(cameraComp->camRes->frustum.up, dx);
+	float3 distance = cameraComp->GetFrustum().pos;
+	Quat X(cameraComp->GetFrustum().WorldRight(), dy);
+	Quat Y(cameraComp->GetFrustum().up, dx);
 
 	distance = X.Transform(distance);
 	distance = Y.Transform(distance);
 
-	cameraComp->camRes->frustum.pos = distance;
+	cameraComp->SetPos(distance);
 
 	cameraComp->LookAt(float3(0, 0, 0));
 }

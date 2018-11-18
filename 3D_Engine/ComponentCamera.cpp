@@ -129,9 +129,38 @@ const float * ComponentCamera::GetProjectionMatrix() const
 
 }
 
-const Frustum ComponentCamera::GetFrustum() const
+Frustum ComponentCamera::GetFrustum() const
 {
 	return camRes->frustum;
+}
+
+const float3 ComponentCamera::GetPos() const
+{
+	return GetFrustum().pos;
+}
+
+const float ComponentCamera::GetFOV() const
+{
+	return camRes->GetFOV();
+}
+
+const float ComponentCamera::GetAspectRatio() const
+{
+	return camRes->GetAspectRatio();
+}
+
+const float ComponentCamera::GetNearPlane() const
+{
+	return GetFrustum().nearPlaneDistance;
+}
+
+const float ComponentCamera::GetFarPlane() const
+{
+	return GetFrustum().farPlaneDistance;
+}
+
+void ComponentCamera::Translate(const float3 trans) {
+	camRes->frustum.Translate(trans);
 }
 
 void ComponentCamera::Save(Config & data) const
