@@ -100,8 +100,8 @@ update_status ModuleScene::PostUpdate(float dt) {
 
 bool ModuleScene::CleanUp()
 {
-
-	ClearScene();
+	
+	ClearSceneCompletely();
 	root->CleanUp();
 	RELEASE(root);
 	RELEASE(rootQuadTree);

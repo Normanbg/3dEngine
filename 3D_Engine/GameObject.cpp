@@ -104,7 +104,7 @@ void GameObject::CleanUp(){
 	if (parent) {
 		parent = nullptr;
 	}
-	
+	transformComp = nullptr;
 }
 
 void GameObject::CalculateAllGlobalMatrix(){
