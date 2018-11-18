@@ -131,6 +131,7 @@ bool ModuleScene::CleanUp()
 	ClearSceneCompletely();
 	root->CleanUp();
 	RELEASE(root);
+	rootQuadTree->Clear();
 	RELEASE(rootQuadTree);
 
 	return true;

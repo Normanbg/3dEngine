@@ -52,6 +52,40 @@ For this delivery we are able to render directly the scene on a window, using a 
 
 Also, we have our fyle system that uses the library physfs.
 
+### Members work:
+Game Objects->Both
+
+Bounding box-> Both
+
+Components-> Both
+
+QuadTree-> Norman
+
+Frustum Culling-> Norman
+
+Import files-> Carles
+
+Own file format-> Carles
+
+Mouse picking-> Norman
+
+Time manager-> Carles
+
+Resources & Fyle System-> Carles
+
+.meta-> Carles
+
+Guizmos-> Norman
+
+Panels:
+Assets-> Carles
+Hierarchy-> Both
+Inspector-> Both
+Optimization-> Norman
+Scene-> Norman
+Scene Info-> Both
+
+
 ### License:
 MIT License
 
