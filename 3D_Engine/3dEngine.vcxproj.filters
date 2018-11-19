@@ -408,7 +408,9 @@
     <ClInclude Include="UIPanelAssets.h">
       <Filter>Sources\Modules\GuiPanels</Filter>
     </ClInclude>
-    <ClInclude Include="UIPanelOptimization.h" />
+    <ClInclude Include="UIPanelOptimization.h">
+      <Filter>Sources\Modules\GuiPanels</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleInput.cpp">
@@ -660,7 +662,9 @@
     <ClCompile Include="UIPanelAssets.cpp">
       <Filter>Sources\Modules\GuiPanels</Filter>
     </ClCompile>
-    <ClCompile Include="UIPanelOptimization.cpp" />
+    <ClCompile Include="UIPanelOptimization.cpp">
+      <Filter>Sources\Modules\GuiPanels</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="MathGeoLib\Geometry\KDTree.inl">

@@ -23,7 +23,7 @@ void Quadtree::Clear(){
 		for (auto it : quTrChilds)
 		{
 			it->Clear();
-			it = nullptr;
+			RELEASE(it);
 		}
 		quTrChilds.clear();
 	}
