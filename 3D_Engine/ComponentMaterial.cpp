@@ -71,8 +71,10 @@ void ComponentMaterial::DrawInspector()
 		ImGui::Text("Texture size:\nWidth: %dpx \nHeight: %dpx ", resourceTexture->width, resourceTexture->height);
 		float windowSize = ImGui::GetWindowContentRegionWidth();
 		ImGui::Image((void*)(resourceTexture->gpuID), ImVec2(windowSize, windowSize));
-	}
+		ImGui::SliderFloat("Alpha", &alphaTest, 0, 1.0f);
 
+	}
+	ImGui::Spacing();
 	ImGui::Text("Color:"); ImGui::SameLine();
 	ImGui::TextDisabled("(?)");
 	if (ImGui::IsItemHovered())	{//ImguiTip

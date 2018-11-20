@@ -172,8 +172,14 @@ void ComponentMesh::DrawMesh(){
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		if (material != NULL) {
 			if (material->HasTexture()) {
+				glEnable(GL_ALPHA_TEST);
+				glEnable(GL_BLEND);				
+				glAlphaFunc(GL_GREATER, material->GetAlphaTest());	
+				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 				glBindTexture(GL_TEXTURE_2D, material->GetTexID());
 				glTexCoordPointer(2, GL_FLOAT, 0, &(resourceMesh->texturesCoords[0]));
+				glDisable(GL_BLEND);
+				glDisable(GL_ALPHA_TEST);
 			}
 			else {
 				glColor3f(material->colors.x, material->colors.y, material->colors.z);
