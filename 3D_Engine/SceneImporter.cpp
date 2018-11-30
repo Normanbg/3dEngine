@@ -52,7 +52,7 @@ bool SceneImporter::ImportScene(const char * FBXpath, std::vector<std::string>* 
 	}
 
 	uint numMaterials = scene->mNumMaterials;
-	uint* materialIDs = new uint[scene->mNumMaterials];
+	//uint* materialIDs = new uint[scene->mNumMaterials]; to delete?
 
 	if (ret && scene->HasMaterials() ) {
 		OWN_LOG("Importing FBX texture to DDS from %s", FBXpath);
@@ -267,7 +267,7 @@ GameObject * SceneImporter::ImportNodeRecursive(aiNode * node, const aiScene * s
 			for (uint i = 0; i < node->mNumMeshes; i++)
 			{
 				ComponentMaterial* compMat = nullptr;
-				ComponentMesh* compMesh = new ComponentMesh();
+				ComponentMesh* compMesh = nullptr;
 				
 
 				aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
