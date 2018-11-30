@@ -33,9 +33,14 @@ public:
 
 	void Save(Config& data) const;
 	void Load(Config* data);
+
+	bool doBlendTest = false;
+
 private:
 	ResourceTexture* resourceTexture = nullptr;
-	float alphaTest = 0.0f;
+	float alphaTest = 1.0f;
+	
+
 };
 
 #endif // !__COMPONENTMATERIAL_H__

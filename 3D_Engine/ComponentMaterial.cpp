@@ -58,7 +58,6 @@ void ComponentMaterial::DrawInspector()
 
 			}
 
-
 		}
 		ImGui::EndCombo();
 	}
@@ -72,7 +71,7 @@ void ComponentMaterial::DrawInspector()
 		float windowSize = ImGui::GetWindowContentRegionWidth();
 		ImGui::Image((void*)(resourceTexture->gpuID), ImVec2(windowSize, windowSize));
 		ImGui::SliderFloat("Alpha", &alphaTest, 0, 1.0f);
-
+		ImGui::Checkbox("Blend Color", &doBlendTest);
 	}
 	ImGui::Spacing();
 	ImGui::Text("Color:"); ImGui::SameLine();

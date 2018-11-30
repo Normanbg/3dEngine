@@ -158,6 +158,10 @@ void ComponentMesh::Draw()
 }
 
 void ComponentMesh::DrawMesh(){
+
+	bool disableAlpha = false;
+	bool disableBlend = false;
+
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
@@ -172,14 +176,20 @@ void ComponentMesh::DrawMesh(){
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		if (material != NULL) {
 			if (material->HasTexture()) {
-				glEnable(GL_ALPHA_TEST);
-				glEnable(GL_BLEND);				
-				glAlphaFunc(GL_GREATER, material->GetAlphaTest());	
-				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+				if (material->GetAlphaTest()<1) {
+					glEnable(GL_ALPHA_TEST);
+					glAlphaFunc(GL_GREATER, material->GetAlphaTest());
+					disableAlpha = true;
+
+				}
+				if (material->doBlendTest) {
+					glEnable(GL_BLEND);
+					glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+					disableBlend = true;
+				}
 				glBindTexture(GL_TEXTURE_2D, material->GetTexID());
 				glTexCoordPointer(2, GL_FLOAT, 0, &(resourceMesh->texturesCoords[0]));
-				glDisable(GL_BLEND);
-				glDisable(GL_ALPHA_TEST);
+
 			}
 			else {
 				glColor3f(material->colors.x, material->colors.y, material->colors.z);
@@ -189,7 +199,8 @@ void ComponentMesh::DrawMesh(){
 		glBindBuffer(GL_ARRAY_BUFFER, resourceMesh->id_vertex);
 		glVertexPointer(3, GL_FLOAT, 0, NULL);
 		glDrawElements(GL_TRIANGLES, resourceMesh->num_index, GL_UNSIGNED_INT, NULL);
-
+		if (disableAlpha) { glDisable(GL_ALPHA_TEST); }
+		if (disableBlend) { glDisable(GL_BLEND); }
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindTexture(GL_TEXTURE_2D, 0);
