@@ -15,18 +15,21 @@ public:
 	void Init();
 	bool ImportToDDS(const char * texPath, const char* texName = nullptr, std::vector<std::string>* written = nullptr);
 
-	void ManageDroppedTexture(char * droppedFileDire);
-		
+	
 	GLuint LoadTexture(const char* path,  uint &texWidth, uint &texHeight);
 
 	bool ImportTexture(const char * tex, std::vector<std::string>* written);
 
-	
+	void ReceiveEvent(const Event &event);
 
 
 public: 
 	
 	uint imageID = 0;
+
+private:
+	void ManageDroppedTexture(const char * droppedFileDire);
+
 	
 };
 

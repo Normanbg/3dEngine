@@ -105,6 +105,16 @@ bool TextureImporter::ImportTexture(const char* tex, std::vector<std::string>* w
 	return ret;
 }
 
+void TextureImporter::ReceiveEvent(const Event & event)
+{
+	switch (event.type)
+	{
+	case Event::EventType::texture_file_dropped:
+		ManageDroppedTexture(event.string);
+		break;
+	}
+}
+
 
 bool TextureImporter::ImportToDDS( const char* texPath, const char* texName, std::vector<std::string>* written ) {
 
@@ -161,9 +171,9 @@ bool TextureImporter::ImportToDDS( const char* texPath, const char* texName, std
 	return ret;
 }
 
-void TextureImporter::ManageDroppedTexture(char * droppedFileDire)
+void TextureImporter::ManageDroppedTexture(const char * droppedFileDire)
 {
-	App->fileSys->NormalizePath(droppedFileDire);
+	App->fileSys->NormalizePath((char*)droppedFileDire);
 	if (App->fileSys->ExistsFile(droppedFileDire)) {
 		OWN_LOG("Texture already in Assets folder!")
 	}

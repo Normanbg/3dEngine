@@ -51,7 +51,6 @@ public:
 	void SetBoundingBox(bool active);
 
 
-	void ManageDroppedFBX(char* droppedFileDir);
 	//void ManageDroppedPEI(char* droppedFileDir);
 
 	inline const bool GetDepthTest() const { return _depthTest; }
@@ -88,6 +87,12 @@ private:
 	void ShowAxis();
 	void ShowGrid();
 	void SetDataFromJson(JSON_Object* data);
+
+	void ManageDroppedFBX(const char* droppedFileDir);
+
+protected:
+
+	 void ReceiveEvent(const Event &event) override;
 
 private:
 	

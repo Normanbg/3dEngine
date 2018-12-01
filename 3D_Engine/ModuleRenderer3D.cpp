@@ -283,7 +283,7 @@ void ModuleRenderer3D::SetBoundingBox(bool active){
 	App->scene->SetBoundingBox(active);
 }
 
-void ModuleRenderer3D::ManageDroppedFBX(char * droppedFileDir){
+void ModuleRenderer3D::ManageDroppedFBX(const char * droppedFileDir){
 	App->importer->LoadFBXScene(droppedFileDir);	
 }
 
@@ -346,6 +346,15 @@ void ModuleRenderer3D::ShowGrid() {
 	glEnd();
 
 	SetTexture2D(recordedTex);
+}
+void ModuleRenderer3D::ReceiveEvent(const Event & event)
+{
+	switch (event.type) {
+	case Event::EventType::scene_file_dropped: {
+		ManageDroppedFBX(event.string);
+		break;
+	}
+	}
 }
 /*
 
