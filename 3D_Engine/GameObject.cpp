@@ -24,7 +24,7 @@ GameObject::GameObject()
 GameObject::GameObject(const char * Name)
 {
 	name = Name;
-	transformComp = new ComponentTransformation();
+	transformComp = new ComponentTransformation(); //NEED TO CHANGE HOW COMPONENT TRANSFORMATION WORKS
 	transformComp->type = TRANSFORM;
 	transformComp->myGO = this;
 	components.push_back(transformComp);
@@ -35,6 +35,19 @@ GameObject::GameObject(const char * Name)
 	UUID = App->scene->GetRandomUUID();	
 }
 
+GameObject::GameObject(const char * Name)
+{
+	name = Name;
+	transformComp = new ComponentTransformation();
+	transformComp->type = TRANSFORM;
+	transformComp->myGO = this;
+	components.push_back(transformComp);
+
+	localAABB.SetNegativeInfinity();
+	globalAABB.SetNegativeInfinity();
+
+	UUID = App->scene->GetRandomUUID();
+}
 
 GameObject::~GameObject()
 {
@@ -158,6 +171,11 @@ Component * GameObject::AddComponent(ComponentType type) {
 		ret->type = CAMERA;
 		break;
 
+	case ComponentType::CANVAS:
+		ret = new ComponentCanvas();
+		ret->type = CANVAS;
+		break;
+
 	case ComponentType::NO_TYPE:
 		return nullptr;
 	}
@@ -277,6 +295,18 @@ ComponentMesh * GameObject::GetComponentMesh() const
 	{
 		if ((*it)->type == MESH)
 			return (ComponentMesh*)(*it);
+	}
+	return ret;
+}
+
+ComponentCanvas * GameObject::GetComponentCanvas() const
+{
+	ComponentCanvas* ret = nullptr;
+	//WILL ONLY FIND THE FIRST COMPONENT EQUAL TO TYPE OF EACH G0
+	for (std::vector<Component*>::const_iterator it = components.begin(); it != components.end(); it++)
+	{
+		if ((*it)->type == CANVAS)
+			return (ComponentCanvas*)(*it);
 	}
 	return ret;
 }

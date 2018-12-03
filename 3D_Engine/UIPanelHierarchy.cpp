@@ -27,6 +27,14 @@ void UIPanelHierarchy::Draw()
 			if (ImGui::MenuItem("Game Object")) {
 				App->scene->AddGameObject("newGameObject");
 			}
+			if (ImGui::TreeNode("UI")) {
+				if (ImGui::MenuItem("Canvas")) {
+					GameObject* canvas = App->scene->AddGameObject("Canvas");
+					canvas->AddComponent(CANVAS);
+					canvas = nullptr;
+				}
+				ImGui::TreePop();
+			}
 			ImGui::EndMenu();
 		}
 		ImGui::EndMenuBar();

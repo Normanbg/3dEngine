@@ -11,9 +11,11 @@ enum ComponentType {
 	NO_TYPE = 0,
 
 	TRANSFORM,
+	TRANSFORMRECT,
 	CAMERA,
 	MESH,
-	MATERIAL
+	MATERIAL,
+	CANVAS
 };
 
 class Component {

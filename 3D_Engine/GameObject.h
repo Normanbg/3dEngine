@@ -10,14 +10,11 @@
 #include "ComponentCamera.h"
 #include "ComponentMesh.h"
 #include "ComponentMaterial.h"
-
+#include "ComponentCanvas.h"
 
 
 class string;
 class vector;
-//class ModuleScene;
-//class ModuleTextures;
-
 
 using namespace std;
 
@@ -55,7 +52,7 @@ public:
 	ComponentCamera* GetComponentCamera() const;
 	ComponentMaterial * GetComponentMaterial() const;
 	ComponentMesh * GetComponentMesh() const;
-
+	ComponentCanvas * GetComponentCanvas() const;
 	ComponentMaterial* GetComponentMaterial(const uuid UUID);
 
 	const bool GetSelected() const;

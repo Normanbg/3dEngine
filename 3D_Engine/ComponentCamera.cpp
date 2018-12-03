@@ -9,6 +9,7 @@
 ComponentCamera::ComponentCamera()
 {
 	camRes = new Camera();
+	type = CAMERA;
 }
 
 ComponentCamera::~ComponentCamera()

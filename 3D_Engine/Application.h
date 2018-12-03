@@ -34,7 +34,8 @@ struct Event
 	};
 
 	Event(EventType type) : type(type)
-	{}	Event() {};
+	{}
+	Event() {};
 };
 
 #define MAX_FPS_LOG 50
@@ -161,7 +162,8 @@ public:
 	void SetOrganization(const char* newName);
 	const std::string GetOrganization() const;
 
-	void Application::BroadcastEvent(const Event& event);
+	void Application::BroadcastEvent(const Event& event);
+
 
 private:
 
