@@ -74,7 +74,7 @@ public:
 	std::vector <Component*>	components;
 	GameObject*					parent = nullptr;
 	std::vector <GameObject*>	childrens;
-	ComponentTransformation*	transformComp;
+	//ComponentTransformation*	transformComp;
 
 	AABB localAABB;
 	AABB globalAABB;
