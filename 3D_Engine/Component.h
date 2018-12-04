@@ -11,6 +11,7 @@ enum ComponentType {
 	NO_TYPE = 0,
 
 	TRANSFORM,
+	RECT_TRANSFORM,
 	CAMERA,
 	MESH,
 	MATERIAL

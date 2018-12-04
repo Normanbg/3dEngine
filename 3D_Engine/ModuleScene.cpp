@@ -665,5 +665,12 @@ GameObject * ModuleScene::AddGameObject(const char * name, GameObject * parent)
 	return ret;
 }
 
-
+GameObject * ModuleScene::AddUIGameObject(const char * name, GameObject * parent)
+{
+	GameObject* ret = new GameObject(name);
+	ret->parent = parent;
+	parent->childrens.push_back(ret);
+	ret->AddComponent(RECT_TRANSFORM);
+	return ret;
+}
 

@@ -144,7 +144,11 @@ Component * GameObject::AddComponent(ComponentType type) {
 	case ComponentType::TRANSFORM:
 		ret = new ComponentTransformation();
 		break;
-	
+
+	case ComponentType::RECT_TRANSFORM:
+		//ret = new ComponentRectTransform();
+		break;
+
 	case ComponentType::CAMERA:
 		ret = new ComponentCamera();
 		break;
