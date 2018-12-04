@@ -6,6 +6,7 @@
 
 
 #include "Component.h"
+#include "ComponentRectTransform.h"
 #include "ComponentTransformation.h"
 #include "ComponentCamera.h"
 #include "ComponentMesh.h"
@@ -71,7 +72,7 @@ public:
 	std::vector <Component*>	components;
 	GameObject*					parent = nullptr;
 	std::vector <GameObject*>	childrens;
-	ComponentTransformation*	transformComp;
+	//ComponentTransformation*	transformComp;
 
 	AABB localAABB;
 	AABB globalAABB;

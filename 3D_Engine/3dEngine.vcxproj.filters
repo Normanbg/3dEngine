@@ -411,6 +411,9 @@
     <ClInclude Include="UIPanelOptimization.h">
       <Filter>Sources\Modules\GuiPanels</Filter>
     </ClInclude>
+    <ClInclude Include="ComponentRectTransform.h">
+      <Filter>Sources\Objects &amp; Components\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleInput.cpp">
@@ -664,6 +667,9 @@
     </ClCompile>
     <ClCompile Include="UIPanelOptimization.cpp">
       <Filter>Sources\Modules\GuiPanels</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentRectTransform.cpp">
+      <Filter>Sources\Objects &amp; Components\Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -10,10 +10,9 @@
 
 GameObject::GameObject()
 {
-	transformComp = new ComponentTransformation();
-	transformComp->type = TRANSFORM;
-	transformComp->myGO = this;
-	components.push_back(transformComp);
+	//transformComp = new ComponentTransformation();
+	//transformComp->myGO = this;
+	//components.push_back(transformComp);
 
 	localAABB.SetNegativeInfinity();
 	globalAABB.SetNegativeInfinity();
@@ -24,29 +23,16 @@ GameObject::GameObject()
 GameObject::GameObject(const char * Name)
 {
 	name = Name;
-	transformComp = new ComponentTransformation(); //NEED TO CHANGE HOW COMPONENT TRANSFORMATION WORKS
-	transformComp->type = TRANSFORM;
-	transformComp->myGO = this;
-	components.push_back(transformComp);
+
+	//transformComp = new ComponentTransformation();
+	//transformComp->myGO = this;
+	//components.push_back(transformComp);
+
 
 	localAABB.SetNegativeInfinity();
 	globalAABB.SetNegativeInfinity();
 
 	UUID = App->scene->GetRandomUUID();	
-}
-
-GameObject::GameObject(const char * Name)
-{
-	name = Name;
-	transformComp = new ComponentTransformation();
-	transformComp->type = TRANSFORM;
-	transformComp->myGO = this;
-	components.push_back(transformComp);
-
-	localAABB.SetNegativeInfinity();
-	globalAABB.SetNegativeInfinity();
-
-	UUID = App->scene->GetRandomUUID();
 }
 
 GameObject::~GameObject()
@@ -117,19 +103,19 @@ void GameObject::CleanUp(){
 	if (parent) {
 		parent = nullptr;
 	}
-	transformComp = nullptr;
+	//transformComp = nullptr;
 }
 
 void GameObject::CalculateAllGlobalMatrix(){
 	if (parent == nullptr)
 	{
-		transformComp->globalMatrix = transformComp->localMatrix;
+		GetComponentTransform()->globalMatrix = GetComponentTransform()->localMatrix;
 	}
 	else
-		transformComp->globalMatrix = parent->transformComp->globalMatrix * transformComp->localMatrix;
+		GetComponentTransform()->globalMatrix = parent->GetComponentTransform()->globalMatrix * GetComponentTransform()->localMatrix;
 
 	OBB newobb = localAABB;
-	newobb.Transform(transformComp->globalMatrix);
+	newobb.Transform(GetComponentTransform()->globalMatrix);
 
 	obb = newobb;
 	globalAABB.SetNegativeInfinity();
@@ -150,25 +136,22 @@ Component * GameObject::AddComponent(ComponentType type) {
 	switch (type) {
 	case ComponentType::MESH:
 		ret = new ComponentMesh();
-		ret->type = MESH;
-
 		break;
 
 	case ComponentType::MATERIAL:
 		ret = new ComponentMaterial();
-		ret->type = MATERIAL;
-
 		break;
 
 	case ComponentType::TRANSFORM:
 		ret = new ComponentTransformation();
-
-		ret->type = TRANSFORM;
 		break;
-	
+
+	case ComponentType::TRANSFORMRECT:
+		ret = new ComponentRectTransform();
+		break;
+
 	case ComponentType::CAMERA:
 		ret = new ComponentCamera();
-		ret->type = CAMERA;
 		break;
 
 	case ComponentType::CANVAS:
@@ -399,7 +382,7 @@ void GameObject::RayHits(const LineSegment & segment, bool & hit, float & dist){
 					return;
 				//Segment for the mesh
 				LineSegment localRay(segment);
-				localRay.Transform(transformComp->getGlobalMatrix().Inverted());
+				localRay.Transform(GetComponentTransform()->getGlobalMatrix().Inverted());
 
 				uint* indices = mesh->GetResourceMesh()->index;
 				float3* vertices = mesh->GetResourceMesh()->vertex;
@@ -442,10 +425,7 @@ void GameObject::Save(Config& data) const
 	if (parent != nullptr) { // in case of root
 		conf.AddUInt("Parent_UUID", parent->UUID);
 	}
-	conf.AddString("Name", name.c_str());
-	conf.AddFloat3("Translation", transformComp->getPos());
-	conf.AddFloat3("Scale", transformComp->getScale());
-	conf.AddFloat3("Rotation", transformComp->getEulerRot()); //save rotation as eulerangle(float3) to save memory.
+	conf.AddString("Name", name.c_str());	
 	conf.AddBool("Static", staticGO);
 	conf.AddArray("Components");	
 
@@ -481,20 +461,17 @@ void GameObject::Load(Config* data)
 	if (strcmp(name.c_str(), "Main Camera") == 0) {
 		App->scene->SetMainCamera(this);
 	}
-	transformComp->setPos(data->GetFloat3("Translation", {0,0,0}));
-	transformComp->setRotEuler(data->GetFloat3("Rotation", { 0,0,0 }));
-	transformComp->setScale(data->GetFloat3("Scale", { 0,0,0 }));
+	
 	staticGO = data->GetBool("Static", false);
 
 	int num = data->GetNumElemsArray("Components");
 	for (int i = 0; i < num; i++) {//iterate all over the childs to save (ecept transform comp)
 		Config elem = data->GetArray("Components", i);
 		ComponentType type = (ComponentType) elem.GetInt("Type", ComponentType::NO_TYPE);
-		if (type != ComponentType::NO_TYPE ) {
-			if (type != ComponentType::TRANSFORM) {
-				Component* comp = AddComponent(type);
-				comp->Load(&elem);
-			}
+		if (type != ComponentType::NO_TYPE) {
+
+			Component* comp = AddComponent(type);
+			comp->Load(&elem);
 		}
 		else {
 			OWN_LOG("Cannot load components correctly. Component type: NOTYPE ")
