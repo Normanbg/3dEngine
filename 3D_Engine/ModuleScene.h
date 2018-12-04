@@ -42,6 +42,8 @@ public:
 	GameObject* AddGameObject();
 	GameObject* AddGameObject(const char* name);	
 	GameObject* AddGameObject(const char* name, GameObject* parent);
+	GameObject * AddUIGameObject(const char * name, GameObject * parent);
+
 	GameObject* GetGameObjectByUUID(uuid UUID) const;
 	GameObject* GetGameObjectUUIDRecursive(uuid UUID, GameObject* go) const;
 

@@ -248,18 +248,16 @@ GameObject * SceneImporter::ImportNodeRecursive(aiNode * node, const aiScene * s
 
 	if (node->mMetaData != nullptr) { // to get the gameobject not a transform matrix
 	
-		nodeGO = new GameObject();
-		nodeGO->name = node->mName.C_Str();
-		nodeGO->SetParent(parent);		
+		nodeGO = App->scene->AddGameObject(node->mName.C_Str(), parent);
 
 		aiVector3D position;
 		aiQuaternion rotation;
 		aiVector3D scale;
 		node->mTransformation.Decompose(scale, rotation, position);		
 		
-		nodeGO->transformComp->setPos(float3(position.x, position.y, position.z));
-		nodeGO->transformComp->setScale(float3(scale.x, scale.y, scale.z));
-		nodeGO->transformComp->setRotQuat(Quat(rotation.x, rotation.y, rotation.z, rotation.w));
+		nodeGO->GetComponentTransform()->setPos(float3(position.x, position.y, position.z));
+		nodeGO->GetComponentTransform()->setScale(float3(scale.x, scale.y, scale.z));
+		nodeGO->GetComponentTransform()->setRotQuat(Quat(rotation.x, rotation.y, rotation.z, rotation.w));
 		
 
 		if (node->mNumMeshes > 0)

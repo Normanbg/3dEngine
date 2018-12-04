@@ -44,27 +44,27 @@ void ComponentTransformation::DrawInspector()
 	{
 		if (ImGui::DragFloat3("Position", (float*)&_pos, 0.1f))
 		{
-			selectedRecover->transformComp->setPos(_pos);
+			selectedRecover->GetComponentTransform()->setPos(_pos);
 			if (selectedRecover->staticGO)
 				App->scene->objectMoved = true;
 		}
 		if (ImGui::DragFloat3("Rotation", (float*)&_rot, 0.1f)) {
 
-			selectedRecover->transformComp->setRotEuler(_rot);
+			selectedRecover->GetComponentTransform()->setRotEuler(_rot);
 			if (selectedRecover->staticGO)
 				App->scene->objectMoved = true;
 		}
 		if (ImGui::DragFloat3("Scale", (float*)&_scale, 0.1f, 0.0f)) {
 			
-			selectedRecover->transformComp->setScale(_scale);
+			selectedRecover->GetComponentTransform()->setScale(_scale);
 			if (selectedRecover->staticGO)
 				App->scene->objectMoved = true;
 		}
 		if (ImGui::SmallButton("Reset"))
 		{			
-			selectedRecover->transformComp->setPos(float3::zero);
-			selectedRecover->transformComp->setRotEuler(float3::zero);
-			selectedRecover->transformComp->setScale(float3::one);
+			selectedRecover->GetComponentTransform()->setPos(float3::zero);
+			selectedRecover->GetComponentTransform()->setRotEuler(float3::zero);
+			selectedRecover->GetComponentTransform()->setScale(float3::one);
 			if (selectedRecover->staticGO)
 				App->scene->objectMoved = true;
 		}
@@ -96,12 +96,18 @@ void ComponentTransformation::UpdateLocalMatrix() {
 void ComponentTransformation::Save(Config & data) const
 {
 	data.AddUInt("UUID", UUID);
+	data.AddFloat3("Translation", getPos());
+	data.AddFloat3("Scale", getScale());
+	data.AddFloat3("Rotation", getEulerRot()); //save rotation as eulerangle(float3) to save memory.
 	
 }
 
 void ComponentTransformation::Load(Config * data)
 {
 	UUID = data->GetUInt("UUID");
+	setPos(data->GetFloat3("Translation", { 0,0,0 }));
+	setRotEuler(data->GetFloat3("Rotation", { 0,0,0 }));
+	setScale(data->GetFloat3("Scale", { 0,0,0 }));
 }
 
 void ComponentTransformation::setPos(const float3 _newpos)
