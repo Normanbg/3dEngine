@@ -96,7 +96,7 @@ void UIPanelInspector::Draw() {
 		ImGui::Text("ID: %i", mat->gpuID);
 		float windowSize = ImGui::GetWindowContentRegionWidth();
 		ImVec2 size = ImGui::GetContentRegionAvail();
-		ImGui::Image((void*)(mat->gpuID), size, ImVec2(0, 1), ImVec2(1, 0));
+		ImGui::Image((void*)(mat->gpuID), size);
 		ImGui::Separator();
 
 	}

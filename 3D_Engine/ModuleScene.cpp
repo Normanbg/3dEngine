@@ -31,7 +31,6 @@ ModuleScene::~ModuleScene()
 bool ModuleScene::Init(JSON_Object * obj)
 {
 	root = new GameObject("root");
-	root->AddComponent(TRANSFORM);
 	mainCamera = AddGameObject("Main Camera");
 	mainCamera->AddComponent(CAMERA);
 	mainCamera->GetComponentCamera()->SetFarPlaneDistance(85.f);
@@ -641,8 +640,6 @@ GameObject * ModuleScene::AddGameObject()
 	GameObject* ret = new GameObject();
 	ret->parent = root;
 	root->childrens.push_back(ret);
-	ret->AddComponent(TRANSFORM);
-
 	return ret;
 }
 
@@ -651,7 +648,6 @@ GameObject* ModuleScene::AddGameObject(const char* name) {
 	GameObject* ret = new GameObject(name);
 	ret->parent = root;
 	root->childrens.push_back(ret);
-	ret->AddComponent(TRANSFORM);
 
 	return ret;
 }
@@ -661,16 +657,9 @@ GameObject * ModuleScene::AddGameObject(const char * name, GameObject * parent)
 	GameObject* ret = new GameObject(name);
 	ret->parent = parent;
 	parent->childrens.push_back(ret);
-	ret->AddComponent(TRANSFORM);
+
 	return ret;
 }
 
-GameObject * ModuleScene::AddUIGameObject(const char * name, GameObject * parent)
-{
-	GameObject* ret = new GameObject(name);
-	ret->parent = parent;
-	parent->childrens.push_back(ret);
-	ret->AddComponent(TRANSFORMRECT);
-	return ret;
-}
+
 

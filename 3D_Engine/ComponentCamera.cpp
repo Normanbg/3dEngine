@@ -21,7 +21,7 @@ bool ComponentCamera::Update()
 {
 	if (myGO)
 	{
-		camRes->frustum.SetWorldMatrix(myGO->GetComponentTransform()->globalMatrix.Float3x4Part());
+		camRes->frustum.SetWorldMatrix(myGO->transformComp->globalMatrix.Float3x4Part());
 		if (myGO->GetSelected())
 			camRes->DebugDraw();
 	}
