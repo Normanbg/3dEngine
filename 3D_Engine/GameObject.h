@@ -11,7 +11,7 @@
 #include "ComponentCamera.h"
 #include "ComponentMesh.h"
 #include "ComponentMaterial.h"
-
+#include "ComponentRectTransform.h"
 
 
 class string;
@@ -52,9 +52,10 @@ public:
 	ComponentTransformation* GetComponentTransform() const;
 	ComponentCamera* GetComponentCamera() const;
 	ComponentMaterial * GetComponentMaterial() const;
+	ComponentMaterial* GetComponentMaterial(const uuid UUID);
 	ComponentMesh * GetComponentMesh() const;
 	ComponentCanvas * GetComponentCanvas() const;
-	ComponentMaterial* GetComponentMaterial(const uuid UUID);
+	ComponentRectTransform * GetComponentRectTransform() const;
 
 	const bool GetSelected() const;
 

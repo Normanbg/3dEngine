@@ -1,18 +1,20 @@
-#pragma once
+#ifndef __COMPONENTRECTTRANS_H__
+#define __COMPONENTRECTTRANS_H__
+
 #include "Component.h"
-#include "Math.h"
 
-#include "mmgr/mmgr.h"
 
-struct RectTransform
-{
-	float2 position = float2(0,0);
-	float width = 0;
-	float height = 0;
-};
+
 
 class ComponentRectTransform :	public Component
 {
+	struct RectTransform
+	{
+		float2 position = float2(0, 0);
+		float width = 0;
+		float height = 0;
+	};
+
 public:
 	ComponentRectTransform();
 	~ComponentRectTransform();
@@ -21,6 +23,16 @@ public:
 	void CleanUp() override;
 	void DrawInspector() override;
 
+	const float2 GetPos() const { return rect.position; }
+	const float GetWidth() const { return rect.width; }
+	const float GetHeight() const { return rect.height; }
+
+	void SetPos(float2 pos);
+	void SetWidth(float w);
+	void SetHeight(float h);
+
+private:
 	RectTransform rect;
 };
 
+#endif // !__COMPONENTRECTTRANS_H__

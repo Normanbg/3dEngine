@@ -104,20 +104,21 @@ void GameObject::CleanUp(){
 }
 
 void GameObject::CalculateAllGlobalMatrix(){
-	if (parent == nullptr)
-	{
-		GetComponentTransform()->globalMatrix = GetComponentTransform()->localMatrix;
+	if (GetComponentTransform() != nullptr) {
+		if (parent == nullptr)
+		{
+			GetComponentTransform()->globalMatrix = GetComponentTransform()->localMatrix;
+		}
+		else
+			GetComponentTransform()->globalMatrix = parent->GetComponentTransform()->globalMatrix * GetComponentTransform()->localMatrix;
+
+		OBB newobb = localAABB;
+		newobb.Transform(GetComponentTransform()->globalMatrix);
+
+		obb = newobb;
+		globalAABB.SetNegativeInfinity();
+		globalAABB.Enclose(obb);
 	}
-	else
-		GetComponentTransform()->globalMatrix = parent->GetComponentTransform()->globalMatrix * GetComponentTransform()->localMatrix;
-
-	OBB newobb = localAABB;
-	newobb.Transform(GetComponentTransform()->globalMatrix);
-
-	obb = newobb;
-	globalAABB.SetNegativeInfinity();
-	globalAABB.Enclose(obb);
-
 	if (!childrens.empty())
 	{
 		for (std::vector<GameObject*>::iterator it = childrens.begin(); it != childrens.end(); it++)
@@ -151,6 +152,10 @@ Component * GameObject::AddComponent(ComponentType type) {
 
 	case ComponentType::CANVAS:
 		ret = new ComponentCanvas();
+		break;
+
+	case ComponentType::TRANSFORMRECT:
+		ret = new ComponentRectTransform();
 		break;
 
 	case ComponentType::NO_TYPE:
@@ -284,6 +289,18 @@ ComponentCanvas * GameObject::GetComponentCanvas() const
 	{
 		if ((*it)->type == CANVAS)
 			return (ComponentCanvas*)(*it);
+	}
+	return ret;
+}
+
+ComponentRectTransform * GameObject::GetComponentRectTransform() const
+{
+	ComponentRectTransform* ret = nullptr;
+	//WILL ONLY FIND THE FIRST COMPONENT EQUAL TO TYPE OF EACH G0
+	for (std::vector<Component*>::const_iterator it = components.begin(); it != components.end(); it++)
+	{
+		if ((*it)->type == TRANSFORMRECT)
+			return (ComponentRectTransform*)(*it);
 	}
 	return ret;
 }
