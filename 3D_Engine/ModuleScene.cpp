@@ -587,23 +587,27 @@ void ModuleScene::SetWireframe(bool active)
 }
 
 void ModuleScene::Draw() {
-	GameObject* iterator;
-
 	std::vector<Component*> components;
+	root->GetComponents(TRANSFORMRECT, components);
 
-	for (int i = 0; i < root->childrens.size(); i++) {
-		iterator = root->childrens[i];
-		iterator->GetComponents(MESH, components);
+	ComponentRectTransform* recTrans = nullptr;
+	for (int i = 0; i < components.size(); i++) {
+		recTrans = (ComponentRectTransform *)components[i];
+		recTrans->Draw();
 	}
 
-	ComponentMesh* mesh;
+	components.clear();
+	root->GetComponents(MESH, components);
+	
+
+	ComponentMesh* mesh = nullptr;
 	for (int i = 0; i < components.size(); i++) {
 		mesh = (ComponentMesh *)components[i];
 
 		//Frustum Culling 
 		if (App->camera->GetFrustumCulling())
 		{
-			if (!iterator->staticGO) {
+			if (components[i]->myGO->staticGO) {
 				mesh->frustumContained = ContainsAaBox(mesh->myGO->globalAABB);
 				if (mesh->frustumContained != IS_OUT) {
 					if (mesh->HasMesh()) { mesh->Draw(); }
@@ -630,7 +634,7 @@ void ModuleScene::Draw() {
 				rootQuadTree->DebugDraw();
 		}
 	}
-	iterator = nullptr;
+	recTrans = nullptr;
 	mesh = nullptr;
 }
 

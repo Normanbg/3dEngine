@@ -13,6 +13,8 @@ class ComponentRectTransform :	public Component
 		float2 position = float2(0, 0);
 		float width = 0;
 		float height = 0;
+		float3* vertex[6];
+		uint bufferID;
 	};
 
 public:
@@ -30,6 +32,9 @@ public:
 	void SetPos(float2 pos);
 	void SetWidth(float w);
 	void SetHeight(float h);
+
+	void Draw();
+	void GenBuffer();
 
 private:
 	RectTransform rect;

@@ -175,19 +175,17 @@ void GameObject::AddComponent(Component * component, ComponentType type)
 
 
 void GameObject::GetComponents(ComponentType type, std::vector<Component*>& comp) {
-	Component* iterator;
-	for (int i = 0; i < components.size(); i++) {
-		iterator = components[i];
-		if (iterator->type == type) {
-			comp.push_back(iterator);
+	
+	for (int i = 0; i < components.size(); i++) {		
+		if (components[i]->type == type) {
+			comp.push_back(components[i]);
 		}
 	}
-	GameObject* gameObject;
-	for(int i = 0; i < childrens.size(); i++) {
-		gameObject = childrens[i];
-		gameObject->GetComponents(type, comp);
+	
+	for(int i = 0; i < childrens.size(); i++) {		
+		childrens[i]->GetComponents(type, comp);
 	}
-	iterator = nullptr;
+	
 }
 
 
