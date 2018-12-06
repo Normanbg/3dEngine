@@ -347,6 +347,7 @@ void ModuleRenderer3D::ShowGrid() {
 
 	SetTexture2D(recordedTex);
 }
+
 void ModuleRenderer3D::ReceiveEvent(const Event & event)
 {
 	switch (event.type) {

@@ -13,8 +13,8 @@ class ComponentRectTransform :	public Component
 		float2 position = float2(0, 0);
 		float width = 0;
 		float height = 0;
-		float3* vertex[6];
-		uint bufferID;
+		float3* vertex;		
+		uint vertexID;
 	};
 
 public:

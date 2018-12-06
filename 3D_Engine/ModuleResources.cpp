@@ -30,6 +30,9 @@ bool ModuleResources::Init(JSON_Object * obj)
 
 bool ModuleResources::Start()
 {
+	//UIrect = CreateNewResource(Resource::ResType::Mesh); delete all UIRect
+
+
 	CheckMetaFiles();
 	return true;
 }
@@ -58,6 +61,7 @@ bool ModuleResources::CleanUp()
 		
 	}
 	resources.clear();
+	//UIrect = nullptr;
 	return true;
 }
 

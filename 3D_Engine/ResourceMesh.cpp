@@ -73,16 +73,17 @@ void ResourceMesh::CleanUp()
 void ResourceMesh::GenerateBuffersGPU()
 {
 	glGenBuffers(1, (GLuint*) &(id_vertex));
-	glGenBuffers(1, (GLuint*) &(id_normals));// generates 1 buffer. then it assign a GLuint to its mem adress.
+	if (num_normals > 0) 
+		glGenBuffers(1, (GLuint*) &(id_normals));// generates 1 buffer. then it assign a GLuint to its mem adress.
 
 	glBindBuffer(GL_ARRAY_BUFFER, id_vertex); // set the type of buffer
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float3)*num_vertex, &vertex[0], GL_STATIC_DRAW);
 
-
-	glBindBuffer(GL_ARRAY_BUFFER, id_normals);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float3)*num_normals, &normals[0], GL_STATIC_DRAW);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
+	if (num_normals > 0) {
+		glBindBuffer(GL_ARRAY_BUFFER, id_normals);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float3)*num_normals, &normals[0], GL_STATIC_DRAW);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+	}
 	if (num_index > 0) {
 		glGenBuffers(1, (GLuint*) &(id_index));
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_index);
