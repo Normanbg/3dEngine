@@ -5,7 +5,6 @@
 
 
 
-
 class ComponentRectTransform :	public Component
 {
 	struct RectTransform
@@ -13,6 +12,7 @@ class ComponentRectTransform :	public Component
 		float2 position = float2(0, 0);
 		float width = 0;
 		float height = 0;
+		float4x4 globalMatrix = float4x4::identity;
 		float3* vertex;		
 		uint vertexID;
 	};
@@ -36,8 +36,16 @@ public:
 	void Draw();
 	void GenBuffer();
 
+	
+	
+
+private:
+	
+	void UpdateGlobalMatrix();
+
 private:
 	RectTransform rect;
+	bool draw = true;
 };
 
 #endif // !__COMPONENTRECTTRANS_H__

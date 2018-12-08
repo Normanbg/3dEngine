@@ -10,7 +10,6 @@
 ComponentTransformation::ComponentTransformation()
 {
 	type = TRANSFORM;
-	globalMatrix.SetIdentity();
 }
 
 ComponentTransformation::~ComponentTransformation()
