@@ -55,7 +55,7 @@ public:
 	void ClearSceneCompletely() ;
 	void SaveScene(const char* file = nullptr);
 	void LoadScene(const char* file= nullptr);
-
+	
 	void SetQuadTree();
 	void MousePicking();
 
@@ -80,6 +80,8 @@ public:
 	bool objectMoved = false;
 
 	int numCubes = 0;	
+
+	char currentScene[64] = "NewScene";
 
 	uint staticsGObjs = 0;
 	Quadtree* rootQuadTree = nullptr;

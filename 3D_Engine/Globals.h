@@ -102,6 +102,10 @@ enum FrustumContained {
 #define OGG_FORMAT ".ogg"
 #define OGG_FORMAT_CAP ".OGG"
 #define META_FORMAT ".meta"
+#define META_FORMAT_CAP ".META"
+#define JSON_FORMAT ".json"
+#define JSON_FORMAT_CAP ".JSON"
+
 
 
 

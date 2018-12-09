@@ -94,10 +94,14 @@ update_status ModuleGui::Update(float dt)
 				clearScene = true;
 			if (ImGui::MenuItem("Load PEI File..."))
 				panelSceneInfo->wantToLoadFile = true;
-			if (ImGui::MenuItem("Save scene"))
-				App->scene->SaveScene();
+			if (ImGui::MenuItem("Save scene...")) {
+				std::string sc = SCENES_PATH;
+				sc+=App->scene->currentScene;
+				sc+=".JSON";
+				App->scene->SaveScene(sc.c_str());
+			}
 			if (ImGui::MenuItem("Load scene"))
-				App->scene->LoadScene();			
+				panelSceneInfo->wantToLoadScene = true;
 			if (ImGui::MenuItem("Quit", "ESC"))
 				return UPDATE_STOP;
 			ImGui::EndMenu();
