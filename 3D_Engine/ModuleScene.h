@@ -45,7 +45,7 @@ public:
 	GameObject * AddUIGameObject(const char * name, GameObject * parent);
 
 	GameObject* GetGameObjectByUUID(uuid UUID) const;
-	GameObject* GetGameObjectUUIDRecursive(uuid UUID, GameObject* go) const;
+	GameObject* GetFirstGameObjectCanvas() const;
 
 	void SetMainCamera(GameObject* camera);
 	void ChangeRootGO(GameObject* newRoot){ root = newRoot; }
@@ -101,6 +101,8 @@ private:
 	void UpdateGuizmoOp();
 
 	void SetQTSize(GameObject * go);
+
+	GameObject* GetGameObjectUUIDRecursive(uuid UUID, GameObject* go) const;
 
 private:
 	pcg32_random_t rng;

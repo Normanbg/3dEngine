@@ -154,6 +154,14 @@ Component * GameObject::AddComponent(ComponentType type) {
 		ret = new ComponentCanvas();
 		break;
 
+	case ComponentType::UI_IMAGE:
+		ret = new ComponentImageUI();
+		break;
+
+	case ComponentType::UI_TEXT:
+		ret = new ComponentTextUI();
+		break;
+
 	case ComponentType::TRANSFORMRECT:
 		ret = new ComponentRectTransform();
 		break;
@@ -291,6 +299,29 @@ ComponentCanvas * GameObject::GetComponentCanvas() const
 	return ret;
 }
 
+ComponentImageUI * GameObject::GetComponentImageUI() const
+{
+	ComponentImageUI* ret = nullptr;
+	//WILL ONLY FIND THE FIRST COMPONENT EQUAL TO TYPE OF EACH G0
+	for (std::vector<Component*>::const_iterator it = components.begin(); it != components.end(); it++)
+	{
+		if ((*it)->type == UI_IMAGE)
+			return (ComponentImageUI*)(*it);
+	}
+	return ret;
+}
+
+ComponentTextUI * GameObject::GetComponentTextUI() const
+{
+	ComponentTextUI* ret = nullptr;
+	//WILL ONLY FIND THE FIRST COMPONENT EQUAL TO TYPE OF EACH G0
+	for (std::vector<Component*>::const_iterator it = components.begin(); it != components.end(); it++)
+	{
+		if ((*it)->type == UI_TEXT)
+			return (ComponentTextUI*)(*it);
+	}
+	return ret;
+}
 ComponentRectTransform * GameObject::GetComponentRectTransform() const
 {
 	ComponentRectTransform* ret = nullptr;
@@ -303,7 +334,7 @@ ComponentRectTransform * GameObject::GetComponentRectTransform() const
 	return ret;
 }
 
-ComponentMaterial * GameObject::GetComponentMaterial(const uuid UUID)
+ComponentMaterial * GameObject::GetComponentMaterial( uuid UUID)
 {
 	std::vector<Component*> materials;
 

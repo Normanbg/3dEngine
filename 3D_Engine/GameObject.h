@@ -12,7 +12,8 @@
 #include "ComponentMesh.h"
 #include "ComponentMaterial.h"
 #include "ComponentRectTransform.h"
-
+#include "ComponentImageUI.h"
+#include "ComponentTextUI.h"
 
 class string;
 class vector;
@@ -52,9 +53,11 @@ public:
 	ComponentTransformation* GetComponentTransform() const;
 	ComponentCamera* GetComponentCamera() const;
 	ComponentMaterial * GetComponentMaterial() const;
-	ComponentMaterial* GetComponentMaterial(const uuid UUID);
+	ComponentMaterial* GetComponentMaterial(uuid UUID);
 	ComponentMesh * GetComponentMesh() const;
 	ComponentCanvas * GetComponentCanvas() const;
+	ComponentImageUI * GetComponentImageUI() const;
+	ComponentTextUI * GetComponentTextUI() const;
 	ComponentRectTransform * GetComponentRectTransform() const;
 
 	const bool GetSelected() const;

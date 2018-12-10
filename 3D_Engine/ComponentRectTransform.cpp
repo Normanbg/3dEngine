@@ -1,6 +1,6 @@
 #include "ComponentRectTransform.h"
 #include "ModuleResources.h"
-
+#include "GameObject.h"
 
 #include "mmgr/mmgr.h"
 
@@ -86,7 +86,6 @@ void ComponentRectTransform::Draw()
 
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glBindBuffer(GL_ARRAY_BUFFER, 0); //resets the buffer
-
 
 		glLineWidth(8.0f);
 		glColor3f(0.5f, 0.0f, 0.7f); //pink

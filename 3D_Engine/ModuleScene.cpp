@@ -162,6 +162,15 @@ GameObject * ModuleScene::GetGameObjectUUIDRecursive(uuid UUID, GameObject * go)
 	return nullptr;
 }
 
+GameObject * ModuleScene::GetFirstGameObjectCanvas() const
+{
+	for (int i = 0; i < root->childrens.size(); i++) {
+		if (root->childrens[i]->GetComponentCanvas() != nullptr)
+			return root->childrens[i];
+	}
+	return nullptr;
+}
+
 void ModuleScene::SetMainCamera(GameObject * camera)
 {
 	mainCamera = camera;

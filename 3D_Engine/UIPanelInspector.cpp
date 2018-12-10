@@ -140,6 +140,20 @@ void UIPanelInspector::DrawComponent(Component* compDraw)
 			ImGui::TreePop();
 		}
 		break;
+	case UI_IMAGE:
+		if (ImGui::TreeNode("UI Image"))
+		{
+			compDraw->myGO->GetComponentImageUI()->DrawInspector();
+			ImGui::TreePop();
+		}
+		break;
+	case UI_TEXT:
+		if (ImGui::TreeNode("UI Text"))
+		{
+			compDraw->myGO->GetComponentTextUI()->DrawInspector();
+			ImGui::TreePop();
+		}
+		break;
 	case MESH:
 		if (ImGui::TreeNode("Mesh"))
 		{
