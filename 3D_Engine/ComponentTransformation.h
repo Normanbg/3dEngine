@@ -24,11 +24,11 @@ public:
 
 	void setGlobalMatrix(const float4x4 newGlobalMat);
 	void setLocalMatrix(const float4x4 newLocalMat);
-	void setPos(const float3 _newpos);
-	void setRotQuat(const Quat qNewRot);
-	void setRotEuler(const float3 _newrot);
+	void SetPos(const float3 _newpos);
+	void SetRotQuat(const Quat qNewRot);
+	void SetRotEuler(const float3 _newrot);
 
-	void setScale(float3 _newscale);
+	void SetScale(float3 _newscale);
 
 	const float3 GetPos() const;
 	const float3 GetScale() const;

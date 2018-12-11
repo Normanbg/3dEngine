@@ -110,7 +110,6 @@ void ComponentRectTransform::GenBuffer()
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float3) * 4, &rect.vertex[0], GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-
 }
 
 void ComponentRectTransform::UpdateGlobalMatrix() {

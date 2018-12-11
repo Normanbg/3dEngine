@@ -291,12 +291,12 @@ void ModuleScene::MousePicking()
 			else
 				ray = App->camera->cameraComp->GetFrustum().UnProjectLineSegment(normalized.x, normalized.y);
 
-			GetDynamicGOs(root);
+			GetAllGOs(root);
 			float distance = 9 * 10 ^ 10;
 			GameObject* closest = nullptr;
 			drawRay = true;
 			line = ray;
-			for (auto it : dynamicOBjs)
+			for (auto it : allGameObjects)
 			{
 				bool hit;
 				float dist;
@@ -482,14 +482,14 @@ void ModuleScene::GetAllStaticGOs(GameObject* go)
 //	stCulled = i;
 //}
 
-void ModuleScene::GetDynamicGOs(GameObject * go)
+void ModuleScene::GetAllGOs(GameObject * go)
 {
-	if (go != root && !go->staticGO)
-		dynamicOBjs.push_back(go);
+	if (go != root)
+		allGameObjects.push_back(go);
 	else if (go == root)
-		dynamicOBjs.clear();
+		allGameObjects.clear();
 	for (auto it : go->childrens) {
-		GetDynamicGOs(it);
+		GetAllGOs(it);
 	}
 }
 

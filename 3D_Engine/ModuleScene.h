@@ -95,7 +95,7 @@ public:
 	uint intersections = 0;
 private:
 	void GetAllStaticGOs(GameObject* go);
-	void GetDynamicGOs(GameObject* go);
+	void GetAllGOs(GameObject* go);
 	void AddGOtoQuadtree(GameObject * go);
 
 	void UpdateGuizmoOp();
@@ -107,7 +107,7 @@ private:
 private:
 	pcg32_random_t rng;
 	std::vector<GameObject*> staticOBjs;
-	std::vector<GameObject*> dynamicOBjs;
+	std::vector<GameObject*> allGameObjects;
 
 };
 #endif __MODULE_SCENE_H__

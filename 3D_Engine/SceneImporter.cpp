@@ -255,9 +255,9 @@ GameObject * SceneImporter::ImportNodeRecursive(aiNode * node, const aiScene * s
 		aiVector3D scale;
 		node->mTransformation.Decompose(scale, rotation, position);		
 		
-		nodeGO->GetComponentTransform()->setPos(float3(position.x, position.y, position.z));
-		nodeGO->GetComponentTransform()->setScale(float3(scale.x, scale.y, scale.z));
-		nodeGO->GetComponentTransform()->setRotQuat(Quat(rotation.x, rotation.y, rotation.z, rotation.w));
+		nodeGO->GetComponentTransform()->SetPos(float3(position.x, position.y, position.z));
+		nodeGO->GetComponentTransform()->SetScale(float3(scale.x, scale.y, scale.z));
+		nodeGO->GetComponentTransform()->SetRotQuat(Quat(rotation.x, rotation.y, rotation.z, rotation.w));
 		
 
 		if (node->mNumMeshes > 0)
