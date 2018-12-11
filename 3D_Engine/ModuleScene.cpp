@@ -337,7 +337,7 @@ void ModuleScene::DrawGuizmo(ImGuizmo::OPERATION operation)
 		glGetFloatv(GL_MODELVIEW_MATRIX, (float*)viewMatrix.v);
 		glGetFloatv(GL_PROJECTION_MATRIX, (float*)projectionMatrix.v);
 
-		transMatr = transform->getGlobalMatrix().Transposed();
+		transMatr = transform->GetGlobalMatrix().Transposed();
 
 		ImGuizmo::Manipulate((float*)viewMatrix.v, (float*)projectionMatrix.v, operation, mode, transMatr.ptr());
 		transMatr.Transpose();

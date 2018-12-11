@@ -126,7 +126,7 @@ const bool ComponentMesh::HasMaterial() const
 void ComponentMesh::Draw()
 {
 	glPushMatrix();
-	glMultMatrixf(myGO->GetComponentTransform()->getGlobalMatrix().Transposed().ptr());
+	glMultMatrixf(myGO->GetComponentTransform()->GetGlobalMatrix().Transposed().ptr());
 	showWireframe ? glPolygonMode(GL_FRONT_AND_BACK, GL_LINE) : glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); // wireframe
 
 	

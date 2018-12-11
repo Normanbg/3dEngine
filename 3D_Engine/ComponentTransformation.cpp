@@ -33,9 +33,9 @@ void ComponentTransformation::DrawInspector()
 {
 	ImGui::Separator();
 	ImGui::TextColored(ImVec4(0.25f, 0.25f, 0.25f, 1), "UUID: %i", GetUUID());
-	float3 _pos = getPos();
-	float3 _rot = getEulerRot();
-	float3 _scale = getScale();
+	float3 _pos = GetPos();
+	float3 _rot = GetEulerRot();
+	float3 _scale = GetScale();
 
 	GameObject* selectedRecover = App->scene->gObjSelected;
 	//bool moved = false;
@@ -43,27 +43,27 @@ void ComponentTransformation::DrawInspector()
 	{
 		if (ImGui::DragFloat3("Position", (float*)&_pos, 0.1f))
 		{
-			selectedRecover->GetComponentTransform()->setPos(_pos);
+			selectedRecover->GetComponentTransform()->SetPos(_pos);
 			if (selectedRecover->staticGO)
 				App->scene->objectMoved = true;
 		}
 		if (ImGui::DragFloat3("Rotation", (float*)&_rot, 0.1f)) {
 
-			selectedRecover->GetComponentTransform()->setRotEuler(_rot);
+			selectedRecover->GetComponentTransform()->SetRotEuler(_rot);
 			if (selectedRecover->staticGO)
 				App->scene->objectMoved = true;
 		}
 		if (ImGui::DragFloat3("Scale", (float*)&_scale, 0.1f, 0.0f)) {
 			
-			selectedRecover->GetComponentTransform()->setScale(_scale);
+			selectedRecover->GetComponentTransform()->SetScale(_scale);
 			if (selectedRecover->staticGO)
 				App->scene->objectMoved = true;
 		}
 		if (ImGui::SmallButton("Reset"))
 		{			
-			selectedRecover->GetComponentTransform()->setPos(float3::zero);
-			selectedRecover->GetComponentTransform()->setRotEuler(float3::zero);
-			selectedRecover->GetComponentTransform()->setScale(float3::one);
+			selectedRecover->GetComponentTransform()->SetPos(float3::zero);
+			selectedRecover->GetComponentTransform()->SetRotEuler(float3::zero);
+			selectedRecover->GetComponentTransform()->SetScale(float3::one);
 			if (selectedRecover->staticGO)
 				App->scene->objectMoved = true;
 		}
@@ -77,7 +77,7 @@ void ComponentTransformation::setGlobalMatrix(const float4x4 newGlobalMat)
 	if (myGO->parent != nullptr)
 	{
 		ComponentTransformation* parentTrans = myGO->parent->GetComponentTransform();
-		float4x4 newlocalMatrix = parentTrans->getGlobalMatrix().Inverted() * globalMatrix;
+		float4x4 newlocalMatrix = parentTrans->GetGlobalMatrix().Inverted() * globalMatrix;
 		setLocalMatrix(newlocalMatrix);
 	}
 }
@@ -95,27 +95,27 @@ void ComponentTransformation::UpdateLocalMatrix() {
 void ComponentTransformation::Save(Config & data) const
 {
 	data.AddUInt("UUID", UUID);
-	data.AddFloat3("Translation", getPos());
-	data.AddFloat3("Scale", getScale());
-	data.AddFloat3("Rotation", getEulerRot()); //save rotation as eulerangle(float3) to save memory.
+	data.AddFloat3("Translation", GetPos());
+	data.AddFloat3("Scale", GetScale());
+	data.AddFloat3("Rotation", GetEulerRot()); //save rotation as eulerangle(float3) to save memory.
 	
 }
 
 void ComponentTransformation::Load(Config * data)
 {
 	UUID = data->GetUInt("UUID");
-	setPos(data->GetFloat3("Translation", { 0,0,0 }));
-	setRotEuler(data->GetFloat3("Rotation", { 0,0,0 }));
-	setScale(data->GetFloat3("Scale", { 0,0,0 }));
+	SetPos(data->GetFloat3("Translation", { 0,0,0 }));
+	SetRotEuler(data->GetFloat3("Rotation", { 0,0,0 }));
+	SetScale(data->GetFloat3("Scale", { 0,0,0 }));
 }
 
-void ComponentTransformation::setPos(const float3 _newpos)
+void ComponentTransformation::SetPos(const float3 _newpos)
 {
 	transform.position = _newpos;
 	UpdateLocalMatrix();
 }
 
-void ComponentTransformation::setScale(float3 _newscale)
+void ComponentTransformation::SetScale(float3 _newscale)
 {
 	if (_newscale.x < 0)
 		_newscale.x = 0.001f;
@@ -128,46 +128,46 @@ void ComponentTransformation::setScale(float3 _newscale)
 	UpdateLocalMatrix();
 }
 
-void ComponentTransformation::setRotQuat(const Quat qNewRot)
+void ComponentTransformation::SetRotQuat(const Quat qNewRot)
 {
 	transform.rotationQuat = qNewRot;
 	transform.rotEuler = transform.rotationQuat.ToEulerXYZ() * RADTODEG;
 	UpdateLocalMatrix();
 }
 
-void ComponentTransformation::setRotEuler(const float3 _newrot)
+void ComponentTransformation::SetRotEuler(const float3 _newrot)
 {
 	transform.rotEuler = _newrot;
 	transform.rotationQuat = Quat::FromEulerXYZ(transform.rotEuler.x * DEGTORAD, transform.rotEuler.y * DEGTORAD, transform.rotEuler.z * DEGTORAD);
 	UpdateLocalMatrix();
 }
 
-const float3 ComponentTransformation::getPos() const
+const float3 ComponentTransformation::GetPos() const
 {
 	return transform.position;
 }
 
-const float3 ComponentTransformation::getScale() const
+const float3 ComponentTransformation::GetScale() const
 {
 	return transform.scale;
 }
 
-const float3 ComponentTransformation::getEulerRot() const
+const float3 ComponentTransformation::GetEulerRot() const
 {
 	return transform.rotEuler;
 }
 
-const Quat ComponentTransformation::getQuatRot() const
+const Quat ComponentTransformation::GetQuatRot() const
 {
 	return transform.rotationQuat;
 }
 
-const float4x4 ComponentTransformation::getGlobalMatrix() const
+const float4x4 ComponentTransformation::GetGlobalMatrix() const
 {
 	return globalMatrix;
 }
 
-const float4x4 ComponentTransformation::getLocalMatrix() const
+const float4x4 ComponentTransformation::GetLocalMatrix() const
 {
 	return localMatrix;
 }

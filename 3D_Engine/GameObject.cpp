@@ -367,17 +367,6 @@ ComponentMaterial * GameObject::GetComponentMaterial() const
 	return ret;
 }
 
-//
-//bool GameObject::isActive()
-//{
-//	return active;
-//}
-//
-//bool GameObject::isStatic()
-//{
-//	return staticGO;
-//}
-
 void GameObject::SetName(char * _name)
 {
 	name = _name;
@@ -422,7 +411,7 @@ void GameObject::RayHits(const LineSegment & segment, bool & hit, float & dist){
 					return;
 				//Segment for the mesh
 				LineSegment localRay(segment);
-				localRay.Transform(GetComponentTransform()->getGlobalMatrix().Inverted());
+				localRay.Transform(GetComponentTransform()->GetGlobalMatrix().Inverted());
 
 				uint* indices = mesh->GetResourceMesh()->index;
 				float3* vertices = mesh->GetResourceMesh()->vertex;

@@ -30,12 +30,12 @@ public:
 
 	void setScale(float3 _newscale);
 
-	const float3 getPos() const;
-	const float3 getScale() const;
-	const float3 getEulerRot() const;
-	const Quat getQuatRot() const;
-	const float4x4 getGlobalMatrix() const;
-	const float4x4 getLocalMatrix() const;
+	const float3 GetPos() const;
+	const float3 GetScale() const;
+	const float3 GetEulerRot() const;
+	const Quat GetQuatRot() const;
+	const float4x4 GetGlobalMatrix() const;
+	const float4x4 GetLocalMatrix() const;
 
 	void UpdateLocalMatrix();
 	void Save(Config& data) const;

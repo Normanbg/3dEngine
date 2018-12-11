@@ -56,9 +56,13 @@ public:
 	ComponentMaterial* GetComponentMaterial(uuid UUID);
 	ComponentMesh * GetComponentMesh() const;
 	ComponentCanvas * GetComponentCanvas() const;
+	ComponentRectTransform * GetComponentRectTransform() const;
+
+	//UI COMPONENTS------------
 	ComponentImageUI * GetComponentImageUI() const;
 	ComponentTextUI * GetComponentTextUI() const;
-	ComponentRectTransform * GetComponentRectTransform() const;
+
+
 
 	const bool GetSelected() const;
 
