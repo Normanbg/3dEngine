@@ -391,75 +391,6 @@ FrustumContained ModuleScene::ContainsAaBox(const AABB& refBox) const
 	// we must be partly in then otherwise
 	return(INTERSECT);
 }
-//
-//void ModuleScene::QTContainsAaBox(Quadtree* qt)
-//{
-//	float3 vCorner[8];
-//	int iTotalIn = 0;
-//	qt->quadTreeBox.GetCornerPoints(vCorner); // get the corners of the box into the vCorner array
-//
-//	if (qt == rootQuadTree)
-//		staticObjsToDraw.clear();
-//
-//	// test all 8 corners against the 6 sides
-//	// if all points are behind 1 specific plane, we are out
-//	// if we are in with all points, then we are fully in
-//	for (int p = 0; p < 6; ++p) {
-//		int iInCount = 8;
-//		int iPtIn = 1;
-//		for (int i = 0; i < 8; ++i) {
-//			// test this point against the planes
-//			if (inGame) {
-//				if (mainCamera->GetComponentCamera()->GetFrustum().GetPlane(p).IsOnPositiveSide(vCorner[i]))
-//				{
-//					iPtIn = 0;
-//					--iInCount;
-//				}
-//			}
-//			else {
-//				if (App->camera->cameraComp->GetFrustum().GetPlane(p).IsOnPositiveSide(vCorner[i]))
-//				{
-//					iPtIn = 0;
-//					--iInCount;
-//				}
-//			}
-//		}
-//		// were all the points outside of plane p?
-//		if (iInCount == 0) {
-//			for (auto it : qt->gameobjs) {
-//				it->GetComponentMesh()->staticCulled = true;
-//				break;
-//			}
-//		}
-//		// check if they were all on the right side of the plane
-//		iTotalIn += iPtIn;
-//	}
-//	if (!qt->quTrChilds.empty()) {
-//		for (int i = 0; i < 4; i++) {
-//			Quadtree* childQT = qt->quTrChilds[i];
-//			QTContainsAaBox(childQT);
-//		}
-//
-//	}
-//	else {
-//		for (auto it : qt->gameobjs) {
-//			staticObjsToDraw.push_back(it);
-//		}
-//	}
-//
-//}
-
-//void ModuleScene::SetStaticsCulled()
-//{
-//	staticObjsToDraw.sort();
-//	staticObjsToDraw.unique();
-//	for (auto it : staticObjsToDraw) {
-//		if (it->GetComponentMesh())
-//		{
-//			it->GetComponentMesh()->staticCulled = false;
-//		}
-//	}
-//}
 
 void ModuleScene::GetAllStaticGOs(GameObject* go)
 {
@@ -469,18 +400,6 @@ void ModuleScene::GetAllStaticGOs(GameObject* go)
 		GetAllStaticGOs(it);
 	}
 }
-
-//void ModuleScene::GetStaticObjsCulled(int& stCulled)
-//{
-//	staticOBjs.clear();
-//	GetAllStaticGOs(root);
-//	int i = 0;
-//	for (auto it : staticOBjs) {
-//		if (it->GetComponentMesh() && it->GetComponentMesh()->staticCulled)
-//			i++;
-//	}
-//	stCulled = i;
-//}
 
 void ModuleScene::GetAllGOs(GameObject * go)
 {

@@ -418,7 +418,6 @@ void GameObject::RayHits(const LineSegment & segment, bool & hit, float & dist){
 				Triangle triangle;
 
 				for (int i = 0; i < mesh->GetResourceMesh()->num_index;) {
-					//TO CHEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEECK!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 					triangle.a = vertices[indices[i]]; ++i;
 					triangle.b = vertices[indices[i]]; ++i;
 					triangle.c = vertices[indices[i]]; ++i;

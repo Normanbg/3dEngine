@@ -59,7 +59,6 @@ void ComponentRectTransform::DrawInspector()
 	ImGui::Checkbox("Draw Canvas", &draw);
 }
 
-
 void ComponentRectTransform::SetPos(float2 pos)
 {
 	rect.position = pos;
@@ -103,6 +102,7 @@ void ComponentRectTransform::Draw()
 		glPopMatrix();
 	}
 }
+
 void ComponentRectTransform::GenBuffer()
 {
 	glGenBuffers(1, (GLuint*) &(rect.vertexID));
