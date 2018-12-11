@@ -14,7 +14,7 @@
     <ProjectGuid>{746CC4C3-787F-4B0E-AA66-E388FE3FF4F6}</ProjectGuid>
     <RootNamespace>SDLGame</RootNamespace>
     <ProjectName>3dEngine</ProjectName>
-    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -83,9 +83,11 @@
     <ClInclude Include="Color.h" />
     <ClInclude Include="ComponentCamera.h" />
     <ClInclude Include="ComponentCanvas.h" />
+    <ClInclude Include="ComponentImageUI.h" />
     <ClInclude Include="ComponentMaterial.h" />
     <ClInclude Include="ComponentMesh.h" />
     <ClInclude Include="ComponentRectTransform.h" />
+    <ClInclude Include="ComponentTextUI.h" />
     <ClInclude Include="ComponentTransformation.h" />
     <ClInclude Include="ComponentWithResource.h" />
     <ClInclude Include="Config.h" />
@@ -204,9 +206,11 @@
     <ClCompile Include="Color.cpp" />
     <ClCompile Include="ComponentCamera.cpp" />
     <ClCompile Include="ComponentCanvas.cpp" />
+    <ClCompile Include="ComponentImageUI.cpp" />
     <ClCompile Include="ComponentMaterial.cpp" />
     <ClCompile Include="ComponentMesh.cpp" />
     <ClCompile Include="ComponentRectTransform.cpp" />
+    <ClCompile Include="ComponentTextUI.cpp" />
     <ClCompile Include="ComponentTransformation.cpp" />
     <ClCompile Include="ComponentWithResource.cpp" />
     <ClCompile Include="Config.cpp" />

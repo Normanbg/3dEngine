@@ -417,6 +417,12 @@
     <ClInclude Include="ComponentRectTransform.h">
       <Filter>Sources\Objects &amp; Components\Components</Filter>
     </ClInclude>
+    <ClInclude Include="ComponentImageUI.h">
+      <Filter>Sources\Objects &amp; Components\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentTextUI.h">
+      <Filter>Sources\Objects &amp; Components\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleInput.cpp">
@@ -675,6 +681,12 @@
       <Filter>Sources\Objects &amp; Components\Components</Filter>
     </ClCompile>
     <ClCompile Include="ComponentRectTransform.cpp">
+      <Filter>Sources\Objects &amp; Components\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentImageUI.cpp">
+      <Filter>Sources\Objects &amp; Components\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentTextUI.cpp">
       <Filter>Sources\Objects &amp; Components\Components</Filter>
     </ClCompile>
   </ItemGroup>
