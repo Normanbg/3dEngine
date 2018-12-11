@@ -7,7 +7,7 @@
 #include <list>
 
 constexpr auto QT_MAX_ELEMS = 1;
-constexpr auto MAX_SUBDIVISIONS = 2;
+constexpr auto MAX_SUBDIVISIONS = 10;
 
 class GameObject;
 class vector;
