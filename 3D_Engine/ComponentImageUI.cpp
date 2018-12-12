@@ -11,9 +11,9 @@ ComponentImageUI::ComponentImageUI()
 	type = UI_IMAGE;
 	static const float uvs[] = {
 		0, 0,
-		0, 1,
+		1, 0,
 		1, 1,
-		1, 0
+		0, 1
 	};
 
 	texCoords = new float2[4];
@@ -100,25 +100,20 @@ void ComponentImageUI::Draw()
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 	glBindBuffer(GL_ARRAY_BUFFER, 0); //resets the buffer
+	glBindTexture(GL_TEXTURE_2D, 0);
 
-	glLineWidth(8.0f);
-	glColor3f(0.5f, 0.0f, 0.7f); //pink
+	glLineWidth(4.0f);
 
-	
-		if (HasTexture()) {
+	if (HasTexture()) {
+		
+		glBindTexture(GL_TEXTURE_2D, resourceTexture->gpuID);
+		glTexCoordPointer(2, GL_FLOAT, 0, &(texCoords[0]));
 
-			glBindTexture(GL_TEXTURE_2D, 0);
-			glBindTexture(GL_TEXTURE_2D, resourceTexture->gpuID);
-			glTexCoordPointer(2, GL_FLOAT, 0, &(texCoords[0]));
-
-		}
-	
-
+	}
 	glBindBuffer(GL_ARRAY_BUFFER, rectTransform->GetVertexID());
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
-	glDrawArrays(GL_TRIANGLES, 0, 3);
+	glDrawArrays(GL_QUADS, 0,4);
 
-	glColor3f(1.f, 0.5f, 1.0f);
 	glLineWidth(1.0f);
 
 	glBindTexture(GL_TEXTURE_2D, 0);
