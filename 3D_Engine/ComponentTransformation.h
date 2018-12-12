@@ -22,11 +22,11 @@ public:
 	void CleanUp() override;
 	void DrawInspector() override;
 
-	void setGlobalMatrix(const float4x4 newGlobalMat);
-	void setLocalMatrix(const float4x4 newLocalMat);
-	void SetPos(const float3 _newpos);
-	void SetRotQuat(const Quat qNewRot);
-	void SetRotEuler(const float3 _newrot);
+	void setGlobalMatrix(float4x4 newGlobalMat);
+	void setLocalMatrix(float4x4 newLocalMat);
+	void SetPos( float3 _newpos);
+	void SetRotQuat( Quat qNewRot);
+	void SetRotEuler( float3 _newrot);
 
 	void SetScale(float3 _newscale);
 
