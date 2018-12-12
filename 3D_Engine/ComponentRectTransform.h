@@ -14,7 +14,7 @@ class ComponentRectTransform :	public Component
 		float height = 0;
 		//float4x4 localMatrix = float4x4::identity;
 		float4x4 globalMatrix = float4x4::identity;
-		float3* vertex;		
+		float3* vertex = nullptr;		
 		uint vertexID;
 	};
 
@@ -29,6 +29,8 @@ public:
 	const float2 GetPos() const { return rect.position; }
 	const float GetWidth() const { return rect.width; }
 	const float GetHeight() const { return rect.height; }
+	const uint GetVertexID() const { return rect.vertexID; }
+	const float4x4 GetGlobalMatrix() const { return rect.globalMatrix; }
 
 	void SetPos(float2 pos);
 	void SetWidth(float w);
@@ -38,6 +40,7 @@ public:
 	void GenBuffer();
 
 	
+	bool draw = true;
 	
 
 private:
@@ -46,7 +49,6 @@ private:
 
 private:
 	RectTransform rect;
-	bool draw = true;
 };
 
 #endif // !__COMPONENTRECTTRANS_H__

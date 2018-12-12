@@ -516,14 +516,23 @@ void ModuleScene::SetWireframe(bool active)
 
 void ModuleScene::Draw() {
 	std::vector<Component*> components;
+	//--------
 	root->GetComponents(TRANSFORMRECT, components);
-
+	
 	ComponentRectTransform* recTrans = nullptr;
 	for (int i = 0; i < components.size(); i++) {
 		recTrans = (ComponentRectTransform *)components[i];
-		recTrans->Draw();
+		if(recTrans->draw)
+			recTrans->Draw();
 	}
-
+	components.clear();
+	root->GetComponents(UI_IMAGE, components);
+	ComponentImageUI* image = nullptr;
+	for (int i = 0; i < components.size(); i++) {
+		image = (ComponentImageUI *)components[i];
+		image->Draw();
+	}
+	//--------UI
 	components.clear();
 	root->GetComponents(MESH, components);
 	

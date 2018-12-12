@@ -26,6 +26,7 @@ ComponentRectTransform::ComponentRectTransform()
 	memcpy(rect.vertex, vtx, sizeof(float3) * 4);
 	
 	GenBuffer();
+	UpdateGlobalMatrix();
 }
 
 
@@ -79,7 +80,6 @@ void ComponentRectTransform::SetHeight(float h)
 
 void ComponentRectTransform::Draw()
 {
-	if (draw) {
 		glPushMatrix();
 		glMultMatrixf(rect.globalMatrix.Transposed().ptr());
 
@@ -100,7 +100,7 @@ void ComponentRectTransform::Draw()
 		glBindBuffer(GL_ARRAY_BUFFER, 0); //resets the buffer
 		glDisableClientState(GL_VERTEX_ARRAY);
 		glPopMatrix();
-	}
+	
 }
 
 void ComponentRectTransform::GenBuffer()

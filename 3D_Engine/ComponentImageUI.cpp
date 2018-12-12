@@ -1,5 +1,5 @@
 #include "ComponentImageUI.h"
-
+#include "GameObject.h"
 #include "ModuleResources.h"
 
 #include "mmgr/mmgr.h"
@@ -9,11 +9,26 @@
 ComponentImageUI::ComponentImageUI()
 {
 	type = UI_IMAGE;
+	static const float uvs[] = {
+		0, 0,
+		0, 1,
+		1, 1,
+		1, 0
+	};
+
+	texCoords = new float2[4];
+	memcpy(texCoords, uvs, sizeof(float3) * 4);
 }
 
 
 ComponentImageUI::~ComponentImageUI()
 {
+}
+
+bool ComponentImageUI::Start()
+{
+	rectTransform = myGO->GetComponentRectTransform();
+	return true;
 }
 
 bool ComponentImageUI::Update()
@@ -26,8 +41,10 @@ void ComponentImageUI::CleanUp()
 	if (HasTexture()) {
 		resourceTexture->CleanUp();
 	}
+	rectTransform = nullptr;
 	resourceTexture = nullptr;
 	myGO = nullptr;
+	RELEASE_ARRAY(texCoords);
 }
 
 void ComponentImageUI::DrawInspector()
@@ -73,6 +90,46 @@ void ComponentImageUI::DrawInspector()
 		ImGui::Image((void*)(resourceTexture->gpuID), ImVec2(windowSize, windowSize), ImVec2(0, 1), ImVec2(1, 0));
 		
 	}
+}
+
+void ComponentImageUI::Draw()
+{
+	glPushMatrix();
+	glMultMatrixf(rectTransform->GetGlobalMatrix().Transposed().ptr());
+
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	glBindBuffer(GL_ARRAY_BUFFER, 0); //resets the buffer
+
+	glLineWidth(8.0f);
+	glColor3f(0.5f, 0.0f, 0.7f); //pink
+
+	
+		if (HasTexture()) {
+
+			glBindTexture(GL_TEXTURE_2D, 0);
+			glBindTexture(GL_TEXTURE_2D, resourceTexture->gpuID);
+			glTexCoordPointer(2, GL_FLOAT, 0, &(texCoords[0]));
+
+		}
+	
+
+	glBindBuffer(GL_ARRAY_BUFFER, rectTransform->GetVertexID());
+	glVertexPointer(3, GL_FLOAT, 0, NULL);
+	glDrawArrays(GL_TRIANGLES, 0, 3);
+
+	glColor3f(1.f, 0.5f, 1.0f);
+	glLineWidth(1.0f);
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0); //resets the buffer
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	glDisableClientState(GL_VERTEX_ARRAY);
+	glPopMatrix();
+}
+
+void ComponentImageUI::GenBuffer()
+{
 }
 
 const bool ComponentImageUI::HasTexture() const

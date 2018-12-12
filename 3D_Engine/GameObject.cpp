@@ -169,8 +169,10 @@ Component * GameObject::AddComponent(ComponentType type) {
 	case ComponentType::NO_TYPE:
 		return nullptr;
 	}
+
 	ret->myGO = this;
 	components.push_back(ret);
+	ret->Start();
 	return ret;
 }
 

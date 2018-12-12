@@ -4,6 +4,7 @@
 #include "Component.h"
 #include "ComponentWithResource.h"
 #include "ResourceTexture.h"
+#include "ComponentRectTransform.h"
 
 
 class ComponentImageUI :
@@ -13,9 +14,13 @@ public:
 	ComponentImageUI();
 	~ComponentImageUI();
 
+	bool Start() override;
 	bool Update() override;
 	void CleanUp() override;
 	void DrawInspector() override;
+
+	void Draw();
+	void GenBuffer();
 
 	const bool HasTexture() const;
 
@@ -25,7 +30,9 @@ public:
 	Resource* GetResource() const override { return (Resource*)resourceTexture; }
 
 private:
+	float2* texCoords = nullptr;
 	ResourceTexture* resourceTexture = nullptr;
+	ComponentRectTransform* rectTransform = nullptr;
 };
 
 
