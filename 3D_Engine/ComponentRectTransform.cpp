@@ -10,7 +10,7 @@
 
 ComponentRectTransform::ComponentRectTransform()
 {
-	type = TRANSFORMRECT;
+	typeUI = TRANSFORMRECT;
 	rect.width = 1;
 	rect.height = 1;
 

@@ -7,7 +7,7 @@
 
 ComponentTextUI::ComponentTextUI()
 {
-	type = UI_TEXT;
+	typeUI = UI_TEXT;
 }
 
 

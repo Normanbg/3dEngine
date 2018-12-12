@@ -41,7 +41,7 @@ void UIPanelHierarchy::Draw()
 						canvas->AddComponent(CANVAS);
 					}
 					GameObject* image = App->scene->AddUIGameObject("UI_Image",canvas);
-					image->AddComponent(UI_IMAGE);
+					image->AddUIComponent(UI_IMAGE);
 					image = nullptr;
 					canvas = nullptr;
 				}
@@ -53,7 +53,7 @@ void UIPanelHierarchy::Draw()
 						canvas->AddComponent(CANVAS);
 					}
 					GameObject* txt = App->scene->AddUIGameObject("UI_Text", canvas);
-					txt->AddComponent(UI_TEXT);
+					txt->AddUIComponent(UI_TEXT);
 					txt = nullptr;
 					canvas = nullptr;
 				}

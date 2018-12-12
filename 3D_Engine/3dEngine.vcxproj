@@ -89,6 +89,7 @@
     <ClInclude Include="ComponentRectTransform.h" />
     <ClInclude Include="ComponentTextUI.h" />
     <ClInclude Include="ComponentTransformation.h" />
+    <ClInclude Include="ComponentUI.h" />
     <ClInclude Include="ComponentWithResource.h" />
     <ClInclude Include="Config.h" />
     <ClInclude Include="DeviceId\DeviceId.h" />
@@ -212,6 +213,7 @@
     <ClCompile Include="ComponentRectTransform.cpp" />
     <ClCompile Include="ComponentTextUI.cpp" />
     <ClCompile Include="ComponentTransformation.cpp" />
+    <ClCompile Include="ComponentUI.cpp" />
     <ClCompile Include="ComponentWithResource.cpp" />
     <ClCompile Include="Config.cpp" />
     <ClCompile Include="DeviceId\DeviceId.cpp" />

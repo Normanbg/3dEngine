@@ -515,27 +515,28 @@ void ModuleScene::SetWireframe(bool active)
 }
 
 void ModuleScene::Draw() {
-	std::vector<Component*> components;
-	//--------
 	
-	root->GetComponents(UI_IMAGE, components);
-	ComponentImageUI* image = nullptr;
-	for (int i = 0; i < components.size(); i++) {
-		image = (ComponentImageUI *)components[i];
+	//--------UI
+	std::vector<ComponentUI*> componentsUI;
+	root->GetComponentsUITypeIgnore( componentsUI, TRANSFORMRECT);
+	ComponentUI* image = nullptr;
+	for (int i = 0; i < componentsUI.size(); i++) {
+		image = (ComponentUI *)componentsUI[i];
 		image->Draw();
 	}
-	components.clear();
+	componentsUI.clear();
 
-	root->GetComponents(TRANSFORMRECT, components);
+	root->GetComponentsUIType(componentsUI, TRANSFORMRECT);
 
 	ComponentRectTransform* recTrans = nullptr;
-	for (int i = 0; i < components.size(); i++) {
-		recTrans = (ComponentRectTransform *)components[i];
+	for (int i = 0; i < componentsUI.size(); i++) {
+		recTrans = (ComponentRectTransform *)componentsUI[i];
 		if (recTrans->draw)
 			recTrans->Draw();
 	}
-	components.clear();
+	componentsUI.clear();
 	//--------UI
+	std::vector<Component*> components;
 	root->GetComponents(MESH, components);
 	
 
@@ -611,7 +612,7 @@ GameObject * ModuleScene::AddUIGameObject(const char * name, GameObject * parent
 	GameObject* ret = new GameObject(name);
 	ret->parent = parent;
 	parent->childrens.push_back(ret);
-	ret->AddComponent(TRANSFORMRECT);
+	ret->AddUIComponent(TRANSFORMRECT);
 	return ret;
 }
 

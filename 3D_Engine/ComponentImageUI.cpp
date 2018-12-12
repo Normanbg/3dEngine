@@ -8,7 +8,7 @@
 
 ComponentImageUI::ComponentImageUI()
 {
-	type = UI_IMAGE;
+	typeUI = UI_IMAGE;
 	static const float uvs[] = {
 		0, 0,
 		1, 0,

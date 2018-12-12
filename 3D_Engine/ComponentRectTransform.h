@@ -2,10 +2,10 @@
 #define __COMPONENTRECTTRANS_H__
 
 #include "Component.h"
+#include "ComponentUI.h"
 
 
-
-class ComponentRectTransform :	public Component
+class ComponentRectTransform :	public ComponentUI
 {
 	struct RectTransform
 	{
@@ -36,7 +36,7 @@ public:
 	void SetWidth(float w);
 	void SetHeight(float h);
 
-	void Draw();
+	void Draw() override;
 	void GenBuffer();
 
 	

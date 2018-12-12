@@ -1,9 +1,10 @@
 #ifndef __COMPONENTTEXTUI_H__
 #define __COMPONENTTEXTUI_H__
 #include "Component.h"
+#include "ComponentUI.h"
 #include "ComponentWithResource.h"
-class ComponentTextUI :
-	public Component
+
+class ComponentTextUI : public ComponentUI
 {
 public:
 	ComponentTextUI();

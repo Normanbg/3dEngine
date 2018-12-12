@@ -55,6 +55,9 @@
     <Filter Include="Sources\Tools\ImGuizmo">
       <UniqueIdentifier>{19af97b0-e4f1-4188-b804-93d7810b1ef2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Objects &amp; Components\Components\ComponentsUI">
+      <UniqueIdentifier>{d0678a25-06b4-4000-a2d1-df7df56d7502}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -411,16 +414,19 @@
     <ClInclude Include="UIPanelOptimization.h">
       <Filter>Sources\Modules\GuiPanels</Filter>
     </ClInclude>
-    <ClInclude Include="ComponentCanvas.h">
-      <Filter>Sources\Objects &amp; Components\Components</Filter>
+    <ClInclude Include="ComponentTextUI.h">
+      <Filter>Sources\Objects &amp; Components\Components\ComponentsUI</Filter>
     </ClInclude>
-    <ClInclude Include="ComponentRectTransform.h">
-      <Filter>Sources\Objects &amp; Components\Components</Filter>
+    <ClInclude Include="ComponentUI.h">
+      <Filter>Sources\Objects &amp; Components\Components\ComponentsUI</Filter>
     </ClInclude>
     <ClInclude Include="ComponentImageUI.h">
-      <Filter>Sources\Objects &amp; Components\Components</Filter>
+      <Filter>Sources\Objects &amp; Components\Components\ComponentsUI</Filter>
     </ClInclude>
-    <ClInclude Include="ComponentTextUI.h">
+    <ClInclude Include="ComponentRectTransform.h">
+      <Filter>Sources\Objects &amp; Components\Components\ComponentsUI</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentCanvas.h">
       <Filter>Sources\Objects &amp; Components\Components</Filter>
     </ClInclude>
   </ItemGroup>
@@ -677,16 +683,19 @@
     <ClCompile Include="UIPanelOptimization.cpp">
       <Filter>Sources\Modules\GuiPanels</Filter>
     </ClCompile>
-    <ClCompile Include="ComponentCanvas.cpp">
-      <Filter>Sources\Objects &amp; Components\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="ComponentRectTransform.cpp">
-      <Filter>Sources\Objects &amp; Components\Components</Filter>
-    </ClCompile>
     <ClCompile Include="ComponentImageUI.cpp">
-      <Filter>Sources\Objects &amp; Components\Components</Filter>
+      <Filter>Sources\Objects &amp; Components\Components\ComponentsUI</Filter>
     </ClCompile>
     <ClCompile Include="ComponentTextUI.cpp">
+      <Filter>Sources\Objects &amp; Components\Components\ComponentsUI</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentUI.cpp">
+      <Filter>Sources\Objects &amp; Components\Components\ComponentsUI</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentRectTransform.cpp">
+      <Filter>Sources\Objects &amp; Components\Components\ComponentsUI</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentCanvas.cpp">
       <Filter>Sources\Objects &amp; Components\Components</Filter>
     </ClCompile>
   </ItemGroup>

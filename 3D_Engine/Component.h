@@ -9,19 +9,11 @@ class GameObject;
 
 enum ComponentType {
 	NO_TYPE = 0,
-
 	TRANSFORM,
-	TRANSFORMRECT,
 	CAMERA,
 	MESH,
 	MATERIAL,
-	CANVAS,
-	UI_IMAGE,
-	UI_WINDOW,
-	UI_BUTTON,
-	UI_TEXT,
-	UI_INPUT,
-	UI_CHECKBOX,
+	CANVAS, 
 };
 
 class Component {

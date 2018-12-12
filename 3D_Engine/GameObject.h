@@ -40,13 +40,16 @@ public:
 	void Load(Config* data);
 	
 	Component* AddComponent(ComponentType type);
+	ComponentUI * AddUIComponent(ComponentTypeUI type);
 	void AddComponent(Component* component, ComponentType type);
 	void AddChildren(GameObject* child);
 
 	void RemoveChildren(GameObject* toRemove);
 	void RemoveComponent(Component* comp);
 
-	void GetComponents(ComponentType type, std::vector<Component*>& components);	
+	void GetComponents(ComponentType type, std::vector<Component*>& components);
+	void GetComponentsUITypeIgnore( std::vector<ComponentUI*>& comp, ComponentTypeUI ignoreType = NOTYPE);
+	void GetComponentsUIType(std::vector<ComponentUI*>& comp, ComponentTypeUI type);
 	void SetParent(GameObject* parent);
 	
 	//DO NOT USE CONST FOR COMPONENTS AS THEY HAVE TO INITIALIZE OTHER COMPONENTS, ONLY FOR THE FUNCTION
@@ -78,6 +81,7 @@ public:
 public:
 	std::string					name;
 	std::vector <Component*>	components;
+	std::vector <ComponentUI*>	componentsUI;
 	GameObject*					parent = nullptr;
 	std::vector <GameObject*>	childrens;
 

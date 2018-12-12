@@ -38,7 +38,10 @@ GameObject::~GameObject()
 
 bool GameObject::PreUpdate(){
 	bool ret = true;
+	for (int i = 0; i < componentsUI.size(); i++) {
 
+		ret &= componentsUI[i]->PreUpdate();
+	}
 	for (int i = 0; i < components.size(); i++) {
 
 		ret &= components[i]->PreUpdate();
@@ -54,7 +57,9 @@ bool GameObject::PreUpdate(){
 bool GameObject::Update(){
 	bool ret = true;
 
-
+	for (int i = 0; i < componentsUI.size(); i++) {
+		ret &= componentsUI[i]->Update();
+	}
 	for (int i = 0; i < components.size() ; i++) {
 		ret &= components[i]->Update();
 	}
@@ -66,7 +71,10 @@ bool GameObject::Update(){
 
 bool GameObject::PostUpdate(){
 	bool ret = true;
+	for (int i = 0; i < componentsUI.size(); i++) {
 
+		ret &= componentsUI[i]->PostUpdate();
+	}
 	for (int i = 0; i < components.size(); i++) {
 
 		ret &= components[i]->PostUpdate();
@@ -80,6 +88,14 @@ bool GameObject::PostUpdate(){
 }
 
 void GameObject::CleanUp(){
+
+	if (componentsUI.empty() == false) {
+		for (int i = componentsUI.size() - 1; i >= 0; i--) {
+			componentsUI[i]->CleanUp();
+			RELEASE(componentsUI[i]);
+		}
+	}
+	componentsUI.clear();
 
 	if (components.empty() == false) {
 		for (int i = components.size() - 1; i >= 0; i--) {
@@ -154,24 +170,38 @@ Component * GameObject::AddComponent(ComponentType type) {
 		ret = new ComponentCanvas();
 		break;
 
-	case ComponentType::UI_IMAGE:
-		ret = new ComponentImageUI();
-		break;
-
-	case ComponentType::UI_TEXT:
-		ret = new ComponentTextUI();
-		break;
-
-	case ComponentType::TRANSFORMRECT:
-		ret = new ComponentRectTransform();
-		break;
-
 	case ComponentType::NO_TYPE:
 		return nullptr;
 	}
 
 	ret->myGO = this;
 	components.push_back(ret);
+	ret->Start();
+	return ret;
+}
+ComponentUI * GameObject::AddUIComponent(ComponentTypeUI type) {
+	ComponentUI* ret;
+
+	switch (type) {
+	
+	case ComponentTypeUI::UI_IMAGE:
+		ret = new ComponentImageUI();
+		break;
+
+	case ComponentTypeUI::UI_TEXT:
+		ret = new ComponentTextUI();
+		break;
+
+	case ComponentTypeUI::TRANSFORMRECT:
+		ret = new ComponentRectTransform();
+		break;
+
+	case ComponentTypeUI::NOTYPE:
+		return nullptr;
+	}
+
+	ret->myGO = this;
+	componentsUI.push_back(ret);
 	ret->Start();
 	return ret;
 }
@@ -197,7 +227,32 @@ void GameObject::GetComponents(ComponentType type, std::vector<Component*>& comp
 	}
 	
 }
+void GameObject::GetComponentsUITypeIgnore( std::vector<ComponentUI*>& comp, ComponentTypeUI ignoreType) {
 
+	for (int i = 0; i < componentsUI.size(); i++) {
+		if (componentsUI[i]->typeUI != ignoreType) {
+			comp.push_back(componentsUI[i]);
+		}
+	}
+
+	for (int i = 0; i < childrens.size(); i++) {
+		childrens[i]->GetComponentsUITypeIgnore(comp, ignoreType);
+	}
+
+}
+void GameObject::GetComponentsUIType(std::vector<ComponentUI*>& comp, ComponentTypeUI type) {
+
+	for (int i = 0; i < componentsUI.size(); i++) {
+		if (componentsUI[i]->typeUI == type) {
+			comp.push_back(componentsUI[i]);
+		}
+	}
+
+	for (int i = 0; i < childrens.size(); i++) {
+		childrens[i]->GetComponentsUIType(comp, type);
+	}
+
+}
 
 
 
@@ -305,9 +360,9 @@ ComponentImageUI * GameObject::GetComponentImageUI() const
 {
 	ComponentImageUI* ret = nullptr;
 	//WILL ONLY FIND THE FIRST COMPONENT EQUAL TO TYPE OF EACH G0
-	for (std::vector<Component*>::const_iterator it = components.begin(); it != components.end(); it++)
+	for (std::vector<ComponentUI*>::const_iterator it = componentsUI.begin(); it != componentsUI.end(); it++)
 	{
-		if ((*it)->type == UI_IMAGE)
+		if ((*it)->typeUI == UI_IMAGE)
 			return (ComponentImageUI*)(*it);
 	}
 	return ret;
@@ -317,9 +372,9 @@ ComponentTextUI * GameObject::GetComponentTextUI() const
 {
 	ComponentTextUI* ret = nullptr;
 	//WILL ONLY FIND THE FIRST COMPONENT EQUAL TO TYPE OF EACH G0
-	for (std::vector<Component*>::const_iterator it = components.begin(); it != components.end(); it++)
+	for (std::vector<ComponentUI*>::const_iterator it = componentsUI.begin(); it != componentsUI.end(); it++)
 	{
-		if ((*it)->type == UI_TEXT)
+		if ((*it)->typeUI == UI_TEXT)
 			return (ComponentTextUI*)(*it);
 	}
 	return ret;
@@ -328,9 +383,9 @@ ComponentRectTransform * GameObject::GetComponentRectTransform() const
 {
 	ComponentRectTransform* ret = nullptr;
 	//WILL ONLY FIND THE FIRST COMPONENT EQUAL TO TYPE OF EACH G0
-	for (std::vector<Component*>::const_iterator it = components.begin(); it != components.end(); it++)
+	for (std::vector<ComponentUI*>::const_iterator it = componentsUI.begin(); it != componentsUI.end(); it++)
 	{
-		if ((*it)->type == TRANSFORMRECT)
+		if ((*it)->typeUI == TRANSFORMRECT)
 			return (ComponentRectTransform*)(*it);
 	}
 	return ret;

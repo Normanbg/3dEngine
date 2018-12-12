@@ -5,10 +5,10 @@
 #include "ComponentWithResource.h"
 #include "ResourceTexture.h"
 #include "ComponentRectTransform.h"
-
+#include "ComponentUI.h"
 
 class ComponentImageUI :
-	public Component, public ComponentWithResource
+	public ComponentWithResource, public ComponentUI
 {
 public:
 	ComponentImageUI();
@@ -19,7 +19,7 @@ public:
 	void CleanUp() override;
 	void DrawInspector() override;
 
-	void Draw();
+	void Draw() override;
 	void GenBuffer();
 
 	const bool HasTexture() const;

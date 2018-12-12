@@ -6,6 +6,7 @@
 #include "ModuleRenderer3D.h"
 #include "GameObject.h"
 #include "Component.h"
+#include "ComponentUI.h"
 #include "ModuleScene.h"
 
 #include "mmgr/mmgr.h"
@@ -48,6 +49,10 @@ void UIPanelInspector::Draw() {
 		std::vector<Component*> componentsRecover = go->components;
 		for (std::vector<Component*>::iterator itComponents = componentsRecover.begin(); itComponents != componentsRecover.end(); itComponents++) {
 			DrawComponent((*itComponents));
+		}
+		std::vector<ComponentUI*> componentsUIRecover = go->componentsUI;
+		for (std::vector<ComponentUI*>::iterator itComponents = componentsUIRecover.begin(); itComponents != componentsUIRecover.end(); itComponents++) {
+			DrawUIComponent((*itComponents));
 		}
 		if (ImGui::CollapsingHeader("Add Component")) {
 		
@@ -126,13 +131,7 @@ void UIPanelInspector::DrawComponent(Component* compDraw)
 			ImGui::TreePop();
 		}
 		break;
-	case TRANSFORMRECT:
-		if (ImGui::TreeNode("TransformRect"))
-		{
-			compDraw->myGO->GetComponentRectTransform()->DrawInspector();
-			ImGui::TreePop();
-		}
-		break;
+	
 	case CANVAS:
 		if (ImGui::TreeNode("Canvas"))
 		{
@@ -140,20 +139,7 @@ void UIPanelInspector::DrawComponent(Component* compDraw)
 			ImGui::TreePop();
 		}
 		break;
-	case UI_IMAGE:
-		if (ImGui::TreeNode("UI Image"))
-		{
-			compDraw->myGO->GetComponentImageUI()->DrawInspector();
-			ImGui::TreePop();
-		}
-		break;
-	case UI_TEXT:
-		if (ImGui::TreeNode("UI Text"))
-		{
-			compDraw->myGO->GetComponentTextUI()->DrawInspector();
-			ImGui::TreePop();
-		}
-		break;
+	
 	case MESH:
 		if (ImGui::TreeNode("Mesh"))
 		{
@@ -180,3 +166,34 @@ void UIPanelInspector::DrawComponent(Component* compDraw)
 	}
 }
 
+void UIPanelInspector::DrawUIComponent(ComponentUI* compDraw)
+{
+	ComponentTypeUI cType = compDraw->typeUI;
+	switch (cType)
+	{
+	case NOTYPE:
+		break;
+	case UI_IMAGE:
+		if (ImGui::TreeNode("UI Image"))
+		{
+			compDraw->myGO->GetComponentImageUI()->DrawInspector();
+			ImGui::TreePop();
+		}
+		break;
+	case UI_TEXT:
+		if (ImGui::TreeNode("UI Text"))
+		{
+			compDraw->myGO->GetComponentTextUI()->DrawInspector();
+			ImGui::TreePop();
+		}
+		break;
+	case TRANSFORMRECT:
+		if (ImGui::TreeNode("TransformRect"))
+		{
+			compDraw->myGO->GetComponentRectTransform()->DrawInspector();
+			ImGui::TreePop();
+		}
+		break;
+	
+	}
+}
