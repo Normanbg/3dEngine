@@ -41,14 +41,14 @@ bool ComponentImageUI::Update()
 
 void ComponentImageUI::CleanUp()
 {
-	/*
+	
 	if (HasTexture()) {
 		resourceTexture->CleanUp();
 	}
 	rectTransform = nullptr;
 	resourceTexture = nullptr;
 	myGO = nullptr;
-	RELEASE_ARRAY(texCoords);*/
+	RELEASE_ARRAY(texCoords);
 }
 
 void ComponentImageUI::DrawInspector()
