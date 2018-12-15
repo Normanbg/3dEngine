@@ -17,8 +17,8 @@ enum ComponentTypeUI {
 class ComponentUI  : public Component
 {
 public:
-	ComponentUI();
-	~ComponentUI();
+	ComponentUI() { type = NO_TYPE; };
+	~ComponentUI() {};
 
 	virtual void Draw() {};
 	ComponentTypeUI typeUI = NOTYPE;

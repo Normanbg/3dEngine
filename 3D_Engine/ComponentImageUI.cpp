@@ -17,7 +17,8 @@ ComponentImageUI::ComponentImageUI()
 	};
 
 	texCoords = new float2[4];
-	memcpy(texCoords, uvs, sizeof(float3) * 4);
+	memcpy(texCoords, uvs, sizeof(float2) * 4);
+	
 }
 
 
@@ -38,13 +39,14 @@ bool ComponentImageUI::Update()
 
 void ComponentImageUI::CleanUp()
 {
+	RELEASE_ARRAY(texCoords);
 	if (HasTexture()) {
 		resourceTexture->CleanUp();
 	}
 	rectTransform = nullptr;
 	resourceTexture = nullptr;
 	myGO = nullptr;
-	RELEASE_ARRAY(texCoords);
+	
 }
 
 void ComponentImageUI::DrawInspector()

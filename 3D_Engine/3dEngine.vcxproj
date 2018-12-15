@@ -213,7 +213,6 @@
     <ClCompile Include="ComponentRectTransform.cpp" />
     <ClCompile Include="ComponentTextUI.cpp" />
     <ClCompile Include="ComponentTransformation.cpp" />
-    <ClCompile Include="ComponentUI.cpp" />
     <ClCompile Include="ComponentWithResource.cpp" />
     <ClCompile Include="Config.cpp" />
     <ClCompile Include="DeviceId\DeviceId.cpp" />

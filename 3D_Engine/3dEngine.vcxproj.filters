@@ -689,9 +689,6 @@
     <ClCompile Include="ComponentTextUI.cpp">
       <Filter>Sources\Objects &amp; Components\Components\ComponentsUI</Filter>
     </ClCompile>
-    <ClCompile Include="ComponentUI.cpp">
-      <Filter>Sources\Objects &amp; Components\Components\ComponentsUI</Filter>
-    </ClCompile>
     <ClCompile Include="ComponentRectTransform.cpp">
       <Filter>Sources\Objects &amp; Components\Components\ComponentsUI</Filter>
     </ClCompile>

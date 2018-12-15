@@ -13,6 +13,7 @@ ComponentRectTransform::ComponentRectTransform()
 	typeUI = TRANSFORMRECT;
 	rect.width = 1;
 	rect.height = 1;
+	
 
 	static const float vtx[] = {
 		0,rect.position.x,  rect.position.y ,
@@ -94,13 +95,23 @@ void ComponentRectTransform::Draw()
 		glVertexPointer(3, GL_FLOAT, 0, NULL);
 		glDrawArrays(GL_QUADS, 0, 4);
 
-		glColor3f(1.f, 1.0f, 1.0f);
-		glLineWidth(1.0f);
+		
 
 		glBindBuffer(GL_ARRAY_BUFFER, 0); //resets the buffer
 		glDisableClientState(GL_VERTEX_ARRAY);
 		glPopMatrix();
-	
+
+		glLineWidth(3.0f);
+
+		glBegin(GL_LINES);
+		glVertex3f(0, rect.anchor.y+0.1f, rect.anchor.x);
+		glVertex3f(0, rect.anchor.y-0.1f, rect.anchor.x);
+		glVertex3f(0, rect.anchor.y , rect.anchor.x+ 0.1f);
+		glVertex3f(0, rect.anchor.y , rect.anchor.x- 0.1f);
+		glEnd();
+		
+		glColor3f(1.f, 1.0f, 1.0f);
+		glLineWidth(1.0f);
 }
 
 void ComponentRectTransform::GenBuffer()
@@ -113,6 +124,9 @@ void ComponentRectTransform::GenBuffer()
 }
 
 void ComponentRectTransform::UpdateGlobalMatrix() {
+
+	rect.anchor.x = rect.position.x + rect.width / 2;
+	rect.anchor.y = rect.position.y + rect.height / 2;
 	rect.globalMatrix = float4x4::FromTRS(float3(0, rect.position.y, rect.position.x), Quat(0,0,0,0), float3(0, rect.height,rect.width ));
 
 

@@ -12,6 +12,7 @@ class ComponentRectTransform :	public ComponentUI
 		float2 position = float2(0, 0);
 		float width = 0;
 		float height = 0;
+		float2 anchor = float2(0,0);
 		//float4x4 localMatrix = float4x4::identity;
 		float4x4 globalMatrix = float4x4::identity;
 		float3* vertex = nullptr;		
