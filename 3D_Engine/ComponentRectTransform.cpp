@@ -11,6 +11,7 @@
 ComponentRectTransform::ComponentRectTransform()
 {
 	typeUI = TRANSFORMRECT;
+	type = UI;
 	rect.width = 1;
 	rect.height = 1;
 	
@@ -79,7 +80,7 @@ void ComponentRectTransform::SetHeight(float h)
 	UpdateGlobalMatrix();
 }
 
-void ComponentRectTransform::Draw()
+void ComponentRectTransform::DrawUI()
 {
 		glPushMatrix();
 		glMultMatrixf(rect.globalMatrix.Transposed().ptr());

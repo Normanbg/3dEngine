@@ -38,6 +38,7 @@ GameObject::~GameObject()
 
 bool GameObject::PreUpdate(){
 	bool ret = true;
+	/*
 	for (int i = 0; i < componentsUI.size(); i++) {
 
 		ret &= componentsUI[i]->PreUpdate();
@@ -45,7 +46,7 @@ bool GameObject::PreUpdate(){
 	for (int i = 0; i < components.size(); i++) {
 
 		ret &= components[i]->PreUpdate();
-	}
+	}*/
 	for (int i = 0; i < childrens.size() ; i++) {
 
 		ret &= childrens[i]->PreUpdate();
@@ -58,7 +59,7 @@ bool GameObject::Update(){
 	bool ret = true;
 
 	for (int i = 0; i < componentsUI.size(); i++) {
-		ret &= componentsUI[i]->Update();
+		componentsUI[i]->doUpdate();
 	}
 	for (int i = 0; i < components.size() ; i++) {
 		ret &= components[i]->Update();
@@ -71,6 +72,7 @@ bool GameObject::Update(){
 
 bool GameObject::PostUpdate(){
 	bool ret = true;
+	/*
 	for (int i = 0; i < componentsUI.size(); i++) {
 
 		ret &= componentsUI[i]->PostUpdate();
@@ -78,24 +80,19 @@ bool GameObject::PostUpdate(){
 	for (int i = 0; i < components.size(); i++) {
 
 		ret &= components[i]->PostUpdate();
-	}
+	}*/
 	for (int i = 0; i < childrens.size(); i++) {
 
 		ret &= childrens[i]->PostUpdate();
 	}
+	
 
 	return ret;
 }
 
 void GameObject::CleanUp(){
 
-	if (componentsUI.empty() == false) {
-		for (int i = componentsUI.size() - 1; i >= 0; i--) {
-			componentsUI[i]->CleanUp();
-			RELEASE(componentsUI[i]);
-		}
-	}
-	componentsUI.clear();
+	
 
 	if (components.empty() == false) {
 		for (int i = components.size() - 1; i >= 0; i--) {
@@ -104,6 +101,14 @@ void GameObject::CleanUp(){
 		}
 	}
 	components.clear();
+
+	if (componentsUI.empty() == false) {
+		for (int i = componentsUI.size() - 1; i >= 0; i--) {
+			componentsUI[i]->doCleanUp();
+			RELEASE(componentsUI[i]);
+		}
+	}
+	componentsUI.clear();
 
 	if (childrens.empty() == false) {
 		for (int i = childrens.size() - 1; i >= 0; i--) {
@@ -184,25 +189,34 @@ ComponentUI * GameObject::AddUIComponent(ComponentTypeUI type) {
 
 	switch (type) {
 	
-	case ComponentTypeUI::UI_IMAGE:
+	case ComponentTypeUI::UI_IMAGE: {
 		ret = new ComponentImageUI();
+		ComponentImageUI* cImatge = (ComponentImageUI*)ret;
+		cImatge->myGO = this;
+		cImatge = nullptr;
 		break;
-
-	case ComponentTypeUI::UI_TEXT:
+	}
+	case ComponentTypeUI::UI_TEXT:{
 		ret = new ComponentTextUI();
+		ComponentTextUI* cTetx = (ComponentTextUI*)ret;
+		cTetx->myGO = this;
+		cTetx = nullptr;
 		break;
-
-	case ComponentTypeUI::TRANSFORMRECT:
+}
+	case ComponentTypeUI::TRANSFORMRECT:{
 		ret = new ComponentRectTransform();
+		ComponentRectTransform* cRect = (ComponentRectTransform*)ret;
+		cRect->myGO = this;
+		cRect = nullptr;
 		break;
+	}
 
 	case ComponentTypeUI::NOTYPE:
 		return nullptr;
 	}
 
-	ret->myGO = this;
 	componentsUI.push_back(ret);
-	ret->Start();
+	ret->doStart();
 	return ret;
 }
 
@@ -305,8 +319,22 @@ void GameObject::RemoveComponent(Component * comp)
 			return;
 		}
 	}
+
+
+
 }
 
+
+void GameObject::RemoveComponentUI(ComponentUI * comp)
+{
+	for (int i = 0; i < componentsUI.size(); i++) {
+		if (componentsUI[i] == comp) {
+			componentsUI[i]->doCleanUp();
+			componentsUI.erase(componentsUI.begin() + i);
+			return;
+		}
+	}
+}
 
 ComponentTransformation * GameObject::GetComponentTransform() const
 {

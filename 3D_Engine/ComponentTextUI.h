@@ -4,15 +4,18 @@
 #include "ComponentUI.h"
 #include "ComponentWithResource.h"
 
-class ComponentTextUI : public ComponentUI
+class ComponentTextUI : public ComponentUI, public Component
 {
 public:
 	ComponentTextUI();
 	~ComponentTextUI();
 
-	bool Update() override;
-	void CleanUp() override;
 	void DrawInspector() override;
+
+	bool Update() override;
+	void CleanUp() override;	
+	inline void doUpdate() override { Update(); }
+	inline void doCleanUp() override { CleanUp(); }
 };
 
 

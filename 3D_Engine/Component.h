@@ -14,6 +14,7 @@ enum ComponentType {
 	MESH,
 	MATERIAL,
 	CANVAS, 
+	UI
 };
 
 class Component {
@@ -24,9 +25,7 @@ public:
 	~Component() {	}
 
 	virtual bool Start() { return true; }
-	virtual bool PreUpdate() { return true; }
 	virtual bool Update() { return true; }
-	virtual bool PostUpdate() { return true; }
 	virtual void CleanUp() {return; }
 	virtual void Enable() { active = true; }
 	virtual void Disable() { active = false; }

@@ -9,15 +9,7 @@
 ComponentImageUI::ComponentImageUI()
 {
 	typeUI = UI_IMAGE;
-	static const float uvs[] = {
-		0, 0,
-		1, 0,
-		1, 1,
-		0, 1
-	};
-
-	texCoords = new float2[4];
-	memcpy(texCoords, uvs, sizeof(float2) * 4);
+	type = UI;
 	
 }
 
@@ -28,6 +20,16 @@ ComponentImageUI::~ComponentImageUI()
 
 bool ComponentImageUI::Start()
 {
+	static const float uvs[] = {
+		0, 0,
+		1, 0,
+		1, 1,
+		0, 1
+	};
+
+	texCoords = new float2[4];
+	memcpy(texCoords, uvs, sizeof(float2) * 4);
+
 	rectTransform = myGO->GetComponentRectTransform();
 	return true;
 }
@@ -39,14 +41,14 @@ bool ComponentImageUI::Update()
 
 void ComponentImageUI::CleanUp()
 {
-	RELEASE_ARRAY(texCoords);
+	/*
 	if (HasTexture()) {
 		resourceTexture->CleanUp();
 	}
 	rectTransform = nullptr;
 	resourceTexture = nullptr;
 	myGO = nullptr;
-	
+	RELEASE_ARRAY(texCoords);*/
 }
 
 void ComponentImageUI::DrawInspector()
@@ -94,7 +96,7 @@ void ComponentImageUI::DrawInspector()
 	}
 }
 
-void ComponentImageUI::Draw()
+void ComponentImageUI::DrawUI()
 {
 	glPushMatrix();
 	glMultMatrixf(rectTransform->GetGlobalMatrix().Transposed().ptr());

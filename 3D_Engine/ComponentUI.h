@@ -14,14 +14,21 @@ enum ComponentTypeUI {
 	UI_CHECKBOX,
 };
 
-class ComponentUI  : public Component
-{
-public:
-	ComponentUI() { type = NO_TYPE; };
-	~ComponentUI() {};
 
-	virtual void Draw() {};
+
+class ComponentUI  
+{
+
+public:
+	ComponentUI() { };
+	~ComponentUI() {};	
+
+	virtual void DrawUI() {};
+	virtual void doStart() {}
+	virtual void doUpdate() {};
+	virtual void doCleanUp() {};
 	ComponentTypeUI typeUI = NOTYPE;
+
 };
 
 

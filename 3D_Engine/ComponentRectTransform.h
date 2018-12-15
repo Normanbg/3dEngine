@@ -5,7 +5,7 @@
 #include "ComponentUI.h"
 
 
-class ComponentRectTransform :	public ComponentUI
+class ComponentRectTransform : public ComponentUI, public Component
 {
 	struct RectTransform
 	{
@@ -23,9 +23,13 @@ public:
 	ComponentRectTransform();
 	~ComponentRectTransform();
 
+	void DrawInspector() override;
+
 	bool Update() override;
 	void CleanUp() override;
-	void DrawInspector() override;
+	
+	inline void doUpdate() override { Update(); }
+	inline void doCleanUp() override {	CleanUp();}
 
 	const float2 GetPos() const { return rect.position; }
 	const float GetWidth() const { return rect.width; }
@@ -37,7 +41,7 @@ public:
 	void SetWidth(float w);
 	void SetHeight(float h);
 
-	void Draw() override;
+	void DrawUI() override;
 	void GenBuffer();
 
 	

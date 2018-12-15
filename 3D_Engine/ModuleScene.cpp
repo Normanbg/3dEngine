@@ -206,6 +206,7 @@ void ModuleScene::ClearSceneCompletely()
 	for (int i = root->components.size() - 1; i >= 0; i--) {
 		root->RemoveComponent(root->components[i]);
 	}
+	
 	mainCamera = nullptr;
 	App->scene->DeselectAll();
 	rootQuadTree->Clear();
@@ -522,7 +523,7 @@ void ModuleScene::Draw() {
 	ComponentUI* image = nullptr;
 	for (int i = 0; i < componentsUI.size(); i++) {
 		image = (ComponentUI *)componentsUI[i];
-		image->Draw();
+		image->DrawUI();
 	}
 	componentsUI.clear();
 
@@ -532,7 +533,7 @@ void ModuleScene::Draw() {
 	for (int i = 0; i < componentsUI.size(); i++) {
 		recTrans = (ComponentRectTransform *)componentsUI[i];
 		if (recTrans->draw)
-			recTrans->Draw();
+			recTrans->DrawUI();
 	}
 	componentsUI.clear();
 	//--------UI

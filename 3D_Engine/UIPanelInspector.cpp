@@ -176,21 +176,24 @@ void UIPanelInspector::DrawUIComponent(ComponentUI* compDraw)
 	case UI_IMAGE:
 		if (ImGui::TreeNode("UI Image"))
 		{
-			compDraw->myGO->GetComponentImageUI()->DrawInspector();
+			ComponentImageUI* comp =(ComponentImageUI*) compDraw;
+			comp->DrawInspector();
 			ImGui::TreePop();
 		}
 		break;
 	case UI_TEXT:
 		if (ImGui::TreeNode("UI Text"))
 		{
-			compDraw->myGO->GetComponentTextUI()->DrawInspector();
+			ComponentTextUI* comp = (ComponentTextUI*)compDraw;
+			comp->DrawInspector();
 			ImGui::TreePop();
 		}
 		break;
 	case TRANSFORMRECT:
 		if (ImGui::TreeNode("TransformRect"))
 		{
-			compDraw->myGO->GetComponentRectTransform()->DrawInspector();
+			ComponentRectTransform* comp = (ComponentRectTransform*)compDraw;
+			comp->DrawInspector();
 			ImGui::TreePop();
 		}
 		break;

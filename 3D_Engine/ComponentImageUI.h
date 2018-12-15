@@ -7,8 +7,7 @@
 #include "ComponentRectTransform.h"
 #include "ComponentUI.h"
 
-class ComponentImageUI :
-	public ComponentWithResource, public ComponentUI
+class ComponentImageUI : public ComponentUI, public ComponentWithResource, public Component
 {
 public:
 	ComponentImageUI();
@@ -17,9 +16,14 @@ public:
 	bool Start() override;
 	bool Update() override;
 	void CleanUp() override;
+
+	inline void doStart() override { Start(); }
+	inline void doUpdate() override { Update(); }
+	inline void doCleanUp() override { CleanUp(); }
+
 	void DrawInspector() override;
 
-	void Draw() override;
+	void DrawUI() override;
 	void GenBuffer();
 
 	const bool HasTexture() const;

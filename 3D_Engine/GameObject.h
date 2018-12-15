@@ -46,12 +46,14 @@ public:
 
 	void RemoveChildren(GameObject* toRemove);
 	void RemoveComponent(Component* comp);
+	void RemoveComponentUI(ComponentUI * comp);
 
 	void GetComponents(ComponentType type, std::vector<Component*>& components);
 	void GetComponentsUITypeIgnore( std::vector<ComponentUI*>& comp, ComponentTypeUI ignoreType = NOTYPE);
 	void GetComponentsUIType(std::vector<ComponentUI*>& comp, ComponentTypeUI type);
 	void SetParent(GameObject* parent);
 	
+
 	//DO NOT USE CONST FOR COMPONENTS AS THEY HAVE TO INITIALIZE OTHER COMPONENTS, ONLY FOR THE FUNCTION
 	ComponentTransformation* GetComponentTransform() const;
 	ComponentCamera* GetComponentCamera() const;
