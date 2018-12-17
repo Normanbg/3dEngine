@@ -60,14 +60,8 @@ public:
 	void MousePicking();
 
 	void DrawGuizmo(ImGuizmo::OPERATION operation);
-
-	//-----------------------
-
 	FrustumContained ContainsAaBox(const AABB & refBox) const;
-	void QTContainsAaBox(Quadtree* qt);
-	void SetStaticsCulled();
 
-	void GetStaticObjsCulled(int& stCulled);
 public:
 
 	GameObject* root;

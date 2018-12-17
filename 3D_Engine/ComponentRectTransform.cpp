@@ -148,3 +148,7 @@ void ComponentRectTransform::UpdateGlobalMatrix() {
 
 
 }
+
+void ComponentRectTransform::UpdateLocalMatrix() {
+	
+}

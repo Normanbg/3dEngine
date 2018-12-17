@@ -13,7 +13,7 @@ class ComponentRectTransform : public ComponentUI, public Component
 		float width = 0;
 		float height = 0;
 		float2 anchor = float2(0,0);
-		//float4x4 localMatrix = float4x4::identity;
+		float4x4 localMatrix = float4x4::identity;
 		float4x4 globalMatrix = float4x4::identity;
 		float3* vertex = nullptr;		
 		uint vertexID;
@@ -56,6 +56,7 @@ public:
 private:
 	
 	void UpdateGlobalMatrix();
+	void UpdateLocalMatrix();
 
 private:
 	RectTransform rect;
