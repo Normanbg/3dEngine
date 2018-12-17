@@ -83,10 +83,10 @@ bool ModuleRenderer3D::Init(JSON_Object* obj)
 			ret = false;
 		}
 
-		fboTex = new FBO();
+		sceneFboTex = new FBO();
 		int w, h;
 		App->window->GetSize(w, h);
-		fboTex->Create(w , h);
+		sceneFboTex->Create(w , h);
 
 		//Initialize Modelview Matrix
 		glMatrixMode(GL_MODELVIEW);
@@ -155,7 +155,7 @@ bool ModuleRenderer3D::Start() {
 update_status ModuleRenderer3D::PreUpdate(float dt)
 {
 	BROFILER_CATEGORY("Renderer3D_PreUpdate", Profiler::Color::HotPink);
-	fboTex->BindFBO();
+	sceneFboTex->BindFBO();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 
@@ -198,7 +198,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 
 	//DrawMeshes();
 	App->scene->Draw();
-	fboTex->UnBindFBO();
+	sceneFboTex->UnBindFBO();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	App->gui->Draw();	
@@ -214,8 +214,8 @@ bool ModuleRenderer3D::CleanUp()
 	OWN_LOG("Destroying 3D Renderer");
 
 		
-	fboTex->UnBindFBO();
-	RELEASE(fboTex);
+	sceneFboTex->UnBindFBO();
+	RELEASE(sceneFboTex);
 
 	SDL_GL_DeleteContext(context); 
 	return true;
@@ -287,11 +287,15 @@ void ModuleRenderer3D::ManageDroppedFBX(const char * droppedFileDir){
 	App->importer->LoadFBXScene(droppedFileDir);	
 }
 
-const uint ModuleRenderer3D::GetFBOTexture()
+const uint ModuleRenderer3D::GetSceneFBOTexture()
 {
-	return fboTex->texture;
+	return sceneFboTex->texture;
 }
 
+const uint ModuleRenderer3D::GetGameFBOTexture()
+{
+	return gameFboTex->texture;
+}
 
 void ModuleRenderer3D::ShowAxis() {
 

@@ -66,7 +66,8 @@ public:
 	inline const bool GetQuadTree() const { return _quadtree; }
 	inline const bool GetRay() const { return _ray; }
 	
-	const uint GetFBOTexture();
+	const uint GetSceneFBOTexture();
+	const uint GetGameFBOTexture();
 
 public:
 
@@ -111,7 +112,8 @@ private:
 	bool _quadtree = false;
 	bool _ray = false;
 
-	FBO* fboTex = nullptr;
+	FBO* sceneFboTex = nullptr;
+	FBO* gameFboTex = nullptr;
 
 };
 

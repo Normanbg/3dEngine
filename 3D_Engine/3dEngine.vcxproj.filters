@@ -429,6 +429,10 @@
     <ClInclude Include="ComponentCanvas.h">
       <Filter>Sources\Objects &amp; Components\Components</Filter>
     </ClInclude>
+    <ClInclude Include="ModuleSceneUI.h" />
+    <ClInclude Include="UIPanelGame.h">
+      <Filter>Sources\Modules\GuiPanels</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleInput.cpp">
@@ -694,6 +698,10 @@
     </ClCompile>
     <ClCompile Include="ComponentCanvas.cpp">
       <Filter>Sources\Objects &amp; Components\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleSceneUI.cpp" />
+    <ClCompile Include="UIPanelGame.cpp">
+      <Filter>Sources\Modules\GuiPanels</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

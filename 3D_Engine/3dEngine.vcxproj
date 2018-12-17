@@ -14,7 +14,7 @@
     <ProjectGuid>{746CC4C3-787F-4B0E-AA66-E388FE3FF4F6}</ProjectGuid>
     <RootNamespace>SDLGame</RootNamespace>
     <ProjectName>3dEngine</ProjectName>
-    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -99,6 +99,7 @@
     <ClInclude Include="mmgr\mmgr.h" />
     <ClInclude Include="ModuleFileSystem.h" />
     <ClInclude Include="ModuleResources.h" />
+    <ClInclude Include="ModuleSceneUI.h" />
     <ClInclude Include="ModuleTime.h" />
     <ClInclude Include="Quadtree.h" />
     <ClInclude Include="Resource.h" />
@@ -194,6 +195,7 @@
     <ClInclude Include="UIPanelAssets.h" />
     <ClInclude Include="UIPanelConfig.h" />
     <ClInclude Include="UIPanelConsole.h" />
+    <ClInclude Include="UIPanelGame.h" />
     <ClInclude Include="UIPanelHierarchy.h" />
     <ClInclude Include="UIPanelInspector.h" />
     <ClInclude Include="UIPanelOptimization.h" />
@@ -222,6 +224,7 @@
     <ClCompile Include="mmgr\mmgr.cpp" />
     <ClCompile Include="ModuleFileSystem.cpp" />
     <ClCompile Include="ModuleResources.cpp" />
+    <ClCompile Include="ModuleSceneUI.cpp" />
     <ClCompile Include="ModuleTime.cpp" />
     <ClCompile Include="Quadtree.cpp" />
     <ClCompile Include="Resource.cpp" />
@@ -284,6 +287,7 @@
     <ClCompile Include="UIPanelAssets.cpp" />
     <ClCompile Include="UIPanelConfig.cpp" />
     <ClCompile Include="UIPanelConsole.cpp" />
+    <ClCompile Include="UIPanelGame.cpp" />
     <ClCompile Include="UIPanelHierarchy.cpp" />
     <ClCompile Include="UIPanelInspector.cpp" />
     <ClCompile Include="UIPanelOptimization.cpp" />

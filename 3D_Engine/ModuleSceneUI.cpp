@@ -10,3 +10,8 @@ ModuleSceneUI::ModuleSceneUI()
 ModuleSceneUI::~ModuleSceneUI()
 {
 }
+
+void ModuleSceneUI::DrawInGameUI()
+{
+
+}
