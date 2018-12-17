@@ -25,7 +25,7 @@ ComponentMesh::~ComponentMesh()
 }
 
 
-update_status ComponentMesh::PreUpdate(float dt)
+bool ComponentMesh::PreUpdate(float dt)
 {
 	glBindBuffer(GL_ARRAY_BUFFER, 0); ///
 

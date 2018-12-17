@@ -25,6 +25,7 @@ public:
 	~Component() {	}
 
 	virtual bool Start() { return true; }
+	virtual bool PreUpdate(float dt=0) { return true; }
 	virtual bool Update() { return true; }
 	virtual void CleanUp() {return; }
 	virtual void Enable() { active = true; }

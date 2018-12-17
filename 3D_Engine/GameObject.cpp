@@ -42,11 +42,11 @@ bool GameObject::PreUpdate(){
 	for (int i = 0; i < componentsUI.size(); i++) {
 
 		ret &= componentsUI[i]->PreUpdate();
-	}
+	}*/
 	for (int i = 0; i < components.size(); i++) {
 
 		ret &= components[i]->PreUpdate();
-	}*/
+	}
 	for (int i = 0; i < childrens.size() ; i++) {
 
 		ret &= childrens[i]->PreUpdate();
