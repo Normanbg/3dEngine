@@ -101,6 +101,8 @@ update_status ModuleGui::Update(float dt)
 				App->scene->SaveScene(sc.c_str());
 			}
 			if (ImGui::MenuItem("Load scene"))
+				App->scene->LoadScene("NewScene.JSON");
+			if (ImGui::MenuItem("Load scene..."))
 				panelSceneInfo->wantToLoadScene = true;
 			if (ImGui::MenuItem("Quit", "ESC"))
 				return UPDATE_STOP;

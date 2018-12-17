@@ -16,6 +16,11 @@ public:
 	void CleanUp() override;	
 	inline void doUpdate() override { Update(); }
 	inline void doCleanUp() override { CleanUp(); }
+
+	void Load(Config* data) override;
+	void Save(Config& data) const override;
+	inline void doLoad(Config* data) override { Load(data); }
+	inline void doSave(Config& data)const  override { Save(data); }
 };
 
 

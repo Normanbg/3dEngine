@@ -46,6 +46,22 @@ void ComponentRectTransform::CleanUp()
 	RELEASE_ARRAY(rect.vertex);	
 }
 
+void ComponentRectTransform::Load(Config * data)
+{
+	UUID = data->GetUInt("UUID");
+	SetPos(data->GetFloat2("Position", { 0,0 }));
+	SetWidth(data->GetFloat("Width", 1));
+	SetHeight(data->GetFloat("Height", 1));
+}
+
+void ComponentRectTransform::Save(Config & data) const
+{
+	data.AddUInt("UUID", UUID);
+	data.AddFloat2("Position", GetPos());
+	data.AddFloat("Width", GetWidth());
+	data.AddFloat("Height", GetHeight());
+}
+
 void ComponentRectTransform::DrawInspector()
 {
 	ImGui::Separator();

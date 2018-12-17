@@ -549,6 +549,13 @@ void GameObject::Save(Config& data) const
 		components[i]->Save(comp);
 		conf.AddArrayChild(comp);
 	}	
+	conf.AddArray("ComponentsUI");
+	for (int i = 0; i < componentsUI.size(); i++) { //iterate all over the componentsUI to save
+		Config comp;
+		comp.AddInt("TypeUI", componentsUI[i]->typeUI);
+		componentsUI[i]->doSave(comp);
+		conf.AddArrayChild(comp);
+	}
 
 	data.AddArrayChild(conf);
 
@@ -592,7 +599,20 @@ void GameObject::Load(Config* data)
 			OWN_LOG("Cannot load components correctly. Component type: NOTYPE ")
 		}
 	}
+	int numUI = data->GetNumElemsArray("ComponentsUI");
+	for (int i = 0; i < numUI; i++) {//iterate all over the childs to save (ecept transform comp)
+		Config elem = data->GetArray("ComponentsUI", i);
+		ComponentTypeUI type = (ComponentTypeUI)elem.GetInt("TypeUI", ComponentTypeUI::NOTYPE);
+		if (type != ComponentTypeUI::NOTYPE) {
 
+			ComponentUI* comp = AddUIComponent(type);
+			comp->doLoad(&elem);
+
+		}
+		else {
+			OWN_LOG("Cannot load UI_Components correctly. Component type: NOTYPE ")
+		}
+	}
 	
 }
 

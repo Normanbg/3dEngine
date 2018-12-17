@@ -27,6 +27,9 @@ public:
 	virtual void doStart() {}
 	virtual void doUpdate() {};
 	virtual void doCleanUp() {};
+
+	virtual void doSave(Config& data)const  {};
+	virtual void doLoad(Config* data){};
 	ComponentTypeUI typeUI = NOTYPE;
 
 };

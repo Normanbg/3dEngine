@@ -25,6 +25,16 @@ void ComponentTextUI::CleanUp()
 {
 }
 
+void ComponentTextUI::Load(Config * data)
+{
+	UUID = data->GetUInt("UUID");
+}
+
+void ComponentTextUI::Save(Config & data) const
+{
+	data.AddUInt("UUID", UUID);
+}
+
 void ComponentTextUI::DrawInspector()
 {
 	ImGui::Separator();

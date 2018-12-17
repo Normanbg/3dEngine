@@ -51,6 +51,25 @@ void ComponentImageUI::CleanUp()
 	RELEASE_ARRAY(texCoords);
 }
 
+void ComponentImageUI::Load(Config * data)
+{
+	UUID = data->GetUInt("UUID");
+	std::string matName = data->GetString("UITexName", "NoName");
+
+	if (matName != "NoName") {
+		resourceTexture = (ResourceTexture*)App->resources->Get(App->resources->FindByName(matName.c_str(), Resource::ResType::Texture));
+		resourceTexture->LoadInMemory();
+	}
+}
+
+void ComponentImageUI::Save(Config & data) const
+{
+	data.AddUInt("UUID", UUID);
+	if (resourceTexture) {
+		data.AddString("UITexName", resourceTexture->GetName());
+	}
+}
+
 void ComponentImageUI::DrawInspector()
 {
 	ImGui::Separator();
@@ -125,10 +144,6 @@ void ComponentImageUI::DrawUI()
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glPopMatrix();
-}
-
-void ComponentImageUI::GenBuffer()
-{
 }
 
 const bool ComponentImageUI::HasTexture() const
