@@ -26,7 +26,7 @@ public:
 	
 	bool Start();
 	update_status PreUpdate(float dt);
-	void PreUpdateGame();
+	void CreateGameTexture();
 	update_status PostUpdate(float dt);
 	bool CleanUp();
 

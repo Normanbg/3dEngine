@@ -187,7 +187,7 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 	return UPDATE_CONTINUE;
 }
 
-void ModuleRenderer3D::PreUpdateGame() {
+void ModuleRenderer3D::CreateGameTexture() {
 	gameFboTex->BindFBO();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
@@ -198,13 +198,11 @@ void ModuleRenderer3D::PreUpdateGame() {
 	ComponentCamera* mainCam = App->scene->mainCamera->GetComponentCamera();
 	glLoadMatrixf(mainCam->GetProjectionMatrix());
 
-
 	glMatrixMode(GL_MODELVIEW);
 	glLoadMatrixf(mainCam->GetViewMatrix());
 
-	glLoadMatrixf(App->camera->cameraComp->GetViewMatrix());
-
 }
+
 // PostUpdate present buffer to screen
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
@@ -215,10 +213,12 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	//DrawMeshes();
 	App->scene->Draw();
 	sceneFboTex->UnBindFBO();
+
 	gameFboTex->BindFBO();
-	PreUpdateGame();
+	CreateGameTexture();
 	App->scene->Draw();
 	gameFboTex->UnBindFBO();
+
 	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	App->gui->Draw();	

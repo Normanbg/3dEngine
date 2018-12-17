@@ -83,6 +83,13 @@ update_status ModuleScene::Update(float dt) {
 			ret &= root->childrens[i]->Update();
 		}
 	}
+	GetAllDynamicGOs(root);
+	for (auto it : dynamicOBjs) {
+		ComponentMesh* mesh = it->GetComponentMesh();
+		if (mesh) {
+			mesh->frustumContained = ContainsAaBox(mesh->bbox);
+		}
+	}
 
 	if (rootQuadTree->quadTreeBox.IsFinite()) {
 		std::list<uuid> uuidList;
@@ -102,7 +109,7 @@ update_status ModuleScene::Update(float dt) {
 			}
 		}
 	}
-
+	
 	update_status retUS;
 	ret ? retUS = UPDATE_CONTINUE : retUS = UPDATE_ERROR;
 	return retUS;
@@ -399,6 +406,15 @@ void ModuleScene::GetAllStaticGOs(GameObject* go)
 		staticOBjs.push_back(go);
 	for (auto it : go->childrens) {
 		GetAllStaticGOs(it);
+	}
+}
+
+void ModuleScene::GetAllDynamicGOs(GameObject* go)
+{
+	if (go != root && !go->staticGO)
+		dynamicOBjs.push_back(go);
+	for (auto it : go->childrens) {
+		GetAllDynamicGOs(it);
 	}
 }
 
