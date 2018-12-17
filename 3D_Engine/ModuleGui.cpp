@@ -16,6 +16,7 @@
 #include "UIPanelScene.h"
 #include "UIPanelSceneInfo.h"
 #include "UIPanelOptimization.h"
+#include "UIPanelGame.h"
 #include "ModuleWindow.h"
 #include "ModuleInput.h"
 #include "ModuleAudio.h"
@@ -61,6 +62,7 @@ bool ModuleGui::Start()
 	uiPanels.push_back(panelSceneInfo = new UIPanelSceneInfo("Scene Info", 0, 399, 240, 406, true));
 	uiPanels.push_back(panelAssets = new UIPanelAssets("Assets", 0, 15, 250, 550, true));
 	uiPanels.push_back(panelOptim = new UIPanelOptimization("Optimization", 0, 15, 250, 550, true));
+	uiPanels.push_back(panelGame = new UIPanelGame("Game", 0, 399, 240, 406, true));
 
 	ImGui::CreateContext();
 	demoShowcase = false;
