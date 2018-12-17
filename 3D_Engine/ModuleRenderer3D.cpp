@@ -84,9 +84,11 @@ bool ModuleRenderer3D::Init(JSON_Object* obj)
 		}
 
 		sceneFboTex = new FBO();
+		gameFboTex = new FBO();
 		int w, h;
 		App->window->GetSize(w, h);
 		sceneFboTex->Create(w , h);
+		gameFboTex->Create(w, h);
 
 		//Initialize Modelview Matrix
 		glMatrixMode(GL_MODELVIEW);
@@ -156,26 +158,22 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 {
 	BROFILER_CATEGORY("Renderer3D_PreUpdate", Profiler::Color::HotPink);
 	sceneFboTex->BindFBO();
+	
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	if (App->scene->inGame) {
-		ComponentCamera* mainCam = App->scene->mainCamera->GetComponentCamera();
-		glLoadMatrixf(mainCam->GetProjectionMatrix());
-	}
-	else
-		glLoadMatrixf(App->camera->cameraComp->GetProjectionMatrix());
+	
+	//-
+	glLoadMatrixf(App->camera->cameraComp->GetProjectionMatrix());
 
 	glMatrixMode(GL_MODELVIEW);
-	if (App->scene->inGame) {
-		ComponentCamera* mainCam = App->scene->mainCamera->GetComponentCamera();
-		glLoadMatrixf(mainCam->GetViewMatrix());
-	}
-	else
-		glLoadMatrixf(App->camera->cameraComp->GetViewMatrix());
+	//-
+	
+	glLoadMatrixf(App->camera->cameraComp->GetViewMatrix());
 
+	//PreUpdateGame();
 	// light 0 on cam pos
 	lights[0].SetPos(App->camera->cameraComp->GetPos().x, App->camera->cameraComp->GetPos().y, App->camera->cameraComp->GetPos().z);
 
@@ -189,6 +187,24 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 	return UPDATE_CONTINUE;
 }
 
+void ModuleRenderer3D::PreUpdateGame() {
+	gameFboTex->BindFBO();
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glLoadIdentity();
+
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+
+	ComponentCamera* mainCam = App->scene->mainCamera->GetComponentCamera();
+	glLoadMatrixf(mainCam->GetProjectionMatrix());
+
+
+	glMatrixMode(GL_MODELVIEW);
+	glLoadMatrixf(mainCam->GetViewMatrix());
+
+	glLoadMatrixf(App->camera->cameraComp->GetViewMatrix());
+
+}
 // PostUpdate present buffer to screen
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
@@ -199,6 +215,8 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	//DrawMeshes();
 	App->scene->Draw();
 	sceneFboTex->UnBindFBO();
+	gameFboTex->BindFBO();
+	gameFboTex->UnBindFBO();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	App->gui->Draw();	
@@ -215,6 +233,7 @@ bool ModuleRenderer3D::CleanUp()
 
 		
 	sceneFboTex->UnBindFBO();
+	gameFboTex->UnBindFBO();
 	RELEASE(sceneFboTex);
 
 	SDL_GL_DeleteContext(context); 
