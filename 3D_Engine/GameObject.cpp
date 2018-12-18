@@ -184,6 +184,7 @@ Component * GameObject::AddComponent(ComponentType type) {
 	ret->Start();
 	return ret;
 }
+
 ComponentUI * GameObject::AddUIComponent(ComponentTypeUI type) {
 	ComponentUI* ret;
 
@@ -227,7 +228,6 @@ void GameObject::AddComponent(Component * component, ComponentType type)
 	components.push_back(component);
 }
 
-
 void GameObject::GetComponents(ComponentType type, std::vector<Component*>& comp) {
 	
 	for (int i = 0; i < components.size(); i++) {		
@@ -241,6 +241,7 @@ void GameObject::GetComponents(ComponentType type, std::vector<Component*>& comp
 	}
 	
 }
+
 void GameObject::GetAllComponentsUI(std::vector<ComponentUI*>& comp) {
 
 	for (int i = 0; i < componentsUI.size(); i++) {		

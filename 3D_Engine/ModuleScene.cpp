@@ -4,6 +4,7 @@
 #include "Quadtree.h"
 #include "Resource.h"
 #include "ModuleEditorCamera.h"
+#include "ModuleSceneUI.h"
 #include "Config.h"
 
 #include "ModuleInput.h"
@@ -629,6 +630,7 @@ GameObject * ModuleScene::AddUIGameObject(const char * name, GameObject * parent
 	ret->parent = parent;
 	parent->childrens.push_back(ret);
 	ret->AddUIComponent(TRANSFORMRECT);
+	uiGameObjects.push_back(ret);
 	return ret;
 }
 

@@ -19,7 +19,7 @@ public:
 
 	void DrawInGameUI();
 
-	void AddUIGameObject(GameObject* go);
+	void AddUIGOtoList(GameObject* go);
 
 private: 
 	std::vector<GameObject*> uiGameObjects;

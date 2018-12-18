@@ -7,6 +7,7 @@
 #include "Math.h"
 #include "RandomGenerator/pcg_variants.h"
 #include "RandomGenerator/extras/entropy.h"
+#include "ModuleSceneUI.h"
 
 class vector;
 class GameObject;
@@ -17,6 +18,8 @@ class Resource;
 
 class ModuleScene : public Module
 {
+	friend class ModuleSceneUI;
+
 public:
 
 	ModuleScene(bool start_enabled = true);
@@ -83,6 +86,7 @@ public:
 	LineSegment line;
 
 	ImGuizmo::OPERATION guizmoOp = ImGuizmo::TRANSLATE;
+
 	//--------------------
 	std::list<GameObject*> staticObjsToDraw;
 
@@ -104,6 +108,8 @@ private:
 	std::vector<GameObject*> staticOBjs;
 	std::vector<GameObject*> dynamicOBjs;
 	std::vector<GameObject*> allGameObjects;
+
+	std::vector<GameObject*> uiGameObjects;
 
 };
 #endif __MODULE_SCENE_H__
