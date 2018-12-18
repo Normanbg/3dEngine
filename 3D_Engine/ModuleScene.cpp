@@ -49,7 +49,12 @@ bool ModuleScene::Init(JSON_Object * obj)
 update_status ModuleScene::PreUpdate(float dt)
 {
 	bool ret = true;
-	root->CalculateAllGlobalMatrix();
+	root->CalculateAllTransformGlobalMat();
+	GameObject* canvas = GetFirstGameObjectCanvas();
+
+	if (canvas) {
+		canvas->CalculateAllRectGlobalMat();
+	}
 
 	if (root->childrens.empty() == false) {
 		for (int i = 0; i < root->childrens.size(); i++) {
@@ -353,7 +358,7 @@ void ModuleScene::DrawGuizmo(ImGuizmo::OPERATION operation)
 
 		if (ImGuizmo::IsUsing()) {
 			transform->setGlobalMatrix(transMatr);
-			root->CalculateAllGlobalMatrix();
+			root->CalculateAllTransformGlobalMat();
 			objectMoved = true;
 		}
 	}

@@ -124,7 +124,7 @@ void GameObject::CleanUp(){
 	
 }
 
-void GameObject::CalculateAllGlobalMatrix(){
+void GameObject::CalculateAllTransformGlobalMat(){
 	if (GetComponentTransform() != nullptr) {
 		if (parent == nullptr)
 		{
@@ -144,7 +144,26 @@ void GameObject::CalculateAllGlobalMatrix(){
 	{
 		for (std::vector<GameObject*>::iterator it = childrens.begin(); it != childrens.end(); it++)
 		{
-			(*it)->CalculateAllGlobalMatrix();
+			(*it)->CalculateAllTransformGlobalMat();
+		}
+	}
+}
+
+void GameObject::CalculateAllRectGlobalMat() {
+	if (GetComponentTransform() != nullptr) {
+		if (parent == nullptr)
+		{
+			GetComponentRectTransform()->SetGlobalMatrix(GetComponentRectTransform()->GetLocalMatrix());
+		}
+		else
+			GetComponentRectTransform()->SetGlobalMatrix(parent->GetComponentRectTransform()->GetGlobalMatrix() * GetComponentRectTransform()->GetLocalMatrix());
+
+	}
+	if (!childrens.empty())
+	{
+		for (auto it : childrens)
+		{
+			it->CalculateAllRectGlobalMat();
 		}
 	}
 }
@@ -286,8 +305,6 @@ void GameObject::GetComponentsUIType(std::vector<ComponentUI*>& comp, ComponentT
 	}
 
 }
-
-
 
 void GameObject::SetParent(GameObject * _parent)//TO CHECK!!!----------------------------------------------------------
 {

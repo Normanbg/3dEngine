@@ -28,7 +28,7 @@ ComponentRectTransform::ComponentRectTransform()
 	memcpy(rect.vertex, vtx, sizeof(float3) * 4);
 	
 	GenBuffer();
-	UpdateGlobalMatrix();
+	UpdateLocalMatrix();
 }
 
 
@@ -70,10 +70,18 @@ void ComponentRectTransform::DrawInspector()
 	float2 _pos = GetPos();
 	float _w = GetWidth();
 	float _h = GetHeight();
-		
-	if (ImGui::DragFloat2("Position", (float*)&_pos, 0.1f)) { SetPos(_pos); }
-	if (ImGui::DragFloat("Width", (float*)&_w, 0.1f)) { SetWidth(_w); }	
-	if (ImGui::DragFloat("Height", (float*)&_h, 0.1f)) { SetHeight(_h); }
+	
+	if (myGO->GetComponentCanvas()) {
+		ImGui::DragFloat2("Position", (float*)&_pos, 0.1f);
+		ImGui::DragFloat("Width", (float*)&_w, 0.1f);
+		ImGui::DragFloat("Height", (float*)&_h, 0.1f);
+	}
+	else {
+		if (ImGui::DragFloat2("Position", (float*)&_pos, 0.1f)) { SetPos(_pos); }
+		if (ImGui::DragFloat("Width", (float*)&_w, 0.1f)) { SetWidth(_w); }
+		if (ImGui::DragFloat("Height", (float*)&_h, 0.1f)) { SetHeight(_h); }
+	}
+
 	ImGui::Spacing();
 	ImGui::Checkbox("Draw Canvas", &draw);
 }
@@ -81,19 +89,42 @@ void ComponentRectTransform::DrawInspector()
 void ComponentRectTransform::SetPos(float2 pos)
 {
 	rect.position = pos;
-	UpdateGlobalMatrix();
+	UpdateLocalMatrix();
 }
 
 void ComponentRectTransform::SetWidth(float w)
 {
 	rect.width = w;
-	UpdateGlobalMatrix();
+	UpdateLocalMatrix();
 }
 
 void ComponentRectTransform::SetHeight(float h)
 {
 	rect.height= h;
-	UpdateGlobalMatrix();
+	UpdateLocalMatrix();
+}
+
+void ComponentRectTransform::SetGlobalMatrix(float4x4 global)
+{
+	rect.globalMatrix = global;
+	if (myGO->parent != nullptr)
+	{
+		ComponentRectTransform* parentTrans = myGO->parent->GetComponentRectTransform();
+		float4x4 newlocalMatrix = parentTrans->GetGlobalMatrix().Inverted() * rect.globalMatrix;
+		SetLocalMatrix(newlocalMatrix);
+	}
+}
+
+void ComponentRectTransform::SetLocalMatrix(float4x4 newLocalMat) {
+	rect.localMatrix = newLocalMat;
+	float4x4 pn;
+	float3 scale;
+	float3 position;
+	newLocalMat.Decompose(position, pn, scale);
+	rect.position.y = position.y;
+	rect.position.x = position.z;
+	rect.width = scale.z;
+	rect.height = scale.y;
 }
 
 void ComponentRectTransform::DrawUI()
@@ -110,9 +141,7 @@ void ComponentRectTransform::DrawUI()
 
 		glBindBuffer(GL_ARRAY_BUFFER, rect.vertexID);
 		glVertexPointer(3, GL_FLOAT, 0, NULL);
-		glDrawArrays(GL_QUADS, 0, 4);
-
-		
+		glDrawArrays(GL_QUADS, 0, 4);		
 
 		glBindBuffer(GL_ARRAY_BUFFER, 0); //resets the buffer
 		glDisableClientState(GL_VERTEX_ARRAY);
@@ -137,18 +166,11 @@ void ComponentRectTransform::GenBuffer()
 	glBindBuffer(GL_ARRAY_BUFFER, rect.vertexID); // set the type of buffer
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float3) * 4, &rect.vertex[0], GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
 }
 
-void ComponentRectTransform::UpdateGlobalMatrix() {
+void ComponentRectTransform::UpdateLocalMatrix() {
 
 	rect.anchor.x = rect.position.x + rect.width / 2;
 	rect.anchor.y = rect.position.y + rect.height / 2;
 	rect.globalMatrix = float4x4::FromTRS(float3(0, rect.position.y, rect.position.x), Quat(0,0,0,0), float3(0, rect.height,rect.width ));
-
-
-}
-
-void ComponentRectTransform::UpdateLocalMatrix() {
-	
 }

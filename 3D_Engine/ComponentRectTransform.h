@@ -40,24 +40,21 @@ public:
 	const float GetWidth() const { return rect.width; }
 	const float GetHeight() const { return rect.height; }
 	const uint GetVertexID() const { return rect.vertexID; }
+	const float4x4 GetLocalMatrix() const { return rect.localMatrix; }
 	const float4x4 GetGlobalMatrix() const { return rect.globalMatrix; }
+	const float2 GetMid() const { return float2(rect.width / 2, rect.height / 2); };
 
 	void SetPos(float2 pos);
 	void SetWidth(float w);
 	void SetHeight(float h);
+	void SetGlobalMatrix(float4x4 global);
+	void SetLocalMatrix(float4x4 newLocalMat);
 
 	void DrawUI() override;
 	void GenBuffer();
 
-public:
-
-	
-	/*float3 minPoint = float3::zero;
-	float3 maxPoint = float3::zero;*/
-
 private:
-	
-	void UpdateGlobalMatrix();
+
 	void UpdateLocalMatrix();
 
 private:
