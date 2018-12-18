@@ -50,12 +50,7 @@ update_status ModuleScene::PreUpdate(float dt)
 {
 	bool ret = true;
 	root->CalculateAllTransformGlobalMat();
-	GameObject* canvas = GetFirstGameObjectCanvas();
-
-	if (canvas) {
-		canvas->CalculateAllRectGlobalMat();
-	}
-
+	
 	if (root->childrens.empty() == false) {
 		for (int i = 0; i < root->childrens.size(); i++) {
 			ret &= root->childrens[i]->PreUpdate();
@@ -132,6 +127,14 @@ update_status ModuleScene::PostUpdate(float dt) {
 	if (objectMoved) {
 		SetQuadTree();
 		objectMoved = false;
+	}
+
+	GameObject* canvas = GetFirstGameObjectCanvas();
+	
+	if (canvas) {
+		ComponentRectTransform* rect = canvas->GetComponentRectTransform();
+		if (rect != nullptr)
+			canvas->CalculateAllRectGlobalMat();
 	}
 
 	update_status retUS;
@@ -602,10 +605,6 @@ void ModuleScene::Draw() {
 
 
 
-
-
-
-
 void ModuleScene::DrawInGameUI()
 {
 	GameObject* canvas = GetFirstGameObjectCanvas();
@@ -625,13 +624,12 @@ void ModuleScene::DrawInGameUI()
 
 				glOrtho(left, right, bottom, top, zNear, zFar);
 				
-				std::vector<ComponentUI*> componentsUI;
-				it->GetMineUIComponents(componentsUI);
+				/*std::vector<ComponentUI*> componentsUI = it.componentsUI;
 				for (int i = 0; i < componentsUI.size(); i++) {
 					if (componentsUI[i]->draw)
 						componentsUI[i]->DrawUI();
 				}
-				componentsUI.clear();
+				componentsUI.clear();*/
 			}
 		}
 	}

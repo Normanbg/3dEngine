@@ -71,16 +71,16 @@ void ComponentRectTransform::DrawInspector()
 	float _w = GetWidth();
 	float _h = GetHeight();
 	
-	if (myGO->GetComponentCanvas()) {
+	/*if (myGO->GetComponentCanvas()) {
 		ImGui::DragFloat2("Position", (float*)&_pos, 0.1f);
 		ImGui::DragFloat("Width", (float*)&_w, 0.1f);
 		ImGui::DragFloat("Height", (float*)&_h, 0.1f);
 	}
-	else {
+	else {*/
 		if (ImGui::DragFloat2("Position", (float*)&_pos, 0.1f)) { SetPos(_pos); }
 		if (ImGui::DragFloat("Width", (float*)&_w, 0.1f)) { SetWidth(_w); }
 		if (ImGui::DragFloat("Height", (float*)&_h, 0.1f)) { SetHeight(_h); }
-	}
+	//}
 
 	ImGui::Spacing();
 	ImGui::Checkbox("Draw Canvas", &draw);
@@ -107,10 +107,12 @@ void ComponentRectTransform::SetHeight(float h)
 void ComponentRectTransform::SetGlobalMatrix(float4x4 global)
 {
 	rect.globalMatrix = global;
-	if (myGO->parent != nullptr)
+	if (myGO->parent != nullptr && myGO->parent != App->scene->root)
 	{
 		ComponentRectTransform* parentTrans = myGO->parent->GetComponentRectTransform();
-		float4x4 newlocalMatrix = parentTrans->GetGlobalMatrix().Inverted() * rect.globalMatrix;
+		float4x4 parentlobal = parentTrans->GetLocalMatrix();
+		float4x4 parentGlobal = parentTrans->GetGlobalMatrix();
+		float4x4 newlocalMatrix = parentGlobal.Inverted() * rect.globalMatrix;
 		SetLocalMatrix(newlocalMatrix);
 	}
 }
@@ -172,5 +174,5 @@ void ComponentRectTransform::UpdateLocalMatrix() {
 
 	rect.anchor.x = rect.position.x + rect.width / 2;
 	rect.anchor.y = rect.position.y + rect.height / 2;
-	rect.globalMatrix = float4x4::FromTRS(float3(0, rect.position.y, rect.position.x), Quat(0,0,0,0), float3(0, rect.height,rect.width ));
+	rect.localMatrix = float4x4::FromTRS(float3(0, rect.position.y, rect.position.x), Quat(0,0,0,0), float3(0, rect.height,rect.width ));
 }
