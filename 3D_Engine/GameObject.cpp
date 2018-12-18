@@ -241,6 +241,7 @@ void GameObject::GetComponents(ComponentType type, std::vector<Component*>& comp
 	}
 	
 }
+
 void GameObject::GetComponentsUITypeIgnore( std::vector<ComponentUI*>& comp, ComponentTypeUI ignoreType) {
 
 	for (int i = 0; i < componentsUI.size(); i++) {
@@ -254,6 +255,7 @@ void GameObject::GetComponentsUITypeIgnore( std::vector<ComponentUI*>& comp, Com
 	}
 
 }
+
 void GameObject::GetComponentsUIType(std::vector<ComponentUI*>& comp, ComponentTypeUI type) {
 
 	for (int i = 0; i < componentsUI.size(); i++) {
