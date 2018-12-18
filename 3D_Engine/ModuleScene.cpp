@@ -534,16 +534,15 @@ void ModuleScene::SetWireframe(bool active)
 void ModuleScene::Draw() {
 	
 	//--------UI
-	std::vector<ComponentUI*> componentsUI;
+	std::vector<ComponentUI*> componentsUI; // first draw UI components
 	root->GetComponentsUITypeIgnore( componentsUI, TRANSFORMRECT);
-	ComponentUI* image = nullptr;
-	for (int i = 0; i < componentsUI.size(); i++) {
-		image = (ComponentUI *)componentsUI[i];
-		image->DrawUI();
+	for (int i = 0; i < componentsUI.size(); i++) {		
+		if (componentsUI[i]->draw)
+			componentsUI[i]->DrawUI();
 	}
 	componentsUI.clear();
 
-	root->GetComponentsUIType(componentsUI, TRANSFORMRECT);
+	root->GetComponentsUIType(componentsUI, TRANSFORMRECT); // then draw rectTransforms
 
 	ComponentRectTransform* recTrans = nullptr;
 	for (int i = 0; i < componentsUI.size(); i++) {

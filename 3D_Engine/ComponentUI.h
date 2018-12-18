@@ -32,6 +32,9 @@ public:
 	virtual void doLoad(Config* data){};
 	ComponentTypeUI typeUI = NOTYPE;
 
+
+	bool draw = true;
+
 };
 
 

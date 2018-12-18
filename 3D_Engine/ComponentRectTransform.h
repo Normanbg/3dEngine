@@ -51,7 +51,6 @@ public:
 
 public:
 
-	bool draw = true;
 	
 	/*float3 minPoint = float3::zero;
 	float3 maxPoint = float3::zero;*/

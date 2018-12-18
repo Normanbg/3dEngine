@@ -49,6 +49,7 @@ public:
 	void RemoveComponentUI(ComponentUI * comp);
 
 	void GetComponents(ComponentType type, std::vector<Component*>& components);
+	void GetAllComponentsUI(std::vector<ComponentUI*>& comp);
 	void GetComponentsUITypeIgnore( std::vector<ComponentUI*>& comp, ComponentTypeUI ignoreType = NOTYPE);
 	void GetComponentsUIType(std::vector<ComponentUI*>& comp, ComponentTypeUI type);
 	void SetParent(GameObject* parent);
