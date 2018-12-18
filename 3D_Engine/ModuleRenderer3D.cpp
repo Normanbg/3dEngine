@@ -217,6 +217,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	gameFboTex->BindFBO();
 	CreateGameTexture();
 	App->scene->Draw();
+	App->scene->DrawInGameUI();
 	gameFboTex->UnBindFBO();
 
 	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

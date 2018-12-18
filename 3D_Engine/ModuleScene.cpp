@@ -597,6 +597,45 @@ void ModuleScene::Draw() {
 
 
 
+
+
+
+
+void ModuleScene::DrawInGameUI()
+{
+	GameObject* canvas = GetFirstGameObjectCanvas();
+	if (canvas) {
+		for (auto it : uiGameObjects) {
+			if (canvas != it) {
+				ComponentRectTransform* rectTransform = it->GetComponentRectTransform();
+				glMatrixMode(GL_PROJECTION);
+				glLoadIdentity();
+
+				float left = canvas->GetComponentRectTransform()->GetPos().x - (rectTransform->GetWidth() / 2);
+				float right = canvas->GetComponentRectTransform()->GetPos().x + (rectTransform->GetWidth() / 2);;
+				float top = canvas->GetComponentRectTransform()->GetPos().y + (rectTransform->GetHeight() / 2);;
+				float bottom = canvas->GetComponentRectTransform()->GetPos().y - (rectTransform->GetHeight() / 2);;
+				float zNear = 1000.f;
+				float zFar = -1000.f;
+
+				glOrtho(left, right, bottom, top, zNear, zFar);
+				
+				std::vector<ComponentUI*> componentsUI;
+				it->GetMineUIComponents(componentsUI);
+				for (int i = 0; i < componentsUI.size(); i++) {
+					if (componentsUI[i]->draw)
+						componentsUI[i]->DrawUI();
+				}
+				componentsUI.clear();
+			}
+		}
+	}
+}
+
+
+
+
+
 GameObject * ModuleScene::AddGameObject()
 {
 	GameObject* ret = new GameObject();

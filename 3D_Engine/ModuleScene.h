@@ -41,6 +41,7 @@ public:
 
 
 	void Draw();
+	void DrawInGameUI();
 
 	GameObject* AddGameObject();
 	GameObject* AddGameObject(const char* name);	
