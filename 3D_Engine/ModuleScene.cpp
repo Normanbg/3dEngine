@@ -596,11 +596,6 @@ void ModuleScene::Draw() {
 }
 
 
-
-
-
-
-
 void ModuleScene::DrawInGameUI()
 {
 	GameObject* canvas = GetFirstGameObjectCanvas();
@@ -620,13 +615,13 @@ void ModuleScene::DrawInGameUI()
 
 				glOrtho(left, right, bottom, top, zNear, zFar);
 				
-				std::vector<ComponentUI*> componentsUI;
+				/*std::vector<ComponentUI*> componentsUI;
 				it->GetMineUIComponents(componentsUI);
 				for (int i = 0; i < componentsUI.size(); i++) {
 					if (componentsUI[i]->draw)
 						componentsUI[i]->DrawUI();
 				}
-				componentsUI.clear();
+				componentsUI.clear();*/
 			}
 		}
 	}
