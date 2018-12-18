@@ -23,7 +23,7 @@ ModuleFileSystem::ModuleFileSystem(bool start_enabled) : Module(start_enabled)
 
 	//Create main files if they do not exist and add them to the search path
 	const char* mainPaths[] = {
-		MODELS_PATH, TEXTURES_PATH, AUDIO_PATH, LIB_MODELS_PATH, LIB_TEXTURES_PATH,LIB_AUDIO_PATH, SETTINGS_PATH, SCENES_PATH
+		MODELS_PATH, TEXTURES_PATH, AUDIO_PATH, FONTS_PATH, LIB_MODELS_PATH, LIB_TEXTURES_PATH,LIB_AUDIO_PATH, SETTINGS_PATH, SCENES_PATH
 	};
 	for (uint i = 0; i < NUM_PATHS; ++i)
 	{
