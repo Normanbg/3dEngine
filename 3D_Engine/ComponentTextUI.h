@@ -11,6 +11,7 @@ public:
 	~ComponentTextUI();
 
 	void DrawInspector() override;
+	void DrawUI() override;
 
 	bool Start() override;
 	bool Update() override;
@@ -26,10 +27,16 @@ public:
 	inline void doSave(Config& data)const  override { Save(data); }
 
 
-	// txt RESOURCE?
+	// txt RESOURCE? NO
 	std::string fontPath = std::string(FONTS_PATH);
+	std::string exportTexPath = std::string(LIB_FONTS_PATH);
 	float scale = 0.0f;
 	char* text = nullptr;
+
+private: 
+
+	float2* texCoords = nullptr;
+	uint texGPUIndex = -1;
 };
 
 

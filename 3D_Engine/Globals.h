@@ -80,9 +80,10 @@ enum FrustumContained {
 #define LIB_TEXTURES_PATH "Library/Textures/"
 #define LIB_MODELS_PATH "Library/3DModels/"
 #define LIB_AUDIO_PATH "Library/Audio/"
+#define LIB_FONTS_PATH "Library/Fonts/"
 #define SETTINGS_PATH "Settings/"
 #define SCENES_PATH "Scenes/"
-#define NUM_PATHS 9
+#define NUM_PATHS 10
 
 #define ASSETS_PATH "Assets/"
 #define OWN_FILE_FORMAT ".pei"
