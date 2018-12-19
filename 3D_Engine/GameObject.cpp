@@ -124,7 +124,7 @@ void GameObject::CleanUp(){
 	
 }
 
-void GameObject::CalculateAllGlobalMatrix(){
+void GameObject::CalculateAllTransformGlobalMat(){
 	if (GetComponentTransform() != nullptr) {
 		if (parent == nullptr)
 		{

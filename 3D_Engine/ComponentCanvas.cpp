@@ -1,11 +1,13 @@
 #include "ComponentCanvas.h"
 
+
 #include "mmgr/mmgr.h"
 
 
 ComponentCanvas::ComponentCanvas()
 {
 	type = CANVAS;
+
 }
 
 

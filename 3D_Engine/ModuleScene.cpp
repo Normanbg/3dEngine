@@ -356,7 +356,7 @@ void ModuleScene::DrawGuizmo(ImGuizmo::OPERATION operation)
 
 		if (ImGuizmo::IsUsing()) {
 			transform->setGlobalMatrix(transMatr);
-			root->CalculateAllGlobalMatrix();
+			root->CalculateAllTransformGlobalMat();
 			objectMoved = true;
 		}
 	}
