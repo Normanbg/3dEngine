@@ -633,27 +633,35 @@ void ModuleScene::DrawInGameUI()///CARLES MARGELI
 		float zNear = 10.f;
 		float zFar = -10.f;
 
-		glOrtho(left, right, bottom, top, zNear, zFar);
+		glOrtho(1, 1, 1, 1, 1, -1);
 
-		std::vector<ComponentUI*> componentsUI; // first draw UI components
-		root->GetComponentsUITypeIgnore(componentsUI, TRANSFORMRECT);
-		for (int i = 0; i < componentsUI.size(); i++) {
-			if (componentsUI[i]->draw)
-				componentsUI[i]->DrawUI();
-		}
-		componentsUI.clear();
+		glBegin(GL_TRIANGLES);
 
-		root->GetComponentsUIType(componentsUI, TRANSFORMRECT); // then draw rectTransforms
+		glVertex2f(-1, -1);
+		glVertex2f(1, -1);
+		glVertex2f(1, 1);
 
-		ComponentRectTransform* recTrans = nullptr;
-		for (int i = 0; i < componentsUI.size(); i++) {
-			recTrans = (ComponentRectTransform *)componentsUI[i];
-			if (recTrans->draw)
-				recTrans->DrawUI();
-		}
-		componentsUI.clear();
-		//--------UI
-		recTrans = nullptr;
+		glEnd();
+
+		//std::vector<ComponentUI*> componentsUI; // first draw UI components
+		//root->GetComponentsUITypeIgnore(componentsUI, TRANSFORMRECT);
+		//for (int i = 0; i < componentsUI.size(); i++) {
+		//	if (componentsUI[i]->draw)
+		//		componentsUI[i]->DrawUI();
+		//}
+		//componentsUI.clear();
+
+		//root->GetComponentsUIType(componentsUI, TRANSFORMRECT); // then draw rectTransforms
+
+		//ComponentRectTransform* recTrans = nullptr;
+		//for (int i = 0; i < componentsUI.size(); i++) {
+		//	recTrans = (ComponentRectTransform *)componentsUI[i];
+		//	if (recTrans->draw)
+		//		recTrans->DrawUI();
+		//}
+		//componentsUI.clear();
+		////--------UI
+		//recTrans = nullptr;
 
 	}
 }
