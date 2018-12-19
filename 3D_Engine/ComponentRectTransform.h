@@ -42,7 +42,6 @@ public:
 	const float2 GetGlobalPos() const { return rect.globalPosition; }
 	const float2 GetMid() const { return float2(rect.width / 2, rect.height / 2); };
 
-	/*void SetPos(float2 pos);*/
 	void SetWidth(float w);
 	void SetHeight(float h);
 	void SetGlobalPos(float2 global);
@@ -55,7 +54,7 @@ public:
 
 private:
 
-	void UpdateLocalPos();
+void UpdateLocalPos();
 
 private:
 	RectTransform rect;

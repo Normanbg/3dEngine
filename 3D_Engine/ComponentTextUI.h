@@ -4,13 +4,27 @@
 #include "ComponentUI.h"
 #include "ComponentWithResource.h"
 
+#define DEFAULT_FONT "arial.ttf"
+
 class ComponentTextUI : public ComponentUI, public Component
 {
+
+	class Font {
+	public:
+		std::string fontDir = std::string(FONTS_PATH );
+		std::string fontSrc = std::string(DEFAULT_FONT);
+		std::string exportTexPath = std::string(LIB_FONTS_PATH);
+		std::string text = std::string("Insert Text.");
+		float scale = 1.0f;		
+		void ResetFont();
+	};
 public:
 	ComponentTextUI();
 	~ComponentTextUI();
 
+	void UpdateRectTransform() override;
 	void DrawInspector() override;
+	void DrawUI() override;
 
 	bool Start() override;
 	bool Update() override;
@@ -25,11 +39,15 @@ public:
 	inline void doLoad(Config* data) override { Load(data); }
 	inline void doSave(Config& data)const  override { Save(data); }
 
+	void LoadLabel(const char* label = "Insert Text", float scale = 1.0f, const char* font = "arial.ttf");
 
-	// txt RESOURCE?
-	std::string fontPath = std::string(FONTS_PATH);
-	float scale = 0.0f;
-	char* text = nullptr;
+	Font font;
+	
+
+private: 
+
+	float2* texCoords = nullptr;
+	uint texGPUIndex = -1;
 };
 
 

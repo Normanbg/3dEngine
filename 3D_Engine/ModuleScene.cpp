@@ -356,7 +356,7 @@ void ModuleScene::DrawGuizmo(ImGuizmo::OPERATION operation)
 
 		if (ImGuizmo::IsUsing()) {
 			transform->setGlobalMatrix(transMatr);
-			root->CalculateAllTransformGlobalMat();
+			root->CalculateAllGlobalMatrix();
 			objectMoved = true;
 		}
 	}
@@ -602,8 +602,6 @@ void ModuleScene::Draw(bool editor) {
 	mesh = nullptr;
 }
 
-
-
 void ModuleScene::DrawInGameUI()
 {
 	GameObject* canvas = GetFirstGameObjectCanvas();
@@ -653,7 +651,6 @@ void ModuleScene::DrawInGameUI()
 		}		
 	}
 }
-
 
 
 

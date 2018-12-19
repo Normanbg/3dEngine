@@ -124,7 +124,7 @@ void GameObject::CleanUp(){
 	
 }
 
-void GameObject::CalculateAllTransformGlobalMat(){
+void GameObject::CalculateAllGlobalMatrix(){
 	if (GetComponentTransform() != nullptr) {
 		if (parent == nullptr)
 		{
@@ -306,6 +306,8 @@ void GameObject::GetComponentsUIType(std::vector<ComponentUI*>& comp, ComponentT
 	}
 
 }
+
+
 
 void GameObject::SetParent(GameObject * _parent)//TO CHECK!!!----------------------------------------------------------
 {

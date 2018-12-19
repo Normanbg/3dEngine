@@ -75,8 +75,7 @@ public:
 
 	inline const uuid GetUUID() { return UUID; }
 
-	void CalculateAllTransformGlobalMat();
-	void CalculateAllRectGlobalMat();
+	void CalculateAllGlobalMatrix();
 	void SetChildsStatic(bool active);
 
 	void SetLocalAABB(AABB aabb);

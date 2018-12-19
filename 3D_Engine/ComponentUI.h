@@ -1,7 +1,10 @@
 #ifndef __COMPONENT_UI_H__
 #define __COMPONENT_UI_H__
 
+
 #include "Component.h"
+
+class ComponentRectTransform;
 
 enum ComponentTypeUI {
 	NOTYPE = 0,
@@ -30,10 +33,12 @@ public:
 
 	virtual void doSave(Config& data)const  {};
 	virtual void doLoad(Config* data){};
+
+	virtual void UpdateRectTransform() {};
+
 	ComponentTypeUI typeUI = NOTYPE;
-
-
 	bool draw = true;
+	ComponentRectTransform* rectTransform = nullptr;
 
 };
 

@@ -27,12 +27,7 @@ void UIPanelHierarchy::Draw()
 			if (ImGui::MenuItem("Game Object")) {
 				App->scene->AddGameObject("newGameObject");
 			}
-			if (ImGui::TreeNode("UI")) {
-				if (ImGui::MenuItem("Canvas")) {
-					GameObject* canvas = App->scene->AddUIGameObject("Canvas", App->scene->root);
-					canvas->AddComponent(CANVAS);
-					canvas = nullptr;
-				}
+			if (ImGui::TreeNode("UI")) {				
 				if (ImGui::MenuItem("Image")) {
 					//check if canvas created
 					GameObject* canvas= App->scene->GetFirstGameObjectCanvas();

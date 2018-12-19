@@ -1,6 +1,7 @@
 #include "ComponentImageUI.h"
 #include "GameObject.h"
 #include "ModuleResources.h"
+#include "ComponentRectTransform.h"
 
 #include "mmgr/mmgr.h"
 
