@@ -40,7 +40,7 @@ public:
 	void SetWireframe(bool active);
 
 
-	void Draw();
+	void Draw(bool editor);
 	void DrawInGameUI();
 
 	GameObject* AddGameObject();

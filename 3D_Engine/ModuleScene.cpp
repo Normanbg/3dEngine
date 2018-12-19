@@ -49,18 +49,13 @@ bool ModuleScene::Init(JSON_Object * obj)
 update_status ModuleScene::PreUpdate(float dt)
 {
 	bool ret = true;
-	root->CalculateAllGlobalMatrix();
-
+	root->CalculateAllTransformGlobalMat();
+	
 	if (root->childrens.empty() == false) {
 		for (int i = 0; i < root->childrens.size(); i++) {
 			ret &= root->childrens[i]->PreUpdate();
 		}
 	}
-	/*if (rootQuadTree->quadTreeBox.IsFinite()) {
-		QTContainsAaBox(rootQuadTree);
-		SetStaticsCulled();
-	}
-*/
 	if (gObjSelected)
 		UpdateGuizmoOp();
 
@@ -127,6 +122,14 @@ update_status ModuleScene::PostUpdate(float dt) {
 	if (objectMoved) {
 		SetQuadTree();
 		objectMoved = false;
+	}
+
+	GameObject* canvas = GetFirstGameObjectCanvas();
+	
+	if (canvas) {
+		ComponentRectTransform* rect = canvas->GetComponentRectTransform();
+		if (rect != nullptr)
+			canvas->CalculateAllRectGlobalMat();
 	}
 
 	update_status retUS;
@@ -532,27 +535,9 @@ void ModuleScene::SetWireframe(bool active)
 	}
 }
 
-void ModuleScene::Draw() {
+void ModuleScene::Draw(bool editor) {
+
 	
-	//--------UI
-	std::vector<ComponentUI*> componentsUI; // first draw UI components
-	root->GetComponentsUITypeIgnore( componentsUI, TRANSFORMRECT);
-	for (int i = 0; i < componentsUI.size(); i++) {		
-		if (componentsUI[i]->draw)
-			componentsUI[i]->DrawUI();
-	}
-	componentsUI.clear();
-
-	root->GetComponentsUIType(componentsUI, TRANSFORMRECT); // then draw rectTransforms
-
-	ComponentRectTransform* recTrans = nullptr;
-	for (int i = 0; i < componentsUI.size(); i++) {
-		recTrans = (ComponentRectTransform *)componentsUI[i];
-		if (recTrans->draw)
-			recTrans->DrawUI();
-	}
-	componentsUI.clear();
-	//--------UI
 	std::vector<Component*> components;
 	root->GetComponents(MESH, components);
 	
@@ -591,10 +576,31 @@ void ModuleScene::Draw() {
 				rootQuadTree->DebugDraw();
 		}
 	}
-	recTrans = nullptr;
+	//--------UI
+	if (editor)
+	{
+		std::vector<ComponentUI*> componentsUI; // first draw UI components
+		root->GetComponentsUITypeIgnore(componentsUI, TRANSFORMRECT);
+		for (int i = 0; i < componentsUI.size(); i++) {
+			if (componentsUI[i]->draw)
+				componentsUI[i]->DrawUI();
+		}
+		componentsUI.clear();
+
+		root->GetComponentsUIType(componentsUI, TRANSFORMRECT); // then draw rectTransforms
+
+		ComponentRectTransform* recTrans = nullptr;
+		for (int i = 0; i < componentsUI.size(); i++) {
+			recTrans = (ComponentRectTransform *)componentsUI[i];
+			if (recTrans->draw)
+				recTrans->DrawUI();
+		}
+		componentsUI.clear();
+		//--------UI
+		recTrans = nullptr;
+	}
 	mesh = nullptr;
 }
-
 
 void ModuleScene::DrawInGameUI()
 {
@@ -603,30 +609,48 @@ void ModuleScene::DrawInGameUI()
 		for (auto it : uiGameObjects) {
 			if (canvas != it) {
 				ComponentRectTransform* rectTransform = it->GetComponentRectTransform();
-				glMatrixMode(GL_PROJECTION);
+				glMatrixMode(GL_MODELVIEW);
 				glLoadIdentity();
 
-				float left = canvas->GetComponentRectTransform()->GetPos().x - (rectTransform->GetWidth() / 2);
-				float right = canvas->GetComponentRectTransform()->GetPos().x + (rectTransform->GetWidth() / 2);;
-				float top = canvas->GetComponentRectTransform()->GetPos().y + (rectTransform->GetHeight() / 2);;
-				float bottom = canvas->GetComponentRectTransform()->GetPos().y - (rectTransform->GetHeight() / 2);;
+				glMatrixMode(GL_PROJECTION);
+				glLoadIdentity();
+				/*float left = rectTransform->GetPos().x - (rectTransform->GetWidth() / 2);
+				float right = rectTransform->GetPos().x + (rectTransform->GetWidth() / 2);
+				float top = rectTransform->GetPos().y + (rectTransform->GetHeight() / 2);
+				float bottom = rectTransform->GetPos().y - (rectTransform->GetHeight() / 2);*/
+				float left = rectTransform->GetGlobalPos().x;
+				float right = rectTransform->GetGlobalPos().x + rectTransform->GetWidth();
+				float top = rectTransform->GetGlobalPos().y + rectTransform->GetHeight();
+				float bottom = rectTransform->GetGlobalPos().y;
 				float zNear = 1000.f;
 				float zFar = -1000.f;
 
 				glOrtho(left, right, bottom, top, zNear, zFar);
-				
-				/*std::vector<ComponentUI*> componentsUI;
-				it->GetMineUIComponents(componentsUI);
-				for (int i = 0; i < componentsUI.size(); i++) {
-					if (componentsUI[i]->draw)
-						componentsUI[i]->DrawUI();
+
+				std::vector <ComponentUI*> goComponents;
+				it->GetComponentsUITypeIgnore(goComponents, TRANSFORMRECT, false);
+				for (auto it : goComponents) {
+					if (it->draw)
+					{
+						it->DrawUI();
+					}
 				}
-				componentsUI.clear();*/
+				goComponents.clear();
+
+				root->GetComponentsUIType(goComponents, TRANSFORMRECT, false); // then draw rectTransforms
+
+				ComponentRectTransform* recTrans = nullptr;
+				for (int i = 0; i < goComponents.size(); i++) {
+					recTrans = (ComponentRectTransform *)goComponents[i];
+					if (recTrans->draw)
+						recTrans->DrawUI();
+				}
+				goComponents.clear();
+
 			}
-		}
+		}		
 	}
 }
-
 
 
 

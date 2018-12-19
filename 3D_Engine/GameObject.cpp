@@ -130,8 +130,10 @@ void GameObject::CalculateAllGlobalMatrix(){
 		{
 			GetComponentTransform()->globalMatrix = GetComponentTransform()->localMatrix;
 		}
-		else
+		else {
+			
 			GetComponentTransform()->globalMatrix = parent->GetComponentTransform()->globalMatrix * GetComponentTransform()->localMatrix;
+		}
 
 		OBB newobb = localAABB;
 		newobb.Transform(GetComponentTransform()->globalMatrix);
@@ -144,7 +146,30 @@ void GameObject::CalculateAllGlobalMatrix(){
 	{
 		for (std::vector<GameObject*>::iterator it = childrens.begin(); it != childrens.end(); it++)
 		{
-			(*it)->CalculateAllGlobalMatrix();
+			(*it)->CalculateAllTransformGlobalMat();
+		}
+	}
+}
+
+void GameObject::CalculateAllRectGlobalMat() {
+	if (GetComponentRectTransform() != nullptr) {
+		GameObject* canvas = App->scene->GetFirstGameObjectCanvas();
+		if (this == canvas)
+		{
+			float2 tr = GetComponentRectTransform()->GetLocalPos();
+			GetComponentRectTransform()->SetGlobalPos(GetComponentRectTransform()->GetLocalPos());
+		}
+		else {
+			float2 parentTrans = parent->GetComponentRectTransform()->GetGlobalPos();
+			float2 globalTr = parentTrans + GetComponentRectTransform()->GetLocalPos();
+			GetComponentRectTransform()->SetGlobalPos(globalTr);
+		}
+	}
+	if (!childrens.empty())
+	{
+		for (auto it : childrens)
+		{
+			it->CalculateAllRectGlobalMat();
 		}
 	}
 }
@@ -244,45 +269,40 @@ void GameObject::GetComponents(ComponentType type, std::vector<Component*>& comp
 
 void GameObject::GetAllComponentsUI(std::vector<ComponentUI*>& comp) {
 
-	GetMineUIComponents(comp);
-
+	for (int i = 0; i < componentsUI.size(); i++) {
+		comp.push_back(componentsUI[i]);
+	}
 	for (int i = 0; i < childrens.size(); i++) {
 		childrens[i]->GetComponentsUITypeIgnore(comp);
 	}
 
 }
 
-void GameObject::GetMineUIComponents(std::vector<ComponentUI*>& comp) {
-
-	for (int i = 0; i < componentsUI.size(); i++) {
-		comp.push_back(componentsUI[i]);
-	}
-}
-
-void GameObject::GetComponentsUITypeIgnore( std::vector<ComponentUI*>& comp, ComponentTypeUI ignoreType) {
+void GameObject::GetComponentsUITypeIgnore( std::vector<ComponentUI*>& comp, ComponentTypeUI ignoreType, bool recursive ) {
 
 	for (int i = 0; i < componentsUI.size(); i++) {
 		if (componentsUI[i]->typeUI != ignoreType) {
 			comp.push_back(componentsUI[i]);
 		}
 	}
-
-	for (int i = 0; i < childrens.size(); i++) {
-		childrens[i]->GetComponentsUITypeIgnore(comp, ignoreType);
+	if (recursive) {
+		for (int i = 0; i < childrens.size(); i++) {
+			childrens[i]->GetComponentsUITypeIgnore(comp, ignoreType);
+		}
 	}
-
 }
 
-void GameObject::GetComponentsUIType(std::vector<ComponentUI*>& comp, ComponentTypeUI type) {
+void GameObject::GetComponentsUIType(std::vector<ComponentUI*>& comp, ComponentTypeUI type, bool recursive) {
 
 	for (int i = 0; i < componentsUI.size(); i++) {
 		if (componentsUI[i]->typeUI == type) {
 			comp.push_back(componentsUI[i]);
 		}
 	}
-
-	for (int i = 0; i < childrens.size(); i++) {
-		childrens[i]->GetComponentsUIType(comp, type);
+	if (recursive) {
+		for (int i = 0; i < childrens.size(); i++) {
+			childrens[i]->GetComponentsUIType(comp, type);
+		}
 	}
 
 }
@@ -426,6 +446,7 @@ ComponentTextUI * GameObject::GetComponentTextUI() const
 	}
 	return ret;
 }
+
 ComponentRectTransform * GameObject::GetComponentRectTransform() const
 {
 	ComponentRectTransform* ret = nullptr;

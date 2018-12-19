@@ -21,10 +21,10 @@ void ModuleSceneUI::DrawInGameUI()
 				glMatrixMode(GL_PROJECTION);
 				glLoadIdentity();
 
-				float left = canvas->GetComponentRectTransform()->GetPos().x - (rectTransform->GetWidth() / 2);
-				float right= canvas->GetComponentRectTransform()->GetPos().x + (rectTransform->GetWidth() / 2);;
-				float top = canvas->GetComponentRectTransform()->GetPos().y + (rectTransform->GetHeight() / 2);;
-				float bottom = canvas->GetComponentRectTransform()->GetPos().y - (rectTransform->GetHeight() / 2);;
+				float left = canvas->GetComponentRectTransform()->GetGlobalPos().x - (rectTransform->GetWidth() / 2);
+				float right= canvas->GetComponentRectTransform()->GetGlobalPos().x + (rectTransform->GetWidth() / 2);;
+				float top = canvas->GetComponentRectTransform()->GetGlobalPos().y + (rectTransform->GetHeight() / 2);;
+				float bottom = canvas->GetComponentRectTransform()->GetGlobalPos().y - (rectTransform->GetHeight() / 2);;
 				float zNear = 1000.f;
 				float zFar = -1000.f;
 
