@@ -213,6 +213,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	if (_axis) { ShowAxis(); }
 	if (_grid) { ShowGrid(); }
 	bool editor = true;
+	App->scene->ToggleEditorCam();
 	App->scene->Draw(editor);
 	sceneFboTex->UnBindFBO();
 
@@ -220,6 +221,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	gameFboTex->BindFBO();
 	CreateGameTexture();
 	App->scene->Draw(editor);
+	App->scene->ToggleEditorCam();
 	App->scene->DrawInGameUI();
 	for (uint i = 0; i < MAX_LIGHTS; ++i)
 		lights[i].Render();
@@ -255,8 +257,7 @@ void ModuleRenderer3D::OnResize(const int width, const int height)
 		mainCam->SetAspectRatio((float)width / (float)height);
 	}
 	else {
-		ComponentCamera* mainCam = App->scene->mainCamera->GetComponentCamera();
-		mainCam->SetAspectRatio((float)width / (float)height);
+		App->camera->cameraComp->SetAspectRatio((float)width / (float)height);
 	}
 }
 

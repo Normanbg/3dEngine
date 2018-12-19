@@ -4,7 +4,6 @@
 #include "Quadtree.h"
 #include "Resource.h"
 #include "ModuleEditorCamera.h"
-#include "ModuleSceneUI.h"
 #include "Config.h"
 
 #include "ModuleInput.h"
@@ -404,6 +403,15 @@ FrustumContained ModuleScene::ContainsAaBox(const AABB& refBox) const
 	return(INTERSECT);
 }
 
+void ModuleScene::ToggleEditorCam()
+{
+	GameObject* canvasGO = GetFirstGameObjectCanvas();
+	if (canvasGO != nullptr) {
+		ComponentCanvas* canvas = canvasGO->GetComponentCanvas();
+		canvas->editor = !canvas->editor;
+	}
+}
+
 void ModuleScene::GetAllStaticGOs(GameObject* go)
 {
 	if (go != root && go->staticGO)
@@ -576,6 +584,7 @@ void ModuleScene::Draw(bool editor) {
 				rootQuadTree->DebugDraw();
 		}
 	}
+
 	//--------UI
 	if (editor)
 	{
@@ -602,53 +611,50 @@ void ModuleScene::Draw(bool editor) {
 	mesh = nullptr;
 }
 
-void ModuleScene::DrawInGameUI()
+void ModuleScene::DrawInGameUI()///CARLES MARGELI
 {
 	GameObject* canvas = GetFirstGameObjectCanvas();
 	if (canvas) {
-		for (auto it : uiGameObjects) {
-			if (canvas != it) {
-				ComponentRectTransform* rectTransform = it->GetComponentRectTransform();
-				glMatrixMode(GL_MODELVIEW);
-				glLoadIdentity();
+		ComponentRectTransform* rectTransform = canvas->GetComponentRectTransform();
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
 
-				glMatrixMode(GL_PROJECTION);
-				glLoadIdentity();
-				/*float left = rectTransform->GetPos().x - (rectTransform->GetWidth() / 2);
-				float right = rectTransform->GetPos().x + (rectTransform->GetWidth() / 2);
-				float top = rectTransform->GetPos().y + (rectTransform->GetHeight() / 2);
-				float bottom = rectTransform->GetPos().y - (rectTransform->GetHeight() / 2);*/
-				float left = rectTransform->GetGlobalPos().x;
-				float right = rectTransform->GetGlobalPos().x + rectTransform->GetWidth();
-				float top = rectTransform->GetGlobalPos().y + rectTransform->GetHeight();
-				float bottom = rectTransform->GetGlobalPos().y;
-				float zNear = 1000.f;
-				float zFar = -1000.f;
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		float left = rectTransform->GetGlobalPos().x;
+		float right = rectTransform->GetGlobalPos().x + rectTransform->GetWidth();
+		float top = rectTransform->GetGlobalPos().y + rectTransform->GetHeight();
+		float bottom = rectTransform->GetGlobalPos().y;
 
-				glOrtho(left, right, bottom, top, zNear, zFar);
+		/*float left = rectTransform->GetGlobalPos().x;
+		float right = rectTransform->GetGlobalPos().x + rectTransform->GetWidth();
+		float top = rectTransform->GetGlobalPos().y + rectTransform->GetHeight();
+		float bottom = rectTransform->GetGlobalPos().y;*/
+		float zNear = 10.f;
+		float zFar = -10.f;
 
-				std::vector <ComponentUI*> goComponents;
-				it->GetComponentsUITypeIgnore(goComponents, TRANSFORMRECT, false);
-				for (auto it : goComponents) {
-					if (it->draw)
-					{
-						it->DrawUI();
-					}
-				}
-				goComponents.clear();
+		glOrtho(left, right, bottom, top, zNear, zFar);
 
-				root->GetComponentsUIType(goComponents, TRANSFORMRECT, false); // then draw rectTransforms
+		std::vector<ComponentUI*> componentsUI; // first draw UI components
+		root->GetComponentsUITypeIgnore(componentsUI, TRANSFORMRECT);
+		for (int i = 0; i < componentsUI.size(); i++) {
+			if (componentsUI[i]->draw)
+				componentsUI[i]->DrawUI();
+		}
+		componentsUI.clear();
 
-				ComponentRectTransform* recTrans = nullptr;
-				for (int i = 0; i < goComponents.size(); i++) {
-					recTrans = (ComponentRectTransform *)goComponents[i];
-					if (recTrans->draw)
-						recTrans->DrawUI();
-				}
-				goComponents.clear();
+		root->GetComponentsUIType(componentsUI, TRANSFORMRECT); // then draw rectTransforms
 
-			}
-		}		
+		ComponentRectTransform* recTrans = nullptr;
+		for (int i = 0; i < componentsUI.size(); i++) {
+			recTrans = (ComponentRectTransform *)componentsUI[i];
+			if (recTrans->draw)
+				recTrans->DrawUI();
+		}
+		componentsUI.clear();
+		//--------UI
+		recTrans = nullptr;
+
 	}
 }
 

@@ -1,4 +1,5 @@
 #include "ComponentRectTransform.h"
+#include "ComponentCanvas.h"
 #include "ModuleResources.h"
 #include "GameObject.h"
 
@@ -155,7 +156,6 @@ void ComponentRectTransform::GenBuffer()
 	glBindBuffer(GL_ARRAY_BUFFER, rect.vertexID); // set the type of buffer
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float3) * 4, &rect.vertex[0], GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
 }
 
 void ComponentRectTransform::UpdateLocalPos() {
@@ -164,9 +164,7 @@ void ComponentRectTransform::UpdateLocalPos() {
 	rect.localPosition = float2(rect.globalPosition.x, rect.globalPosition.y);
 }
 
-void ComponentRectTransform::SetGlobalMatrixToDraw(float4x4 &globalMatrix) {
-	globalMatrix = float4x4::FromTRS(float3(0, rect.globalPosition.y, rect.globalPosition.x), Quat(0, 0, 0, 0), float3(0, rect.height, rect.width));
-}
+
 
 void ComponentRectTransform::UpdateUIComponents()
 {
@@ -175,4 +173,16 @@ void ComponentRectTransform::UpdateUIComponents()
 			myGO->componentsUI[i]->UpdateRectTransform();
 		}
 	}
+}
+
+void ComponentRectTransform::SetGlobalMatrixToDraw(float4x4 &globalMatrix) {
+	ComponentCanvas* canvas = App->scene->GetFirstGameObjectCanvas()->GetComponentCanvas();
+	if (canvas->editor) {
+		float2 dividedPos = rect.globalPosition / 5;
+		float dividedHeight = rect.height / 5;
+		float dividedWidth = rect.width / 5;
+		globalMatrix = float4x4::FromTRS(float3(0, dividedPos.y, dividedPos.x), Quat(0, 0, 0, 0), float3(0, dividedHeight, dividedWidth));
+	}
+	else
+		globalMatrix = float4x4::FromTRS(float3(0, rect.globalPosition.y, rect.globalPosition.x), Quat(0, 0, 0, 0), float3(0, rect.height, rect.width));
 }

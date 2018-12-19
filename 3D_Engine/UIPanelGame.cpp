@@ -20,7 +20,8 @@ void UIPanelGame::Draw() {
 	positionY = pos.y;
 */
 
-	size = float2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y);
+	/*size = float2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y);*/
+	size = float2(512, 384);
 	/*if (lastSize.x != size.x || lastSize.y != size.y)
 	{
 		lastSize.x = size.x; lastSize.y = size.y;

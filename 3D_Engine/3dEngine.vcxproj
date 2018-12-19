@@ -101,7 +101,6 @@
     <ClInclude Include="mmgr\mmgr.h" />
     <ClInclude Include="ModuleFileSystem.h" />
     <ClInclude Include="ModuleResources.h" />
-    <ClInclude Include="ModuleSceneUI.h" />
     <ClInclude Include="ModuleTime.h" />
     <ClInclude Include="Quadtree.h" />
     <ClInclude Include="Resource.h" />
@@ -228,7 +227,6 @@
     <ClCompile Include="mmgr\mmgr.cpp" />
     <ClCompile Include="ModuleFileSystem.cpp" />
     <ClCompile Include="ModuleResources.cpp" />
-    <ClCompile Include="ModuleSceneUI.cpp" />
     <ClCompile Include="ModuleTime.cpp" />
     <ClCompile Include="Quadtree.cpp" />
     <ClCompile Include="Resource.cpp" />
