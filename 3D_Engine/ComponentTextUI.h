@@ -45,7 +45,6 @@ public:
 	
 
 private: 
-	void LoadFontsFromFolder();
 
 	std::vector<std::string> loadedFonts;
 	float2* texCoords = nullptr;

@@ -89,11 +89,13 @@ void ComponentRectTransform::DrawInspector()
 void ComponentRectTransform::SetWidth(float w)
 {
 	rect.width = w;
+	UpdateUIComponents();
 }
 
 void ComponentRectTransform::SetHeight(float h)
 {
 	rect.height= h;
+	UpdateUIComponents();
 }
 
 void ComponentRectTransform::SetGlobalPos(float2 global)
@@ -164,4 +166,13 @@ void ComponentRectTransform::UpdateLocalPos() {
 
 void ComponentRectTransform::SetGlobalMatrixToDraw(float4x4 &globalMatrix) {
 	globalMatrix = float4x4::FromTRS(float3(0, rect.globalPosition.y, rect.globalPosition.x), Quat(0, 0, 0, 0), float3(0, rect.height, rect.width));
+}
+
+void ComponentRectTransform::UpdateUIComponents()
+{
+	for (int i = 0; i < myGO->componentsUI.size(); ++i) {
+		if (myGO->componentsUI[i] != this) {
+			myGO->componentsUI[i]->UpdateRectTransform();
+		}
+	}
 }

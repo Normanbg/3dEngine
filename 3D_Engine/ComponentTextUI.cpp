@@ -90,13 +90,17 @@ void ComponentTextUI::LoadLabel(const char * _label, float _scale, const char * 
 	if (!stbtt_InitFont(&info, (unsigned char*)buffer, 0))
 	{
 		OWN_LOG("failed initialising font");
+		RELEASE_ARRAY(buffer);
 		return;
 	}
 
 	int bm_w = 100*rectTransform->GetWidth(); // bitmap width 
 	int bm_h = 100*rectTransform->GetHeight(); // bitmap height
 	int line_h = 64; // line height 
-	if (bm_w <= 0 || bm_h <= 0) { return; }
+	if (bm_w <= 0 || bm_h <= 0) {
+		RELEASE_ARRAY(buffer);
+		return;
+	}
 	unsigned char* bitmap = new unsigned char[bm_w * bm_h]; // creates bitmap for the phrase
 	float sc = stbtt_ScaleForPixelHeight(&info, line_h)*font.scale;// calculate font scaling
 

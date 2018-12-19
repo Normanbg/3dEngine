@@ -49,6 +49,8 @@ public:
 
 	void SetGlobalMatrixToDraw(float4x4 &globalMatrix);
 
+	void UpdateUIComponents();
+
 	void DrawUI() override;
 	void GenBuffer();
 
