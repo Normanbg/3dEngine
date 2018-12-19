@@ -40,7 +40,7 @@ bool ComponentTextUI::Start()
 	memcpy(texCoords, uvs, sizeof(float2) * 4);
 
 	rectTransform = myGO->GetComponentRectTransform();
-	
+	font.exportTexPath += (std::to_string(UUID) + PNG_FORMAT);
 	LoadLabel();
 	return true;
 }
@@ -69,13 +69,19 @@ void ComponentTextUI::Save(Config & data) const
 	data.AddUInt("UUID", UUID);
 }
 
-void ComponentTextUI::LoadLabel(const char * _label, uint _scale, const char * _font)
+void ComponentTextUI::LoadLabel(const char * _label, float _scale, const char * _font)
 {
 	//-------- Loading Font arial -->
-	font.ResetFont();
+	//font.ResetFont();	
+
+	font.fontSrc = _font;
+	font.scale = _scale;
+	font.text =_label;
+
+	std::string fullFontPath = font.fontDir + font.fontSrc;
+
 	char* buffer = nullptr;
-	font.fontPath += _font;
-	int size = App->fileSys->readFile(font.fontPath.c_str(), &buffer);
+	int size = App->fileSys->readFile(fullFontPath.c_str(), &buffer);
 
 	stbtt_fontinfo info;
 	if (!stbtt_InitFont(&info, (unsigned char*)buffer, 0))
@@ -89,43 +95,42 @@ void ComponentTextUI::LoadLabel(const char * _label, uint _scale, const char * _
 	int l_h = 64; // line height 
 
 	unsigned char* bitmap = new unsigned char[b_w * b_h]; // creates bitmap for the phrase
+	float sc = stbtt_ScaleForPixelHeight(&info, l_h)*font.scale;// calculate font scaling
 
-	font.scale = stbtt_ScaleForPixelHeight(&info, l_h)*_scale;// calculate font scaling
-
-	font.text = (char*)_label;
+	
 	int ascent, descent, lineGap;
 	stbtt_GetFontVMetrics(&info, &ascent, &descent, &lineGap);
 
-	ascent *= font.scale;
-	descent *= font.scale;
+	ascent *= sc;
+	descent *=sc;
 
 	int x = 0;
 	int i;
-	for (i = 0; i < strlen(font.text); ++i)
+	for (i = 0; i < font.text.size(); ++i)
 	{
 		/* get bounding box for character (may be offset to account for chars that dip above or below the line */
 		int c_x1, c_y1, c_x2, c_y2;
-		stbtt_GetCodepointBitmapBox(&info, font.text[i], font.scale, font.scale, &c_x1, &c_y1, &c_x2, &c_y2);
+		stbtt_GetCodepointBitmapBox(&info, font.text[i], sc, sc, &c_x1, &c_y1, &c_x2, &c_y2);
 
 		/* compute y (different characters have different heights */
 		int y = ascent + c_y1;
 
 		/* render character (stride and offset is important here) */
 		int byteOffset = x + (y  * b_w);
-		stbtt_MakeCodepointBitmap(&info, bitmap + byteOffset, c_x2 - c_x1, c_y2 - c_y1, b_w, font.scale, font.scale, font.text[i]);
+		stbtt_MakeCodepointBitmap(&info, bitmap + byteOffset, c_x2 - c_x1, c_y2 - c_y1, b_w, sc, sc, font.text[i]);
 
 		/* how wide is this character */
 		int ax;
 		stbtt_GetCodepointHMetrics(&info, font.text[i], &ax, 0);
-		x += ax * font.scale;
+		x += ax * sc;
 
 		/* add kerning */
 		int kern;
 		kern = stbtt_GetCodepointKernAdvance(&info, font.text[i], font.text[i + 1]);
-		x += kern * font.scale;
+		x += kern * sc;
 	}
 
-	font.exportTexPath += (std::to_string(UUID) + PNG_FORMAT);
+	
 	stbi_write_png(font.exportTexPath.c_str(), b_w, b_h, 1, bitmap, b_w);
 	RELEASE_ARRAY(buffer);
 	RELEASE_ARRAY(bitmap);
@@ -139,9 +144,11 @@ void ComponentTextUI::DrawInspector()
 	ImGui::Separator();
 	ImGui::TextColored(ImVec4(0.25f, 0.25f, 0.25f, 1), "UUID: %i", GetUUID());
 	static const int maxSize = 16;
-	std::string name = std::string(font.text);
-	if (ImGui::InputText("Label Text",(char*) name.c_str(), maxSize)) {
-		LoadLabel(name.c_str(),2);
+	if (ImGui::InputText("Label Text",(char*) font.text.c_str(), maxSize)) {
+		LoadLabel(font.text.c_str(),font.scale);
+	}
+	if (ImGui::SliderFloat("Scale", &font.scale, 0.1f, 2.0f)) {
+		LoadLabel(font.text.c_str(), font.scale);
 	}
 }
 
@@ -178,7 +185,7 @@ void ComponentTextUI::DrawUI()
 
 void ComponentTextUI::Font::ResetFont()
 {
-	fontPath = std::string(FONTS_PATH);
+	fontSrc = std::string(DEFAULT_FONT);
 	exportTexPath = std::string(LIB_FONTS_PATH);
 	scale = 1.0f;
 	text = "Insert Text";
