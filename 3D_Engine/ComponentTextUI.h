@@ -39,13 +39,15 @@ public:
 	inline void doLoad(Config* data) override { Load(data); }
 	inline void doSave(Config& data)const  override { Save(data); }
 
-	void LoadLabel(const char* label = "Insert Text", float scale = 1.0f, const char* font = "arial.ttf");
-
+	void LoadLabel(const char* label = "Insert Text", float scale = 1.0f, const char* font = DEFAULT_FONT);
+	
 	Font font;
 	
 
 private: 
+	void LoadFontsFromFolder();
 
+	std::vector<std::string> loadedFonts;
 	float2* texCoords = nullptr;
 	uint texGPUIndex = -1;
 };
