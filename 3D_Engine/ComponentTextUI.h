@@ -6,6 +6,15 @@
 
 class ComponentTextUI : public ComponentUI, public Component
 {
+
+	class Font {
+	public:
+		std::string fontPath = std::string(FONTS_PATH);
+		std::string exportTexPath = std::string(LIB_FONTS_PATH);
+		float scale = 1.0f;
+		char* text = nullptr;
+		void ResetFont();
+	};
 public:
 	ComponentTextUI();
 	~ComponentTextUI();
@@ -26,12 +35,10 @@ public:
 	inline void doLoad(Config* data) override { Load(data); }
 	inline void doSave(Config& data)const  override { Save(data); }
 
+	void LoadLabel(const char* label = "Insert Text", uint scale = 1, const char* font = "arial.ttf");
 
-	// txt RESOURCE? NO
-	std::string fontPath = std::string(FONTS_PATH);
-	std::string exportTexPath = std::string(LIB_FONTS_PATH);
-	float scale = 0.0f;
-	char* text = nullptr;
+	Font font;
+	
 
 private: 
 
