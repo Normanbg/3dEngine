@@ -535,27 +535,9 @@ void ModuleScene::SetWireframe(bool active)
 	}
 }
 
-void ModuleScene::Draw() {
+void ModuleScene::Draw(bool editor) {
+
 	
-	//--------UI
-	std::vector<ComponentUI*> componentsUI; // first draw UI components
-	root->GetComponentsUITypeIgnore( componentsUI, TRANSFORMRECT);
-	for (int i = 0; i < componentsUI.size(); i++) {		
-		if (componentsUI[i]->draw)
-			componentsUI[i]->DrawUI();
-	}
-	componentsUI.clear();
-
-	root->GetComponentsUIType(componentsUI, TRANSFORMRECT); // then draw rectTransforms
-
-	ComponentRectTransform* recTrans = nullptr;
-	for (int i = 0; i < componentsUI.size(); i++) {
-		recTrans = (ComponentRectTransform *)componentsUI[i];
-		if (recTrans->draw)
-			recTrans->DrawUI();
-	}
-	componentsUI.clear();
-	//--------UI
 	std::vector<Component*> components;
 	root->GetComponents(MESH, components);
 	
@@ -594,7 +576,29 @@ void ModuleScene::Draw() {
 				rootQuadTree->DebugDraw();
 		}
 	}
-	recTrans = nullptr;
+	//--------UI
+	if (editor)
+	{
+		std::vector<ComponentUI*> componentsUI; // first draw UI components
+		root->GetComponentsUITypeIgnore(componentsUI, TRANSFORMRECT);
+		for (int i = 0; i < componentsUI.size(); i++) {
+			if (componentsUI[i]->draw)
+				componentsUI[i]->DrawUI();
+		}
+		componentsUI.clear();
+
+		root->GetComponentsUIType(componentsUI, TRANSFORMRECT); // then draw rectTransforms
+
+		ComponentRectTransform* recTrans = nullptr;
+		for (int i = 0; i < componentsUI.size(); i++) {
+			recTrans = (ComponentRectTransform *)componentsUI[i];
+			if (recTrans->draw)
+				recTrans->DrawUI();
+		}
+		componentsUI.clear();
+		//--------UI
+		recTrans = nullptr;
+	}
 	mesh = nullptr;
 }
 
@@ -607,9 +611,12 @@ void ModuleScene::DrawInGameUI()
 		for (auto it : uiGameObjects) {
 			if (canvas != it) {
 				ComponentRectTransform* rectTransform = it->GetComponentRectTransform();
-				glMatrixMode(GL_PROJECTION);
+				glMatrixMode(GL_MODELVIEW);
 				glLoadIdentity();
 
+				glMatrixMode(GL_PROJECTION);
+				glLoadIdentity();
+				float2 t = canvas->GetComponentRectTransform()->GetPos();
 				float left = canvas->GetComponentRectTransform()->GetPos().x - (rectTransform->GetWidth() / 2);
 				float right = canvas->GetComponentRectTransform()->GetPos().x + (rectTransform->GetWidth() / 2);;
 				float top = canvas->GetComponentRectTransform()->GetPos().y + (rectTransform->GetHeight() / 2);;
@@ -618,15 +625,28 @@ void ModuleScene::DrawInGameUI()
 				float zFar = -1000.f;
 
 				glOrtho(left, right, bottom, top, zNear, zFar);
-				
-				/*std::vector<ComponentUI*> componentsUI = it.componentsUI;
-				for (int i = 0; i < componentsUI.size(); i++) {
-					if (componentsUI[i]->draw)
-						componentsUI[i]->DrawUI();
+				std::vector <ComponentUI*> goComponents;
+				it->GetComponentsUITypeIgnore(goComponents, TRANSFORMRECT, false);
+				for (auto it : goComponents) {
+					if (it->draw)
+					{
+						it->DrawUI();
+					}
 				}
-				componentsUI.clear();*/
+				goComponents.clear();
+
+				root->GetComponentsUIType(goComponents, TRANSFORMRECT, false); // then draw rectTransforms
+
+				ComponentRectTransform* recTrans = nullptr;
+				for (int i = 0; i < goComponents.size(); i++) {
+					recTrans = (ComponentRectTransform *)goComponents[i];
+					if (recTrans->draw)
+						recTrans->DrawUI();
+				}
+				goComponents.clear();
+
 			}
-		}
+		}		
 	}
 }
 

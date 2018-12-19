@@ -282,30 +282,31 @@ void GameObject::GetAllComponentsUI(std::vector<ComponentUI*>& comp) {
 
 }
 
-void GameObject::GetComponentsUITypeIgnore( std::vector<ComponentUI*>& comp, ComponentTypeUI ignoreType) {
+void GameObject::GetComponentsUITypeIgnore( std::vector<ComponentUI*>& comp, ComponentTypeUI ignoreType, bool recursive ) {
 
 	for (int i = 0; i < componentsUI.size(); i++) {
 		if (componentsUI[i]->typeUI != ignoreType) {
 			comp.push_back(componentsUI[i]);
 		}
 	}
-
-	for (int i = 0; i < childrens.size(); i++) {
-		childrens[i]->GetComponentsUITypeIgnore(comp, ignoreType);
+	if (recursive) {
+		for (int i = 0; i < childrens.size(); i++) {
+			childrens[i]->GetComponentsUITypeIgnore(comp, ignoreType);
+		}
 	}
-
 }
 
-void GameObject::GetComponentsUIType(std::vector<ComponentUI*>& comp, ComponentTypeUI type) {
+void GameObject::GetComponentsUIType(std::vector<ComponentUI*>& comp, ComponentTypeUI type, bool recursive) {
 
 	for (int i = 0; i < componentsUI.size(); i++) {
 		if (componentsUI[i]->typeUI == type) {
 			comp.push_back(componentsUI[i]);
 		}
 	}
-
-	for (int i = 0; i < childrens.size(); i++) {
-		childrens[i]->GetComponentsUIType(comp, type);
+	if (recursive) {
+		for (int i = 0; i < childrens.size(); i++) {
+			childrens[i]->GetComponentsUIType(comp, type);
+		}
 	}
 
 }

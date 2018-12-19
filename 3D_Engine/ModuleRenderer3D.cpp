@@ -157,31 +157,7 @@ bool ModuleRenderer3D::Start() {
 update_status ModuleRenderer3D::PreUpdate(float dt)
 {
 	BROFILER_CATEGORY("Renderer3D_PreUpdate", Profiler::Color::HotPink);
-	sceneFboTex->BindFBO();
 	
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glLoadIdentity();
-
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	
-	//-
-	glLoadMatrixf(App->camera->cameraComp->GetProjectionMatrix());
-
-	glMatrixMode(GL_MODELVIEW);
-	//-
-	
-	glLoadMatrixf(App->camera->cameraComp->GetViewMatrix());
-
-	//PreUpdateGame();
-	// light 0 on cam pos
-	lights[0].SetPos(App->camera->cameraComp->GetPos().x, App->camera->cameraComp->GetPos().y, App->camera->cameraComp->GetPos().z);
-
-	for(uint i = 0; i < MAX_LIGHTS; ++i)
-		lights[i].Render();
-
-	if (_axis) { ShowAxis(); }
-	if (_grid) { ShowGrid(); }
 	
 
 	return UPDATE_CONTINUE;
@@ -211,13 +187,42 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	
 
 	//DrawMeshes();
-	App->scene->Draw();
+	sceneFboTex->BindFBO();
+
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glLoadIdentity();
+
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+
+	//-
+	glLoadMatrixf(App->camera->cameraComp->GetProjectionMatrix());
+
+	glMatrixMode(GL_MODELVIEW);
+	//-
+
+	glLoadMatrixf(App->camera->cameraComp->GetViewMatrix());
+
+	//PreUpdateGame();
+	// light 0 on cam pos
+	lights[0].SetPos(App->camera->cameraComp->GetPos().x, App->camera->cameraComp->GetPos().y, App->camera->cameraComp->GetPos().z);
+
+	for (uint i = 0; i < MAX_LIGHTS; ++i)
+		lights[i].Render();
+
+	if (_axis) { ShowAxis(); }
+	if (_grid) { ShowGrid(); }
+	bool editor = true;
+	App->scene->Draw(editor);
 	sceneFboTex->UnBindFBO();
 
+	editor = false;
 	gameFboTex->BindFBO();
 	CreateGameTexture();
-	App->scene->Draw();
+	App->scene->Draw(editor);
 	App->scene->DrawInGameUI();
+	for (uint i = 0; i < MAX_LIGHTS; ++i)
+		lights[i].Render();
 	gameFboTex->UnBindFBO();
 
 	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
