@@ -9,7 +9,7 @@ ComponentCanvas::ComponentCanvas()
 {
 	type = CANVAS;
 
-	resolution = float2(1024, 768);
+	resolution = float2(512, 384);
 }
 
 
