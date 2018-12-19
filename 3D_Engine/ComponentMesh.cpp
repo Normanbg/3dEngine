@@ -91,13 +91,6 @@ void ComponentMesh::DrawInspector() {
 	currentMesh = nullptr;
 	ImGui::Separator();
 }
-/*
-void ComponentMesh::GenerateBuffer()
-{
-	
-	
-	//GenerateBoundingBox();
-}*/
 
 void ComponentMesh::SetResource(uuid resource)
 {

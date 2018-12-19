@@ -184,7 +184,9 @@ void ComponentTextUI::DrawInspector()
 void ComponentTextUI::DrawUI()
 {
 	glPushMatrix();
-	glMultMatrixf(rectTransform->GetGlobalMatrix().Transposed().ptr());
+	float4x4 globalMat;
+	rectTransform->SetGlobalMatrixToDraw(globalMat);
+	glMultMatrixf(globalMat.Transposed().ptr());
 
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);

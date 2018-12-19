@@ -50,9 +50,8 @@ public:
 
 	void GetComponents(ComponentType type, std::vector<Component*>& components);
 	void GetAllComponentsUI(std::vector<ComponentUI*>& comp);
-	void GetMineUIComponents(std::vector<ComponentUI*>& comp);
-	void GetComponentsUITypeIgnore( std::vector<ComponentUI*>& comp, ComponentTypeUI ignoreType = NOTYPE);
-	void GetComponentsUIType(std::vector<ComponentUI*>& comp, ComponentTypeUI type);
+	void GetComponentsUITypeIgnore( std::vector<ComponentUI*>& comp, ComponentTypeUI ignoreType = NOTYPE, bool recursive = true);
+	void GetComponentsUIType(std::vector<ComponentUI*>& comp, ComponentTypeUI type, bool recursive = true);
 	void SetParent(GameObject* parent);
 	
 
@@ -76,7 +75,8 @@ public:
 
 	inline const uuid GetUUID() { return UUID; }
 
-	void CalculateAllGlobalMatrix();
+	void CalculateAllTransformGlobalMat();
+	void CalculateAllRectGlobalMat();
 	void SetChildsStatic(bool active);
 
 	void SetLocalAABB(AABB aabb);
