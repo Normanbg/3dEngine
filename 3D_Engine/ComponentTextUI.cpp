@@ -90,52 +90,51 @@ void ComponentTextUI::LoadLabel(const char * _label, float _scale, const char * 
 		return;
 	}
 
-	int b_w = 512; // bitmap width 
-	int b_h = 128; // bitmap height
-	int l_h = 64; // line height 
+	int bm_w = 100*rectTransform->GetWidth(); // bitmap width 
+	int bm_h = 100*rectTransform->GetHeight(); // bitmap height
+	int line_h = 64; // line height 
 
-	unsigned char* bitmap = new unsigned char[b_w * b_h]; // creates bitmap for the phrase
-	float sc = stbtt_ScaleForPixelHeight(&info, l_h)*font.scale;// calculate font scaling
+	unsigned char* bitmap = new unsigned char[bm_w * bm_h]; // creates bitmap for the phrase
+	float sc = stbtt_ScaleForPixelHeight(&info, line_h)*font.scale;// calculate font scaling
 
 	
 	int ascent, descent, lineGap;
-	stbtt_GetFontVMetrics(&info, &ascent, &descent, &lineGap);
+	stbtt_GetFontVMetrics(&info, &ascent, &descent, &lineGap); // get lowest and upper height
 
 	ascent *= sc;
 	descent *=sc;
 
-	int x = 0;
-	int i;
-	for (i = 0; i < font.text.size(); ++i)
+	int x = 0;	
+	for (int i = 0; i < font.text.size(); ++i)
 	{
-		/* get bounding box for character (may be offset to account for chars that dip above or below the line */
+		
 		int c_x1, c_y1, c_x2, c_y2;
-		stbtt_GetCodepointBitmapBox(&info, font.text[i], sc, sc, &c_x1, &c_y1, &c_x2, &c_y2);
+		stbtt_GetCodepointBitmapBox(&info, font.text[i], sc, sc, &c_x1, &c_y1, &c_x2, &c_y2);// get bounding box for character (may be offset to account for chars that dip above or below the line)
 
-		/* compute y (different characters have different heights */
-		int y = ascent + c_y1;
+		
+		int y = ascent + c_y1; //calculates y bc every character has its own height
 
-		/* render character (stride and offset is important here) */
-		int byteOffset = x + (y  * b_w);
-		stbtt_MakeCodepointBitmap(&info, bitmap + byteOffset, c_x2 - c_x1, c_y2 - c_y1, b_w, sc, sc, font.text[i]);
+		
+		int byteOffset = x + (y  * bm_w);
+		stbtt_MakeCodepointBitmap(&info, bitmap + byteOffset, c_x2 - c_x1, c_y2 - c_y1, bm_w, sc, sc, font.text[i]);// render character (stride and offset is important here) 
 
-		/* how wide is this character */
+		
 		int ax;
-		stbtt_GetCodepointHMetrics(&info, font.text[i], &ax, 0);
+		stbtt_GetCodepointHMetrics(&info, font.text[i], &ax, 0); //  character's wide
 		x += ax * sc;
 
-		/* add kerning */
+		
 		int kern;
-		kern = stbtt_GetCodepointKernAdvance(&info, font.text[i], font.text[i + 1]);
+		kern = stbtt_GetCodepointKernAdvance(&info, font.text[i], font.text[i + 1]);// add kerning 
 		x += kern * sc;
 	}
 
 	
-	stbi_write_png(font.exportTexPath.c_str(), b_w, b_h, 1, bitmap, b_w);
+	stbi_write_png(font.exportTexPath.c_str(), bm_w, bm_h, 1, bitmap, bm_w); // export to PNG
 	RELEASE_ARRAY(buffer);
 	RELEASE_ARRAY(bitmap);
 	uint texW, texH;
-	texGPUIndex = App->texImporter->LoadTexture(font.exportTexPath.c_str(), texW, texH);
+	texGPUIndex = App->texImporter->LoadTexture(font.exportTexPath.c_str(), texW, texH); // load the texture
 }
 
 
