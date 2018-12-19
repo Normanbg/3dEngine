@@ -153,7 +153,6 @@ void ComponentRectTransform::GenBuffer()
 	glBindBuffer(GL_ARRAY_BUFFER, rect.vertexID); // set the type of buffer
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float3) * 4, &rect.vertex[0], GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
 }
 
 void ComponentRectTransform::UpdateLocalPos() {

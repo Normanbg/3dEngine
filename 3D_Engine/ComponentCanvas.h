@@ -12,6 +12,12 @@ public:
 	bool Update() override;
 	void CleanUp() override;
 	void DrawInspector() override;
+
+public:
+	float2 resolution;
+
+private:
+	bool setWidthHeight = false;
 };
 
 #endif // !__COMPONENTCANVAS_H__
