@@ -46,7 +46,7 @@ void ComponentMaterial::DrawInspector()
 		{
 			bool is_selected = false;
 			if (currentMaterial != nullptr) {
-				bool is_selected = (strcmp(currentMaterial, mat[i]->GetName()) == 0);
+				is_selected = (strcmp(currentMaterial, mat[i]->GetName()) == 0);
 			}
 			if (ImGui::Selectable(mat[i]->GetName(), is_selected)) {
 				currentMaterial = mat[i]->GetName();

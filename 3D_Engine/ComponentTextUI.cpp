@@ -4,6 +4,7 @@
 #include "GameObject.h"
 #include "ComponentRectTransform.h"
 
+
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "TrueType/stb_image_write.h"
 
@@ -28,6 +29,7 @@ ComponentTextUI::~ComponentTextUI()
 
 bool ComponentTextUI::Start()
 {
+	App->fileSys->GetFilesFromDir(FONTS_PATH, loadedFonts, loadedFonts); // load fonts
 
 	static const float uvs[] = {
 		0, 0,
@@ -94,7 +96,7 @@ void ComponentTextUI::LoadLabel(const char * _label, float _scale, const char * 
 	int bm_w = 100*rectTransform->GetWidth(); // bitmap width 
 	int bm_h = 100*rectTransform->GetHeight(); // bitmap height
 	int line_h = 64; // line height 
-
+	if (bm_w <= 0 || bm_h <= 0) { return; }
 	unsigned char* bitmap = new unsigned char[bm_w * bm_h]; // creates bitmap for the phrase
 	float sc = stbtt_ScaleForPixelHeight(&info, line_h)*font.scale;// calculate font scaling
 
@@ -139,9 +141,10 @@ void ComponentTextUI::LoadLabel(const char * _label, float _scale, const char * 
 }
 
 
+
 void ComponentTextUI::UpdateRectTransform()
 {
-	LoadLabel(font.text.c_str(), font.scale);
+	LoadLabel(font.text.c_str(), font.scale, font.fontSrc.c_str());
 }
 
 void ComponentTextUI::DrawInspector()
@@ -149,10 +152,33 @@ void ComponentTextUI::DrawInspector()
 	ImGui::Separator();
 	ImGui::TextColored(ImVec4(0.25f, 0.25f, 0.25f, 1), "UUID: %i", GetUUID());
 	static const int maxSize = 16;
-	if (ImGui::InputText("Label Text",(char*) font.text.c_str(), maxSize)|| ImGui::SliderFloat("Scale", &font.scale, 0.1f, 2.0f)) {
-		LoadLabel(font.text.c_str(),font.scale);
+	if (ImGui::InputText("Label Text",(char*) font.text.c_str(), maxSize)|| ImGui::SliderFloat("Scale", &font.scale, 0.1f, 1.5f)) {
+		LoadLabel(font.text.c_str(),font.scale, font.fontSrc.c_str());
 	}
-	
+	if (ImGui::BeginCombo("Fonts", font.fontSrc.c_str()))
+	{
+		for (int i = 0; i < loadedFonts.size(); i++)
+		{
+			bool isSelected = false;
+			if (strcmp(font.fontSrc.c_str(), loadedFonts[i].c_str()) == 0) {
+				isSelected = true;
+			}
+			
+			if (ImGui::Selectable(loadedFonts[i].c_str(), isSelected)) {
+				std::string chosenFont;
+				App->fileSys->GetNameFromPath(loadedFonts[i].c_str(), nullptr, nullptr, &chosenFont, nullptr);
+				font.fontSrc = chosenFont;
+				LoadLabel(font.text.c_str(), font.scale, font.fontSrc.c_str());
+
+				if (isSelected) {
+					ImGui::SetItemDefaultFocus();
+				}
+
+			}
+
+		}
+		ImGui::EndCombo();
+	}
 }
 
 void ComponentTextUI::DrawUI()
