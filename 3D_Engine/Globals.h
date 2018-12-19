@@ -71,15 +71,16 @@ enum FrustumContained {
 #define SCENE_FILE "Scenes/scene.JSON"
 #define TEMP_SCENE_FILE "Scenes/scene_temp.JSON"
 #define ENGINE_FX_PATH "Engine/Audio/Fx/"
+#define FONTS_PATH "Engine/Fonts/"
 #define CAMERA_SPEED 10.0f
 
 #define TEXTURES_PATH "Assets/Textures/"
 #define MODELS_PATH "Assets/3DModels/"
 #define AUDIO_PATH "Assets/Audio/"
-#define FONTS_PATH "Assets/Fonts/"
 #define LIB_TEXTURES_PATH "Library/Textures/"
 #define LIB_MODELS_PATH "Library/3DModels/"
 #define LIB_AUDIO_PATH "Library/Audio/"
+#define LIB_FONTS_PATH "Library/Fonts/"
 #define SETTINGS_PATH "Settings/"
 #define SCENES_PATH "Scenes/"
 #define NUM_PATHS 9

@@ -4,7 +4,6 @@
 #include "Component.h"
 #include "ComponentWithResource.h"
 #include "ResourceTexture.h"
-#include "ComponentRectTransform.h"
 #include "ComponentUI.h"
 
 class ComponentImageUI : public ComponentUI, public ComponentWithResource, public Component
@@ -39,7 +38,6 @@ public:
 private:
 	float2* texCoords = nullptr;
 	ResourceTexture* resourceTexture = nullptr;
-	ComponentRectTransform* rectTransform = nullptr;
 };
 
 

@@ -1,7 +1,10 @@
 #ifndef __COMPONENT_UI_H__
 #define __COMPONENT_UI_H__
 
+
 #include "Component.h"
+
+class ComponentRectTransform;
 
 enum ComponentTypeUI {
 	NOTYPE = 0,
@@ -34,6 +37,7 @@ public:
 
 
 	bool draw = true;
+	ComponentRectTransform* rectTransform = nullptr;
 
 };
 
