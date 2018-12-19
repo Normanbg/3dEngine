@@ -120,28 +120,37 @@ void ComponentRectTransform::SetLocalPos(float2 newLocalMat) {
 
 void ComponentRectTransform::DrawUI()
 {
-		glLineWidth(8.0f);
-		glColor3f(0.5f, 0.0f, 0.7f); //pink
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glPushMatrix();
+	float4x4 globalMat;
+	SetGlobalMatrixToDraw(globalMat);
+	glMultMatrixf(globalMat.Transposed().ptr());
 
-		glBegin(GL_QUADS);
-		glVertex3f(0, rect.globalPosition.x, rect.globalPosition.y);
-		glVertex3f(0, rect.globalPosition.x,  rect.globalPosition.y + rect.height);
-		glVertex3f(0, rect.globalPosition.x + rect.width, rect.globalPosition.y + rect.height);
-		glVertex3f(0, rect.globalPosition.x + rect.width, rect.globalPosition.y);
-		glEnd();
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glBindBuffer(GL_ARRAY_BUFFER, 0); //resets the buffer
 
-		glLineWidth(3.0f);
+	glLineWidth(8.0f);
+	glColor3f(0.5f, 0.0f, 0.7f); //pink
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-		glBegin(GL_LINES);
-		glVertex3f(0, rect.anchor.y+0.1f, rect.anchor.x);
-		glVertex3f(0, rect.anchor.y-0.1f, rect.anchor.x);
-		glVertex3f(0, rect.anchor.y , rect.anchor.x+ 0.1f);
-		glVertex3f(0, rect.anchor.y , rect.anchor.x- 0.1f);
-		glEnd();
-		
-		glColor3f(1.f, 1.0f, 1.0f);
-		glLineWidth(1.0f);
+	glBindBuffer(GL_ARRAY_BUFFER, rect.vertexID);
+	glVertexPointer(3, GL_FLOAT, 0, NULL);
+	glDrawArrays(GL_QUADS, 0, 4);
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0); //resets the buffer
+	glDisableClientState(GL_VERTEX_ARRAY);
+	glPopMatrix();
+
+	glLineWidth(3.0f);
+
+	glBegin(GL_LINES);
+	glVertex3f(0, rect.anchor.y + 0.1f, rect.anchor.x);
+	glVertex3f(0, rect.anchor.y - 0.1f, rect.anchor.x);
+	glVertex3f(0, rect.anchor.y, rect.anchor.x + 0.1f);
+	glVertex3f(0, rect.anchor.y, rect.anchor.x - 0.1f);
+	glEnd();
+
+	glColor3f(1.f, 1.0f, 1.0f);
+	glLineWidth(1.0f);
 }
 
 void ComponentRectTransform::GenBuffer()
@@ -156,4 +165,8 @@ void ComponentRectTransform::UpdateLocalPos() {
 	rect.anchor.x = rect.globalPosition.x + rect.width / 2;
 	rect.anchor.y = rect.globalPosition.y + rect.height / 2;
 	rect.localPosition = float2(rect.globalPosition.x, rect.globalPosition.y);
+}
+
+void ComponentRectTransform::SetGlobalMatrixToDraw(float4x4 &globalMatrix) {
+	globalMatrix = float4x4::FromTRS(float3(0, rect.globalPosition.y, rect.globalPosition.x), Quat(0, 0, 0, 0), float3(0, rect.height, rect.width));
 }

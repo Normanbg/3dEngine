@@ -49,6 +49,8 @@ public:
 	void SetGlobalPos(float2 global);
 	void SetLocalPos(float2 newLocalMat);
 
+	void SetGlobalMatrixToDraw(float4x4 &globalMatrix);
+
 	void DrawUI() override;
 	void GenBuffer();
 
