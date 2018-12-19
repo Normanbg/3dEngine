@@ -254,8 +254,10 @@ void ModuleRenderer3D::OnResize(const int width, const int height)
 		ComponentCamera* mainCam = App->scene->mainCamera->GetComponentCamera();
 		mainCam->SetAspectRatio((float)width / (float)height);
 	}
-	else
-		App->camera->cameraComp->SetAspectRatio((float)width / (float)height);
+	else {
+		ComponentCamera* mainCam = App->scene->mainCamera->GetComponentCamera();
+		mainCam->SetAspectRatio((float)width / (float)height);
+	}
 }
 
 char* ModuleRenderer3D::GetGraphicsModel() const

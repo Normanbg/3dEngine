@@ -616,15 +616,19 @@ void ModuleScene::DrawInGameUI()
 
 				glMatrixMode(GL_PROJECTION);
 				glLoadIdentity();
-				float2 t = canvas->GetComponentRectTransform()->GetPos();
-				float left = canvas->GetComponentRectTransform()->GetPos().x - (rectTransform->GetWidth() / 2);
-				float right = canvas->GetComponentRectTransform()->GetPos().x + (rectTransform->GetWidth() / 2);;
-				float top = canvas->GetComponentRectTransform()->GetPos().y + (rectTransform->GetHeight() / 2);;
-				float bottom = canvas->GetComponentRectTransform()->GetPos().y - (rectTransform->GetHeight() / 2);;
+				/*float left = rectTransform->GetPos().x - (rectTransform->GetWidth() / 2);
+				float right = rectTransform->GetPos().x + (rectTransform->GetWidth() / 2);
+				float top = rectTransform->GetPos().y + (rectTransform->GetHeight() / 2);
+				float bottom = rectTransform->GetPos().y - (rectTransform->GetHeight() / 2);*/
+				float left = rectTransform->GetGlobalPos().x;
+				float right = rectTransform->GetGlobalPos().x + rectTransform->GetWidth();
+				float top = rectTransform->GetGlobalPos().y + rectTransform->GetHeight();
+				float bottom = rectTransform->GetGlobalPos().y;
 				float zNear = 1000.f;
 				float zFar = -1000.f;
 
 				glOrtho(left, right, bottom, top, zNear, zFar);
+
 				std::vector <ComponentUI*> goComponents;
 				it->GetComponentsUITypeIgnore(goComponents, TRANSFORMRECT, false);
 				for (auto it : goComponents) {

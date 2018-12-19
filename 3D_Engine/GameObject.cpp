@@ -160,13 +160,9 @@ void GameObject::CalculateAllRectGlobalMat() {
 			GetComponentRectTransform()->SetGlobalPos(GetComponentRectTransform()->GetLocalPos());
 		}
 		else {
-			/*float2 parentGlobal = parent->GetComponentRectTransform()->GetGlobalPos();
-			ComponentRectTransform* rectTrans = GetComponentRectTransform();
-			float2 localMatrix = rectTrans->GetLocalPos();
-			float2 tryi = parentGlobal * localMatrix;
-			GetComponentRectTransform()->SetGlobalMatrix(parentGlobal * localMatrix);
-
-*/
+			float2 parentTrans = parent->GetComponentRectTransform()->GetGlobalPos();
+			float2 globalTr = parentTrans + GetComponentRectTransform()->GetLocalPos();
+			GetComponentRectTransform()->SetGlobalPos(globalTr);
 		}
 	}
 	if (!childrens.empty())

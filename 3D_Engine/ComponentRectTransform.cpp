@@ -49,7 +49,7 @@ void ComponentRectTransform::CleanUp()
 void ComponentRectTransform::Load(Config * data)
 {
 	UUID = data->GetUInt("UUID");
-	SetPos(data->GetFloat2("Position", { 0,0 }));
+	SetGlobalPos(data->GetFloat2("Position", { 0,0 }));
 	SetWidth(data->GetFloat("Width", 1));
 	SetHeight(data->GetFloat("Height", 1));
 }
@@ -57,7 +57,7 @@ void ComponentRectTransform::Load(Config * data)
 void ComponentRectTransform::Save(Config & data) const
 {
 	data.AddUInt("UUID", UUID);
-	data.AddFloat2("Position", GetPos());
+	data.AddFloat2("Position", GetGlobalPos());
 	data.AddFloat("Width", GetWidth());
 	data.AddFloat("Height", GetHeight());
 }
@@ -67,29 +67,23 @@ void ComponentRectTransform::DrawInspector()
 	ImGui::Separator();
 	ImGui::TextColored(ImVec4(0.25f, 0.25f, 0.25f, 1), "UUID: %i", GetUUID());
 
-	float2 _pos = GetPos();
+	float2 _pos = GetLocalPos();
 	float _w = GetWidth();
 	float _h = GetHeight();
 	
-	/*if (myGO->GetComponentCanvas()) {
+	if (myGO->GetComponentCanvas()) {
 		ImGui::DragFloat2("Position", (float*)&_pos, 0.1f);
 		ImGui::DragFloat("Width", (float*)&_w, 0.1f);
 		ImGui::DragFloat("Height", (float*)&_h, 0.1f);
 	}
-	else {*/
-		if (ImGui::DragFloat2("Position", (float*)&_pos, 0.1f)) { SetPos(_pos); }
+	else {
+		if (ImGui::DragFloat2("Position", (float*)&_pos, 0.1f)) { SetLocalPos(_pos); }
 		if (ImGui::DragFloat("Width", (float*)&_w, 0.1f)) { SetWidth(_w); }
 		if (ImGui::DragFloat("Height", (float*)&_h, 0.1f)) { SetHeight(_h); }
-	//}
+	}
 
 	ImGui::Spacing();
 	ImGui::Checkbox("Draw Canvas", &draw);
-}
-
-void ComponentRectTransform::SetPos(float2 pos)
-{
-	rect.globalPosition = pos;
-	UpdateLocalPos();
 }
 
 void ComponentRectTransform::SetWidth(float w)

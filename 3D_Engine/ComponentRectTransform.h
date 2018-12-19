@@ -35,7 +35,6 @@ public:
 	inline void doUpdate() override { Update(); }
 	inline void doCleanUp() override {	CleanUp();}
 
-	const float2 GetPos() const { return rect.globalPosition; }
 	const float GetWidth() const { return rect.width; }
 	const float GetHeight() const { return rect.height; }
 	const uint GetVertexID() const { return rect.vertexID; }
@@ -43,7 +42,7 @@ public:
 	const float2 GetGlobalPos() const { return rect.globalPosition; }
 	const float2 GetMid() const { return float2(rect.width / 2, rect.height / 2); };
 
-	void SetPos(float2 pos);
+	/*void SetPos(float2 pos);*/
 	void SetWidth(float w);
 	void SetHeight(float h);
 	void SetGlobalPos(float2 global);
