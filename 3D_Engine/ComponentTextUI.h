@@ -22,6 +22,7 @@ public:
 	ComponentTextUI();
 	~ComponentTextUI();
 
+	void UpdateRectTransform() override;
 	void DrawInspector() override;
 	void DrawUI() override;
 

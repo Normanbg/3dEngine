@@ -40,6 +40,7 @@ bool ComponentTextUI::Start()
 	memcpy(texCoords, uvs, sizeof(float2) * 4);
 
 	rectTransform = myGO->GetComponentRectTransform();
+	rectTransform->SetWidth(3.0f);
 	font.exportTexPath += (std::to_string(UUID) + PNG_FORMAT);
 	LoadLabel();
 	return true;
@@ -137,6 +138,11 @@ void ComponentTextUI::LoadLabel(const char * _label, float _scale, const char * 
 	texGPUIndex = App->texImporter->LoadTexture(font.exportTexPath.c_str(), texW, texH); // load the texture
 }
 
+
+void ComponentTextUI::UpdateRectTransform()
+{
+	LoadLabel(font.text.c_str(), font.scale);
+}
 
 void ComponentTextUI::DrawInspector()
 {

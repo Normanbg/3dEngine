@@ -82,18 +82,21 @@ void ComponentRectTransform::SetPos(float2 pos)
 {
 	rect.position = pos;
 	UpdateGlobalMatrix();
+	//UpdateUIComponents();
 }
 
 void ComponentRectTransform::SetWidth(float w)
 {
 	rect.width = w;
 	UpdateGlobalMatrix();
+	UpdateUIComponents();
 }
 
 void ComponentRectTransform::SetHeight(float h)
 {
 	rect.height= h;
 	UpdateGlobalMatrix();
+	UpdateUIComponents();
 }
 
 void ComponentRectTransform::DrawUI()
@@ -138,6 +141,15 @@ void ComponentRectTransform::GenBuffer()
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float3) * 4, &rect.vertex[0], GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
+}
+
+void ComponentRectTransform::UpdateUIComponents()
+{
+	for (int i = 0; i < myGO->componentsUI.size(); ++i) {
+		if (myGO->componentsUI[i] != this) {
+			myGO->componentsUI[i]->UpdateRectTransform();
+		}
+	}
 }
 
 void ComponentRectTransform::UpdateGlobalMatrix() {

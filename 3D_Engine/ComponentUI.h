@@ -33,9 +33,10 @@ public:
 
 	virtual void doSave(Config& data)const  {};
 	virtual void doLoad(Config* data){};
+
+	virtual void UpdateRectTransform() {};
+
 	ComponentTypeUI typeUI = NOTYPE;
-
-
 	bool draw = true;
 	ComponentRectTransform* rectTransform = nullptr;
 

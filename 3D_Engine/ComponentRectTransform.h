@@ -49,6 +49,7 @@ public:
 	void DrawUI() override;
 	void GenBuffer();
 
+
 public:
 
 	
@@ -56,7 +57,7 @@ public:
 	float3 maxPoint = float3::zero;*/
 
 private:
-	
+	void UpdateUIComponents();
 	void UpdateGlobalMatrix();
 	void UpdateLocalMatrix();
 
