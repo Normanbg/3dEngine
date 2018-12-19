@@ -432,9 +432,6 @@
     <ClInclude Include="UIPanelGame.h">
       <Filter>Sources\Modules\GuiPanels</Filter>
     </ClInclude>
-    <ClInclude Include="ModuleSceneUI.h">
-      <Filter>Sources\Modules\Game</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleInput.cpp">
@@ -703,9 +700,6 @@
     </ClCompile>
     <ClCompile Include="UIPanelGame.cpp">
       <Filter>Sources\Modules\GuiPanels</Filter>
-    </ClCompile>
-    <ClCompile Include="ModuleSceneUI.cpp">
-      <Filter>Sources\Modules\Game</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

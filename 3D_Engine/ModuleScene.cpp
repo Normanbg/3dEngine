@@ -4,7 +4,6 @@
 #include "Quadtree.h"
 #include "Resource.h"
 #include "ModuleEditorCamera.h"
-#include "ModuleSceneUI.h"
 #include "Config.h"
 
 #include "ModuleInput.h"

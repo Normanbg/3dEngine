@@ -7,7 +7,6 @@
 #include "Math.h"
 #include "RandomGenerator/pcg_variants.h"
 #include "RandomGenerator/extras/entropy.h"
-#include "ModuleSceneUI.h"
 
 class vector;
 class GameObject;
@@ -18,7 +17,6 @@ class Resource;
 
 class ModuleScene : public Module
 {
-	friend class ModuleSceneUI;
 
 public:
 
