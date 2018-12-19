@@ -1,4 +1,5 @@
 #include "ComponentRectTransform.h"
+#include "ComponentCanvas.h"
 #include "ModuleResources.h"
 #include "GameObject.h"
 
@@ -162,5 +163,13 @@ void ComponentRectTransform::UpdateLocalPos() {
 }
 
 void ComponentRectTransform::SetGlobalMatrixToDraw(float4x4 &globalMatrix) {
-	globalMatrix = float4x4::FromTRS(float3(0, rect.globalPosition.y, rect.globalPosition.x), Quat(0, 0, 0, 0), float3(0, rect.height, rect.width));
+	ComponentCanvas* canvas = App->scene->GetFirstGameObjectCanvas()->GetComponentCanvas();
+	if (canvas->editor) {
+		float2 dividedPos = rect.globalPosition / 10;
+		float dividedHeight = rect.height / 10;
+		float dividedWidth = rect.width / 10;
+		globalMatrix = float4x4::FromTRS(float3(0, dividedPos.y, dividedPos.x), Quat(0, 0, 0, 0), float3(0, dividedHeight, dividedWidth));
+	}
+	else
+		globalMatrix = float4x4::FromTRS(float3(0, rect.globalPosition.y, rect.globalPosition.x), Quat(0, 0, 0, 0), float3(0, rect.height, rect.width));
 }

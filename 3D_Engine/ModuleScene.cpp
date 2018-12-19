@@ -404,6 +404,15 @@ FrustumContained ModuleScene::ContainsAaBox(const AABB& refBox) const
 	return(INTERSECT);
 }
 
+void ModuleScene::ToggleEditorCam()
+{
+	GameObject* canvasGO = GetFirstGameObjectCanvas();
+	if (canvasGO != nullptr) {
+		ComponentCanvas* canvas = canvasGO->GetComponentCanvas();
+		canvas->editor = !canvas->editor;
+	}
+}
+
 void ModuleScene::GetAllStaticGOs(GameObject* go)
 {
 	if (go != root && go->staticGO)

@@ -15,7 +15,7 @@ public:
 
 public:
 	float2 resolution;
-
+	bool editor = false;
 private:
 	bool setWidthHeight = false;
 };

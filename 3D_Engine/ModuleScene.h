@@ -66,6 +66,8 @@ public:
 	void DrawGuizmo(ImGuizmo::OPERATION operation);
 	FrustumContained ContainsAaBox(const AABB & refBox) const;
 
+	void ToggleEditorCam();
+
 public:
 
 	GameObject* root;

@@ -213,6 +213,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	if (_axis) { ShowAxis(); }
 	if (_grid) { ShowGrid(); }
 	bool editor = true;
+	App->scene->ToggleEditorCam();
 	App->scene->Draw(editor);
 	sceneFboTex->UnBindFBO();
 
@@ -220,6 +221,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	gameFboTex->BindFBO();
 	CreateGameTexture();
 	App->scene->Draw(editor);
+	App->scene->ToggleEditorCam();
 	App->scene->DrawInGameUI();
 	for (uint i = 0; i < MAX_LIGHTS; ++i)
 		lights[i].Render();
