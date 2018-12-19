@@ -144,12 +144,10 @@ void ComponentTextUI::DrawInspector()
 	ImGui::Separator();
 	ImGui::TextColored(ImVec4(0.25f, 0.25f, 0.25f, 1), "UUID: %i", GetUUID());
 	static const int maxSize = 16;
-	if (ImGui::InputText("Label Text",(char*) font.text.c_str(), maxSize)) {
+	if (ImGui::InputText("Label Text",(char*) font.text.c_str(), maxSize)|| ImGui::SliderFloat("Scale", &font.scale, 0.1f, 2.0f)) {
 		LoadLabel(font.text.c_str(),font.scale);
 	}
-	if (ImGui::SliderFloat("Scale", &font.scale, 0.1f, 2.0f)) {
-		LoadLabel(font.text.c_str(), font.scale);
-	}
+	
 }
 
 void ComponentTextUI::DrawUI()
