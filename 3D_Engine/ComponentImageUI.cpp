@@ -118,7 +118,7 @@ void ComponentImageUI::DrawInspector()
 void ComponentImageUI::DrawUI()
 {
 	glPushMatrix();
-	glMultMatrixf(rectTransform->GetGlobalMatrix().Transposed().ptr());
+	glMultMatrixf(rectTransform->GetGlobalPos().Transposed().ptr());
 
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);

@@ -17,10 +17,10 @@ ComponentRectTransform::ComponentRectTransform()
 	
 
 	static const float vtx[] = {
-		0,rect.position.x,  rect.position.y ,
-		0,rect.position.x ,  rect.position.y + rect.height,
-		0,rect.position.x + rect.width,  rect.position.y + rect.height,
-		0,rect.position.x + rect.width,  rect.position.y,	
+		0,rect.globalPosition.x,  rect.globalPosition.y ,
+		0,rect.globalPosition.x ,  rect.globalPosition.y + rect.height,
+		0,rect.globalPosition.x + rect.width,  rect.globalPosition.y + rect.height,
+		0,rect.globalPosition.x + rect.width,  rect.globalPosition.y,	
 	};
 
 	
@@ -28,7 +28,7 @@ ComponentRectTransform::ComponentRectTransform()
 	memcpy(rect.vertex, vtx, sizeof(float3) * 4);
 	
 	GenBuffer();
-	UpdateLocalMatrix();
+	UpdateLocalPos();
 }
 
 
@@ -88,66 +88,48 @@ void ComponentRectTransform::DrawInspector()
 
 void ComponentRectTransform::SetPos(float2 pos)
 {
-	rect.position = pos;
-	UpdateLocalMatrix();
+	rect.globalPosition = pos;
+	UpdateLocalPos();
 }
 
 void ComponentRectTransform::SetWidth(float w)
 {
 	rect.width = w;
-	UpdateLocalMatrix();
 }
 
 void ComponentRectTransform::SetHeight(float h)
 {
 	rect.height= h;
-	UpdateLocalMatrix();
 }
 
-void ComponentRectTransform::SetGlobalMatrix(float4x4 global)
+void ComponentRectTransform::SetGlobalPos(float2 global)
 {
-	rect.globalMatrix = global;
+	rect.globalPosition = global;
 	if (myGO->parent != nullptr && myGO->parent != App->scene->root)
 	{
 		ComponentRectTransform* parentTrans = myGO->parent->GetComponentRectTransform();
-		float4x4 parentlobal = parentTrans->GetLocalMatrix();
-		float4x4 parentGlobal = parentTrans->GetGlobalMatrix();
-		float4x4 newlocalMatrix = parentGlobal.Inverted() * rect.globalMatrix;
-		SetLocalMatrix(newlocalMatrix);
+		float2 parentGlobal = parentTrans->GetGlobalPos();
+		float2 newLocalPos = rect.globalPosition - parentGlobal;
+		SetLocalPos(newLocalPos);
 	}
 }
 
-void ComponentRectTransform::SetLocalMatrix(float4x4 newLocalMat) {
-	rect.localMatrix = newLocalMat;
-	float4x4 pn;
-	float3 scale;
-	float3 position;
-	newLocalMat.Decompose(position, pn, scale);
-	rect.position.y = position.y;
-	rect.position.x = position.z;
-	rect.width = scale.z;
-	rect.height = scale.y;
+void ComponentRectTransform::SetLocalPos(float2 newLocalMat) {
+	rect.localPosition = newLocalMat;                                                                                                                                                                                      
 }
 
 void ComponentRectTransform::DrawUI()
 {
-		glPushMatrix();
-		glMultMatrixf(rect.globalMatrix.Transposed().ptr());
-
-		glEnableClientState(GL_VERTEX_ARRAY);
-		glBindBuffer(GL_ARRAY_BUFFER, 0); //resets the buffer
-
 		glLineWidth(8.0f);
 		glColor3f(0.5f, 0.0f, 0.7f); //pink
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-		glBindBuffer(GL_ARRAY_BUFFER, rect.vertexID);
-		glVertexPointer(3, GL_FLOAT, 0, NULL);
-		glDrawArrays(GL_QUADS, 0, 4);		
-
-		glBindBuffer(GL_ARRAY_BUFFER, 0); //resets the buffer
-		glDisableClientState(GL_VERTEX_ARRAY);
-		glPopMatrix();
+		glBegin(GL_QUADS);
+		glVertex3f(0, rect.globalPosition.x, rect.globalPosition.y);
+		glVertex3f(0, rect.globalPosition.x,  rect.globalPosition.y + rect.height);
+		glVertex3f(0, rect.globalPosition.x + rect.width, rect.globalPosition.y + rect.height);
+		glVertex3f(0, rect.globalPosition.x + rect.width, rect.globalPosition.y);
+		glEnd();
 
 		glLineWidth(3.0f);
 
@@ -170,9 +152,8 @@ void ComponentRectTransform::GenBuffer()
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-void ComponentRectTransform::UpdateLocalMatrix() {
-
-	rect.anchor.x = rect.position.x + rect.width / 2;
-	rect.anchor.y = rect.position.y + rect.height / 2;
-	rect.localMatrix = float4x4::FromTRS(float3(0, rect.position.y, rect.position.x), Quat(0,0,0,0), float3(0, rect.height,rect.width ));
+void ComponentRectTransform::UpdateLocalPos() {
+	rect.anchor.x = rect.globalPosition.x + rect.width / 2;
+	rect.anchor.y = rect.globalPosition.y + rect.height / 2;
+	rect.localPosition = float2(rect.globalPosition.x, rect.globalPosition.y);
 }

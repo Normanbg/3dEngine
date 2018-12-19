@@ -9,12 +9,11 @@ class ComponentRectTransform : public ComponentUI, public Component
 {
 	struct RectTransform
 	{
-		float2 position = float2(0, 0);
+		float2 localPosition = float2::zero;
+		float2 globalPosition = float2::zero;
 		float width = 0;
 		float height = 0;
 		float2 anchor = float2(0,0);
-		float4x4 localMatrix = float4x4::identity;
-		float4x4 globalMatrix = float4x4::identity;
 		float3* vertex = nullptr;		
 		uint vertexID;
 	};
@@ -36,26 +35,26 @@ public:
 	inline void doUpdate() override { Update(); }
 	inline void doCleanUp() override {	CleanUp();}
 
-	const float2 GetPos() const { return rect.position; }
+	const float2 GetPos() const { return rect.globalPosition; }
 	const float GetWidth() const { return rect.width; }
 	const float GetHeight() const { return rect.height; }
 	const uint GetVertexID() const { return rect.vertexID; }
-	const float4x4 GetLocalMatrix() const { return rect.localMatrix; }
-	const float4x4 GetGlobalMatrix() const { return rect.globalMatrix; }
+	const float2 GetLocalPos() const { return rect.localPosition; }
+	const float2 GetGlobalPos() const { return rect.globalPosition; }
 	const float2 GetMid() const { return float2(rect.width / 2, rect.height / 2); };
 
 	void SetPos(float2 pos);
 	void SetWidth(float w);
 	void SetHeight(float h);
-	void SetGlobalMatrix(float4x4 global);
-	void SetLocalMatrix(float4x4 newLocalMat);
+	void SetGlobalPos(float2 global);
+	void SetLocalPos(float2 newLocalMat);
 
 	void DrawUI() override;
 	void GenBuffer();
 
 private:
 
-	void UpdateLocalMatrix();
+	void UpdateLocalPos();
 
 private:
 	RectTransform rect;

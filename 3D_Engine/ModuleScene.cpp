@@ -56,11 +56,6 @@ update_status ModuleScene::PreUpdate(float dt)
 			ret &= root->childrens[i]->PreUpdate();
 		}
 	}
-	/*if (rootQuadTree->quadTreeBox.IsFinite()) {
-		QTContainsAaBox(rootQuadTree);
-		SetStaticsCulled();
-	}
-*/
 	if (gObjSelected)
 		UpdateGuizmoOp();
 

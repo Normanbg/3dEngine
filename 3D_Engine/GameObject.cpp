@@ -153,20 +153,21 @@ void GameObject::CalculateAllTransformGlobalMat(){
 
 void GameObject::CalculateAllRectGlobalMat() {
 	if (GetComponentRectTransform() != nullptr) {
-		GameObject* pn = App->scene->GetFirstGameObjectCanvas();
-		if (this == pn)
+		GameObject* canvas = App->scene->GetFirstGameObjectCanvas();
+		if (this == canvas)
 		{
-			float4x4 tr = GetComponentRectTransform()->GetLocalMatrix();
-			GetComponentRectTransform()->SetGlobalMatrix(GetComponentRectTransform()->GetLocalMatrix());
+			float2 tr = GetComponentRectTransform()->GetLocalPos();
+			GetComponentRectTransform()->SetGlobalPos(GetComponentRectTransform()->GetLocalPos());
 		}
 		else {
-			float4x4 parentGlobal = parent->GetComponentRectTransform()->GetGlobalMatrix();
+			/*float2 parentGlobal = parent->GetComponentRectTransform()->GetGlobalPos();
 			ComponentRectTransform* rectTrans = GetComponentRectTransform();
-			float4x4 localMatrix = rectTrans->GetLocalMatrix();
-			float4x4 tryi = parentGlobal * localMatrix;
+			float2 localMatrix = rectTrans->GetLocalPos();
+			float2 tryi = parentGlobal * localMatrix;
 			GetComponentRectTransform()->SetGlobalMatrix(parentGlobal * localMatrix);
-		}
 
+*/
+		}
 	}
 	if (!childrens.empty())
 	{
