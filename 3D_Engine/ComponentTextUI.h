@@ -2,7 +2,6 @@
 #define __COMPONENTTEXTUI_H__
 #include "Component.h"
 #include "ComponentUI.h"
-#include "ComponentWithResource.h"
 
 #define DEFAULT_FONT "arial.ttf"
 
@@ -39,12 +38,13 @@ public:
 	inline void doLoad(Config* data) override { Load(data); }
 	inline void doSave(Config& data)const  override { Save(data); }
 
-	void LoadLabel(const char* label = "Insert Text", float scale = 1.0f, const char* font = DEFAULT_FONT);
+	
 	
 	Font font;
 	
 
 private: 
+	void LoadLabel(const char* label = "Insert Text", float scale = 1.0f, const char* font = DEFAULT_FONT);
 
 	std::vector<std::string> loadedFonts;
 	float2* texCoords = nullptr;

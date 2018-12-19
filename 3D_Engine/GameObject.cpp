@@ -222,13 +222,27 @@ ComponentUI * GameObject::AddUIComponent(ComponentTypeUI type) {
 		cImatge = nullptr;
 		break;
 	}
-	case ComponentTypeUI::UI_TEXT:{
+	case ComponentTypeUI::UI_TEXT: {
 		ret = new ComponentTextUI();
 		ComponentTextUI* cTetx = (ComponentTextUI*)ret;
 		cTetx->myGO = this;
 		cTetx = nullptr;
 		break;
-}
+	}
+	case ComponentTypeUI::UI_INPUT: {
+		ret = new ComponentInputUI();
+		ComponentInputUI* cInput = (ComponentInputUI*)ret;
+		cInput->myGO = this;
+		cInput = nullptr;
+		break;
+	}
+	case ComponentTypeUI::UI_BUTTON: {
+		ret = new ComponentButtonUI();
+		ComponentButtonUI* cBut = (ComponentButtonUI*)ret;
+		cBut->myGO = this;
+		cBut = nullptr;
+		break;
+	}
 	case ComponentTypeUI::TRANSFORMRECT:{
 		ret = new ComponentRectTransform();
 		ComponentRectTransform* cRect = (ComponentRectTransform*)ret;
@@ -443,6 +457,30 @@ ComponentTextUI * GameObject::GetComponentTextUI() const
 	{
 		if ((*it)->typeUI == UI_TEXT)
 			return (ComponentTextUI*)(*it);
+	}
+	return ret;
+}
+
+ComponentInputUI * GameObject::GetComponentInputUI() const
+{
+	ComponentInputUI* ret = nullptr;
+	//WILL ONLY FIND THE FIRST COMPONENT EQUAL TO TYPE OF EACH G0
+	for (std::vector<ComponentUI*>::const_iterator it = componentsUI.begin(); it != componentsUI.end(); it++)
+	{
+		if ((*it)->typeUI == UI_INPUT)
+			return (ComponentInputUI*)(*it);
+	}
+	return ret;
+}
+
+ComponentButtonUI * GameObject::GetComponentButtonUI() const
+{
+	ComponentButtonUI* ret = nullptr;
+	//WILL ONLY FIND THE FIRST COMPONENT EQUAL TO TYPE OF EACH G0
+	for (std::vector<ComponentUI*>::const_iterator it = componentsUI.begin(); it != componentsUI.end(); it++)
+	{
+		if ((*it)->typeUI == UI_BUTTON)
+			return (ComponentButtonUI*)(*it);
 	}
 	return ret;
 }

@@ -14,6 +14,8 @@
 #include "ComponentRectTransform.h"
 #include "ComponentImageUI.h"
 #include "ComponentTextUI.h"
+#include "ComponentButtonUI.h"
+#include "ComponentInputUI.h"
 
 class string;
 class vector;
@@ -67,7 +69,8 @@ public:
 	//UI COMPONENTS------------
 	ComponentImageUI * GetComponentImageUI() const;
 	ComponentTextUI * GetComponentTextUI() const;
-
+	ComponentInputUI * GetComponentInputUI() const;
+	ComponentButtonUI * GetComponentButtonUI() const;
 
 
 	const bool GetSelected() const;

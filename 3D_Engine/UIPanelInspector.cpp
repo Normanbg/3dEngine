@@ -189,6 +189,22 @@ void UIPanelInspector::DrawUIComponent(ComponentUI* compDraw)
 			ImGui::TreePop();
 		}
 		break;
+	case UI_BUTTON:
+		if (ImGui::TreeNode("UI Button"))
+		{
+			ComponentButtonUI* comp = (ComponentButtonUI*)compDraw;
+			comp->DrawInspector();
+			ImGui::TreePop();
+		}
+		break;
+	case UI_INPUT:
+		if (ImGui::TreeNode("UI Input"))
+		{
+			ComponentInputUI* comp = (ComponentInputUI*)compDraw;
+			comp->DrawInspector();
+			ImGui::TreePop();
+		}
+		break;
 	case TRANSFORMRECT:
 		if (ImGui::TreeNode("TransformRect"))
 		{

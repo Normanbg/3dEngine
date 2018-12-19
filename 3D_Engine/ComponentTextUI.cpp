@@ -148,6 +148,7 @@ void ComponentTextUI::LoadLabel(const char * _label, float _scale, const char * 
 
 void ComponentTextUI::UpdateRectTransform()
 {
+	
 	LoadLabel(font.text.c_str(), font.scale, font.fontSrc.c_str());
 }
 

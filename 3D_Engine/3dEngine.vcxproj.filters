@@ -435,6 +435,12 @@
     <ClInclude Include="ModuleSceneUI.h">
       <Filter>Sources\Modules\Game</Filter>
     </ClInclude>
+    <ClInclude Include="ComponentButtonUI.h">
+      <Filter>Sources\Objects &amp; Components\Components\ComponentsUI</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentInputUI.h">
+      <Filter>Sources\Objects &amp; Components\Components\ComponentsUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleInput.cpp">
@@ -706,6 +712,12 @@
     </ClCompile>
     <ClCompile Include="ModuleSceneUI.cpp">
       <Filter>Sources\Modules\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentButtonUI.cpp">
+      <Filter>Sources\Objects &amp; Components\Components\ComponentsUI</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentInputUI.cpp">
+      <Filter>Sources\Objects &amp; Components\Components\ComponentsUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

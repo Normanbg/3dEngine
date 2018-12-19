@@ -52,6 +52,30 @@ void UIPanelHierarchy::Draw()
 					txt = nullptr;
 					canvas = nullptr;
 				}
+				if (ImGui::MenuItem("Input")) {
+					//check if canvas created
+					GameObject* canvas = App->scene->GetFirstGameObjectCanvas();
+					if (canvas == nullptr) {
+						canvas = App->scene->AddUIGameObject("Canvas", App->scene->root);
+						canvas->AddComponent(CANVAS);
+					}
+					GameObject* inp = App->scene->AddUIGameObject("UI_Input", canvas);
+					inp->AddUIComponent(UI_INPUT);
+					inp = nullptr;
+					canvas = nullptr;
+				}
+				if (ImGui::MenuItem("Button")) {
+					//check if canvas created
+					GameObject* canvas = App->scene->GetFirstGameObjectCanvas();
+					if (canvas == nullptr) {
+						canvas = App->scene->AddUIGameObject("Canvas", App->scene->root);
+						canvas->AddComponent(CANVAS);
+					}
+					GameObject* but = App->scene->AddUIGameObject("UI_Button", canvas);
+					but->AddUIComponent(UI_BUTTON);
+					but = nullptr;
+					canvas = nullptr;
+				}
 				ImGui::TreePop();
 			}
 			ImGui::EndMenu();
