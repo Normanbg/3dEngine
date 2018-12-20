@@ -121,7 +121,7 @@ void ComponentImageUI::DrawUI()
 	glPushMatrix();
 	float4x4 globalMat;
 	rectTransform->SetGlobalMatrixToDraw(globalMat);
-	//glMultMatrixf(globalMat.Transposed().ptr());
+	glMultMatrixf(globalMat.Transposed().ptr());
 
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);

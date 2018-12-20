@@ -73,6 +73,8 @@ public:
 	GameObject* gObjSelected = nullptr;
 	uuid TextureResourceSelected = 0;
 	
+	AABB ui_render_box;
+
 	bool inGame = false;
 	bool drawRay = false;
 	bool objectMoved = false;

@@ -18,10 +18,10 @@ ComponentRectTransform::ComponentRectTransform()
 	
 
 	static const float vtx[] = {
-		0,rect.globalPosition.x,  rect.globalPosition.y ,
-		0,rect.globalPosition.x ,  rect.globalPosition.y + rect.height,
-		0,rect.globalPosition.x + rect.width,  rect.globalPosition.y + rect.height,
-		0,rect.globalPosition.x + rect.width,  rect.globalPosition.y,	
+		rect.globalPosition.x,  rect.globalPosition.y , 0,
+		rect.globalPosition.x + rect.width,  rect.globalPosition.y,	0,
+		rect.globalPosition.x + rect.width,  rect.globalPosition.y + rect.height, 0,
+		rect.globalPosition.x ,  rect.globalPosition.y + rect.height, 0, 		
 	};
 
 	
@@ -165,7 +165,6 @@ void ComponentRectTransform::UpdateLocalPos() {
 }
 
 
-
 void ComponentRectTransform::UpdateUIComponents()
 {
 	for (int i = 0; i < myGO->componentsUI.size(); ++i) {
@@ -181,8 +180,8 @@ void ComponentRectTransform::SetGlobalMatrixToDraw(float4x4 &globalMatrix) {
 		float2 dividedPos = rect.globalPosition / 5;
 		float dividedHeight = rect.height / 5;
 		float dividedWidth = rect.width / 5;
-		globalMatrix = float4x4::FromTRS(float3(0, dividedPos.y, dividedPos.x), Quat(0, 0, 0, 0), float3(0, dividedHeight, dividedWidth));
+		globalMatrix = float4x4::FromTRS(float3(dividedPos.x, dividedPos.y, 0), Quat(0, 0, 0, 0), float3(dividedWidth, dividedHeight, 0));
 	}
 	else
-		globalMatrix = float4x4::FromTRS(float3(0, rect.globalPosition.y, rect.globalPosition.x), Quat(0, 0, 0, 0), float3(0, rect.height, rect.width));
+		globalMatrix = float4x4::FromTRS(float3(rect.globalPosition.x, rect.globalPosition.y, 0), Quat(0, 0, 0, 0), float3(rect.width, rect.height, 0));
 }
