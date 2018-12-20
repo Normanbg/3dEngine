@@ -43,3 +43,19 @@ void UIPanelGame::Draw() {
 
 	ImGui::End();
 }
+
+const ImVec2 UIPanelGame::GetMouse() const
+{
+	ImVec2 mousePos = ImGui::GetMousePos();
+
+	ImVec2 realMousePos = ImVec2(mousePos.x - pos.x, mousePos.y - pos.y);
+	ImVec2 mouseNormalized;
+
+	mouseNormalized.x = realMousePos.x / size.x;
+	mouseNormalized.y = realMousePos.y / size.y;
+
+	mouseNormalized.x = (mouseNormalized.x - 0.5) * 2;
+	mouseNormalized.y = (mouseNormalized.y - 0.5) * -2;
+
+	return mouseNormalized;
+}

@@ -16,6 +16,8 @@ class ComponentRectTransform : public ComponentUI, public Component
 		float2 anchor = float2(0,0);
 		float3* vertex = nullptr;		
 		uint vertexID;
+
+		bool isClicked = false;
 	};
 
 public:
@@ -53,6 +55,8 @@ public:
 
 	void DrawUI() override;
 	void GenBuffer();
+
+	void CheckPicked();
 
 private:
 

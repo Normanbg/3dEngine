@@ -15,6 +15,8 @@ public:
 
 	void Draw();
 
+	const ImVec2 GetMouse() const;
+
 public:
 	ImTextureID img;
 
