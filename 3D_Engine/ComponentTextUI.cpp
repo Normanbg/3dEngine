@@ -4,14 +4,8 @@
 #include "GameObject.h"
 #include "ComponentRectTransform.h"
 
-
-#define STB_IMAGE_WRITE_IMPLEMENTATION
-#include "TrueType/stb_image_write.h"
-
-#define STB_TRUETYPE_IMPLEMENTATION 
-#include "TrueType/stb_truetype.h"
-
 #include "mmgr/mmgr.h"
+#include "FontManager.h"
 
 
 
@@ -76,7 +70,7 @@ void ComponentTextUI::LoadLabel(const char * _label, float _scale, const char * 
 {
 	//-------- Loading Font arial -->
 	//font.ResetFont();	
-
+	/*
 	font.fontSrc = _font;
 	font.scale = _scale;
 	font.text =_label;
@@ -142,7 +136,7 @@ void ComponentTextUI::LoadLabel(const char * _label, float _scale, const char * 
 	RELEASE_ARRAY(bitmap);
 	uint texW, texH;
 	texGPUIndex = App->texImporter->LoadTexture(font.exportTexPath.c_str(), texW, texH); // load the texture
-}
+*/}
 
 
 
@@ -217,12 +211,4 @@ void ComponentTextUI::DrawUI()
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glPopMatrix();
-}
-
-void ComponentTextUI::Font::ResetFont()
-{
-	fontSrc = std::string(DEFAULT_FONT);
-	exportTexPath = std::string(LIB_FONTS_PATH);
-	scale = 1.0f;
-	text = "Insert Text";
 }

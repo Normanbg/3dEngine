@@ -3,20 +3,12 @@
 #include "Component.h"
 #include "ComponentUI.h"
 
-#define DEFAULT_FONT "arial.ttf"
 
 class ComponentTextUI : public ComponentUI, public Component
 {
 
-	class Font {
-	public:
-		std::string fontDir = std::string(FONTS_PATH );
-		std::string fontSrc = std::string(DEFAULT_FONT);
-		std::string exportTexPath = std::string(LIB_FONTS_PATH);
-		std::string text = std::string("Insert Text.");
-		float scale = 1.0f;		
-		void ResetFont();
-	};
+	
+
 public:
 	ComponentTextUI();
 	~ComponentTextUI();
@@ -39,8 +31,6 @@ public:
 	inline void doSave(Config& data)const  override { Save(data); }
 
 	
-	
-	Font font;
 	
 
 private: 

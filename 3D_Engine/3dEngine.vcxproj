@@ -97,6 +97,10 @@
     <ClInclude Include="DeviceId\DeviceId.h" />
     <ClInclude Include="DeviceId\dxgi1_4.h" />
     <ClInclude Include="FBO.h" />
+    <ClInclude Include="FontManager.h" />
+    <ClInclude Include="FreeType\include\freetype\config\ftheader.h" />
+    <ClInclude Include="FreeType\include\freetype\freetype.h" />
+    <ClInclude Include="FreeType\include\ft2build.h" />
     <ClInclude Include="ImGuizmo\ImGuizmo.h" />
     <ClInclude Include="mmgr\mmgr.h" />
     <ClInclude Include="ModuleFileSystem.h" />
@@ -222,6 +226,7 @@
     <ClCompile Include="Config.cpp" />
     <ClCompile Include="DeviceId\DeviceId.cpp" />
     <ClCompile Include="FBO.cpp" />
+    <ClCompile Include="FontManager.cpp" />
     <ClCompile Include="ImGuizmo\ImGuizmo.cpp" />
     <ClCompile Include="Math.cpp" />
     <ClCompile Include="mmgr\mmgr.cpp" />
