@@ -32,7 +32,7 @@ void UIPanelScene::Draw() {
 		lastSize.x = size.x; lastSize.y = size.y;
 		width = size.x; height = size.y;
 
-		App->renderer3D->OnResize(size.x, size.y);
+		App->renderer3D->OnResize(size.x, size.y, true);
 	}
 
 	img = (ImTextureID)App->renderer3D->GetSceneFBOTexture();

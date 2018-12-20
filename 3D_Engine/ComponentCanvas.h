@@ -13,11 +13,13 @@ public:
 	void CleanUp() override;
 	void DrawInspector() override;
 
+	void SetResolution(float2 _resolution);
 public:
-	float2 resolution;
 	bool editor = false;
+
 private:
 	bool setWidthHeight = false;
+	float2 resolution;
 };
 
 #endif // !__COMPONENTCANVAS_H__

@@ -46,6 +46,8 @@ public:
 	void ImplGuiInputs(SDL_Event* e)const;
 	bool isMouseOnScene() const;
 	void MouseOnScene(bool mouseScene);
+	bool isMouseOnGame() const;
+	void MouseOnGame(bool mouseGame);
 
 public:
 	bool demoShowcase = false;
@@ -81,7 +83,7 @@ private:
 	void SetWinDockInv();
 private:
 	bool mouseOnScene = false;
-
+	bool mouseOnGame = false;
 };
 
 #endif 

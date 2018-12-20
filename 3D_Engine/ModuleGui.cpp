@@ -263,6 +263,15 @@ void ModuleGui::MouseOnScene(bool mouseScene)
 	mouseOnScene = mouseScene;
 }
 
+bool ModuleGui::isMouseOnGame() const {
+	return mouseOnGame;
+}
+
+void ModuleGui::MouseOnGame(bool mouseGame)
+{
+	mouseOnGame = mouseGame;
+}
+
 void ModuleGui::SetWinDockInv(){	
 	ImGuiViewport* viewport = ImGui::GetMainViewport();
 	ImGui::SetNextWindowPos(viewport->Pos);

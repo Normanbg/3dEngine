@@ -9,7 +9,7 @@ ComponentCanvas::ComponentCanvas()
 {
 	type = CANVAS;
 
-	resolution = float2(512, 384);
+	//resolution = float2(512, 384);
 }
 
 
@@ -37,4 +37,10 @@ void ComponentCanvas::DrawInspector()
 {
 	ImGui::Separator();
 	ImGui::TextColored(ImVec4(0.25f, 0.25f, 0.25f, 1), "UUID: %i", GetUUID());
+}
+
+void ComponentCanvas::SetResolution(float2 _resolution)
+{
+	resolution = _resolution;
+	setWidthHeight = false;
 }

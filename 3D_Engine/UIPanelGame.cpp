@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleGui.h"
+#include "ComponentCanvas.h"
 
 UIPanelGame::UIPanelGame(const char * name, float positionX, float positionY, float width, float height, bool active) : UIPanel(name, positionX, positionY, width, height, active)
 {
@@ -20,20 +21,19 @@ void UIPanelGame::Draw() {
 	positionY = pos.y;
 */
 
-	/*size = float2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y);*/
-	size = float2(512, 384);
-	/*if (lastSize.x != size.x || lastSize.y != size.y)
+	size = float2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y);
+	//size = float2(512, 384);
+	if (lastSize.x != size.x || lastSize.y != size.y)
 	{
 		lastSize.x = size.x; lastSize.y = size.y;
 		width = size.x; height = size.y;
-
-		App->renderer3D->OnResize(size.x, size.y);
-	}*/
+		App->renderer3D->OnResize(size.x, size.y, false);
+	}
 
 	img = (ImTextureID)App->renderer3D->GetGameFBOTexture();
 
 	ImGui::Image(img, ImVec2(size.x, size.y), ImVec2(0, 1), ImVec2(1, 0));
-	//App->gui->MouseOnScene(ImGui::IsMouseHoveringWindow());
+	App->gui->MouseOnGame(ImGui::IsMouseHoveringWindow());
 
 	if (App->scene->gObjSelected) {
 		ImGuizmo::SetDrawlist();

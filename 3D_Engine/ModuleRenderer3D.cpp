@@ -250,14 +250,18 @@ bool ModuleRenderer3D::CleanUp()
 	return true;
 }
 
-void ModuleRenderer3D::OnResize(const int width, const int height)
+void ModuleRenderer3D::OnResize(const int width, const int height, bool scene)
 {
-	if (App->scene->inGame) {
-		ComponentCamera* mainCam = App->scene->mainCamera->GetComponentCamera();
-		mainCam->SetAspectRatio((float)width / (float)height);
+	if (scene) {
+		App->camera->cameraComp->SetAspectRatio((float)width / (float)height);
 	}
 	else {
-		App->camera->cameraComp->SetAspectRatio((float)width / (float)height);
+		ComponentCamera* mainCam = App->scene->mainCamera->GetComponentCamera();
+		mainCam->SetAspectRatio((float)width / (float)height);
+		GameObject* canvasGO = App->scene->GetFirstGameObjectCanvas();
+		if (canvasGO) {
+			canvasGO->GetComponentCanvas()->SetResolution(float2(width, height));
+		}
 	}
 }
 

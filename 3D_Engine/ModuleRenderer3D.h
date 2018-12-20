@@ -33,7 +33,7 @@ public:
 	bool LoadSettings(Config* data)override;
 	bool SaveSettings(Config* data) const override;
 
-	void OnResize(const int width, const int height);
+	void OnResize(const int width, const int height, bool isScene);
 	char* GetGraphicsModel() const;
 	char* GetGraphicsVendor() const;
 
