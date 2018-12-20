@@ -1,6 +1,7 @@
 #include "GameObject.h"
 #include "Config.h"
 #include "ResourceMesh.h"
+#include "ModuleGui.h"
 
 #include <array>
 #include <vector>
@@ -20,11 +21,6 @@ GameObject::GameObject()
 GameObject::GameObject(const char * Name)
 {
 	name = Name;
-	//transformComp = new ComponentTransformation(); //NEED TO CHANGE HOW COMPONENT TRANSFORMATION WORKS
-	//transformComp->type = TRANSFORM;
-	//transformComp->myGO = this;
-	//components.push_back(transformComp);
-
 	localAABB.SetNegativeInfinity();
 	globalAABB.SetNegativeInfinity();
 

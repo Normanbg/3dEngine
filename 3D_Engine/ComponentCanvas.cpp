@@ -1,6 +1,7 @@
 #include "ComponentCanvas.h"
 #include "GameObject.h"
-
+#include "ModuleGui.h"
+#include "UIPanelGame.h"
 
 #include "mmgr/mmgr.h"
 
@@ -9,7 +10,7 @@ ComponentCanvas::ComponentCanvas()
 {
 	type = CANVAS;
 
-	//resolution = float2(512, 384);
+	SetResolution(float2(App->gui->panelGame->width, App->gui->panelGame->height));
 }
 
 

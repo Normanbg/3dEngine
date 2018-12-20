@@ -14,11 +14,12 @@ public:
 	void DrawInspector() override;
 
 	void SetResolution(float2 _resolution);
+
 public:
 	bool editor = false;
 
 private:
-	bool setWidthHeight = false;
+	bool setWidthHeight = true;
 	float2 resolution;
 };
 

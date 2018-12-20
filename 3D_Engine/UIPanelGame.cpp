@@ -2,7 +2,6 @@
 #include "Application.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleGui.h"
-#include "ComponentCanvas.h"
 
 UIPanelGame::UIPanelGame(const char * name, float positionX, float positionY, float width, float height, bool active) : UIPanel(name, positionX, positionY, width, height, active)
 {
