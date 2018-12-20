@@ -82,6 +82,55 @@ void ComponentRectTransform::DrawInspector()
 		if (ImGui::DragFloat2("Position", (float*)&_pos, 0.1f)) { SetLocalPos(_pos); }
 		if (ImGui::DragFloat("Width", (float*)&_w, 0.1f)) { SetWidth(_w); }
 		if (ImGui::DragFloat("Height", (float*)&_h, 0.1f)) { SetHeight(_h); }
+		if (ImGui::CollapsingHeader("Basic Positions")) {
+			if (ImGui::Button("Top Left")) {
+				float height = myGO->parent->GetComponentRectTransform()->GetHeight();
+				SetLocalPos(float2(0, height));
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("Top center")) {
+				float height = myGO->parent->GetComponentRectTransform()->GetHeight();
+				float width = myGO->parent->GetComponentRectTransform()->GetWidth() / 2;
+				SetLocalPos(float2(width, height));
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("Top Right")) {
+				float height = myGO->parent->GetComponentRectTransform()->GetHeight();
+				float width = myGO->parent->GetComponentRectTransform()->GetWidth();
+				SetLocalPos(float2(width, height));
+			}
+			if (ImGui::Button("Center Left")) {
+				float height = myGO->parent->GetComponentRectTransform()->GetHeight() / 2;
+				SetLocalPos(float2(0, height));
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("Center")) {
+				float2 mid = myGO->parent->GetComponentRectTransform()->GetMid();
+				SetLocalPos(mid);
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("Center Right")) {
+				float height = myGO->parent->GetComponentRectTransform()->GetHeight() / 2;
+				float width = myGO->parent->GetComponentRectTransform()->GetWidth();
+				SetLocalPos(float2(width, height));
+			}
+			if (ImGui::Button("Down Left")) {
+				SetLocalPos(float2(0, 0));
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("Down center")) {
+				float width = myGO->parent->GetComponentRectTransform()->GetWidth() / 2;
+				SetLocalPos(float2(width, 0));
+			}
+		
+			ImGui::SameLine();
+			if (ImGui::Button("Down Right")) {
+				float width = myGO->parent->GetComponentRectTransform()->GetWidth();
+				SetLocalPos(float2(width, 0));
+			}
+			ImGui::SameLine();
+			
+		}
 	}
 
 	ImGui::Spacing();
