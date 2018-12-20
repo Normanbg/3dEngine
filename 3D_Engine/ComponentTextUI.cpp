@@ -5,11 +5,12 @@
 #include "ComponentRectTransform.h"
 
 
-#define STB_IMAGE_WRITE_IMPLEMENTATION
-#include "TrueType/stb_image_write.h"
-
 #define STB_TRUETYPE_IMPLEMENTATION 
 #include "TrueType/stb_truetype.h"
+
+
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include "TrueType/stb_image_write.h"
 
 #include "mmgr/mmgr.h"
 
@@ -86,7 +87,7 @@ void ComponentTextUI::LoadLabel(const char * _label, float _scale, const char * 
 	char* buffer = nullptr;
 	int size = App->fileSys->readFile(fullFontPath.c_str(), &buffer);
 
-	stbtt_fontinfo info;
+	/*stbtt_fontinfo info;
 	if (!stbtt_InitFont(&info, (unsigned char*)buffer, 0))
 	{
 		OWN_LOG("failed initialising font");
@@ -124,7 +125,7 @@ void ComponentTextUI::LoadLabel(const char * _label, float _scale, const char * 
 		
 		int byteOffset = x + (y  * bm_w);
 		stbtt_MakeCodepointBitmap(&info, bitmap + byteOffset, c_x2 - c_x1, c_y2 - c_y1, bm_w, sc, sc, font.text[i]);// render character (stride and offset is important here) 
-
+		
 		
 		int ax;
 		stbtt_GetCodepointHMetrics(&info, font.text[i], &ax, 0); //  character's wide
@@ -135,13 +136,38 @@ void ComponentTextUI::LoadLabel(const char * _label, float _scale, const char * 
 		kern = stbtt_GetCodepointKernAdvance(&info, font.text[i], font.text[i + 1]);// add kerning 
 		x += kern * sc;
 	}
-
 	
+	*/
+	stbtt_bakedchar charData[96];
+
+	int bm_w = 100 * rectTransform->GetWidth(); // bitmap width 
+	int bm_h = 100 * rectTransform->GetHeight(); // bitmap height
+	
+	unsigned char* bitmap = new unsigned char[bm_w * bm_h]; // creates bitmap for the phrase
+	stbtt_BakeFontBitmap((unsigned char*)buffer, 0, 64, bitmap, bm_w, bm_h, 32, 96, charData);
+
+	glGenTextures(1, &texGPUIndex);
+	glBindTexture(GL_TEXTURE_2D, texGPUIndex);
+	glTexImage2D(GL_TEXTURE_2D, 0,GL_RGBA, bm_w, bm_h, 0, GL_ALPHA, GL_UNSIGNED_BYTE, bitmap);
+	// can free temp_bitmap at this point
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+	glBindTexture(GL_TEXTURE_2D, texGPUIndex);
+
+	stbi_write_png(font.exportTexPath.c_str(), bm_w, bm_h, 1, bitmap, bm_w); // export to PNG
+	RELEASE_ARRAY(buffer);
+	RELEASE_ARRAY(bitmap);
+
+	/*
 	stbi_write_png(font.exportTexPath.c_str(), bm_w, bm_h, 1, bitmap, bm_w); // export to PNG
 	RELEASE_ARRAY(buffer);
 	RELEASE_ARRAY(bitmap);
 	uint texW, texH;
 	texGPUIndex = App->texImporter->LoadTexture(font.exportTexPath.c_str(), texW, texH); // load the texture
+*/
+
+
+
 }
 
 
@@ -197,11 +223,12 @@ void ComponentTextUI::DrawUI()
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 	glBindBuffer(GL_ARRAY_BUFFER, 0); //resets the buffer
 	glBindTexture(GL_TEXTURE_2D, 0);
-
+	glColor3f(1.0f, 1.0f, 1.0f);
 	glLineWidth(4.0f);
 
 	if (texGPUIndex !=-1) {
-
+		glEnable(GL_ALPHA_TEST);
+		glAlphaFunc(GL_GREATER, 0);
 		glBindTexture(GL_TEXTURE_2D, texGPUIndex);
 		glTexCoordPointer(2, GL_FLOAT, 0, &(texCoords[0]));
 
@@ -215,7 +242,7 @@ void ComponentTextUI::DrawUI()
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0); //resets the buffer
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-	glDisableClientState(GL_VERTEX_ARRAY);
+	glDisableClientState(GL_VERTEX_ARRAY); glDisable(GL_ALPHA_TEST);
 	glPopMatrix();
 }
 
