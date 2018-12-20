@@ -137,13 +137,13 @@ void ComponentRectTransform::DrawInspector()
 	ImGui::Checkbox("Draw Canvas", &draw);
 }
 
-void ComponentRectTransform::SetWidth(float w)
+void ComponentRectTransform::SetWidth(float w, bool canvas)
 {
 	rect.width = w;
 	UpdateUIComponents();
 }
 
-void ComponentRectTransform::SetHeight(float h)
+void ComponentRectTransform::SetHeight(float h, bool canvas)
 {
 	rect.height= h;
 	UpdateUIComponents();
@@ -190,10 +190,10 @@ void ComponentRectTransform::DrawUI()
 	glLineWidth(3.0f);
 
 	glBegin(GL_LINES);
-	glVertex3f(0, rect.anchor.y + 0.1f, rect.anchor.x);
-	glVertex3f(0, rect.anchor.y - 0.1f, rect.anchor.x);
-	glVertex3f(0, rect.anchor.y, rect.anchor.x + 0.1f);
-	glVertex3f(0, rect.anchor.y, rect.anchor.x - 0.1f);
+	glVertex3f(rect.anchor.x, rect.anchor.y + 0.1f, 0);
+	glVertex3f(rect.anchor.x, rect.anchor.y - 0.1f, 0);
+	glVertex3f(rect.anchor.x + 0.1f, rect.anchor.y, 0);
+	glVertex3f(rect.anchor.x - 0.1f, rect.anchor.y, 0);
 	glEnd();
 
 	glColor3f(1.f, 1.0f, 1.0f);
@@ -219,6 +219,28 @@ void ComponentRectTransform::UpdateLocalPos() {
 	rect.localPosition = float2(rect.globalPosition.x, rect.globalPosition.y);
 }
 
+void ComponentRectTransform::UpdatePercentatge() {
+	ComponentRectTransform* parentRect = myGO->parent->GetComponentRectTransform();
+	if (parentRect) {
+		rect.percentatgeHeight = rect.height / parentRect->GetHeight();
+		rect.percentatgeWidth = rect.width / parentRect->GetWidth();
+	}
+}
+
+void ComponentRectTransform::UpdateSizeWithPercentatge(float lastParentWidth, float lastParentHeight) {
+	ComponentRectTransform* parentRect = myGO->parent->GetComponentRectTransform();
+	if (parentRect) {
+		float lastWidth, lastHeight;
+		lastWidth = rect.width;
+		lastHeight = rect.height;
+		rect.height *= (parentRect->GetHeight() / lastParentHeight);
+		rect.width *= (parentRect->GetWidth() / lastParentWidth);
+
+		for (auto it : myGO->childrens) {
+			UpdateSizeWithPercentatge(lastWidth, lastHeight);
+		}
+	}
+}
 
 void ComponentRectTransform::UpdateUIComponents()
 {

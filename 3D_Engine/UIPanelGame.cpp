@@ -15,13 +15,8 @@ void UIPanelGame::Draw() {
 	uint flags = ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse;
 	ImGui::Begin("Game", &active, flags);
 
-	/*pos = float2(ImGui::GetCursorPosX() + ImGui::GetWindowPos().x, ImGui::GetCursorPosY() + ImGui::GetWindowPos().y);
-	positionX = pos.x;
-	positionY = pos.y;
-*/
-
 	size = float2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y);
-	//size = float2(512, 384);
+
 	if (lastSize.x != size.x || lastSize.y != size.y)
 	{
 		lastSize.x = size.x; lastSize.y = size.y;

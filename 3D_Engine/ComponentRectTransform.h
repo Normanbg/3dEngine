@@ -11,9 +11,11 @@ class ComponentRectTransform : public ComponentUI, public Component
 	{
 		float2 localPosition = float2::zero;
 		float2 globalPosition = float2::zero;
-		float width = 0;
-		float height = 0;
-		float2 anchor = float2(0,0);
+		float width = 0.f;
+		float height = 0.f;
+		float percentatgeWidth = 0.f;
+		float percentatgeHeight = 0.f;
+		float2 anchor = float2(0.f,0.f);
 		float3* vertex = nullptr;		
 		uint vertexID;
 
@@ -44,8 +46,8 @@ public:
 	const float2 GetGlobalPos() const { return rect.globalPosition; }
 	const float2 GetMid() const { return float2(rect.width / 2, rect.height / 2); };
 
-	void SetWidth(float w);
-	void SetHeight(float h);
+	void SetWidth(float w, bool isCanvas);
+	void SetHeight(float h, bool isCanvas);
 	void SetGlobalPos(float2 global);
 	void SetLocalPos(float2 newLocalMat);
 
@@ -61,6 +63,8 @@ public:
 private:
 
 void UpdateLocalPos();
+void UpdatePercentatge();
+void UpdateSizeWithPercentatge(float lastParentWidth, float lastParentHeight);
 
 private:
 	RectTransform rect;
