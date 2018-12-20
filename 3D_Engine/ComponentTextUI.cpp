@@ -42,7 +42,7 @@ bool ComponentTextUI::Start()
 	memcpy(texCoords, uvs, sizeof(float2) * 4);
 
 	rectTransform = myGO->GetComponentRectTransform();
-	rectTransform->SetWidth(3.0f);
+	rectTransform->SetWidth(3.0f, false);
 	font.exportTexPath += (std::to_string(UUID) + PNG_FORMAT);
 	LoadLabel();
 	return true;

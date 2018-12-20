@@ -21,8 +21,8 @@ ComponentCanvas::~ComponentCanvas()
 bool ComponentCanvas::Update()
 {
 	if (!setWidthHeight) {
-		myGO->GetComponentRectTransform()->SetWidth(resolution.x);
-		myGO->GetComponentRectTransform()->SetHeight(resolution.y);
+		myGO->GetComponentRectTransform()->SetWidth(resolution.x, true);
+		myGO->GetComponentRectTransform()->SetHeight(resolution.y, true);
 		setWidthHeight = true;
 	}
 

@@ -52,8 +52,8 @@ void ComponentRectTransform::Load(Config * data)
 {
 	UUID = data->GetUInt("UUID");
 	SetGlobalPos(data->GetFloat2("Position", { 0,0 }));
-	SetWidth(data->GetFloat("Width", 1));
-	SetHeight(data->GetFloat("Height", 1));
+	SetWidth(data->GetFloat("Width", 1),false);
+	SetHeight(data->GetFloat("Height", 1), false);
 }
 
 void ComponentRectTransform::Save(Config & data) const
@@ -80,8 +80,8 @@ void ComponentRectTransform::DrawInspector()
 	}
 	else {
 		if (ImGui::DragFloat2("Position", (float*)&_pos, 0.1f)) { SetLocalPos(_pos); }
-		if (ImGui::DragFloat("Width", (float*)&_w, 0.1f)) { SetWidth(_w); }
-		if (ImGui::DragFloat("Height", (float*)&_h, 0.1f)) { SetHeight(_h); }
+		if (ImGui::DragFloat("Width", (float*)&_w, 0.1f)) { SetWidth(_w, false); }
+		if (ImGui::DragFloat("Height", (float*)&_h, 0.1f)) { SetHeight(_h, false); }
 		if (ImGui::CollapsingHeader("Basic Positions")) {
 			if (ImGui::Button("Top Left")) {
 				float height = myGO->parent->GetComponentRectTransform()->GetHeight();
