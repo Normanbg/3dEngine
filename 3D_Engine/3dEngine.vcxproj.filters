@@ -58,6 +58,9 @@
     <Filter Include="Sources\Objects &amp; Components\Components\ComponentsUI">
       <UniqueIdentifier>{d0678a25-06b4-4000-a2d1-df7df56d7502}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Tools\FreeType">
+      <UniqueIdentifier>{2702723f-e9b2-4ce5-9934-522644f73109}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -438,6 +441,18 @@
     <ClInclude Include="ComponentInputUI.h">
       <Filter>Sources\Objects &amp; Components\Components\ComponentsUI</Filter>
     </ClInclude>
+    <ClInclude Include="FontManager.h">
+      <Filter>Sources\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="FreeType\include\ft2build.h">
+      <Filter>Sources\Tools\FreeType</Filter>
+    </ClInclude>
+    <ClInclude Include="FreeType\include\freetype\config\ftheader.h">
+      <Filter>Sources\Tools\FreeType</Filter>
+    </ClInclude>
+    <ClInclude Include="FreeType\include\freetype\freetype.h">
+      <Filter>Sources\Tools\FreeType</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleInput.cpp">
@@ -712,6 +727,9 @@
     </ClCompile>
     <ClCompile Include="ComponentInputUI.cpp">
       <Filter>Sources\Objects &amp; Components\Components\ComponentsUI</Filter>
+    </ClCompile>
+    <ClCompile Include="FontManager.cpp">
+      <Filter>Sources\Tools</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
