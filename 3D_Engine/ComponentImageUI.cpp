@@ -88,7 +88,8 @@ void ComponentImageUI::DrawInspector()
 		{
 			bool is_selected = false;
 			if (currentMaterial != nullptr) {
-				bool is_selected = (strcmp(currentMaterial, mat[i]->GetName()) == 0);
+				const char* n = mat[i]->GetName();
+				bool is_selected = (strcmp(currentMaterial, n) == 0);
 			}
 			if (ImGui::Selectable(mat[i]->GetName(), is_selected)) {
 				currentMaterial = mat[i]->GetName();
@@ -111,8 +112,7 @@ void ComponentImageUI::DrawInspector()
 
 		ImGui::Text("Texture size:\nWidth: %dpx \nHeight: %dpx ", resourceTexture->width, resourceTexture->height);
 		float windowSize = ImGui::GetWindowContentRegionWidth();
-		ImGui::Image((void*)(resourceTexture->gpuID), ImVec2(windowSize, windowSize), ImVec2(0, 1), ImVec2(1, 0));
-		
+		ImGui::Image((void*)(resourceTexture->gpuID), ImVec2(windowSize, windowSize), ImVec2(0, 1), ImVec2(1, 0));		
 	}
 }
 
@@ -162,6 +162,7 @@ void ComponentImageUI::SetResource(uuid resource)
 	resourceTexture->LoadInMemory();
 	resourceUUID = resource;
 }
+
 const uint ComponentImageUI::GetTexID() const
 {
 	if (HasTexture()) {

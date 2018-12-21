@@ -3,8 +3,7 @@
 #include "ModuleResources.h"
 #include "GameObject.h"
 #include "UIPanelGame.h"
-#include "ModuleInput.h"
-#include "ModuleGui.h"
+
 
 #include "mmgr/mmgr.h"
 
@@ -42,9 +41,6 @@ ComponentRectTransform::~ComponentRectTransform()
 
 bool ComponentRectTransform::Update()
 {
-	GameObject* canvasGO = App->scene->GetFirstGameObjectCanvas();
-	if (App->gui->isMouseOnGame() && myGO != canvasGO)
-		CheckMousePos();
 	return true;
 }
 
@@ -211,19 +207,6 @@ void ComponentRectTransform::GenBuffer()
 	glBindBuffer(GL_ARRAY_BUFFER, rect.vertexID); // set the type of buffer
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float3) * 4, &rect.vertex[0], GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-}
-
-void ComponentRectTransform::CheckMousePos() {
-	float2 mousePos = float2(App->gui->panelGame->GetMouseRelativeToGame().x, App->gui->panelGame->GetMouseRelativeToGame().y);
-	if (rect.globalPosition.x <= mousePos.x && mousePos.x <= rect.globalPosition.x + rect.width &&
-		rect.globalPosition.y <= mousePos.y && mousePos.y <= rect.globalPosition.y + rect.height) {
-		if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN) {
-			state = CLICKED;
-		}
-		else if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_IDLE && state != CLICKED) {
-			state = MOUSEOVER;
-		}
-	}
 }
 
 void ComponentRectTransform::UpdateLocalPos() {

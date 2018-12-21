@@ -3,6 +3,8 @@
 
 #include "Component.h"
 #include "ComponentUI.h"
+#include "ResourceTexture.h"
+
 
 class ComponentButtonUI : public ComponentUI, public Component
 {
@@ -10,6 +12,19 @@ public:
 	ComponentButtonUI();
 	~ComponentButtonUI();
 
+	enum Function {
+		NO_FUNCTION,
+		START,
+		OPEN_IN_GAME_MENU,
+		ACTIVATE_VSYNC
+	};
+
+	enum ButtonState
+	{
+		STANDBY,
+		MOUSEOVER,
+		CLICKED
+	};
 	void UpdateRectTransform() override;
 	void DrawInspector() override;
 	void DrawUI() override;
@@ -26,6 +41,16 @@ public:
 	void Save(Config& data) const override;
 	inline void doLoad(Config* data) override { Load(data); }
 	inline void doSave(Config& data)const  override { Save(data); }
+
+	void CheckState();
+
+	void SetResource(uuid resource, int numRes);
+
+public:
+	ButtonState state = STANDBY;
+	ResourceTexture* idleImg = nullptr;
+	ResourceTexture* hoverImg = nullptr;
+	ResourceTexture* pressedImg = nullptr;
 };
 
 

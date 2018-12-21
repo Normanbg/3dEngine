@@ -21,12 +21,7 @@ class ComponentRectTransform : public ComponentUI, public Component
 
 	};
 
-	enum elementState
-	{
-		STANDBY,
-		MOUSEOVER,
-		CLICKED
-	};
+	
 
 public:
 	ComponentRectTransform();
@@ -66,12 +61,7 @@ public:
 	void DrawUI() override;
 	void GenBuffer();
 
-	void CheckMousePos();
 
-public:
-	elementState state = STANDBY;
-
-	bool tri = false;
 
 private:
 
