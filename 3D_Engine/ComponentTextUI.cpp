@@ -27,10 +27,11 @@ bool ComponentTextUI::Start()
 	App->fileSys->GetFilesFromDir(FONTS_PATH, loadedFonts, loadedFonts); // load fonts
 
 	static const float uvs[] = {
-		0, 0,
-		1, 0,
+		0, 1,
 		1, 1,
-		0, 1
+		1, 0,		
+		0, 0
+		
 	};
 
 	texCoords = new float2[4];
@@ -38,8 +39,8 @@ bool ComponentTextUI::Start()
 
 	rectTransform = myGO->GetComponentRectTransform();
 	
-	label.font = App->fontManager->LoadFont(DEFAULT_FONT, 10);
-	SetText("Default Text.");
+	label.font = App->fontManager->LoadFont(DEFAULT_FONT, 20);
+	SetText("D.");
 	//font.exportTexPath += (std::to_string(UUID) + PNG_FORMAT);
 	//LoadLabel();
 	return true;
@@ -86,6 +87,7 @@ void ComponentTextUI::EnframeLabel(float3 * points) {
 	labelFrame[2] = GetCornerLabelPoint(2) + GetCornerLabelPoint(1);//topright;
 	labelFrame[3] = GetCornerLabelPoint(2) + GetCornerLabelPoint(3);//bottomrigth;
 }
+
 float3 ComponentTextUI::GetCornerLabelPoint(int corner) {
 	float3 ret = float3(0, 0, 0);
 	switch (corner) {
@@ -110,7 +112,7 @@ float3 ComponentTextUI::GetCornerLabelPoint(int corner) {
 			}
 
 		}
-		ret = { 0, max_y_plane->vertex[0].y + max_y + rectTransform->GetGlobalPos().y + label.textOrigin.y, 0 };
+		ret = { 0, max_y_plane->vertex[2].y + max_y + rectTransform->GetGlobalPos().y + label.textOrigin.y, 0 };
 		break;
 	}
 	case 2: {//maxX		
@@ -162,7 +164,7 @@ float3 ComponentTextUI::GetCornerLabelPoint(int corner) {
 	return ret;
 }
 
-void ComponentTextUI::AddCharPanel(char character, float3 pos)
+void ComponentTextUI::AddCharPanel(char character)
 {
 	FT_Load_Char(label.font->face, (GLchar)character, FT_LOAD_RENDER);
 	float2 size = { (float)label.font->face->glyph->bitmap.width, (float)label.font->face->glyph->bitmap.rows };
@@ -175,7 +177,7 @@ void ComponentTextUI::AddCharPanel(char character, float3 pos)
 void ComponentTextUI::FillCharPlanes()
 {
 	for (int i = 0; i < label.text.size(); i++)
-		AddCharPanel(label.text[i], { 0,0,0 });
+		AddCharPanel(label.text[i]);
 
 	int counter = 0;
 	offsetPlanes.clear();
@@ -303,6 +305,7 @@ void ComponentTextUI::DrawInspector()
 	if (ImGui::SliderInt("Scale", &label.scale, 10, 30)) {
 		
 	}
+	
 	/*if (ImGui::BeginCombo("Fonts", label.fontSrc.c_str()))
 	{
 		for (int i = 0; i < loadedFonts.size(); i++)
@@ -347,7 +350,7 @@ void ComponentTextUI::DrawUI()
 		if (!draw_section) {// && (counter < section.x || counter > section.y))
 
 			lettersDrawn++;
-			
+
 			//ComponentTransform* trans = rectTrans->GetTransform();
 
 			// Get Parent Matrix
@@ -391,11 +394,11 @@ void ComponentTextUI::DrawUI()
 
 				lineDistance = 0;*/
 			}
-			/**/
-			glPushMatrix();
-			float4x4 globalMat;
-			rectTransform->SetGlobalMatrixToDraw(globalMat);
-			glMultMatrixf(globalMat.Transposed().ptr());
+			increment.SetTranslatePart(cursor);
+
+			glColor3f(1.0f, 1.0f, 1.0f);
+			glMatrixMode(GL_MODELVIEW);
+			glLoadMatrixf((GLfloat*)(((float4x4::identity * increment).Transposed() * view_mat).v));
 
 			glEnableClientState(GL_VERTEX_ARRAY);
 			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
@@ -403,10 +406,16 @@ void ComponentTextUI::DrawUI()
 			glBindTexture(GL_TEXTURE_2D, 0);
 
 			glLineWidth(4.0f);
-						
+
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+			glEnable(GL_ALPHA_TEST);
+			glAlphaFunc(GL_GREATER, 0);
+
 			glBindTexture(GL_TEXTURE_2D, (*it)->textureID);
 			glTexCoordPointer(2, GL_FLOAT, 0, &(texCoords[0]));
-			
+
 			glBindBuffer(GL_ARRAY_BUFFER, (*it)->vertexID);
 			glVertexPointer(3, GL_FLOAT, 0, NULL);
 			glDrawArrays(GL_QUADS, 0, 4);
@@ -417,25 +426,39 @@ void ComponentTextUI::DrawUI()
 			glBindBuffer(GL_ARRAY_BUFFER, 0); //resets the buffer
 			glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 			glDisableClientState(GL_VERTEX_ARRAY);
-			glPopMatrix(); 
-/*
-			glBegin(GL_LINES);
-			glColor3f(0.0f, 1.0f, 0.0f);
 
-			glVertex3f((*it)->vertex[0].x, (*it)->vertex[0].y, (*it)->vertex[0].z);
-			glVertex3f((*it)->vertex[1].x, (*it)->vertex[1].y, (*it)->vertex[1].z);
+			glDisable(GL_BLEND);
+			glDisable(GL_ALPHA_TEST);
 
-			glVertex3f((*it)->vertex[1].x, (*it)->vertex[1].y, (*it)->vertex[1].z);
-			glVertex3f((*it)->vertex[2].x, (*it)->vertex[2].y, (*it)->vertex[2].z);
+			glPopMatrix();
+			glColor3f(1.0f, 1.0f, 1.0f);
 
-			glVertex3f((*it)->vertex[2].x, (*it)->vertex[2].y, (*it)->vertex[2].z);
-			glVertex3f((*it)->vertex[3].x, (*it)->vertex[3].y, (*it)->vertex[3].z);
+			if (drawCharPanel) {
+				glBegin(GL_LINES);
+				glColor3f(0.0f, 1.0f, 1.0f);
 
-			glVertex3f((*it)->vertex[3].x, (*it)->vertex[3].y, (*it)->vertex[3].z);
-			glVertex3f((*it)->vertex[0].x, (*it)->vertex[0].y, (*it)->vertex[0].z);
+				glVertex3f((*it)->vertex[0].x, (*it)->vertex[0].y, (*it)->vertex[0].z);
+				glVertex3f((*it)->vertex[1].x, (*it)->vertex[1].y, (*it)->vertex[1].z);
 
-			glEnd();
+				glVertex3f((*it)->vertex[1].x, (*it)->vertex[1].y, (*it)->vertex[1].z);
+				glVertex3f((*it)->vertex[2].x, (*it)->vertex[2].y, (*it)->vertex[2].z);
+
+				glVertex3f((*it)->vertex[2].x, (*it)->vertex[2].y, (*it)->vertex[2].z);
+				glVertex3f((*it)->vertex[3].x, (*it)->vertex[3].y, (*it)->vertex[3].z);
+
+				glVertex3f((*it)->vertex[3].x, (*it)->vertex[3].y, (*it)->vertex[3].z);
+				glVertex3f((*it)->vertex[0].x, (*it)->vertex[0].y, (*it)->vertex[0].z);
+
+				glEnd();
+			}
 			
+
+			glMatrixMode(GL_MODELVIEW);
+			glLoadMatrixf((GLfloat*)view_mat.v);
+
+			glColor3f(1.0f, 1.0f, 1.0f);
+
+			/*
 			increment.SetTranslatePart(cursor);
 
 			glMatrixMode(GL_MODELVIEW);
@@ -458,8 +481,27 @@ void ComponentTextUI::DrawUI()
 
 			glMatrixMode(GL_MODELVIEW);
 			glLoadMatrixf((GLfloat*)view_mat.v);*/
+
 		}
-	}
+		if (drawLabelrect) {
+			glBegin(GL_LINES);
+			glColor3f(0.0f, 0.0f, 1.0f);
+
+			glVertex3f(labelFrame[0].x, labelFrame[0].y, labelFrame[0].z);
+			glVertex3f(labelFrame[1].x, labelFrame[1].y, labelFrame[1].z);
+
+			glVertex3f(labelFrame[1].x, labelFrame[1].y, labelFrame[1].z);
+			glVertex3f(labelFrame[2].x, labelFrame[2].y, labelFrame[2].z);
+
+			glVertex3f(labelFrame[2].x, labelFrame[2].y, labelFrame[2].z);
+			glVertex3f(labelFrame[3].x, labelFrame[3].y, labelFrame[3].z);
+
+			glVertex3f(labelFrame[3].x, labelFrame[3].y, labelFrame[3].z);
+			glVertex3f(labelFrame[0].x, labelFrame[0].y, labelFrame[0].z);
+
+			glEnd();
+		}
+		}
 	/*
 	glPushMatrix();
 	float4x4 globalMat;
@@ -492,35 +534,19 @@ void ComponentTextUI::DrawUI()
 	glPopMatrix();*/
 
 
-	/*
-	glBegin(GL_LINES);
-	glColor3f(0.0f, 1.0f, 0.0f);
 	
-	glVertex3f(labelFrame[0].x, labelFrame[0].y, labelFrame[0].z);
-	glVertex3f(labelFrame[1].x, labelFrame[1].y, labelFrame[1].z);
-
-	glVertex3f(labelFrame[1].x, labelFrame[1].y, labelFrame[1].z);
-	glVertex3f(labelFrame[2].x, labelFrame[2].y, labelFrame[2].z);
-
-	glVertex3f(labelFrame[2].x, labelFrame[2].y, labelFrame[2].z);
-	glVertex3f(labelFrame[3].x, labelFrame[3].y, labelFrame[3].z);
-
-	glVertex3f(labelFrame[3].x, labelFrame[3].y, labelFrame[3].z);
-	glVertex3f(labelFrame[0].x, labelFrame[0].y, labelFrame[0].z);
-
-	glEnd();*/
 }
 
 void ComponentTextUI::CharPlane::GenBuffer(float2 size)
 {
-	static const float vtx[] = { -1,-1, 0,
+	/*static const float vtx[] = { -1,-1, 0,
 								  -1,1, 0,
 								  1,1, 0,
-								   1,-1, 0 };
-	/*static const float vtx[] = { -size.x/2 ,size.y/2, 0,
-								size.x/2 ,size.y/2, 0,
-								-size.x/2, -size.y/2, 0, 
-								size.x/2, -size.y/2, 0 };*/
+								   1,-1, 0 };*/
+	static const float vtx[] = { -size.x/2 ,-size.y/2, 0,
+								size.x/2 ,-size.y/2, 0,
+								size.x/2, size.y/2, 0, 
+								-size.x/2, size.y/2, 0 };
 	vertex = new float3[4];
 	memcpy(vertex, vtx, sizeof(float3) * 4);
 

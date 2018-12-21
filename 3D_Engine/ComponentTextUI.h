@@ -52,7 +52,7 @@ public:
 private: 
 	//void LoadLabel(const char* label = "Insert Text", float scale = 1.0f, const char* font = DEFAULT_FONT);
 
-	void AddCharPanel(char character, float3 pos);
+	void AddCharPanel(char character);
 
 	void FillCharPlanes();
 	void EnframeLabel(float3 * points);
@@ -66,6 +66,8 @@ private:
 	//uint texGPUIndex = -1;
 	Label label;
 	uint lineSpacing = 0;
+	bool drawCharPanel = true;
+	bool drawLabelrect = true;
 	
 };
 
