@@ -16,6 +16,9 @@ void UIPanelGame::Draw() {
 	ImGui::Begin("Game", &active, flags);
 
 	size = float2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y);
+	pos = float2(ImGui::GetCursorPosX() + ImGui::GetWindowPos().x, ImGui::GetCursorPosY() + ImGui::GetWindowPos().y);
+	positionX = pos.x;
+	positionY = pos.y;
 
 	if (lastSize.x != size.x || lastSize.y != size.y)
 	{
@@ -38,18 +41,12 @@ void UIPanelGame::Draw() {
 	ImGui::End();
 }
 
-const ImVec2 UIPanelGame::GetMouse() const
+const ImVec2 UIPanelGame::GetMouseRelativeToGame() const
 {
 	ImVec2 mousePos = ImGui::GetMousePos();
 
 	ImVec2 realMousePos = ImVec2(mousePos.x - pos.x, mousePos.y - pos.y);
-	ImVec2 mouseNormalized;
+	ImVec2 mouseRelativeToGame = ImVec2(realMousePos.x, size.y - realMousePos.y);
 
-	mouseNormalized.x = realMousePos.x / size.x;
-	mouseNormalized.y = realMousePos.y / size.y;
-
-	mouseNormalized.x = (mouseNormalized.x - 0.5) * 2;
-	mouseNormalized.y = (mouseNormalized.y - 0.5) * -2;
-
-	return mouseNormalized;
+	return mouseRelativeToGame;
 }
