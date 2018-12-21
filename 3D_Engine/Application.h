@@ -55,6 +55,7 @@ class ModuleTime;
 class ModuleResources;
 class SceneImporter;
 class TextureImporter;
+class FontManager;
 
 class Application
 {
@@ -70,7 +71,7 @@ public:
 	ModuleTime* time;
 	ModuleResources* resources;
 
-
+	FontManager* fontManager;
 	SceneImporter* importer;
 	TextureImporter* texImporter;
 

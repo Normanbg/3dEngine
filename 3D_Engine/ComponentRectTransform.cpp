@@ -53,7 +53,8 @@ void ComponentRectTransform::Load(Config * data)
 {
 	UUID = data->GetUInt("UUID");
 	SetGlobalPos(data->GetFloat2("Position", { 0,0 }));
-	SetWidth(data->GetFloat("Width", 1), false);
+	SetWidth(data->GetFloat("Width", 1),false);
+
 	SetHeight(data->GetFloat("Height", 1), false);
 }
 
@@ -172,7 +173,7 @@ void ComponentRectTransform::DrawUI()
 	float4x4 globalMat;
 	SetGlobalMatrixToDraw(globalMat);
 	glMultMatrixf(globalMat.Transposed().ptr());
-
+	
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glBindBuffer(GL_ARRAY_BUFFER, 0); //resets the buffer
 
@@ -190,6 +191,7 @@ void ComponentRectTransform::DrawUI()
 
 	glLineWidth(3.0f);
 
+	//----Anchor Point
 	glBegin(GL_LINES);
 	glVertex3f(rect.anchor.x, rect.anchor.y + 0.1f, 0);
 	glVertex3f(rect.anchor.x, rect.anchor.y - 0.1f, 0);
