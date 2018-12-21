@@ -13,6 +13,7 @@
 #include "ModuleGui.h"
 #include "SceneImporter.h"
 #include "TextureImporter.h"
+#include "FontManager.h"
 #include "Brofiler/Brofiler.h"
 
 #include "mmgr/mmgr.h"
@@ -78,6 +79,7 @@ bool Application::Init(){
 
 	importer = new SceneImporter();
 	texImporter = new TextureImporter();
+	fontManager = new FontManager();
 
 	importer->Init();
 	texImporter->Init();

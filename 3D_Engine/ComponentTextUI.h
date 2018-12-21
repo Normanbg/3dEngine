@@ -2,12 +2,27 @@
 #define __COMPONENTTEXTUI_H__
 #include "Component.h"
 #include "ComponentUI.h"
+#include "FontManager.h"
+#include <string>
 
 
 class ComponentTextUI : public ComponentUI, public Component
 {
+	struct Label {
+		Font* font = nullptr;
+		int scale = 0;
+		float3 color = float3(0,0,0);
+		float2 textOrigin = float2(0, 0);
+		std::string text = std::string("Default Text.");
+	};
+	class CharPlane {
+	public:
+		void GenBuffer(float2 size);
 
-	
+		float3* vertex = nullptr;
+		uint vertexID =-1;
+		uint textureID = -1;
+	};
 
 public:
 	ComponentTextUI();
@@ -31,14 +46,27 @@ public:
 	inline void doSave(Config& data)const  override { Save(data); }
 
 	
-	
+	void SetText(const char* txt);
+
 
 private: 
-	void LoadLabel(const char* label = "Insert Text", float scale = 1.0f, const char* font = DEFAULT_FONT);
+	//void LoadLabel(const char* label = "Insert Text", float scale = 1.0f, const char* font = DEFAULT_FONT);
+
+	void AddCharPanel(char character, float3 pos);
+
+	void FillCharPlanes();
+	void EnframeLabel(float3 * points);
+	float3 GetCornerLabelPoint(int corner);
 
 	std::vector<std::string> loadedFonts;
+	std::vector<CharPlane*> charPlanes;
+	std::vector<float3> offsetPlanes;
 	float2* texCoords = nullptr;
-	uint texGPUIndex = -1;
+	float3 labelFrame[4];
+	//uint texGPUIndex = -1;
+	Label label;
+	uint lineSpacing = 0;
+	
 };
 
 
