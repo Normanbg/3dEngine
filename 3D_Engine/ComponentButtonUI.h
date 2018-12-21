@@ -21,9 +21,9 @@ public:
 
 	enum ButtonState
 	{
-		STANDBY,
+		IDLE,
 		MOUSEOVER,
-		CLICKED
+		PRESSED
 	};
 	void UpdateRectTransform() override;
 	void DrawInspector() override;
@@ -42,12 +42,15 @@ public:
 	inline void doLoad(Config* data) override { Load(data); }
 	inline void doSave(Config& data)const  override { Save(data); }
 
-	void CheckState();
-
 	void SetResource(uuid resource, int numRes);
 
+private:
+	void CheckState();
+	const bool HasTexture(ResourceTexture * res) const;
+	void ChangeGOImage();
+
 public:
-	ButtonState state = STANDBY;
+	ButtonState state = IDLE;
 	ResourceTexture* idleImg = nullptr;
 	ResourceTexture* hoverImg = nullptr;
 	ResourceTexture* pressedImg = nullptr;
