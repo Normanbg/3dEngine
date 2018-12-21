@@ -318,9 +318,7 @@ void GameObject::GetComponentsUIType(std::vector<ComponentUI*>& comp, ComponentT
 
 }
 
-
-
-void GameObject::SetParent(GameObject * _parent)//TO CHECK!!!----------------------------------------------------------
+void GameObject::SetParent(GameObject * _parent)
 {
 		
 	if (parent != nullptr ) {

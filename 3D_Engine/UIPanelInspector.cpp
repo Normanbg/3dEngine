@@ -54,38 +54,40 @@ void UIPanelInspector::Draw() {
 		for (std::vector<ComponentUI*>::iterator itComponents = componentsUIRecover.begin(); itComponents != componentsUIRecover.end(); itComponents++) {
 			DrawUIComponent((*itComponents));
 		}
-		if (ImGui::CollapsingHeader("Add Component")) {
-		
-			if (!go->GetComponentCamera()) {
-				if (ImGui::Button("Camera")) {
-					go->AddComponent(CAMERA);
-				}
-			}
-			
-			if (!go->GetComponentMaterial()) {
-				if (ImGui::Button("Material")) {
-					ComponentMaterial* mat =(ComponentMaterial*) go->AddComponent(MATERIAL);
-					ComponentMesh* m =go->GetComponentMesh();
-					if (m) {
-						m->SetMaterial(mat);
+		if (go->GetComponentRectTransform() == nullptr)
+		{
+			if (ImGui::CollapsingHeader("Add Component")) {
+
+				if (!go->GetComponentCamera()) {
+					if (ImGui::Button("Camera")) {
+						go->AddComponent(CAMERA);
 					}
-					mat = nullptr;
-					m = nullptr;
 				}
-			}
-			if (!go->GetComponentMesh()) {
-				if (ImGui::Button("Mesh")) {
-					ComponentMesh* m =(ComponentMesh*) go->AddComponent(MESH);
-					ComponentMaterial* mat = go->GetComponentMaterial();
-					if (mat) {
-						m->SetMaterial(mat);
+
+				if (!go->GetComponentMaterial()) {
+					if (ImGui::Button("Material")) {
+						ComponentMaterial* mat = (ComponentMaterial*)go->AddComponent(MATERIAL);
+						ComponentMesh* m = go->GetComponentMesh();
+						if (m) {
+							m->SetMaterial(mat);
+						}
+						mat = nullptr;
+						m = nullptr;
 					}
-					mat = nullptr;
-					m = nullptr;
+				}
+				if (!go->GetComponentMesh()) {
+					if (ImGui::Button("Mesh")) {
+						ComponentMesh* m = (ComponentMesh*)go->AddComponent(MESH);
+						ComponentMaterial* mat = go->GetComponentMaterial();
+						if (mat) {
+							m->SetMaterial(mat);
+						}
+						mat = nullptr;
+						m = nullptr;
+					}
 				}
 			}
 		}
-
 
 
 	}

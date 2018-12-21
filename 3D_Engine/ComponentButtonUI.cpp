@@ -149,7 +149,7 @@ void ComponentButtonUI::DrawInspector()
 		if (idleImg != nullptr) {
 			idleMaterial = idleImg->GetName();
 		}
-		if (ImGui::BeginCombo("                         .", idleMaterial))
+		if (ImGui::BeginCombo("   ", idleMaterial))
 		{
 			std::vector<Resource*> mat = App->resources->GetResourcesListType(Resource::ResType::Texture);
 
@@ -175,17 +175,17 @@ void ComponentButtonUI::DrawInspector()
 		}
 		if (idleImg != nullptr) {
 			ImGui::Image((void*)(idleImg->gpuID), ImVec2(windowSize / 2, windowSize / 2), ImVec2(0, 1), ImVec2(1, 0));
+			ImGui::Text("Size:\n Width: %dpx | Height: %dpx ", idleImg->width, idleImg->height);
 			idleMaterial = nullptr;
 		}
 	}
-
-
+	
 	if (ImGui::CollapsingHeader("Hover Image")) {
 		const char* hoverMaterial = NULL;
 		if (hoverImg != nullptr) {
 			hoverMaterial = hoverImg->GetName();
 		}
-		if (ImGui::BeginCombo("                        .", hoverMaterial))
+		if (ImGui::BeginCombo(" ", hoverMaterial))
 		{
 			std::vector<Resource*> mat = App->resources->GetResourcesListType(Resource::ResType::Texture);
 
@@ -211,6 +211,7 @@ void ComponentButtonUI::DrawInspector()
 		}
 		if (hoverImg != nullptr) {
 			ImGui::Image((void*)(hoverImg->gpuID), ImVec2(windowSize / 2, windowSize / 2), ImVec2(0, 1), ImVec2(1, 0));
+			ImGui::Text("Size:\n Width: %dpx | Height: %dpx ", hoverImg->width, hoverImg->height);
 			hoverMaterial = nullptr;
 		}
 	}
@@ -220,7 +221,7 @@ void ComponentButtonUI::DrawInspector()
 		if (pressedImg != nullptr) {
 			pressedMaterial = pressedImg->GetName();
 		}
-		if (ImGui::BeginCombo("                       .", pressedMaterial))//TO AVOID 
+		if (ImGui::BeginCombo("  ", pressedMaterial))//TO AVOID 
 		{
 			std::vector<Resource*> mat = App->resources->GetResourcesListType(Resource::ResType::Texture);
 
@@ -246,6 +247,7 @@ void ComponentButtonUI::DrawInspector()
 		if (pressedImg != nullptr) {
 			float windowSize = ImGui::GetWindowContentRegionWidth();
 			ImGui::Image((void*)(pressedImg->gpuID), ImVec2(windowSize / 2, windowSize / 2), ImVec2(0, 1), ImVec2(1, 0));
+			ImGui::Text("Size:\n Width: %dpx | Height: %dpx ", pressedImg->width, pressedImg->height);
 			pressedMaterial = nullptr;
 		}
 	}
