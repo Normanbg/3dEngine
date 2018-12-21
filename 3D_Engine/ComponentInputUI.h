@@ -3,6 +3,11 @@
 
 #include "Component.h"
 #include "ComponentUI.h"
+
+
+class ComponentTextUI;
+class ComponentButtonUI;
+
 class ComponentInputUI : public ComponentUI, public Component
 {
 public:
@@ -25,6 +30,10 @@ public:
 	void Save(Config& data) const override;
 	inline void doLoad(Config* data) override { Load(data); }
 	inline void doSave(Config& data)const  override { Save(data); }
+
+	ComponentTextUI* cText = nullptr;
+	ComponentButtonUI* cButton = nullptr;
+
 };
 
 

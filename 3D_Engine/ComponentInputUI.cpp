@@ -1,6 +1,7 @@
 #include "ComponentInputUI.h"
-
-
+#include "ComponentTextUI.h"
+#include "ComponentButtonUI.h"
+#include "GameObject.h"
 
 ComponentInputUI::ComponentInputUI()
 {
@@ -25,6 +26,9 @@ void ComponentInputUI::DrawUI()
 
 bool ComponentInputUI::Start()
 {
+	cText = myGO->GetComponentTextUI();
+	cButton = myGO->GetComponentButtonUI();
+		
 	return true;
 }
 

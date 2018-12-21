@@ -362,7 +362,14 @@ void ComponentTextUI::DrawUI()
 
 		lettersDrawn++;
 		float4x4 viewMatrix = float4x4::identity;
+		float4x4 globalMatrix = float4x4::identity;
 		float4x4 incrementMatrix = float4x4::identity;
+
+		float3	pos = float3(rectTransform->GetGlobalPos().x, rectTransform->GetGlobalPos().y, 0);
+		
+		globalMatrix.SetTranslatePart(pos);
+
+		
 
 		GLfloat matrix[16];
 		glGetFloatv(GL_MODELVIEW_MATRIX, matrix);
@@ -401,7 +408,7 @@ void ComponentTextUI::DrawUI()
 		if ((*it)->textureID != -1) {
 			glColor3f(label.color.x, label.color.y, label.color.z);
 			glMatrixMode(GL_MODELVIEW);
-			glLoadMatrixf((GLfloat*)(((float4x4::identity * incrementMatrix).Transposed() * viewMatrix).v));
+			glLoadMatrixf((GLfloat*)(((globalMatrix * incrementMatrix).Transposed() * viewMatrix).v));
 
 			glEnableClientState(GL_VERTEX_ARRAY);
 			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
