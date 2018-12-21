@@ -76,6 +76,9 @@ void ComponentImageUI::DrawInspector()
 	ImGui::Separator();
 	ImGui::TextColored(ImVec4(0.25f, 0.25f, 0.25f, 1), "UUID: %i", GetUUID());
 
+	if (myGO->GetComponentButtonUI() != nullptr) {
+		return;
+	}
 	const char* currentMaterial = NULL;
 	if (resourceTexture != nullptr) {
 		currentMaterial = resourceTexture->GetName();

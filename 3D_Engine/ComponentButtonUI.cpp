@@ -65,19 +65,24 @@ void ComponentButtonUI::CheckState() {
 		rectTrans->GetGlobalPos().y <= mousePos.y && mousePos.y <= rectTrans->GetGlobalPos().y + rectTrans->GetHeight()) {
 		if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN && state == PRESSED) {
 			state = MOUSEOVER;
-			ChangeGOImage();
+			if (hoverImg != nullptr)
+				ChangeGOImage();
 		}
 		else if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN && state != PRESSED) {
 			state = PRESSED;
-			ChangeGOImage();
+			if (pressedImg != nullptr)
+				ChangeGOImage();
 		}
 		else if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_IDLE && state != PRESSED) {
 			state = MOUSEOVER;
-			ChangeGOImage();
+			if (hoverImg != nullptr)
+				ChangeGOImage();
 		}
 	}
-	else {
+	else if (state == MOUSEOVER){
 		state = IDLE;
+		if (idleImg != nullptr)
+			ChangeGOImage();
 	}
 }
 
@@ -107,6 +112,7 @@ void ComponentButtonUI::SetResource(uuid resource, int numRes)
 	case 0:
 		idleImg = (ResourceTexture*)App->resources->Get(resource);
 		idleImg->LoadInMemory();
+		ChangeGOImage();
 		break;
 	case 1:
 		hoverImg = (ResourceTexture*)App->resources->Get(resource);

@@ -236,6 +236,7 @@ ComponentUI * GameObject::AddUIComponent(ComponentTypeUI type) {
 		ret = new ComponentButtonUI();
 		ComponentButtonUI* cBut = (ComponentButtonUI*)ret;
 		cBut->myGO = this;
+		AddUIComponent(UI_IMAGE);
 		cBut = nullptr;
 		break;
 	}
