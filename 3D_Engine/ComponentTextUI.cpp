@@ -37,14 +37,14 @@ bool ComponentTextUI::Start()
 	memcpy(texCoords, uvs, sizeof(float2) * 4);
 
 	rectTransform = myGO->GetComponentRectTransform();
-	
+		
 	label.font = App->fontManager->GetFont(DEFAULT_FONT);
 	//App->fontManager->LoadFont("federalescort.ttf", 20);
-	SetText("Pi");
+	SetText("Norman Capullo");
 	rectTransform->SetWidth((labelFrame[3].x - labelFrame[0].x)*10, false);
 	rectTransform->SetHeight((labelFrame[2].y - labelFrame[3].y)*10, false);
-	//font.exportTexPath += (std::to_string(UUID) + PNG_FORMAT);
-	//LoadLabel();
+
+
 	return true;
 }
 
@@ -101,25 +101,24 @@ float3 ComponentTextUI::GetCornerLabelPoint(int corner) {
 		float max_y = -100;
 
 		int counter = 0;
-		CharPlane* max_y_plane = nullptr;
+		CharPlane* planeMaxY = nullptr;
 
 		for (std::vector<CharPlane*>::iterator it = charPlanes.begin(); it != charPlanes.end(); it++, counter++)
 		{
-			float plane_max_y = offsetPlanes[counter].y;
+			float offsetY = offsetPlanes[counter].y;
 
-			if (max_y < plane_max_y)
+			if (max_y < offsetY)
 			{
-				max_y = plane_max_y;
-				max_y_plane = (*it);
+				max_y = offsetY;
+				planeMaxY = (*it);
 			}
 
 		}
-		ret = { 0, max_y_plane->vertex[2].y + max_y + rectTransform->GetGlobalPos().y + label.textOrigin.y, 0 };
+		ret = { 0, planeMaxY->vertex[2].y + max_y + rectTransform->GetGlobalPos().y + label.textOrigin.y, 0 };
 		break;
 	}
 	case 2: {//maxX		
-		//It will always lay on the last letter 
-		CharPlane* last_img = nullptr;
+		CharPlane* planeMaxX = nullptr;
 		int counter = 0;
 		float offset = -1;
 
@@ -127,7 +126,7 @@ float3 ComponentTextUI::GetCornerLabelPoint(int corner) {
 		{
 			if (counter == charPlanes.size() - 1)
 			{
-				last_img = (*it);
+				planeMaxX = (*it);
 				offset += offsetPlanes[counter].x;
 				break;
 			}
@@ -136,32 +135,32 @@ float3 ComponentTextUI::GetCornerLabelPoint(int corner) {
 		}
 
 
-		ret = { last_img->vertex[2].x + offset + rectTransform->GetGlobalPos().x + label.textOrigin.x, 0, 0 };
+		ret = { planeMaxX->vertex[2].x + offset + rectTransform->GetGlobalPos().x + label.textOrigin.x, 0, 0 };
 
 		break;
 	}
 	case 3: {//minY	
 
-		float min_y = 100;
-		CharPlane* min_y_plane = nullptr;
+		float minY = 100;
+		CharPlane* planeMinY = nullptr;
 		int counter = 0;
 
 		for (std::vector<CharPlane*>::iterator it = charPlanes.begin(); it != charPlanes.end(); it++, counter++)
 		{
-			float plane_min_y = offsetPlanes[counter].y;
+			float offsetY = offsetPlanes[counter].y;
 
-			if (min_y > plane_min_y && plane_min_y != 0) //if plane_min_y == 0 it's an space
+			if (minY > offsetY && offsetY != 0) //if plane_min_y == 0 it's an space
 			{
-				min_y = plane_min_y;
-				min_y_plane = (*it);
+				minY = offsetY;
+				planeMinY = (*it);
 			}
 		}
 
-		if (min_y_plane != nullptr) {
-			ret = { 0, min_y_plane->vertex[0].y + min_y + rectTransform->GetGlobalPos().y + label.textOrigin.y, 0 };
+		if (planeMinY != nullptr) {
+			ret = { 0, planeMinY->vertex[0].y + minY + rectTransform->GetGlobalPos().y + label.textOrigin.y, 0 };
 		}
 		else {
-			ret = { 0, 0 + min_y + rectTransform->GetGlobalPos().y + label.textOrigin.y, 0 };
+			ret = { 0, 0 + minY + rectTransform->GetGlobalPos().y + label.textOrigin.y, 0 };
 		}
 		break;
 	}
@@ -206,8 +205,8 @@ void ComponentTextUI::FillCharPlanes()
 		//Y offset
 		float size = (float)currChar->size.y;
 		float bearingy = (float)currChar->bearing.y;
-		float center_to_origin = (currChar->size.y /2);
-		distancey = -(size - bearingy) + center_to_origin;
+		float center = (currChar->size.y /2);
+		distancey = -(size - bearingy) + center;
 
 		if (counter == 0)
 		{

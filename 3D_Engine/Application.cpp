@@ -43,9 +43,9 @@ Application::Application()
 	// They will CleanUp() in reverse order
 
 	// Main Modules
+	AddModule(input);
 	AddModule(window);
 	AddModule(camera);
-	AddModule(input);
 	AddModule(fileSys);
 	AddModule(audio);
 	AddModule(resources);

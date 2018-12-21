@@ -3,6 +3,8 @@
 #include "ModuleResources.h"
 #include "GameObject.h"
 #include "UIPanelGame.h"
+#include "ModuleInput.h"
+#include "ModuleGui.h"
 
 #include "mmgr/mmgr.h"
 
@@ -40,6 +42,9 @@ ComponentRectTransform::~ComponentRectTransform()
 
 bool ComponentRectTransform::Update()
 {
+	GameObject* canvasGO = App->scene->GetFirstGameObjectCanvas();
+	if (App->gui->isMouseOnGame() && myGO != canvasGO)
+		CheckMousePos();
 	return true;
 }
 
@@ -53,6 +58,7 @@ void ComponentRectTransform::Load(Config * data)
 	UUID = data->GetUInt("UUID");
 	SetGlobalPos(data->GetFloat2("Position", { 0,0 }));
 	SetWidth(data->GetFloat("Width", 1),false);
+
 	SetHeight(data->GetFloat("Height", 1), false);
 }
 
@@ -209,9 +215,17 @@ void ComponentRectTransform::GenBuffer()
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-void ComponentRectTransform::CheckPicked(){
-
-
+void ComponentRectTransform::CheckMousePos() {
+	float2 mousePos = float2(App->gui->panelGame->GetMouseRelativeToGame().x, App->gui->panelGame->GetMouseRelativeToGame().y);
+	if (rect.globalPosition.x <= mousePos.x && mousePos.x <= rect.globalPosition.x + rect.width &&
+		rect.globalPosition.y <= mousePos.y && mousePos.y <= rect.globalPosition.y + rect.height) {
+		if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN) {
+			state = CLICKED;
+		}
+		else if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_IDLE && state != CLICKED) {
+			state = MOUSEOVER;
+		}
+	}
 }
 
 void ComponentRectTransform::UpdateLocalPos() {

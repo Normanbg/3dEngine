@@ -19,7 +19,13 @@ class ComponentRectTransform : public ComponentUI, public Component
 		float3* vertex = nullptr;		
 		uint vertexID;
 
-		bool isClicked = false;
+	};
+
+	enum elementState
+	{
+		STANDBY,
+		MOUSEOVER,
+		CLICKED
 	};
 
 public:
@@ -53,12 +59,19 @@ public:
 
 	void SetGlobalMatrixToDraw(float4x4 &globalMatrix);
 
+	void SetCheckState(bool _checkState) { _checkState = checkState;}
+
 	void UpdateUIComponents();
 
 	void DrawUI() override;
 	void GenBuffer();
 
-	void CheckPicked();
+	void CheckMousePos();
+
+public:
+	elementState state = STANDBY;
+
+	bool tri = false;
 
 private:
 
@@ -68,6 +81,7 @@ void UpdateSizeWithPercentatge(float lastParentWidth, float lastParentHeight);
 
 private:
 	RectTransform rect;
+	bool checkState = false;
 };
 
 #endif // !__COMPONENTRECTTRANS_H__

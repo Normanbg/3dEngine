@@ -29,8 +29,7 @@ class Font {
 public:
 	std::string fontDir = std::string(FONTS_PATH);
 	std::string fontSrc = std::string(DEFAULT_FONT);
-	//std::string exportTexPath = std::string(LIB_FONTS_PATH);
-	//std::string text = std::string("Insert Text.");
+	
 
 	Font(const char* name );
 	void GenerateCharsList();
@@ -50,9 +49,9 @@ public:
 	FontManager();
 	~FontManager();
 
-	//delete font
+	
 	void CleanUp();
-	//cleanP
+	
 
 	void LoadAllFolderFonts();
 

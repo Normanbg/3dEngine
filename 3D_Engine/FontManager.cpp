@@ -37,7 +37,7 @@ Font::Font(const char * name)
 
 void Font::GenerateCharsList()
 {
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 1); // Disable byte-alignment restriction
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1); 
 
 	float3 cursor = { 0,0,0 };
 
@@ -45,15 +45,13 @@ void Font::GenerateCharsList()
 	{
 		Character* nwChar = new Character();
 		
-		// Load character glyph 
+		
 		if (FT_Load_Char(face, c, FT_LOAD_RENDER))
 		{
 			OWN_LOG("ERROR::FREETYTPE: Failed to load Glyph");
 			continue;
 		}
-
-		// Generate texture
-		
+				
 		glGenTextures(1, &nwChar->textureID);		
 		glBindTexture(GL_TEXTURE_2D, nwChar->textureID);
 		glTexImage2D(GL_TEXTURE_2D,0, GL_ALPHA,face->glyph->bitmap.width,face->glyph->bitmap.rows,0, GL_ALPHA,GL_UNSIGNED_BYTE,face->glyph->bitmap.buffer);
@@ -63,20 +61,18 @@ void Font::GenerateCharsList()
 		{
 			OWN_LOG("Error initializing OpenGL! %s\n", gluErrorString(error));
 		}
-		//GLubyte error2 = gluErrorString(error);
-		// Set texture options
+		
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-		// Now store character for later use
+		
 		nwChar->bearing = { (float)face->glyph->bitmap_left, (float)face->glyph->bitmap_top };
 		nwChar->size = { (float)face->glyph->bitmap.width, (float)face->glyph->bitmap.rows };
 		nwChar->advance = face->glyph->advance.x / 64.0f;
 
-		charsList.insert(std::pair<char, Character*>(c, nwChar));
-		
+		charsList.insert(std::pair<char, Character*>(c, nwChar));		
 	}
 }
 uint Font::GetCharacterTexture(GLchar character)
