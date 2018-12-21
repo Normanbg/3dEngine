@@ -11,7 +11,7 @@ class ComponentTextUI : public ComponentUI, public Component
 	struct Label {
 		Font* font = nullptr;
 		int scale = 0;
-		float3 color = float3(0,0,0);
+		float3 color = float3(1,1,1);
 		float2 textOrigin = float2(0, 0);
 		std::string text = std::string("Default Text.");
 	};
@@ -32,6 +32,8 @@ public:
 	void DrawInspector() override;
 	void DrawUI() override;
 
+	
+
 	bool Start() override;
 	bool Update() override;
 	void CleanUp() override;	
@@ -50,22 +52,21 @@ public:
 
 
 private: 
-	//void LoadLabel(const char* label = "Insert Text", float scale = 1.0f, const char* font = DEFAULT_FONT);
-
+	
 	void AddCharPanel(char character);
-
 	void FillCharPlanes();
 	void EnframeLabel(float3 * points);
 	float3 GetCornerLabelPoint(int corner);
-
-	std::vector<std::string> loadedFonts;
+	bool ShiftNewLine(float3& cursor,  uint& line, int i);
+	void SetFontScale(uint scale);
+	void SetFont(const char * font);
+	
 	std::vector<CharPlane*> charPlanes;
 	std::vector<float3> offsetPlanes;
 	float2* texCoords = nullptr;
 	float3 labelFrame[4];
-	//uint texGPUIndex = -1;
 	Label label;
-	uint lineSpacing = 0;
+	uint lineSpacing = 1;
 	bool drawCharPanel = true;
 	bool drawLabelrect = true;
 	

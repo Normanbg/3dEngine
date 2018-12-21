@@ -14,7 +14,8 @@
 #pragma comment(lib, "FreeType/win32/freetype.lib") 
 
 
-#define DEFAULT_FONT "arial.ttf"
+#define DEFAULT_FONT "Crimson-Roman.ttf"
+#define DEFAULT_SCALE 30
 
 struct Character {
 
@@ -22,6 +23,7 @@ struct Character {
 	float2 size;       // Size of glyph
 	float2 bearing;    // Offset from baseline to left/top of glyph
 	uint advance;    // Offset to advance to next glyph
+
 };
 class Font {
 public:
@@ -34,12 +36,10 @@ public:
 	void GenerateCharsList();
 	uint GetCharacterTexture(GLchar character);
 	Character * GetCharacter(GLchar character);
-	void ResetFont() {};//
-	//CLEAN UP FT_Done_Face(font->face);
-	void CleanUp() {};
+	
+	void CleanUp();
 	FT_Face face;
 	float scale = 1.0f;
-	bool loaded = false;
 	std::map<GLchar, Character*> charsList;
 };
 
@@ -51,11 +51,14 @@ public:
 	~FontManager();
 
 	//delete font
-	//get font
+	void CleanUp();
 	//cleanP
 
+	void LoadAllFolderFonts();
+
 	Font * LoadFont(const char * name, uint size);
-	Font GetFont(const char * name);
+	Font* GetFont(const char * name);
+	void RemoveFont(const char * name);
 	FT_Library library;
 	std::vector<Font*> loadedFonts = std::vector<Font*>();
 };

@@ -102,7 +102,7 @@ bool Application::Init(){
 		ret = (*item)->Start();
 		item++;
 	}
-
+	fontManager->LoadAllFolderFonts();
 	
 
 
@@ -223,6 +223,7 @@ bool Application::CleanUp()
 		item++;
 	}
 
+	fontManager->CleanUp();
 
 	importer->CleanUp();
 
