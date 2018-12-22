@@ -7,6 +7,7 @@
 
 class ComponentRectTransform : public ComponentUI, public Component
 {
+	friend class ComponentTextUI;
 	struct RectTransform
 	{
 		float2 localPosition = float2::zero;
@@ -69,7 +70,7 @@ void UpdateLocalPos();
 void UpdatePercentatge();
 void UpdateSizeWithPercentatge(float lastParentWidth, float lastParentHeight);
 
-private:
+protected:
 	RectTransform rect;
 	bool checkState = false;
 };

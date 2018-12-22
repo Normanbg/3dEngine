@@ -40,7 +40,7 @@ bool ComponentTextUI::Start()
 		
 	label.font = App->fontManager->GetFont(DEFAULT_FONT);
 	//App->fontManager->LoadFont("federalescort.ttf", 20);
-	SetText("Norman Capullo");
+	SetText("01234");
 	rectTransform->SetWidth((labelFrame[3].x - labelFrame[0].x)*10, false);
 	rectTransform->SetHeight((labelFrame[2].y - labelFrame[3].y)*10, false);
 
@@ -183,14 +183,14 @@ void ComponentTextUI::FillCharPlanes()
 {
 	for (int i = 0; i < label.text.size(); i++)
 		AddCharPanel(label.text[i]);
-
+	
 	int counter = 0;
 	offsetPlanes.clear();
 	for (std::vector<CharPlane*>::iterator it = charPlanes.begin(); it != charPlanes.end(); it++, counter++)
 	{
 		float distancex = 0;
 		float distancey = 0;
-
+		
 		Character* currChar = label.font->GetCharacter(label.text[counter]);
 		Character* prevChar = nullptr;
 
@@ -219,80 +219,6 @@ void ComponentTextUI::FillCharPlanes()
 
 }
 
-/*void ComponentTextUI::LoadLabel(const char * _label, float _scale, const char * _font)
-{
-	//-------- Loading Font arial -->
-	//font.ResetFont();	
-	/*
-	font.fontSrc = _font;
-	font.scale = _scale;
-	font.text =_label;
-
-	std::string fullFontPath = font.fontDir + font.fontSrc;
-
-	char* buffer = nullptr;
-	int size = App->fileSys->readFile(fullFontPath.c_str(), &buffer);
-
-	stbtt_fontinfo info;
-	if (!stbtt_InitFont(&info, (unsigned char*)buffer, 0))
-	{
-		OWN_LOG("failed initialising font");
-		RELEASE_ARRAY(buffer);
-		return;
-	}
-
-	int bm_w = 100*rectTransform->GetWidth(); // bitmap width 
-	int bm_h = 100*rectTransform->GetHeight(); // bitmap height
-	int line_h = 64; // line height 
-	if (bm_w <= 0 || bm_h <= 0) {
-		RELEASE_ARRAY(buffer);
-		return;
-	}
-	unsigned char* bitmap = new unsigned char[bm_w * bm_h]; // creates bitmap for the phrase
-	float sc = stbtt_ScaleForPixelHeight(&info, line_h)*font.scale;// calculate font scaling
-
-	
-	int ascent, descent, lineGap;
-	stbtt_GetFontVMetrics(&info, &ascent, &descent, &lineGap); // get lowest and upper height
-
-	ascent *= sc;
-	descent *=sc;
-
-	int x = 0;	
-	for (int i = 0; i < font.text.size(); ++i)
-	{
-		
-		int c_x1, c_y1, c_x2, c_y2;
-		stbtt_GetCodepointBitmapBox(&info, font.text[i], sc, sc, &c_x1, &c_y1, &c_x2, &c_y2);// get bounding box for character (may be offset to account for chars that dip above or below the line)
-
-		
-		int y = ascent + c_y1; //calculates y bc every character has its own height
-
-		
-		int byteOffset = x + (y  * bm_w);
-		stbtt_MakeCodepointBitmap(&info, bitmap + byteOffset, c_x2 - c_x1, c_y2 - c_y1, bm_w, sc, sc, font.text[i]);// render character (stride and offset is important here) 
-
-		
-		int ax;
-		stbtt_GetCodepointHMetrics(&info, font.text[i], &ax, 0); //  character's wide
-		x += ax * sc;
-
-		
-		int kern;
-		kern = stbtt_GetCodepointKernAdvance(&info, font.text[i], font.text[i + 1]);// add kerning 
-		x += kern * sc;
-	}
-
-	
-	stbi_write_png(font.exportTexPath.c_str(), bm_w, bm_h, 1, bitmap, bm_w); // export to PNG
-	RELEASE_ARRAY(buffer);
-	RELEASE_ARRAY(bitmap);
-	uint texW, texH;
-	texGPUIndex = App->texImporter->LoadTexture(font.exportTexPath.c_str(), texW, texH); // load the texture
-}*/
-
-
-
 void ComponentTextUI::UpdateRectTransform()
 {
 	
@@ -303,7 +229,7 @@ void ComponentTextUI::DrawInspector()
 {
 	ImGui::Separator();
 	ImGui::TextColored(ImVec4(0.25f, 0.25f, 0.25f, 1), "UUID: %i", GetUUID());
-	static const int maxSize = 16;
+	static const int maxSize = 32;
 	if (ImGui::InputText("Label Text",(char*) label.text.c_str(), maxSize)){
 		SetText(label.text.c_str());
 	}
@@ -350,7 +276,7 @@ void ComponentTextUI::DrawUI()
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
 	uint charNum = 0;
-	uint line = 0;
+	int line = 0;
 	uint lettersDrawn=0;
 	float lineDistance = 0;	
 	float initOffset = label.textOrigin.x;
@@ -358,22 +284,17 @@ void ComponentTextUI::DrawUI()
 
 	for (std::vector<CharPlane*>::iterator it = charPlanes.begin(); it != charPlanes.end(); it++, charNum++)
 	{
-
-
 		lettersDrawn++;
-		float4x4 viewMatrix = float4x4::identity;
-		float4x4 globalMatrix = float4x4::identity;
-		float4x4 incrementMatrix = float4x4::identity;
+		float4x4 viewMatrix = float4x4::identity; // modelView Matrix
+		float4x4 globalMatrix = float4x4::identity; // global Matrix ( from RectTransform)
+		float4x4 incrementMatrix = float4x4::identity;// advance for every char Matrix ( from cursor)
 
-		float3	pos = float3(rectTransform->GetGlobalPos().x, rectTransform->GetGlobalPos().y, 0);
-		
-		globalMatrix.SetTranslatePart(pos);
-
-		
+		float3	pos = float3(rectTransform->GetGlobalPos().x, rectTransform->GetGlobalPos().y, 0);		
+		globalMatrix.SetTranslatePart(pos); 	// set global Mat	
 
 		GLfloat matrix[16];
 		glGetFloatv(GL_MODELVIEW_MATRIX, matrix);
-		viewMatrix.Set((float*)matrix);
+		viewMatrix.Set((float*)matrix);		// set MV mat
 
 		
 		Character* currChar = label.font->GetCharacter((GLchar)label.text[charNum]);
@@ -400,15 +321,17 @@ void ComponentTextUI::DrawUI()
 
 		if (lineDistance > rectTransform->GetWidth())
 		{
-			ShiftNewLine(cursor, line, charNum);
+			if (ShiftNewLine(cursor, line, charNum)) {
+				return;
+			}
 			lineDistance = 0;
 		}
-		incrementMatrix.SetTranslatePart(cursor);
+		incrementMatrix.SetTranslatePart(cursor); // set cursor mat
 
 		if ((*it)->textureID != -1) {
 			glColor3f(label.color.x, label.color.y, label.color.z);
 			glMatrixMode(GL_MODELVIEW);
-			glLoadMatrixf((GLfloat*)(((globalMatrix * incrementMatrix).Transposed() * viewMatrix).v));
+			glLoadMatrixf((GLfloat*)(((globalMatrix * incrementMatrix).Transposed() * viewMatrix).v)); // multiplies all mat
 
 			glEnableClientState(GL_VERTEX_ARRAY);
 			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
@@ -439,11 +362,10 @@ void ComponentTextUI::DrawUI()
 
 			glDisable(GL_BLEND);
 			glDisable(GL_ALPHA_TEST);
-
-			glPopMatrix();
+						
 			glColor3f(1.0f, 1.0f, 1.0f);
 
-
+			
 			if (drawCharPanel) {
 				glBegin(GL_LINES);
 				glColor3f(0.0f, 1.0f, 1.0f);
@@ -490,13 +412,14 @@ void ComponentTextUI::DrawUI()
 	}	
 }
 
-
 void ComponentTextUI::CharPlane::GenBuffer(float2 size)
 {
-	static const float vtx[] = { -size.x/2 ,-size.y/2, 0,
-								size.x/2 ,-size.y/2, 0,
-								size.x/2, size.y/2, 0, 
-								-size.x/2, size.y/2, 0 };
+	float2 halfSize = size / 2;
+	
+	const float vtx[] = { -halfSize.x ,-halfSize.y, 0,
+								halfSize.x ,-halfSize.y, 0,
+								halfSize.x, halfSize.y, 0,
+								-halfSize.x, halfSize.y, 0 };
 	vertex = new float3[4];
 	memcpy(vertex, vtx, sizeof(float3) * 4);
 
@@ -504,14 +427,18 @@ void ComponentTextUI::CharPlane::GenBuffer(float2 size)
 	glBindBuffer(GL_ARRAY_BUFFER, vertexID); // set the type of buffer
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float3) * 4, &vertex[0], GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	
 }
 
-bool ComponentTextUI::ShiftNewLine(float3& cursor,uint& current_line, int i)
+bool ComponentTextUI::ShiftNewLine(float3& cursor,int& current_line, int i)
 {	
 	current_line++;
 	cursor.x = label.textOrigin.x;
-	cursor.y = offsetPlanes[i].y + label.textOrigin.y + -current_line * lineSpacing;
-	
+	cursor.y = offsetPlanes[i].y + label.textOrigin.y -(current_line * lineSpacing);
+
+	if (cursor.y - LABEL_Y_LIMIT <= rectTransform->rect.vertex[0].y);
+		return false;
+
 	return true;
 
 }
