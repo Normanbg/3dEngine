@@ -5,9 +5,11 @@
 #include "FontManager.h"
 #include <string>
 
+#define LABEL_Y_LIMIT 10 
 
 class ComponentTextUI : public ComponentUI, public Component
 {
+	
 	struct Label {
 		Font* font = nullptr;
 		int scale = 0;
@@ -57,7 +59,7 @@ private:
 	void FillCharPlanes();
 	void EnframeLabel(float3 * points);
 	float3 GetCornerLabelPoint(int corner);
-	bool ShiftNewLine(float3& cursor,  uint& line, int i);
+	bool ShiftNewLine(float3& cursor,  int& line, int i);
 	void SetFontScale(uint scale);
 	void SetFont(const char * font);
 	
@@ -66,7 +68,7 @@ private:
 	float2* texCoords = nullptr;
 	float3 labelFrame[4];
 	Label label;
-	uint lineSpacing = 1;
+	int lineSpacing = 30;
 	bool drawCharPanel = true;
 	bool drawLabelrect = true;
 	

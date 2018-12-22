@@ -17,7 +17,7 @@ class ComponentWindowUI :	public ComponentUI, public Component
 public:
 	ComponentWindowUI();
 	~ComponentWindowUI();
-
+/*
 	bool Start() override;
 	bool Update() override;
 	void CleanUp() override;
@@ -34,7 +34,7 @@ public:
 	inline void doSave(Config& data)const  override { Save(data); }
 
 	void DrawInspector() override;
-	void DrawUI() override;
+	void DrawUI() override;*/
 
 	void SetDraggable(bool dragg) { draggable = dragg; }
 	bool IsDraggable() { return draggable; }
