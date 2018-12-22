@@ -12,7 +12,6 @@ class ComponentTextUI : public ComponentUI, public Component
 	
 	struct Label {
 		Font* font = nullptr;
-		int scale = 0;
 		float3 color = float3(1,1,1);
 		float2 textOrigin = float2(0, 0);
 		std::string text = std::string("Default Text.");

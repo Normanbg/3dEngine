@@ -39,6 +39,7 @@ bool ComponentTextUI::Start()
 	rectTransform = myGO->GetComponentRectTransform();
 		
 	label.font = App->fontManager->GetFont(DEFAULT_FONT);
+	
 	//App->fontManager->LoadFont("federalescort.ttf", 20);
 	SetText("01234");
 	rectTransform->SetWidth((labelFrame[3].x - labelFrame[0].x)*10, false);
@@ -233,8 +234,8 @@ void ComponentTextUI::DrawInspector()
 	if (ImGui::InputText("Label Text",(char*) label.text.c_str(), maxSize)){
 		SetText(label.text.c_str());
 	}
-	if (ImGui::SliderInt("Scale", &label.scale, 12, 50)) {
-		SetFontScale(label.scale);
+	if (ImGui::SliderFloat("Scale", &(label.font->scale), 8, 64,"%0.f")) {
+		SetFontScale(label.font->scale);
 	}
 	ImGui::Checkbox("Draw Characters Frame", &drawCharPanel);
 	ImGui::Checkbox("Draw Label Frame", &drawLabelrect);
