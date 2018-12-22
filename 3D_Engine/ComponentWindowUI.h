@@ -1,7 +1,17 @@
 #ifndef __COMPONENTWINUI_H__
 #define __COMPONENTWINUI_H__
 
+#include "Component.h"
 #include "ComponentUI.h"
+#include "ResourceTexture.h"
+
+enum WindowState
+{
+	WINDOW_IDLE,
+	WIN_MOUSEOVER,
+	DRAGGING
+};
+
 class ComponentWindowUI :	public ComponentUI, public Component
 {
 public:
@@ -11,6 +21,8 @@ public:
 	bool Start() override;
 	bool Update() override;
 	void CleanUp() override;
+
+	void DraggWindow();
 
 	inline void doStart() override { Start(); }
 	inline void doUpdate() override { Update(); }
@@ -24,6 +36,23 @@ public:
 	void DrawInspector() override;
 	void DrawUI() override;*/
 
+	void SetDraggable(bool dragg) { draggable = dragg; }
+	bool IsDraggable() { return draggable; }
+
+public:
+	ResourceTexture* windImage = nullptr;
+	WindowState state = WindowState::WINDOW_IDLE;
+
+private: 
+	void CheckState();
+	bool CheckChildsState();
+	void SetResource(uuid resource);
+
+private:
+	bool draggable = false;
+	bool hasSetToMid = false;
+	float2 initMousePos = float2::zero;
+	float2 lastPos = float2::zero;
 };
 
 

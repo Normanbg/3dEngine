@@ -5,6 +5,12 @@
 #include "ComponentUI.h"
 #include "ResourceTexture.h"
 
+enum ButtonState
+{
+	IDLE,
+	MOUSEOVER,
+	PRESSED
+};
 
 class ComponentButtonUI : public ComponentUI, public Component
 {
@@ -19,12 +25,7 @@ public:
 		ACTIVATE_VSYNC
 	};
 
-	enum ButtonState
-	{
-		IDLE,
-		MOUSEOVER,
-		PRESSED
-	};
+
 	void UpdateRectTransform() override;
 	void DrawInspector() override;
 	void DrawUI() override;

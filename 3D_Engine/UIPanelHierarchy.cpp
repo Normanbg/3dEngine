@@ -76,6 +76,18 @@ void UIPanelHierarchy::Draw()
 					but = nullptr;
 					canvas = nullptr;
 				}
+				if (ImGui::MenuItem("Window")) {
+					//check if canvas created
+					GameObject* canvas = App->scene->GetFirstGameObjectCanvas();
+					if (canvas == nullptr) {
+						canvas = App->scene->AddUIGameObject("Canvas", App->scene->root);
+						canvas->AddComponent(CANVAS);
+					}
+					GameObject* window = App->scene->AddUIGameObject("UI_Window", canvas);
+					window->AddUIComponent(UI_WINDOW);
+					window = nullptr;
+					canvas = nullptr;
+				}
 				ImGui::TreePop();
 			}
 			ImGui::EndMenu();
