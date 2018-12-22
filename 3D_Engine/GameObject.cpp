@@ -251,6 +251,7 @@ ComponentUI * GameObject::AddUIComponent(ComponentTypeUI type) {
 		ret = new ComponentWindowUI();
 		ComponentWindowUI* cWin = (ComponentWindowUI*)ret;
 		cWin->myGO = this;
+		AddUIComponent(UI_IMAGE);
 		cWin = nullptr;
 		break;
 	}

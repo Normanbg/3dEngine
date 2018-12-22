@@ -91,13 +91,13 @@ void ComponentButtonUI::ChangeGOImage()
 	ComponentImageUI* image = myGO->GetComponentImageUI();
 	switch (state)
 	{
-	case ComponentButtonUI::IDLE:
+	case ButtonState::IDLE:
 		image->SetResource(App->resources->FindByName(idleImg->GetName(), Resource::ResType::Texture));
 		break;
-	case ComponentButtonUI::MOUSEOVER:
+	case ButtonState::MOUSEOVER:
 		image->SetResource(App->resources->FindByName(hoverImg->GetName(), Resource::ResType::Texture));
 		break;
-	case ComponentButtonUI::PRESSED:
+	case ButtonState::PRESSED:
 		image->SetResource(App->resources->FindByName(pressedImg->GetName(), Resource::ResType::Texture));
 		break;
 	default:

@@ -215,6 +215,13 @@ void UIPanelInspector::DrawUIComponent(ComponentUI* compDraw)
 			ImGui::TreePop();
 		}
 		break;
-	
+	case UI_WINDOW:
+		if (ImGui::TreeNode("UI Window"))
+		{
+			ComponentWindowUI* comp = (ComponentWindowUI*)compDraw;
+			comp->DrawInspector();
+			ImGui::TreePop();
+		}
+		break;
 	}
 }

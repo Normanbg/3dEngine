@@ -76,7 +76,7 @@ void ComponentImageUI::DrawInspector()
 	ImGui::Separator();
 	ImGui::TextColored(ImVec4(0.25f, 0.25f, 0.25f, 1), "UUID: %i", GetUUID());
 
-	if (myGO->GetComponentButtonUI() != nullptr) {
+	if (myGO->GetComponentButtonUI() != nullptr || myGO->GetComponentWindowUI() != nullptr) {
 		return;
 	}
 	const char* currentMaterial = NULL;
@@ -101,9 +101,7 @@ void ComponentImageUI::DrawInspector()
 				if (is_selected) {
 					ImGui::SetItemDefaultFocus();
 				}
-
 			}
-
 		}
 		ImGui::EndCombo();
 	}
