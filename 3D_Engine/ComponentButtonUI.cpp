@@ -23,6 +23,7 @@ void ComponentButtonUI::UpdateRectTransform()
 
 void ComponentButtonUI::DrawUI()
 {
+	
 }
 
 bool ComponentButtonUI::Start()
@@ -142,6 +143,9 @@ void ComponentButtonUI::Save(Config & data) const
 
 void ComponentButtonUI::DrawInspector()
 {
+	ImGui::Separator();
+	ImGui::TextColored(ImVec4(0.25f, 0.25f, 0.25f, 1), "UUID: %i", GetUUID());
+
 	float windowSize = ImGui::GetWindowContentRegionWidth();
 
 	if (ImGui::CollapsingHeader("Idle Image")) {

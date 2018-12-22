@@ -41,7 +41,7 @@ bool ComponentTextUI::Start()
 	label.font = App->fontManager->GetFont(DEFAULT_FONT);
 	
 	//App->fontManager->LoadFont("federalescort.ttf", 20);
-	SetText("01234");
+	SetText("Default Text");
 	rectTransform->SetWidth((labelFrame[3].x - labelFrame[0].x)*10, false);
 	rectTransform->SetHeight((labelFrame[2].y - labelFrame[3].y)*10, false);
 
@@ -80,8 +80,10 @@ void ComponentTextUI::SetText(const char * txt)
 
 	FillCharPlanes();
 
-	if (label.text.size() != 0) //Adjust the container plane to the new text size 
+	if (label.text.size() != 0) {//Adjust the container plane to the new text size 
+		label.textOrigin.x = initOffsetX;
 		EnframeLabel(labelFrame);
+	}
 }
 void ComponentTextUI::EnframeLabel(float3 * points) {
 
@@ -169,12 +171,13 @@ float3 ComponentTextUI::GetCornerLabelPoint(int corner) {
 	return ret;
 }
 
-void ComponentTextUI::AddCharPanel(char character)
+void ComponentTextUI::AddCharPanel(char character, bool first)
 {
 	FT_Load_Char(label.font->face, (GLchar)character, FT_LOAD_RENDER);
 	float2 size = { (float)label.font->face->glyph->bitmap.width, (float)label.font->face->glyph->bitmap.rows };
-	CharPlane* nwCharPlane = new CharPlane();
+	CharPlane* nwCharPlane = new CharPlane();	
 	nwCharPlane->GenBuffer(size);
+	if (first) { initOffsetX = size.x / 2; }
 	if (character !=' ') {
 		nwCharPlane->textureID = label.font->GetCharacterTexture(character); }
 	charPlanes.push_back(nwCharPlane);
@@ -182,19 +185,25 @@ void ComponentTextUI::AddCharPanel(char character)
 
 void ComponentTextUI::FillCharPlanes()
 {
-	for (int i = 0; i < label.text.size(); i++)
-		AddCharPanel(label.text[i]);
+	bool first = false;
+	for (int i = 0; i < label.text.size(); i++) {
+		if (i == 0) { first = true; }
+		AddCharPanel(label.text[i], first);
+	}
 	
 	int counter = 0;
 	offsetPlanes.clear();
-	for (std::vector<CharPlane*>::iterator it = charPlanes.begin(); it != charPlanes.end(); it++, counter++)
+	for (std::vector<CharPlane*>::const_iterator it = charPlanes.begin(); it != charPlanes.end(); it++, counter++)
 	{
 		float distancex = 0;
 		float distancey = 0;
 		
 		Character* currChar = label.font->GetCharacter(label.text[counter]);
 		Character* prevChar = nullptr;
-
+		if (!currChar) { 
+			currChar = label.font->GetCharacter(' ');
+			
+		}
 		if (counter - 1 >= 0)
 			prevChar = label.font->GetCharacter(label.text[counter - 1]);
 
@@ -280,8 +289,9 @@ void ComponentTextUI::DrawUI()
 	int line = 0;
 	uint lettersDrawn=0;
 	float lineDistance = 0;	
-	float initOffset = label.textOrigin.x;
-	float3 cursor = float3(label.textOrigin.x, label.textOrigin.y, 0);
+	Character* firstChar = label.font->GetCharacter((GLchar)label.text[0]);
+	
+	float3 cursor = float3(label.textOrigin.x , label.textOrigin.y, 0);
 
 	for (std::vector<CharPlane*>::iterator it = charPlanes.begin(); it != charPlanes.end(); it++, charNum++)
 	{
@@ -300,6 +310,10 @@ void ComponentTextUI::DrawUI()
 		
 		Character* currChar = label.font->GetCharacter((GLchar)label.text[charNum]);
 		Character* nextChar = nullptr;
+
+		if (!currChar) {
+			currChar = label.font->GetCharacter(' ');//if not avaliable glyph, put a space (like "í")
+		}
 
 		if (charNum < label.text.size() - 1)
 			nextChar = label.font->GetCharacter((GLchar)label.text[charNum + 1]);
@@ -410,6 +424,7 @@ void ComponentTextUI::DrawUI()
 
 			glEnd();
 		}
+		glColor3f(1.0f, 1.0f, 1.0f);
 	}	
 }
 

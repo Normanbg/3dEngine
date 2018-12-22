@@ -102,6 +102,13 @@ update_status ModuleInput::PreUpdate(float dt)
 	while(SDL_PollEvent(&e))
 	{
 		App->gui->ImplGuiInputs(&e);
+		
+		if (e.type == SDL_TEXTINPUT)  {
+			Event event;
+			event.type = event.input;
+			event.string = e.text.text;
+			App->BroadcastEvent(event);
+		}
 		switch(e.type)
 		{
 			case SDL_MOUSEWHEEL:
@@ -181,8 +188,10 @@ update_status ModuleInput::PreUpdate(float dt)
 	if (quit == true || keyboard[SDL_SCANCODE_ESCAPE] == KEY_UP)
 		return UPDATE_STOP;		
 
+	
 	return UPDATE_CONTINUE;
 }
+
 
 
 // Called before quitting

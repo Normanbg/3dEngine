@@ -104,9 +104,11 @@ public:
 private:	
 		
 	void SetName(char* _name);
+	void ReceiveEvent(const Event &event);
 	
 	void ToggleSelected();
 	uuid UUID = 0;
+
 
 private:
 	bool inspectorSelected = false;

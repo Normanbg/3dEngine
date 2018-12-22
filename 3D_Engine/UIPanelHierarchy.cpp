@@ -59,7 +59,9 @@ void UIPanelHierarchy::Draw()
 						canvas = App->scene->AddUIGameObject("Canvas", App->scene->root);
 						canvas->AddComponent(CANVAS);
 					}
-					GameObject* inp = App->scene->AddUIGameObject("UI_Input", canvas);
+					GameObject* inp = App->scene->AddUIGameObject("UI_Input", canvas);					
+					inp->AddUIComponent(UI_TEXT);
+					inp->AddUIComponent(UI_BUTTON);
 					inp->AddUIComponent(UI_INPUT);
 					inp = nullptr;
 					canvas = nullptr;

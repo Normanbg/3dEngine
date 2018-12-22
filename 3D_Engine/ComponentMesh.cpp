@@ -148,6 +148,7 @@ void ComponentMesh::Draw()
 	if (showBBox) {
 		DrawBoundingBox();
 	}
+	glColor3f(1.f, 1.f, 1.0f);
 }
 
 void ComponentMesh::DrawMesh(){

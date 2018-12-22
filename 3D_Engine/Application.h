@@ -22,15 +22,18 @@ struct Event
 	{
 		scene_file_dropped,
 		texture_file_dropped,
+		input,
 		invalid
 	} type;
 
 	union
 	{	
+		
 		const char* string;		
 		struct{
 			int x, y;
 		} point2d;
+		
 	};
 
 	Event(EventType type) : type(type)

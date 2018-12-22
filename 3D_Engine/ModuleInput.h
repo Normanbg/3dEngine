@@ -5,6 +5,7 @@
 #include "Globals.h"
 
 #define MAX_MOUSE_BUTTONS 5
+#define MAX_BUTTONS_STORED 10
 
 enum KEY_STATE
 {
@@ -33,7 +34,7 @@ public:
 	~ModuleInput();
 
 	bool Init(JSON_Object* obj);
-	update_status PreUpdate(float dt);
+	update_status PreUpdate(float dt)override;
 	bool CleanUp();
 
 	FileType ObtainDroppedFileType(std::string droppedFileDir);
@@ -73,6 +74,9 @@ public:
 		return mouse_y_motion;
 	}
 
+	std::vector<char> pressedButtons = std::vector<char>();
+	uint buttonsPressed = 0;
+
 private:
 	KEY_STATE* keyboard;
 	KEY_STATE mouse_buttons[MAX_MOUSE_BUTTONS];
@@ -84,6 +88,7 @@ private:
 
 	char* dropped_filedir = nullptr;
 	uint dropFX = 0;
+
 
 };
 

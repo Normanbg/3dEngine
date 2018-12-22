@@ -31,6 +31,8 @@ public:
 	update_status Update(float dt) override;
 	update_status PostUpdate(float dt) override;
 	bool CleanUp() override;
+	void ReceiveEvent(const Event &event)override;
+
 
 	void ShowGameObjectInspector(GameObject * newSelected);
 	void ShowTextureResourceInspector(uuid newSelected);
@@ -62,6 +64,7 @@ public:
 	
 	void SetQuadTree();
 	void MousePicking();
+
 
 	void DrawGuizmo(ImGuizmo::OPERATION operation);
 	FrustumContained ContainsAaBox(const AABB & refBox) const;

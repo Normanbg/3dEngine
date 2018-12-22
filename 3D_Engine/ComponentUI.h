@@ -40,6 +40,9 @@ public:
 	bool draw = true;
 	ComponentRectTransform* rectTransform = nullptr;
 
+
+	virtual void ReceiveEvent(const Event &event) {};
+
 };
 
 

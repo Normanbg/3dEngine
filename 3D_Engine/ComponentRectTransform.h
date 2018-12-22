@@ -48,8 +48,8 @@ public:
 	const float2 GetGlobalPos() const { return rect.globalPosition; }
 	const float2 GetMid() const { return float2(rect.width / 2, rect.height / 2); };
 
-	void SetWidth(float w, bool isCanvas);
-	void SetHeight(float h, bool isCanvas);
+	void SetWidth(float w, bool isCanvas = false);
+	void SetHeight(float h, bool isCanvas = false);
 	void SetGlobalPos(float2 global);
 	void SetLocalPos(float2 newLocalMat);
 

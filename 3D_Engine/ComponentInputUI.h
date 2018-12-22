@@ -31,9 +31,12 @@ public:
 	inline void doLoad(Config* data) override { Load(data); }
 	inline void doSave(Config& data)const  override { Save(data); }
 
+	void ReceiveEvent(const Event &event) override;
+
+	bool readInput = false;
 	ComponentTextUI* cText = nullptr;
 	ComponentButtonUI* cButton = nullptr;
-
+	std::string textInput= std::string();
 };
 
 

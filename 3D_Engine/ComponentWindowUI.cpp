@@ -106,6 +106,9 @@ void ComponentWindowUI::SetResource(uuid resource)
 
 void ComponentWindowUI::DrawInspector()
 {
+	ImGui::Separator();
+	ImGui::TextColored(ImVec4(0.25f, 0.25f, 0.25f, 1), "UUID: %i", GetUUID());
+
 	float windowSize = ImGui::GetWindowContentRegionWidth();
 	ImGui::Checkbox("Draggable", &draggable);
 	if (ImGui::CollapsingHeader("Background Image")) {

@@ -50,11 +50,12 @@ public:
 
 	
 	void SetText(const char* txt);
-
+	float GetLabelWidth() const { return labelFrame[3].x - labelFrame[0].x + initOffsetX; }
+	float GetLabelHeight() const { return labelFrame[1].y - labelFrame[0].y; }
 
 private: 
 	
-	void AddCharPanel(char character);
+	void AddCharPanel(char character, bool first = false);
 	void FillCharPlanes();
 	void EnframeLabel(float3 * points);
 	float3 GetCornerLabelPoint(int corner);
@@ -66,6 +67,7 @@ private:
 	std::vector<float3> offsetPlanes;
 	float2* texCoords = nullptr;
 	float3 labelFrame[4];
+	float initOffsetX = 0.0f;
 	Label label;
 	int lineSpacing = 30;
 	bool drawCharPanel = true;

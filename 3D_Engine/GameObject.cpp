@@ -549,6 +549,16 @@ void GameObject::SetName(char * _name)
 	name = _name;
 }
 
+void GameObject::ReceiveEvent(const Event & event)
+{
+	for (int i = 0; i < componentsUI.size(); i++) {
+		componentsUI[i]->ReceiveEvent(event);
+	}
+	for (int i = 0; i < childrens.size(); i++) {
+		childrens[i]->ReceiveEvent(event);
+	}
+}
+
 void GameObject::SetChildsStatic(bool active)
 {
 	if (this->staticGO != active && active == true)

@@ -148,6 +148,11 @@ bool ModuleScene::CleanUp()
 	return true;
 }
 
+void ModuleScene::ReceiveEvent(const Event &event)
+{
+	root->ReceiveEvent(event);
+}
+
 GameObject * ModuleScene::GetGameObjectByUUID(uuid UUID) const
 {
 	GameObject* ret= nullptr;
