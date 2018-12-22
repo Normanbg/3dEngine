@@ -247,7 +247,13 @@ ComponentUI * GameObject::AddUIComponent(ComponentTypeUI type) {
 		cRect = nullptr;
 		break;
 	}
-
+	case ComponentTypeUI::UI_WINDOW: {
+		ret = new ComponentWindowUI();
+		ComponentWindowUI* cWin = (ComponentWindowUI*)ret;
+		cWin->myGO = this;
+		cWin = nullptr;
+		break;
+	}
 	case ComponentTypeUI::NOTYPE:
 		return nullptr;
 	}
@@ -476,6 +482,18 @@ ComponentButtonUI * GameObject::GetComponentButtonUI() const
 	{
 		if ((*it)->typeUI == UI_BUTTON)
 			return (ComponentButtonUI*)(*it);
+	}
+	return ret;
+}
+
+ComponentWindowUI * GameObject::GetComponentWindowUI() const
+{
+	ComponentWindowUI* ret = nullptr;
+	//WILL ONLY FIND THE FIRST COMPONENT EQUAL TO TYPE OF EACH G0
+	for (std::vector<ComponentUI*>::const_iterator it = componentsUI.begin(); it != componentsUI.end(); it++)
+	{
+		if ((*it)->typeUI == UI_WINDOW)
+			return (ComponentWindowUI*)(*it);
 	}
 	return ret;
 }

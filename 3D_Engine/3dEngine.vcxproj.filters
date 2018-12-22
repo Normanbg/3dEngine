@@ -453,6 +453,7 @@
     <ClInclude Include="FreeType\include\freetype\freetype.h">
       <Filter>Sources\Tools\FreeType</Filter>
     </ClInclude>
+    <ClInclude Include="ComponentWindowUI.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleInput.cpp">
@@ -731,6 +732,7 @@
     <ClCompile Include="FontManager.cpp">
       <Filter>Sources\Tools</Filter>
     </ClCompile>
+    <ClCompile Include="ComponentWindowUI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="MathGeoLib\Geometry\KDTree.inl">

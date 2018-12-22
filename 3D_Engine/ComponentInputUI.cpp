@@ -5,6 +5,8 @@
 
 ComponentInputUI::ComponentInputUI()
 {
+	typeUI = UI_INPUT;
+	type = UI;
 }
 
 
