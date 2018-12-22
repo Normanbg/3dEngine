@@ -50,7 +50,7 @@ bool ComponentInputUI::Update()
 		
 		readInput = true;		
 	}
-	if (readInput && cButton->state == IDLE && App->input->GetMouseButton(0)) {
+	if (readInput && cButton->state == IDLE && App->input->GetMouseButton(0)) {// to fix
 		readInput = false;
 
 	}

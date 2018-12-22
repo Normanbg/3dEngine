@@ -30,7 +30,6 @@ public:
 	void DrawUI() override;
 	const bool HasTexture() const;
 
-
 	void SetResource(uuid resource)override;
 	const uint GetTexID() const;
 	Resource* GetResource() const override { return (Resource*)resourceTexture; }

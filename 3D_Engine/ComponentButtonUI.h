@@ -5,12 +5,16 @@
 #include "ComponentUI.h"
 #include "ResourceTexture.h"
 
+#define DELTA_ALPHA 0.01f
+
 enum ButtonState
 {
 	IDLE,
 	MOUSEOVER,
 	PRESSED
 };
+
+class ComponentImageUI;
 
 class ComponentButtonUI : public ComponentUI, public Component
 {
@@ -44,13 +48,19 @@ public:
 	inline void doSave(Config& data)const  override { Save(data); }
 
 	void SetResource(uuid resource, int numRes);
+	
 
 private:
 	void CheckState();
 	const bool HasTexture(ResourceTexture * res) const;
 	void ChangeGOImage();
+	void FadeIn();
+	void FadeOut();
+	bool fadingIn = false;
+	bool fadingOut = false;
 
 public:
+	ComponentImageUI* image = nullptr;
 	ButtonState state = IDLE;
 	ResourceTexture* idleImg = nullptr;
 	ResourceTexture* hoverImg = nullptr;

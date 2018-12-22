@@ -28,6 +28,8 @@ void ComponentButtonUI::DrawUI()
 
 bool ComponentButtonUI::Start()
 {
+	image = myGO->GetComponentImageUI();
+	rectTransform = myGO->GetComponentRectTransform();
 	return true;
 }
 
@@ -36,7 +38,14 @@ bool ComponentButtonUI::Update()
 	GameObject* canvasGO = App->scene->GetFirstGameObjectCanvas();
 	if (App->gui->isMouseOnGame() && myGO != canvasGO)
 		CheckState();
-
+	
+	if (fadingOut) {
+		FadeOut();
+	}
+	if (fadingIn) {
+		FadeIn();
+	}
+	image->SetAlpha(alpha);
 	return true;
 }
 
@@ -61,9 +70,9 @@ void ComponentButtonUI::CleanUp()
 
 void ComponentButtonUI::CheckState() {
 	float2 mousePos = float2(App->gui->panelGame->GetMouseRelativeToGame().x, App->gui->panelGame->GetMouseRelativeToGame().y);
-	ComponentRectTransform* rectTrans = myGO->GetComponentRectTransform();
-	if (rectTrans->GetGlobalPos().x <= mousePos.x && mousePos.x <= rectTrans->GetGlobalPos().x + rectTrans->GetWidth() &&
-		rectTrans->GetGlobalPos().y <= mousePos.y && mousePos.y <= rectTrans->GetGlobalPos().y + rectTrans->GetHeight()) {
+	
+	if (rectTransform->GetGlobalPos().x <= mousePos.x && mousePos.x <= rectTransform->GetGlobalPos().x + rectTransform->GetWidth() &&
+		rectTransform->GetGlobalPos().y <= mousePos.y && mousePos.y <= rectTransform->GetGlobalPos().y + rectTransform->GetHeight()) {
 		if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN && state == PRESSED) {
 			state = MOUSEOVER;
 			if (hoverImg != nullptr)
@@ -89,7 +98,7 @@ void ComponentButtonUI::CheckState() {
 
 void ComponentButtonUI::ChangeGOImage()
 {
-	ComponentImageUI* image = myGO->GetComponentImageUI();
+	
 	switch (state)
 	{
 	case ButtonState::IDLE:
@@ -103,6 +112,24 @@ void ComponentButtonUI::ChangeGOImage()
 		break;
 	default:
 		break;
+	}
+}
+
+void ComponentButtonUI::FadeIn()
+{
+	alpha += DELTA_ALPHA;
+	if (alpha >= 1.0f) {
+		fadingIn = false;
+		alpha = 1.0f;
+	}	
+}
+
+void ComponentButtonUI::FadeOut()
+{
+	alpha -= DELTA_ALPHA;
+	if (alpha <= 0.0f) {
+		fadingOut = false;
+		alpha = 0.0f;
 	}
 }
 
@@ -147,6 +174,12 @@ void ComponentButtonUI::DrawInspector()
 	ImGui::TextColored(ImVec4(0.25f, 0.25f, 0.25f, 1), "UUID: %i", GetUUID());
 
 	float windowSize = ImGui::GetWindowContentRegionWidth();
+	ImGui::SliderFloat("Alpha", &alpha, 0.0f, 1.0f);
+	if (ImGui::Button("FadeIn")) { 
+		alpha = 0.0f; fadingIn = true; }
+	ImGui::SameLine();
+	if(ImGui::Button("FadeOut")) { 
+		alpha = 1.0f; fadingOut = true; }
 
 	if (ImGui::CollapsingHeader("Idle Image")) {
 		const char* idleMaterial = NULL;

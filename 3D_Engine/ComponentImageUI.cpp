@@ -83,6 +83,7 @@ void ComponentImageUI::DrawInspector()
 	if (resourceTexture != nullptr) {
 		currentMaterial = resourceTexture->GetName();
 	}
+	ImGui::SliderFloat("Alpha", &alpha, 0.0f, 1.0f);
 	if (ImGui::BeginCombo("Material", currentMaterial))
 	{
 		std::vector<Resource*> mat = App->resources->GetResourcesListType(Resource::ResType::Texture);
@@ -128,14 +129,14 @@ void ComponentImageUI::DrawUI()
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 	glBindBuffer(GL_ARRAY_BUFFER, 0); //resets the buffer
 	glBindTexture(GL_TEXTURE_2D, 0);
-
+	glEnable(GL_BLEND);
+	glColor4f(1.0, 1.0, 1.0, alpha);
 	glLineWidth(4.0f);
 
 	if (HasTexture()) {
 		
 		glBindTexture(GL_TEXTURE_2D, resourceTexture->gpuID);
 		glTexCoordPointer(2, GL_FLOAT, 0, &(texCoords[0]));
-
 	}
 	glBindBuffer(GL_ARRAY_BUFFER, rectTransform->GetVertexID());
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
@@ -147,7 +148,10 @@ void ComponentImageUI::DrawUI()
 	glBindBuffer(GL_ARRAY_BUFFER, 0); //resets the buffer
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 	glDisableClientState(GL_VERTEX_ARRAY);
+	
+	glDisable(GL_BLEND);
 	glPopMatrix();
+
 }
 
 const bool ComponentImageUI::HasTexture() const

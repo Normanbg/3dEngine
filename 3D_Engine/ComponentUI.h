@@ -35,6 +35,10 @@ public:
 	virtual void doLoad(Config* data){};
 
 	virtual void UpdateRectTransform() {};
+	
+
+	void SetAlpha(float _alpha) { alpha = _alpha; }
+	float alpha=1.0f;
 
 	ComponentTypeUI typeUI = NOTYPE;
 	bool draw = true;
