@@ -68,7 +68,7 @@ enum FrustumContained {
 #define TITLE "3D_Engine"
 #define ORGANIZATION "UPC CITM"
 #define CONFIG_FILE "Settings/config.JSON"
-#define SCENE_FILE "Scenes/scene.JSON"
+#define SCENE_FILE "Scenes/NewScene.JSON"
 #define TEMP_SCENE_FILE "Scenes/scene_temp.JSON"
 #define ENGINE_FX_PATH "Engine/Audio/Fx/"
 #define FONTS_PATH "Engine/Fonts/"

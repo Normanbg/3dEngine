@@ -165,12 +165,13 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 
 void ModuleRenderer3D::CreateGameTexture() {
 	gameFboTex->BindFBO();
+	if (App->scene->mainCamera == nullptr) { return; }
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-
+	
 	ComponentCamera* mainCam = App->scene->mainCamera->GetComponentCamera();
 	glLoadMatrixf(mainCam->GetProjectionMatrix());
 

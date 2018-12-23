@@ -688,7 +688,7 @@ void GameObject::Load(Config* data)
 	staticGO = data->GetBool("Static", false);
 
 	int num = data->GetNumElemsArray("Components");
-	for (int i = 0; i < num; i++) {//iterate all over the childs to save (ecept transform comp)
+	for (int i = 0; i < num; i++) {//iterate all over the childs to save (except transform comp)
 		Config elem = data->GetArray("Components", i);
 		ComponentType type = (ComponentType) elem.GetInt("Type", ComponentType::NO_TYPE);
 		if (type != ComponentType::NO_TYPE ) {
@@ -702,7 +702,7 @@ void GameObject::Load(Config* data)
 		}
 	}
 	int numUI = data->GetNumElemsArray("ComponentsUI");
-	for (int i = 0; i < numUI; i++) {//iterate all over the childs to save (ecept transform comp)
+	for (int i = 0; i < numUI; i++) {
 		Config elem = data->GetArray("ComponentsUI", i);
 		ComponentTypeUI type = (ComponentTypeUI)elem.GetInt("TypeUI", ComponentTypeUI::NOTYPE);
 		if (type != ComponentTypeUI::NOTYPE) {

@@ -7,6 +7,8 @@
 #include "ComponentImageUI.h"
 #include "ComponentButtonUI.h"
 
+#include "mmgr/mmgr.h"
+
 ComponentWindowUI::ComponentWindowUI()
 {
 	typeUI = UI_WINDOW;
@@ -23,6 +25,7 @@ bool ComponentWindowUI::Start()
 	rectTransform = myGO->GetComponentRectTransform();
 	rectTransform->SetWidth(100, false);
 	rectTransform->SetHeight(100, false);
+	image = myGO->GetComponentImageUI();
 	return true;
 }
 
@@ -45,6 +48,9 @@ bool ComponentWindowUI::Update()
 
 void ComponentWindowUI::CleanUp()
 {
+	image = nullptr;
+	if(windImage)
+	windImage->CleanUp();
 }
 
 void ComponentWindowUI::DraggWindow()
@@ -60,9 +66,9 @@ void ComponentWindowUI::DraggWindow()
 
 void ComponentWindowUI::CheckState() {
 	float2 mousePos = float2(App->gui->panelGame->GetMouseRelativeToGame().x, App->gui->panelGame->GetMouseRelativeToGame().y);
-	ComponentRectTransform* rectTrans = myGO->GetComponentRectTransform();
-	if (rectTrans->GetGlobalPos().x <= mousePos.x && mousePos.x <= rectTrans->GetGlobalPos().x + rectTrans->GetWidth() &&
-		rectTrans->GetGlobalPos().y <= mousePos.y && mousePos.y <= rectTrans->GetGlobalPos().y + rectTrans->GetHeight()) {
+	rectTransform = myGO->GetComponentRectTransform();
+	if (rectTransform->GetGlobalPos().x <= mousePos.x && mousePos.x <= rectTransform->GetGlobalPos().x + rectTransform->GetWidth() &&
+		rectTransform->GetGlobalPos().y <= mousePos.y && mousePos.y <= rectTransform->GetGlobalPos().y + rectTransform->GetHeight()) {
 		if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_IDLE) {
 			state = WindowState::WIN_MOUSEOVER;
 		}
@@ -98,7 +104,7 @@ void ComponentWindowUI::SetResource(uuid resource)
 {
 	windImage = (ResourceTexture*)App->resources->Get(resource);
 	windImage->LoadInMemory();
-	ComponentImageUI* image = myGO->GetComponentImageUI();
+	 
 	if (image != nullptr) {
 		image->SetResource(App->resources->FindByName(windImage->GetName(), Resource::ResType::Texture));
 	}
@@ -153,8 +159,12 @@ void ComponentWindowUI::DrawUI()
 
 void ComponentWindowUI::Load(Config * data)
 {
+	UUID = data->GetUInt("UUID");
+	alpha = data->GetFloat("Alpha", 1.0f);
 }
 
 void ComponentWindowUI::Save(Config & data) const
 {
+	data.AddUInt("UUID", UUID);
+	data.AddFloat("Alpha", alpha);
 }

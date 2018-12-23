@@ -56,9 +56,9 @@ bool ComponentTextUI::Update()
 
 void ComponentTextUI::CleanUp()
 {
-	//LEFT clean buffer
+	CleanCharPlanes();
 	rectTransform = nullptr;
-	
+	label.font = nullptr;
 	myGO = nullptr;
 	RELEASE_ARRAY(texCoords);
 }
@@ -66,17 +66,27 @@ void ComponentTextUI::CleanUp()
 void ComponentTextUI::Load(Config * data)
 {
 	UUID = data->GetUInt("UUID");
+	alpha = data->GetFloat("Alpha",1.0f );
+	label.color = data->GetFloat3("Color", { 1,1,1 });
+	SetFont(data->GetString("FontName", DEFAULT_FONT));
+	SetFontScale(data->GetUInt("Scale", DEFAULT_SCALE));
+	SetText(data->GetString("Txt", ""));
 }
 
 void ComponentTextUI::Save(Config & data) const
 {
 	data.AddUInt("UUID", UUID);
+	data.AddFloat("Alpha", alpha);
+	data.AddString("Txt", label.text.c_str());
+	data.AddFloat3("Color", label.color);
+	data.AddString("FontName", label.font->fontSrc.c_str());
+	data.AddUInt("Scale", label.font->scale);
 }
 
 void ComponentTextUI::SetText(const char * txt)
 {
 	label.text = txt;
-	charPlanes.clear();
+	CleanCharPlanes();
 
 	FillCharPlanes();
 
@@ -472,4 +482,16 @@ void ComponentTextUI::SetFont(const char* font) {
 	label.font = App->fontManager->GetFont(font);
 	SetText(label.text.c_str());
 
+}
+
+
+void ComponentTextUI::CleanCharPlanes()
+{
+	for (int i = charPlanes.size()-1; i >=0; i--) {
+		
+		RELEASE_ARRAY(charPlanes[i]->vertex);
+		glDeleteBuffers(1, &charPlanes[i]->vertexID);
+		RELEASE(charPlanes[i]);
+	}
+	charPlanes.clear();
 }

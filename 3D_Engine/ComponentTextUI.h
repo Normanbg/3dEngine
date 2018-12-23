@@ -62,6 +62,7 @@ private:
 	bool ShiftNewLine(float3& cursor,  int& line, int i);
 	void SetFontScale(uint scale);
 	void SetFont(const char * font);
+	void CleanCharPlanes();
 	
 	std::vector<CharPlane*> charPlanes;
 	std::vector<float3> offsetPlanes;

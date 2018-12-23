@@ -4,7 +4,7 @@
 #include "MathGeoLib/Math/float3.h"
 #include "ModuleFileSystem.h"
 
-
+#include "mmgr/mmgr.h"
 
 
 
@@ -104,7 +104,9 @@ void Font::CleanUp()
 	for (std::map<GLchar, Character*>::reverse_iterator it = charsList.rbegin(); it != charsList.rend(); it++)
 	{		
 		glDeleteBuffers(1, &(*it).second->textureID);
+		RELEASE((*it).second);
 	}
+	charsList.clear();
 	FT_Done_Face(face);
 }
 

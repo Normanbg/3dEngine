@@ -11,7 +11,7 @@ enum WindowState
 	WIN_MOUSEOVER,
 	DRAGGING
 };
-
+class ComponentImageUI;
 class ComponentWindowUI :	public ComponentUI, public Component
 {
 public:
@@ -40,6 +40,7 @@ public:
 	bool IsDraggable() { return draggable; }
 
 public:
+	ComponentImageUI* image = nullptr;
 	ResourceTexture* windImage = nullptr;
 	WindowState state = WindowState::WINDOW_IDLE;
 

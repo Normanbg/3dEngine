@@ -85,6 +85,7 @@ update_status ModuleScene::Update(float dt) {
 			mesh->frustumContained = ContainsAaBox(mesh->bbox);
 		}
 	}
+	dynamicOBjs.clear();
 
 	if (rootQuadTree->quadTreeBox.IsFinite()) {
 		std::list<uuid> uuidList;

@@ -46,6 +46,7 @@ bool ComponentRectTransform::Update()
 
 void ComponentRectTransform::CleanUp()
 {
+	myGO = nullptr;
 	RELEASE_ARRAY(rect.vertex);	
 }
 

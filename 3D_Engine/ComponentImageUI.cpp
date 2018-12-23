@@ -55,6 +55,7 @@ void ComponentImageUI::CleanUp()
 void ComponentImageUI::Load(Config * data)
 {
 	UUID = data->GetUInt("UUID");
+	alpha = data->GetFloat("Alpha", 1.0f);
 	std::string matName = data->GetString("UITexName", "NoName");
 
 	if (matName != "NoName") {
@@ -66,6 +67,7 @@ void ComponentImageUI::Load(Config * data)
 void ComponentImageUI::Save(Config & data) const
 {
 	data.AddUInt("UUID", UUID);
+	data.AddFloat("Alpha", alpha);
 	if (resourceTexture) {
 		data.AddString("UITexName", resourceTexture->GetName());
 	}
