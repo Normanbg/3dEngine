@@ -48,6 +48,12 @@ bool ComponentButtonUI::Update()
 	GameObject* canvasGO = App->scene->GetFirstGameObjectCanvas();
 	if (App->gui->isMouseOnGame() && myGO != canvasGO)
 		CheckState();
+	else if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN && state == PRESSED)
+	{
+		state = IDLE;
+		if (idleImg != nullptr)
+			ChangeGOImage();
+	}
 	
 	if (fadingOut) {
 		FadeOut();
@@ -98,6 +104,11 @@ void ComponentButtonUI::CheckState() {
 		}
 	}
 	else if (state == MOUSEOVER){
+		state = IDLE;
+		if (idleImg != nullptr)
+			ChangeGOImage();
+	}
+	else if (state == PRESSED && App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN) {
 		state = IDLE;
 		if (idleImg != nullptr)
 			ChangeGOImage();
