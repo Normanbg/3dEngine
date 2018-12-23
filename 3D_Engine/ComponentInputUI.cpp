@@ -5,6 +5,7 @@
 #include "GameObject.h"
 #include "ModuleInput.h"
 #include "ModuleGui.h"
+#include "ModuleResources.h"
 
 #include "mmgr/mmgr.h"
 
@@ -42,6 +43,10 @@ bool ComponentInputUI::Start()
 	cText->SetText("Insert Text Here");
 	rectTransform->SetWidth(cText->GetLabelWidth());
 	rectTransform->SetHeight(cText->GetLabelHeight());
+	cButton->SetResource(App->resources->FindByName(DEFAULT_IDLE_IN, Resource::ResType::UI), 0);
+	cButton->SetResource(App->resources->FindByName(DEFAULT_IDLE_IN, Resource::ResType::UI), 1);
+	cButton->SetResource(App->resources->FindByName(DEFAULT_PRESSED_IN, Resource::ResType::UI), 2);
+
 
 		return true;
 }
@@ -62,8 +67,14 @@ bool ComponentInputUI::Update()
 		}
 	}
 	
-		
-	
+	if (fadingOut) {
+		FadeOut();
+	}
+	if (fadingIn) {
+		FadeIn();
+	}
+	cText->SetAlpha(alpha);
+	cButton->SetAlpha(alpha);
 	
 	return true;
 }
@@ -98,3 +109,20 @@ void ComponentInputUI::ReceiveEvent(const Event & event)
 	
 }
 
+void ComponentInputUI::FadeIn()
+{
+	alpha += DELTA_ALPHA;
+	if (alpha >= 1.0f) {
+		fadingIn = false;
+		alpha = 1.0f;
+	}
+}
+
+void ComponentInputUI::FadeOut()
+{
+	alpha -= DELTA_ALPHA;
+	if (alpha <= 0.0f) {
+		fadingOut = false;
+		alpha = 0.0f;
+	}
+}

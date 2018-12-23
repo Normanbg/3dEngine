@@ -5,6 +5,9 @@
 #include "ComponentUI.h"
 
 
+#define DEFAULT_IDLE_IN "UI_Frame_white"
+#define DEFAULT_PRESSED_IN "UI_Frame_black"
+
 class ComponentTextUI;
 class ComponentButtonUI;
 
@@ -32,6 +35,10 @@ public:
 	inline void doSave(Config& data)const  override { Save(data); }
 
 	void ReceiveEvent(const Event &event) override;
+
+	void FadeIn()override;
+
+	void FadeOut()override;
 
 	bool readInput = false;
 	ComponentTextUI* cText = nullptr;

@@ -32,6 +32,20 @@
 ModuleGui::ModuleGui(bool start_enabled) : Module(start_enabled)
 {
 	name = "Gui";
+
+
+	uiPanels.push_back(panelAbout = new UIPanelAbout("About", 150, 150, 350, 350));
+	uiPanels.push_back(panelConfig = new UIPanelConfig("Configuration", 1025, 15, 250, 550, true));
+	uiPanels.push_back(panelConsole = new UIPanelConsole("Console", 50, 650, 1165, 350, true));
+	uiPanels.push_back(panelInspector = new UIPanelInspector("Inspector", 775, 15, 250, 550, true));
+	uiPanels.push_back(panelHierarchy = new UIPanelHierarchy("Hierarchy", 0, 15, 250, 550, true));
+	uiPanels.push_back(panelMaterial = new UIPanelMaterials("Materials", 0, 399, 240, 406, true));
+	uiPanels.push_back(panelScene = new UIPanelScene("Scene", 0, 399, 240, 406, true));
+	uiPanels.push_back(panelSceneInfo = new UIPanelSceneInfo("Scene Info", 0, 399, 240, 406, true));
+	uiPanels.push_back(panelAssets = new UIPanelAssets("Assets", 0, 15, 250, 550, true));
+	uiPanels.push_back(panelOptim = new UIPanelOptimization("Optimization", 0, 15, 250, 550, true));
+	uiPanels.push_back(panelGame = new UIPanelGame("Game", 0, 399, 240, 406, true));
+
 }
 
 
@@ -51,18 +65,6 @@ bool ModuleGui::Start()
 	closeFX = App->audio->LoadFx("close.wav");
 	openFX = App->audio->LoadFx("open.wav");
 	searchingFX = App->audio->LoadFx("searching.wav");
-
-	uiPanels.push_back(panelAbout = new UIPanelAbout("About", 150, 150, 350, 350));
-	uiPanels.push_back(panelConfig = new UIPanelConfig("Configuration", 1025, 15, 250, 550, true));
-	uiPanels.push_back(panelConsole = new UIPanelConsole("Console", 50, 650, 1165, 350, true));
-	uiPanels.push_back(panelInspector = new UIPanelInspector("Inspector", 775, 15, 250, 550, true));
-	uiPanels.push_back(panelHierarchy = new UIPanelHierarchy("Hierarchy", 0, 15, 250, 550, true));
-	uiPanels.push_back(panelMaterial = new UIPanelMaterials("Materials", 0, 399, 240, 406, true));
-	uiPanels.push_back(panelScene = new UIPanelScene("Scene", 0, 399, 240, 406, true));
-	uiPanels.push_back(panelSceneInfo = new UIPanelSceneInfo("Scene Info", 0, 399, 240, 406, true));
-	uiPanels.push_back(panelAssets = new UIPanelAssets("Assets", 0, 15, 250, 550, true));
-	uiPanels.push_back(panelOptim = new UIPanelOptimization("Optimization", 0, 15, 250, 550, true));
-	uiPanels.push_back(panelGame = new UIPanelGame("Game", 0, 399, 240, 406, true));
 
 	ImGui::CreateContext();
 	demoShowcase = false;

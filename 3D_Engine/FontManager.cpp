@@ -30,6 +30,8 @@ void FontManager::CleanUp()
 	loadedFonts.clear();
 }
 
+
+
 Font::Font(const char * name)
 {
 	if(name)
@@ -134,7 +136,15 @@ Font* FontManager::LoadFont(const char* name, uint scale)
 		FT_Set_Pixel_Sizes(font->face, 0, scale);
 		font->GenerateCharsList();
 		font->scale = scale;
-		loadedFonts.push_back(font);		
+		loadedFonts.push_back(font);	
+		bool add = true;
+		for (int i = 0; i < singleFonts.size(); i++) {
+			if (font->fontSrc == singleFonts[i]) {
+				add = false;
+				break;
+			}
+		}
+		if (add) { singleFonts.push_back(font->fontSrc.c_str()); }
 	}
 	else {		
 		font->CleanUp();		

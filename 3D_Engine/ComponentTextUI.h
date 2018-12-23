@@ -5,8 +5,7 @@
 #include "FontManager.h"
 #include <string>
 
-#define LABEL_Y_LIMIT 10 
-#define MAX_CHARS 64
+#define MAX_CHARS 32
 
 class ComponentTextUI : public ComponentUI, public Component
 {
@@ -38,6 +37,8 @@ public:
 
 	bool Start() override;
 	bool Update() override;
+	void FadeIn()override;
+	void FadeOut()override;
 	void CleanUp() override;	
 
 	inline void doStart() override { Start(); }
@@ -53,14 +54,14 @@ public:
 	void SetText(const char* txt);
 	float GetLabelWidth() const { return labelFrame[3].x - labelFrame[0].x + initOffsetX; }
 	float GetLabelHeight() const { return labelFrame[1].y - labelFrame[0].y; }
-
+	void SetAsCheckBox();
 private: 
 	
 	void AddCharPanel(char character, bool first = false);
 	void FillCharPlanes();
 	void EnframeLabel(float3 * points);
 	float3 GetCornerLabelPoint(int corner);
-	bool ShiftNewLine(float3& cursor,  int& line, int i);
+	void ShiftNewLine(float3& cursor,  int& line, int i);
 	void SetFontScale(uint scale);
 	void SetFont(const char * font);
 	void CleanCharPlanes();
@@ -72,8 +73,8 @@ private:
 	float initOffsetX = 0.0f;
 	Label label;
 	int lineSpacing = 30;
-	bool drawCharPanel = true;
-	bool drawLabelrect = true;
+	bool drawCharPanel = false;
+	bool drawLabelrect = false;
 	
 };
 

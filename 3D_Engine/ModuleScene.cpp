@@ -9,6 +9,7 @@
 #include "ModuleInput.h"
 #include "ModuleGui.h"
 #include "UIPanelScene.h"
+#include "FakeFunctions.h"
 
 #include "mmgr/mmgr.h"
 
@@ -26,8 +27,9 @@ ModuleScene::ModuleScene(bool start_enabled) : Module(start_enabled){
 
 ModuleScene::~ModuleScene()
 {
-
+	RELEASE(functions);;
 }
+
 bool ModuleScene::Init(JSON_Object * obj)
 {
 	root = new GameObject("root");
@@ -39,9 +41,16 @@ bool ModuleScene::Init(JSON_Object * obj)
 	AABB rootAABB;
 	rootAABB.SetNegativeInfinity();
 	rootQuadTree = new Quadtree(rootAABB, 0);
+	functions = new FakeFunctions();
 
 	ImGuizmo::Enable(false);
 
+	return true;
+}
+
+bool ModuleScene::Start()
+{
+	
 	return true;
 }
 
@@ -49,6 +58,11 @@ update_status ModuleScene::PreUpdate(float dt)
 {
 	bool ret = true;
 	root->CalculateAllTransformGlobalMat();
+
+	if (clear) {
+		ClearScene();
+		clear = false;
+	}
 	
 	if (root->childrens.empty() == false) {
 		for (int i = 0; i < root->childrens.size(); i++) {
@@ -221,6 +235,9 @@ void ModuleScene::ClearSceneCompletely()
 	}
 	for (int i = root->components.size() - 1; i >= 0; i--) {
 		root->RemoveComponent(root->components[i]);
+	}
+	for (int i = root->componentsUI.size() - 1; i >= 0; i--) {
+		root->RemoveComponentUI(root->componentsUI[i]);
 	}
 	
 	mainCamera = nullptr;
@@ -590,15 +607,21 @@ void ModuleScene::Draw(bool editor) {
 				rootQuadTree->DebugDraw();
 		}
 	}
+	else
+	{
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	}
 
-	float3 corners[8];
+	/*float3 corners[8];
 	ui_render_box.GetCornerPoints(corners);
-	DebugDrawBox(corners, Red, 5.f);
+	DebugDrawBox(corners, Red, 5.f);*/
 
 
 	//--------UI
+	
 	if (editor)
 	{
+		
 		std::vector<ComponentUI*> componentsUI; // first draw UI components
 		root->GetComponentsUITypeIgnore(componentsUI, TRANSFORMRECT);
 		for (int i = 0; i < componentsUI.size(); i++) {
@@ -647,10 +670,14 @@ void ModuleScene::DrawInGameUI()
 		ui_render_box.maxPoint = max;
 		
 		glOrtho(left, right, bottom, top, zNear, zFar);
-		float3 corners[8];
+		/*float3 corners[8];
 		ui_render_box.GetCornerPoints(corners);
-		DebugDrawBox(corners, Red, 5.f);
-
+		DebugDrawBox(corners, Red, 5.f);*/
+		if (GetFirstGameObjectCanvas()) {
+			ComponentCanvas* canvas = GetFirstGameObjectCanvas()->GetComponentCanvas();
+			if (canvas) { canvas->DrawCrossHair(); }
+			canvas = nullptr;
+		}
 		std::vector<ComponentUI*> componentsUI; // first draw UI components
 		root->GetComponentsUITypeIgnore(componentsUI, TRANSFORMRECT);
 		for (int i = 0; i < componentsUI.size(); i++) {

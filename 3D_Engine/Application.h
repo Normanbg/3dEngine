@@ -23,6 +23,7 @@ struct Event
 		scene_file_dropped,
 		texture_file_dropped,
 		input,
+		active_Vsync,
 		invalid
 	} type;
 

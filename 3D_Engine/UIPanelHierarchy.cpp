@@ -36,7 +36,11 @@ void UIPanelHierarchy::Draw()
 						canvas->AddComponent(CANVAS);
 					}
 					GameObject* image = App->scene->AddUIGameObject("UI_Image",canvas);
+					
 					image->AddUIComponent(UI_IMAGE);
+					image->GetComponentRectTransform()->SetHeight(50);
+					image->GetComponentRectTransform()->SetWidth(50);
+
 					image = nullptr;
 					canvas = nullptr;
 				}
@@ -59,8 +63,9 @@ void UIPanelHierarchy::Draw()
 						canvas = App->scene->AddUIGameObject("Canvas", App->scene->root);
 						canvas->AddComponent(CANVAS);
 					}
-					GameObject* inp = App->scene->AddUIGameObject("UI_Input", canvas);					
+					GameObject* inp = App->scene->AddUIGameObject("UI_Input", canvas);						
 					inp->AddUIComponent(UI_TEXT);
+					inp->AddUIComponent(UI_IMAGE);
 					inp->AddUIComponent(UI_BUTTON);
 					inp->AddUIComponent(UI_INPUT);
 					inp = nullptr;
@@ -74,6 +79,7 @@ void UIPanelHierarchy::Draw()
 						canvas->AddComponent(CANVAS);
 					}
 					GameObject* but = App->scene->AddUIGameObject("UI_Button", canvas);
+					but->AddUIComponent(UI_IMAGE);
 					but->AddUIComponent(UI_BUTTON);
 					but = nullptr;
 					canvas = nullptr;
@@ -86,6 +92,7 @@ void UIPanelHierarchy::Draw()
 						canvas->AddComponent(CANVAS);
 					}
 					GameObject* checkbox = App->scene->AddUIGameObject("UI_Checkbox", canvas);
+					checkbox->AddUIComponent(UI_IMAGE);
 					checkbox->AddUIComponent(UI_CHECKBOX);
 					checkbox = nullptr;
 					canvas = nullptr;
@@ -98,7 +105,10 @@ void UIPanelHierarchy::Draw()
 						canvas->AddComponent(CANVAS);
 					}
 					GameObject* window = App->scene->AddUIGameObject("UI_Window", canvas);
+					window->AddUIComponent(UI_IMAGE);
 					window->AddUIComponent(UI_WINDOW);
+					window->GetComponentRectTransform()->SetHeight(100);
+					window->GetComponentRectTransform()->SetWidth(100);
 					window = nullptr;
 					canvas = nullptr;
 				}
@@ -126,6 +136,7 @@ void UIPanelHierarchy::Draw()
 				if (ImGui::MenuItem("Button")) {
 					GameObject* butt;
 					butt = App->scene->AddUIGameObject("UI Button", App->scene->gObjSelected);
+					butt->AddUIComponent(UI_IMAGE);
 					butt->AddUIComponent(UI_BUTTON);
 					showPopUp = false;
 				}
@@ -138,19 +149,24 @@ void UIPanelHierarchy::Draw()
 				if (ImGui::MenuItem("Input Text")) {
 					GameObject* inpText;
 					inpText = App->scene->AddUIGameObject("UI Input Text", App->scene->gObjSelected);
+					inpText->AddUIComponent(UI_TEXT);
+					inpText->AddUIComponent(UI_IMAGE);
+					inpText->AddUIComponent(UI_BUTTON);
 					inpText->AddUIComponent(UI_INPUT);
 					showPopUp = false;
 				}
 				if (ImGui::MenuItem("Checkbox")) {
 					GameObject* checkB;
 					checkB = App->scene->AddUIGameObject("UI Checkbox", App->scene->gObjSelected);
+					checkB->AddUIComponent(UI_IMAGE);
 					checkB->AddUIComponent(UI_CHECKBOX);
 					showPopUp = false;
 				}
 				if (ImGui::MenuItem("Window")) {
 					GameObject* window;
 					window = App->scene->AddUIGameObject("UI Window", App->scene->gObjSelected);
-					window->AddUIComponent(UI_WINDOW);
+					window->AddUIComponent(UI_IMAGE);
+					window->AddUIComponent(UI_WINDOW);					
 					showPopUp = false;
 				}
 			}

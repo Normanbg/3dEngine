@@ -66,23 +66,24 @@ bool GameObject::Update(){
 	return ret;
 }
 
-bool GameObject::PostUpdate(){
+bool GameObject::PostUpdate() {
 	bool ret = true;
-	/*
-	for (int i = 0; i < componentsUI.size(); i++) {
 
-		ret &= componentsUI[i]->PostUpdate();
-	}
-	for (int i = 0; i < components.size(); i++) {
-
-		ret &= components[i]->PostUpdate();
-	}*/
 	for (int i = 0; i < childrens.size(); i++) {
 
 		ret &= childrens[i]->PostUpdate();
 	}
-	
-
+	if (fadeDelete) {
+		ComponentImageUI* ima = GetComponentImageUI();
+			if (ima) {
+				if (ima->alpha < 0.5f)
+				{
+					fadeDelete = false;
+					App->scene->clear = true;
+				}
+			}
+		ima = nullptr;
+	}
 	return ret;
 }
 
@@ -227,7 +228,7 @@ ComponentUI * GameObject::AddUIComponent(ComponentTypeUI type) {
 	}
 	case ComponentTypeUI::UI_INPUT: {
 		ret = new ComponentInputUI();
-		ComponentInputUI* cInput = (ComponentInputUI*)ret;
+		ComponentInputUI* cInput = (ComponentInputUI*)ret;		
 		cInput->myGO = this;
 		cInput = nullptr;
 		break;
@@ -236,7 +237,6 @@ ComponentUI * GameObject::AddUIComponent(ComponentTypeUI type) {
 		ret = new ComponentButtonUI();
 		ComponentButtonUI* cBut = (ComponentButtonUI*)ret;
 		cBut->myGO = this;
-		AddUIComponent(UI_IMAGE);
 		cBut = nullptr;
 		break;
 	}
@@ -251,7 +251,6 @@ ComponentUI * GameObject::AddUIComponent(ComponentTypeUI type) {
 		ret = new ComponentWindowUI();
 		ComponentWindowUI* cWin = (ComponentWindowUI*)ret;
 		cWin->myGO = this;
-		AddUIComponent(UI_IMAGE);
 		cWin = nullptr;
 		break;
 	}
@@ -259,7 +258,6 @@ ComponentUI * GameObject::AddUIComponent(ComponentTypeUI type) {
 		ret = new ComponentCheckBoxUI();
 		ComponentCheckBoxUI* cWin = (ComponentCheckBoxUI*)ret;
 		cWin->myGO = this;
-		AddUIComponent(UI_IMAGE);
 		cWin = nullptr;
 		break;
 	}
@@ -349,6 +347,17 @@ void GameObject::SetParent(GameObject * _parent)
 	}
 	parent = _parent;
 	parent->AddChildren(this);
+}
+
+void GameObject::DoFadeAndDelete()
+{
+	for (int i = 0; i < componentsUI.size(); i++) {
+		componentsUI[i]->fadingOut = true;
+	}
+	for (int i = 0; i < childrens.size(); i++) {
+		childrens[i]->DoFadeAndDelete();
+	}
+	fadeDelete = true;
 }
 
 void GameObject::AddChildren(GameObject * child)
@@ -513,7 +522,7 @@ ComponentCheckBoxUI * GameObject::GetComponentCheckBoxUI() const{
 	//WILL ONLY FIND THE FIRST COMPONENT EQUAL TO TYPE OF EACH G0
 	for (std::vector<ComponentUI*>::const_iterator it = componentsUI.begin(); it != componentsUI.end(); it++)
 	{
-		if ((*it)->typeUI == TRANSFORMRECT)
+		if ((*it)->typeUI == UI_CHECKBOX)
 			return (ComponentCheckBoxUI*)(*it);
 	}
 	return ret;

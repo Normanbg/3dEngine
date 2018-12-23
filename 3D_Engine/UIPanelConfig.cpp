@@ -190,19 +190,19 @@ void UIPanelConfig::Draw() {
 		ImGui::PlotHistogram("##memory", &memory[0], memory.size(), 0, title, 0.0f, stats.peakReportedMemory * 1.5f, ImVec2(310, 100));
 	}
 	if (ImGui::CollapsingHeader("Render")) {
-		bool depthTest = App->renderer3D->GetDepthTest();
+		/*bool depthTest = App->renderer3D->GetDepthTest();
 		if (ImGui::Checkbox("Depth Test ", &depthTest)) {			
 			App->renderer3D->SetDepthTest(depthTest);
-		}
+		}*/
 		ImGui::SameLine();
 		bool cullFace = App->renderer3D->GetCullFace();
 		if (ImGui::Checkbox("Cull Face ", &cullFace)) {
 			App->renderer3D->SetCullFace(cullFace);
 		}
-		bool light = App->renderer3D->GetLighting();
+		/*bool light = App->renderer3D->GetLighting();
 		if (ImGui::Checkbox("Lightning ", &light)) {
 			App->renderer3D->SetLighting(light);
-		}
+		}*/
 		ImGui::SameLine();
 		bool colormat = App->renderer3D->GetColorMaterial();
 		if (ImGui::Checkbox("Color Material", &colormat)) {

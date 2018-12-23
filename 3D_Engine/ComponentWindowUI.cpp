@@ -23,9 +23,9 @@ ComponentWindowUI::~ComponentWindowUI()
 bool ComponentWindowUI::Start()
 {
 	rectTransform = myGO->GetComponentRectTransform();
-	rectTransform->SetWidth(100);
-	rectTransform->SetHeight(100);
 	image = myGO->GetComponentImageUI();
+	SetResource(App->resources->FindByName(DEFAULT_WIN, Resource::ResType::UI));
+
 	return true;
 }
 
@@ -79,13 +79,17 @@ void ComponentWindowUI::CheckLimits(float2& newPos) {
 		newPos.y = 0.f;
 	}
 	ComponentRectTransform* parentRect = myGO->parent->GetComponentRectTransform();
-	if (newPos.x > parentRect->GetWidth())
+	float parentWidth = parentRect->GetWidth();
+	float widthMax = (parentWidth - rectTransform->GetWidth());
+	if (newPos.x > widthMax)
 	{
-		newPos.x = parentRect->GetWidth();
+		newPos.x = widthMax;
 	}
-	if (newPos.y > parentRect->GetHeight())
+	float parentHeight = parentRect->GetHeight();
+	float heightMax = (parentHeight  - rectTransform->GetHeight());
+	if (newPos.y > heightMax)
 	{
-		newPos.y = parentRect->GetHeight();
+		newPos.y = heightMax;
 	}
 }
 
@@ -124,7 +128,10 @@ bool ComponentWindowUI::CheckChildsState()
 		if (it->GetComponentButtonUI() != nullptr && it->GetComponentButtonUI()->state != ButtonState::IDLE) {
 			return false;
 		}
-		//....missing to check checkboxes and input
+		if (it->GetComponentCheckBoxUI() != nullptr && it->GetComponentCheckBoxUI()->IsMouseOver()) {
+			return false;
+		}
+		//....missing to check input
 	}
 	return true;
 }
@@ -190,10 +197,14 @@ void ComponentWindowUI::Load(Config * data)
 {
 	UUID = data->GetUInt("UUID");
 	alpha = data->GetFloat("Alpha", 1.0f);
+	SetResource(App->resources->FindByName(data->GetString("Idle", ""), Resource::ResType::UI));
+	hasSetToMid = true;
 }
 
 void ComponentWindowUI::Save(Config & data) const
 {
 	data.AddUInt("UUID", UUID);
 	data.AddFloat("Alpha", alpha);
+	if (windImage)
+		data.AddString("Idle", windImage->GetName());
 }

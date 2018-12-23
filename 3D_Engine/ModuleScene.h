@@ -14,7 +14,7 @@ class vector;
 class GameObject;
 class Quadtree;
 class Resource;
-
+class FakeFunctions;
 
 
 class ModuleScene : public Module
@@ -27,6 +27,7 @@ public:
 
 
 	bool Init(JSON_Object* obj) override;
+	bool Start()override;
 	update_status PreUpdate(float dt) override;
 	update_status Update(float dt) override;
 	update_status PostUpdate(float dt) override;
@@ -95,10 +96,13 @@ public:
 
 	ImGuizmo::OPERATION guizmoOp = ImGuizmo::TRANSLATE;
 
-	//--------------------
 	std::list<GameObject*> staticObjsToDraw;
-
 	uint intersections = 0;
+
+	//-------------------------------
+	FakeFunctions* functions;
+	bool clear = false;
+
 private:
 	void GetAllStaticGOs(GameObject* go);
 	void GetAllDynamicGOs(GameObject* go);

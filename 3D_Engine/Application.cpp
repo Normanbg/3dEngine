@@ -104,7 +104,7 @@ bool Application::Init(){
 		item++;
 	}
 	fontManager->LoadAllFolderFonts();
-	
+	App->scene->LoadScene("Scenes/Intro.JSON");
 
 
 	ms_timer.Start();

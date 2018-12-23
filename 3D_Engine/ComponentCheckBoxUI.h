@@ -5,6 +5,9 @@
 #include "ComponentUI.h"
 #include "ComponentButtonUI.h"
 
+#define DEFAULT_IDLE_CH "UI_Checked_white"
+#define DEFAULT_PRESSED_CH "UI_Unchecked_white"
+
 class ComponentImageUI;
 
 class ComponentCheckBoxUI : public ComponentUI, public Component
@@ -33,6 +36,9 @@ public:
 
 	bool IsMouseOver();
 
+
+	void PressedCallback();
+
 public:
 	ComponentImageUI* image = nullptr;
 	ButtonState state = IDLE;
@@ -43,6 +49,10 @@ private:
 	void ChangeGOImage();
 	const bool HasTexture(ResourceTexture * res) const;
 	void SetResource(uuid resource, int numRes);
+	Functions function = NO_FUNCTION;
+
+private:
+	bool hasSetToMid = false;
 };
 
 

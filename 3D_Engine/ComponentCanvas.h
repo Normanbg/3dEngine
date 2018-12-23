@@ -14,13 +14,16 @@ public:
 	void DrawInspector() override;
 
 	void SetResolution(float2 _resolution);
+	void DrawCrossHair();
 
 public:
 	bool editor = false;
+	float2 lastResolution = float2::zero;
 
 private:
 	bool setWidthHeight = true;
 	float2 resolution;
+	bool cross = true;
 };
 
 #endif // !__COMPONENTCANVAS_H__

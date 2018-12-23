@@ -4,8 +4,12 @@
 #include "Component.h"
 #include "ComponentUI.h"
 #include "ResourceTexture.h"
+#include "FakeFunctions.h"
 
 #define DELTA_ALPHA 0.01f
+#define DEFAULT_IDLE_BT "UI_ButtonIdle"
+#define DEFAULT_HOVER_BT "UI_ButtonHover"
+#define DEFAULT_PRESSED_BT "UI_ButtonPressed"
 
 enum ButtonState
 {
@@ -21,14 +25,6 @@ class ComponentButtonUI : public ComponentUI, public Component
 public:
 	ComponentButtonUI();
 	~ComponentButtonUI();
-
-	enum Function {
-		NO_FUNCTION,
-		START,
-		OPEN_IN_GAME_MENU,
-		ACTIVATE_VSYNC
-	};
-
 
 	void UpdateRectTransform() override;
 	void DrawInspector() override;
@@ -50,6 +46,8 @@ public:
 	void SetResource(uuid resource, int numRes);
 	
 	bool IsMouseOver();
+	
+	void PressedCallback();
 
 public:
 	ComponentImageUI* image = nullptr;
@@ -57,6 +55,8 @@ public:
 	ResourceTexture* idleImg = nullptr;
 	ResourceTexture* hoverImg = nullptr;
 	ResourceTexture* pressedImg = nullptr;
+
+	Functions function = NO_FUNCTION;
 
 private:
 	void CheckState();
