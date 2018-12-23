@@ -112,13 +112,13 @@ void ComponentButtonUI::ChangeGOImage()
 	switch (state)
 	{
 	case ButtonState::IDLE:
-		image->SetResource(App->resources->FindByName(idleImg->GetName(), Resource::ResType::Texture));
+		image->SetResource(App->resources->FindByName(idleImg->GetName(), Resource::ResType::UI));
 		break;
 	case ButtonState::MOUSEOVER:
-		image->SetResource(App->resources->FindByName(hoverImg->GetName(), Resource::ResType::Texture));
+		image->SetResource(App->resources->FindByName(hoverImg->GetName(), Resource::ResType::UI));
 		break;
 	case ButtonState::PRESSED:
-		image->SetResource(App->resources->FindByName(pressedImg->GetName(), Resource::ResType::Texture));
+		image->SetResource(App->resources->FindByName(pressedImg->GetName(), Resource::ResType::UI));
 		break;
 	default:
 		break;
@@ -176,9 +176,9 @@ void ComponentButtonUI::Load(Config * data)
 {
 	UUID = data->GetUInt("UUID", 0);
 	alpha = data->GetFloat("Alpha", 1.0f);
-	SetResource(App->resources->FindByName(data->GetString("Idle", ""), Resource::ResType::Texture),0);
-	SetResource(App->resources->FindByName(data->GetString("Hover", ""), Resource::ResType::Texture), 1);
-	SetResource(App->resources->FindByName(data->GetString("Press", ""), Resource::ResType::Texture), 2);
+	SetResource(App->resources->FindByName(data->GetString("Idle", ""), Resource::ResType::UI),0);
+	SetResource(App->resources->FindByName(data->GetString("Hover", ""), Resource::ResType::UI), 1);
+	SetResource(App->resources->FindByName(data->GetString("Press", ""), Resource::ResType::UI), 2);
 }
 
 void ComponentButtonUI::Save(Config & data) const
@@ -213,7 +213,7 @@ void ComponentButtonUI::DrawInspector()
 		}
 		if (ImGui::BeginCombo("   ", idleMaterial))
 		{
-			std::vector<Resource*> mat = App->resources->GetResourcesListType(Resource::ResType::Texture);
+			std::vector<Resource*> mat = App->resources->GetResourcesListType(Resource::ResType::UI);
 
 			for (int i = 0; i < mat.size(); i++)
 			{
@@ -224,7 +224,7 @@ void ComponentButtonUI::DrawInspector()
 				}
 				if (ImGui::Selectable(mat[i]->GetName(), is_selected)) {
 					idleMaterial = mat[i]->GetName();
-					SetResource(App->resources->FindByName(mat[i]->GetName(), Resource::ResType::Texture), 0);
+					SetResource(App->resources->FindByName(mat[i]->GetName(), Resource::ResType::UI), 0);
 
 					if (is_selected) {
 						ImGui::SetItemDefaultFocus();
@@ -249,7 +249,7 @@ void ComponentButtonUI::DrawInspector()
 		}
 		if (ImGui::BeginCombo(" ", hoverMaterial))
 		{
-			std::vector<Resource*> mat = App->resources->GetResourcesListType(Resource::ResType::Texture);
+			std::vector<Resource*> mat = App->resources->GetResourcesListType(Resource::ResType::UI);
 
 			for (int i = 0; i < mat.size(); i++)
 			{
@@ -260,7 +260,7 @@ void ComponentButtonUI::DrawInspector()
 				}
 				if (ImGui::Selectable(mat[i]->GetName(), is_selected)) {
 					hoverMaterial = mat[i]->GetName();
-					SetResource(App->resources->FindByName(mat[i]->GetName(), Resource::ResType::Texture), 1);
+					SetResource(App->resources->FindByName(mat[i]->GetName(), Resource::ResType::UI), 1);
 
 					if (is_selected) {
 						ImGui::SetItemDefaultFocus();
@@ -285,7 +285,7 @@ void ComponentButtonUI::DrawInspector()
 		}
 		if (ImGui::BeginCombo("  ", pressedMaterial))//TO AVOID 
 		{
-			std::vector<Resource*> mat = App->resources->GetResourcesListType(Resource::ResType::Texture);
+			std::vector<Resource*> mat = App->resources->GetResourcesListType(Resource::ResType::UI);
 
 			for (int i = 0; i < mat.size(); i++)
 			{
@@ -296,7 +296,7 @@ void ComponentButtonUI::DrawInspector()
 				}
 				if (ImGui::Selectable(mat[i]->GetName(), is_selected)) {
 					pressedMaterial = mat[i]->GetName();
-					SetResource(App->resources->FindByName(mat[i]->GetName(), Resource::ResType::Texture), 2);
+					SetResource(App->resources->FindByName(mat[i]->GetName(), Resource::ResType::UI), 2);
 
 					if (is_selected) {
 						ImGui::SetItemDefaultFocus();

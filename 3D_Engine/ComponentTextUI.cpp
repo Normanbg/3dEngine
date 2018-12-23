@@ -42,8 +42,8 @@ bool ComponentTextUI::Start()
 	
 	//App->fontManager->LoadFont("federalescort.ttf", 20);
 	SetText("Default Text");
-	rectTransform->SetWidth((labelFrame[3].x - labelFrame[0].x)*10, false);
-	rectTransform->SetHeight((labelFrame[2].y - labelFrame[3].y)*10, false);
+	rectTransform->SetWidth((labelFrame[3].x - labelFrame[0].x), false);
+	rectTransform->SetHeight((labelFrame[2].y - labelFrame[3].y), false);
 
 
 	return true;
@@ -253,7 +253,7 @@ void ComponentTextUI::DrawInspector()
 	if (ImGui::InputText("Label Text",(char*) label.text.c_str(), maxSize)){
 		SetText(label.text.c_str());
 	}
-	if (ImGui::SliderFloat("Scale", &(label.font->scale), 8, 64,"%0.f")) {
+	if (ImGui::SliderFloat("Scale", &(label.font->scale), 8, MAX_CHARS,"%0.f")) {
 		SetFontScale(label.font->scale);
 	}
 	ImGui::Checkbox("Draw Characters Frame", &drawCharPanel);

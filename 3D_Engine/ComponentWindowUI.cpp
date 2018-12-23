@@ -135,7 +135,7 @@ void ComponentWindowUI::SetResource(uuid resource)
 	windImage->LoadInMemory();
 	 
 	if (image != nullptr) {
-		image->SetResource(App->resources->FindByName(windImage->GetName(), Resource::ResType::Texture));
+		image->SetResource(App->resources->FindByName(windImage->GetName(), Resource::ResType::UI));
 	}
 }
 
@@ -153,7 +153,7 @@ void ComponentWindowUI::DrawInspector()
 		}
 		if (ImGui::BeginCombo("   ", windMaterial))
 		{
-			std::vector<Resource*> mat = App->resources->GetResourcesListType(Resource::ResType::Texture);
+			std::vector<Resource*> mat = App->resources->GetResourcesListType(Resource::ResType::UI);
 
 			for (int i = 0; i < mat.size(); i++)
 			{
@@ -164,7 +164,7 @@ void ComponentWindowUI::DrawInspector()
 				}
 				if (ImGui::Selectable(mat[i]->GetName(), is_selected)) {
 					windMaterial = mat[i]->GetName();
-					SetResource(App->resources->FindByName(mat[i]->GetName(), Resource::ResType::Texture));
+					SetResource(App->resources->FindByName(mat[i]->GetName(), Resource::ResType::UI));
 
 					if (is_selected) {
 						ImGui::SetItemDefaultFocus();

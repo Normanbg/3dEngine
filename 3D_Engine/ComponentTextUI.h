@@ -6,6 +6,7 @@
 #include <string>
 
 #define LABEL_Y_LIMIT 10 
+#define MAX_CHARS 64
 
 class ComponentTextUI : public ComponentUI, public Component
 {

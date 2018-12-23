@@ -62,6 +62,9 @@ bool ComponentInputUI::Update()
 		}
 	}
 	
+		
+	
+	
 	return true;
 }
 
@@ -87,9 +90,10 @@ void ComponentInputUI::Save(Config & data) const
 void ComponentInputUI::ReceiveEvent(const Event & event)
 {
 	if (event.type == event.input && readInput) {
-
-		textInput += event.string;
-		cText->SetText(textInput.c_str());
+		if (textInput.size() <= MAX_CHARS) {
+			textInput += event.string;
+			cText->SetText(textInput.c_str());
+		}
 	}
 	
 }
