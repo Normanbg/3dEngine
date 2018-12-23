@@ -24,7 +24,8 @@ void FontManager::CleanUp()
 {
 	for (std::vector<Font*>::reverse_iterator it = loadedFonts.rbegin(); it != loadedFonts.rend(); it++)
 	{		
-		(*it)->CleanUp();			
+		(*it)->CleanUp();		
+		RELEASE((*it));
 	}
 	loadedFonts.clear();
 }

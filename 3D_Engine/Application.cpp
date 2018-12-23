@@ -67,6 +67,7 @@ Application::~Application(){
 		delete (*item);
 	}
 	list_modules.clear();
+	RELEASE(fontManager);
 	RELEASE(importer);
 	RELEASE(texImporter);
 }

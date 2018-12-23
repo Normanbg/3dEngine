@@ -246,6 +246,7 @@ bool ModuleRenderer3D::CleanUp()
 	sceneFboTex->UnBindFBO();
 	gameFboTex->UnBindFBO();
 	RELEASE(sceneFboTex);
+	RELEASE(gameFboTex);
 
 	SDL_GL_DeleteContext(context); 
 	return true;
