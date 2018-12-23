@@ -49,6 +49,11 @@ void ComponentRectTransform::CleanUp()
 	RELEASE_ARRAY(rect.vertex);	
 }
 
+const float2 ComponentRectTransform::GetMid() const
+{
+	return float2(rect.width / 2, rect.height / 2);
+}
+
 void ComponentRectTransform::SetWidth(float w, bool canvas)
 {
 	if (canvas) {
@@ -115,6 +120,14 @@ void ComponentRectTransform::SetGlobalPos(float2 global)
 
 void ComponentRectTransform::SetLocalPos(float2 newLocalMat) {
 	rect.localPosition = newLocalMat;                                                                                                                                                                                      
+}
+
+void ComponentRectTransform::SetToMid()
+{
+	float2 newPos = myGO->parent->GetComponentRectTransform()->GetMid();
+	newPos.x -= rect.width / 2;
+	newPos.y -= rect.height / 2;
+	SetLocalPos(newPos);
 }
 
 void ComponentRectTransform::UpdateLocalPos() {
@@ -202,34 +215,33 @@ void ComponentRectTransform::DrawInspector()
 		if (ImGui::DragFloat("Height", (float*)&_h, 0.1f)) { SetHeight(_h, false); }
 		if (ImGui::CollapsingHeader("Basic Positions")) {
 			if (ImGui::Button("Top Left")) {
-				float height = myGO->parent->GetComponentRectTransform()->GetHeight();
+				float height = myGO->parent->GetComponentRectTransform()->GetHeight() - rect.height;
 				SetLocalPos(float2(0, height));
 			}
 			ImGui::SameLine();
 			if (ImGui::Button("Top center")) {
-				float height = myGO->parent->GetComponentRectTransform()->GetHeight();
-				float width = myGO->parent->GetComponentRectTransform()->GetWidth() / 2;
+				float height = myGO->parent->GetComponentRectTransform()->GetHeight() - rect.height;
+				float width = myGO->parent->GetComponentRectTransform()->GetWidth() / 2 - (rect.width / 2);
 				SetLocalPos(float2(width, height));
 			}
 			ImGui::SameLine();
 			if (ImGui::Button("Top Right")) {
-				float height = myGO->parent->GetComponentRectTransform()->GetHeight();
-				float width = myGO->parent->GetComponentRectTransform()->GetWidth();
+				float height = myGO->parent->GetComponentRectTransform()->GetHeight() - rect.height;
+				float width = myGO->parent->GetComponentRectTransform()->GetWidth() - rect.width;
 				SetLocalPos(float2(width, height));
 			}
 			if (ImGui::Button("Center Left")) {
-				float height = myGO->parent->GetComponentRectTransform()->GetHeight() / 2;
+				float height = myGO->parent->GetComponentRectTransform()->GetHeight() / 2 - (rect.height / 2);
 				SetLocalPos(float2(0, height));
 			}
 			ImGui::SameLine();
 			if (ImGui::Button("Center")) {
-				float2 mid = myGO->parent->GetComponentRectTransform()->GetMid();
-				SetLocalPos(mid);
+				SetToMid();
 			}
 			ImGui::SameLine();
 			if (ImGui::Button("Center Right")) {
-				float height = myGO->parent->GetComponentRectTransform()->GetHeight() / 2;
-				float width = myGO->parent->GetComponentRectTransform()->GetWidth();
+				float height = myGO->parent->GetComponentRectTransform()->GetHeight() / 2 - (rect.height / 2);
+				float width = myGO->parent->GetComponentRectTransform()->GetWidth() - rect.width;
 				SetLocalPos(float2(width, height));
 			}
 			if (ImGui::Button("Down Left")) {
@@ -237,13 +249,13 @@ void ComponentRectTransform::DrawInspector()
 			}
 			ImGui::SameLine();
 			if (ImGui::Button("Down center")) {
-				float width = myGO->parent->GetComponentRectTransform()->GetWidth() / 2;
+				float width = myGO->parent->GetComponentRectTransform()->GetWidth() / 2 - (rect.width / 2);
 				SetLocalPos(float2(width, 0));
 			}
 
 			ImGui::SameLine();
 			if (ImGui::Button("Down Right")) {
-				float width = myGO->parent->GetComponentRectTransform()->GetWidth();
+				float width = myGO->parent->GetComponentRectTransform()->GetWidth() - rect.width;
 				SetLocalPos(float2(width, 0));
 			}
 			ImGui::SameLine();
