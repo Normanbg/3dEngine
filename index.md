@@ -55,7 +55,7 @@ Also, we have our fyle system that uses the library physfs.
 
 ## Video
 
-<iframe width="560" height="315" src="https://youtu.be/2DGAjaIH5W8" frameborder="0" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/2DGAjaIH5W8" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 ### Members work:
 Game Objects->Both
