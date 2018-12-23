@@ -53,6 +53,11 @@ For this delivery we are able to render directly the scene on a window, using a 
 Also, we have our fyle system that uses the library physfs.
 
 
+## About us 
+<blockquote class="imgur-embed-pub" lang="en" data-id="a/RrB7kKm"><a href="//imgur.com/RrB7kKm"></a></blockquote><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script>
+
+Norman Benet
+
 ## Video
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/2DGAjaIH5W8" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
