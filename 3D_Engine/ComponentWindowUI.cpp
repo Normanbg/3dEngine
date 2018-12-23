@@ -81,13 +81,17 @@ void ComponentWindowUI::CheckLimits(float2& newPos) {
 		newPos.y = 0.f;
 	}
 	ComponentRectTransform* parentRect = myGO->parent->GetComponentRectTransform();
-	if (newPos.x > parentRect->GetWidth())
+	float parentWidth = parentRect->GetWidth();
+	float widthMax = (parentWidth - rectTransform->GetWidth());
+	if (newPos.x > widthMax)
 	{
-		newPos.x = parentRect->GetWidth();
+		newPos.x = widthMax;
 	}
-	if (newPos.y > parentRect->GetHeight())
+	float parentHeight = parentRect->GetHeight();
+	float heightMax = (parentHeight  - rectTransform->GetHeight());
+	if (newPos.y > heightMax)
 	{
-		newPos.y = parentRect->GetHeight();
+		newPos.y = heightMax;
 	}
 }
 

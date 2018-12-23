@@ -46,7 +46,7 @@ public:
 	const uint GetVertexID() const { return rect.vertexID; }
 	const float2 GetLocalPos() const { return rect.localPosition; }
 	const float2 GetGlobalPos() const { return rect.globalPosition; }
-	const float2 GetMid() const { return float2(rect.width / 2, rect.height / 2); };
+	const float2 GetMid() const;
 
 	void SetWidth(float w, bool isCanvas = false);
 	void MoveCanvasXChilds();
@@ -54,6 +54,7 @@ public:
 	void SetHeight(float h, bool isCanvas = false);
 	void SetGlobalPos(float2 global);
 	void SetLocalPos(float2 newLocalMat);
+	void SetToMid();
 
 	void SetGlobalMatrixToDraw(float4x4 &globalMatrix);
 
