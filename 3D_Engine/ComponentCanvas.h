@@ -17,6 +17,7 @@ public:
 
 public:
 	bool editor = false;
+	float2 lastResolution = float2::zero;
 
 private:
 	bool setWidthHeight = true;

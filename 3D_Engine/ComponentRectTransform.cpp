@@ -4,7 +4,6 @@
 #include "GameObject.h"
 #include "UIPanelGame.h"
 
-
 #include "mmgr/mmgr.h"
 
 #pragma comment (lib, "glu32.lib")
@@ -50,11 +49,127 @@ void ComponentRectTransform::CleanUp()
 	RELEASE_ARRAY(rect.vertex);	
 }
 
+void ComponentRectTransform::SetWidth(float w, bool canvas)
+{
+	if (canvas) {
+		float lastHeight = rect.height;
+		float lastWidth = rect.width;
+		rect.width = w;
+		//UpdateSizeWithPercentatge(lastWidth, lastHeight);
+		MoveCanvasXChilds();
+	}
+	else {
+		rect.width = w;
+		//UpdatePercentatge();
+	}
+	UpdateUIComponents();
+}
+
+void ComponentRectTransform::MoveCanvasXChilds()
+{
+	float2 lRes = myGO->GetComponentCanvas()->lastResolution;
+	float widthMult = myGO->GetComponentRectTransform()->GetWidth() / lRes.x;
+	for (auto it : myGO->childrens) {
+		float2 globalPos = it->GetComponentRectTransform()->GetGlobalPos();
+		globalPos.x = globalPos.x * widthMult;
+		it->GetComponentRectTransform()->SetGlobalPos(globalPos);
+	}
+}
+
+void ComponentRectTransform::MoveCanvasYChilds()
+{
+	float2 lRes = myGO->GetComponentCanvas()->lastResolution;
+	float heightMult = myGO->GetComponentRectTransform()->GetHeight() / lRes.y;
+	for (auto it : myGO->childrens) {
+		float2 globalPos = it->GetComponentRectTransform()->GetGlobalPos();
+		globalPos.y = globalPos.y * heightMult;
+		it->GetComponentRectTransform()->SetGlobalPos(globalPos);
+	}
+}
+
+void ComponentRectTransform::SetHeight(float h, bool canvas)
+{
+	if (canvas) {
+		float lastHeight = rect.height;
+		float lastWidth = rect.width;
+		rect.height = h;
+		//UpdateSizeWithPercentatge(lastWidth, lastHeight);
+		MoveCanvasYChilds();
+	}
+	else
+		rect.height = h;
+	UpdateUIComponents();
+}
+
+void ComponentRectTransform::SetGlobalPos(float2 global)
+{
+	rect.globalPosition = global;
+	if (myGO->parent != nullptr && myGO->parent != App->scene->root)
+	{
+		ComponentRectTransform* parentTrans = myGO->parent->GetComponentRectTransform();
+		float2 parentGlobal = parentTrans->GetGlobalPos();
+		float2 newLocalPos = rect.globalPosition - parentGlobal;
+		SetLocalPos(newLocalPos);
+	}
+}
+
+void ComponentRectTransform::SetLocalPos(float2 newLocalMat) {
+	rect.localPosition = newLocalMat;                                                                                                                                                                                      
+}
+
+void ComponentRectTransform::UpdateLocalPos() {
+	rect.anchor.x = rect.globalPosition.x + rect.width / 2;
+	rect.anchor.y = rect.globalPosition.y + rect.height / 2;
+	rect.localPosition = float2(rect.globalPosition.x, rect.globalPosition.y);
+}
+
+void ComponentRectTransform::UpdatePercentatge() {
+	ComponentRectTransform* parentRect = myGO->parent->GetComponentRectTransform();
+	if (parentRect) {
+		rect.percentatgeHeight = rect.height / parentRect->GetHeight();
+		rect.percentatgeWidth = rect.width / parentRect->GetWidth();
+	}
+}
+
+void ComponentRectTransform::UpdateSizeWithPercentatge(float lastParentWidth, float lastParentHeight) {
+	ComponentRectTransform* parentRect = myGO->parent->GetComponentRectTransform();
+	if (parentRect) {
+		float lastWidth, lastHeight;
+		lastWidth = rect.width;
+		lastHeight = rect.height;
+		rect.height *= (parentRect->GetHeight() / lastParentHeight);
+		rect.width *= (parentRect->GetWidth() / lastParentWidth);
+
+		for (auto it : myGO->childrens) {
+			it->GetComponentRectTransform()->UpdateSizeWithPercentatge(lastWidth, lastHeight);
+		}
+	}
+	else {
+		for (auto it : myGO->childrens) {
+			it->GetComponentRectTransform()->UpdateSizeWithPercentatge(lastParentWidth, lastParentHeight);
+		}
+	}
+}
+
+void ComponentRectTransform::UpdateUIComponents()
+{
+	for (int i = 0; i < myGO->componentsUI.size(); ++i) {
+		if (myGO->componentsUI[i] != this) {
+			myGO->componentsUI[i]->UpdateRectTransform();
+		}
+	}
+}
+
+void ComponentRectTransform::SetGlobalMatrixToDraw(float4x4 &globalMatrix) {
+
+	globalMatrix = float4x4::FromTRS(float3(rect.globalPosition.x, rect.globalPosition.y, 0), Quat(0, 0, 0, 0), float3(rect.width, rect.height, 0));
+}
+
 void ComponentRectTransform::Load(Config * data)
 {
 	UUID = data->GetUInt("UUID");
 	SetGlobalPos(data->GetFloat2("Position", { 0,0 }));
-	SetWidth(data->GetFloat("Width", 1),false);
+	SetWidth(data->GetFloat("Width", 1), false);
 
 	SetHeight(data->GetFloat("Height", 1), false);
 }
@@ -75,7 +190,7 @@ void ComponentRectTransform::DrawInspector()
 	float2 _pos = GetLocalPos();
 	float _w = GetWidth();
 	float _h = GetHeight();
-	
+
 	if (myGO->GetComponentCanvas()) {
 		ImGui::DragFloat2("Position", (float*)&_pos, 0.1f);
 		ImGui::DragFloat("Width", (float*)&_w, 0.1f);
@@ -125,14 +240,14 @@ void ComponentRectTransform::DrawInspector()
 				float width = myGO->parent->GetComponentRectTransform()->GetWidth() / 2;
 				SetLocalPos(float2(width, 0));
 			}
-		
+
 			ImGui::SameLine();
 			if (ImGui::Button("Down Right")) {
 				float width = myGO->parent->GetComponentRectTransform()->GetWidth();
 				SetLocalPos(float2(width, 0));
 			}
 			ImGui::SameLine();
-			
+
 		}
 	}
 
@@ -140,33 +255,6 @@ void ComponentRectTransform::DrawInspector()
 	ImGui::Checkbox("Draw Canvas", &draw);
 }
 
-void ComponentRectTransform::SetWidth(float w, bool canvas)
-{
-	rect.width = w;
-	UpdateUIComponents();
-}
-
-void ComponentRectTransform::SetHeight(float h, bool canvas)
-{
-	rect.height= h;
-	UpdateUIComponents();
-}
-
-void ComponentRectTransform::SetGlobalPos(float2 global)
-{
-	rect.globalPosition = global;
-	if (myGO->parent != nullptr && myGO->parent != App->scene->root)
-	{
-		ComponentRectTransform* parentTrans = myGO->parent->GetComponentRectTransform();
-		float2 parentGlobal = parentTrans->GetGlobalPos();
-		float2 newLocalPos = rect.globalPosition - parentGlobal;
-		SetLocalPos(newLocalPos);
-	}
-}
-
-void ComponentRectTransform::SetLocalPos(float2 newLocalMat) {
-	rect.localPosition = newLocalMat;                                                                                                                                                                                      
-}
 
 void ComponentRectTransform::DrawUI()
 {
@@ -174,7 +262,7 @@ void ComponentRectTransform::DrawUI()
 	float4x4 globalMat;
 	SetGlobalMatrixToDraw(globalMat);
 	glMultMatrixf(globalMat.Transposed().ptr());
-	
+
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glBindBuffer(GL_ARRAY_BUFFER, 0); //resets the buffer
 
@@ -210,47 +298,4 @@ void ComponentRectTransform::GenBuffer()
 	glBindBuffer(GL_ARRAY_BUFFER, rect.vertexID); // set the type of buffer
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float3) * 4, &rect.vertex[0], GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-}
-
-void ComponentRectTransform::UpdateLocalPos() {
-	rect.anchor.x = rect.globalPosition.x + rect.width / 2;
-	rect.anchor.y = rect.globalPosition.y + rect.height / 2;
-	rect.localPosition = float2(rect.globalPosition.x, rect.globalPosition.y);
-}
-
-void ComponentRectTransform::UpdatePercentatge() {
-	ComponentRectTransform* parentRect = myGO->parent->GetComponentRectTransform();
-	if (parentRect) {
-		rect.percentatgeHeight = rect.height / parentRect->GetHeight();
-		rect.percentatgeWidth = rect.width / parentRect->GetWidth();
-	}
-}
-
-void ComponentRectTransform::UpdateSizeWithPercentatge(float lastParentWidth, float lastParentHeight) {
-	ComponentRectTransform* parentRect = myGO->parent->GetComponentRectTransform();
-	if (parentRect) {
-		float lastWidth, lastHeight;
-		lastWidth = rect.width;
-		lastHeight = rect.height;
-		rect.height *= (parentRect->GetHeight() / lastParentHeight);
-		rect.width *= (parentRect->GetWidth() / lastParentWidth);
-
-		for (auto it : myGO->childrens) {
-			UpdateSizeWithPercentatge(lastWidth, lastHeight);
-		}
-	}
-}
-
-void ComponentRectTransform::UpdateUIComponents()
-{
-	for (int i = 0; i < myGO->componentsUI.size(); ++i) {
-		if (myGO->componentsUI[i] != this) {
-			myGO->componentsUI[i]->UpdateRectTransform();
-		}
-	}
-}
-
-void ComponentRectTransform::SetGlobalMatrixToDraw(float4x4 &globalMatrix) {
-
-	globalMatrix = float4x4::FromTRS(float3(rect.globalPosition.x, rect.globalPosition.y, 0), Quat(0, 0, 0, 0), float3(rect.width, rect.height, 0));
 }
