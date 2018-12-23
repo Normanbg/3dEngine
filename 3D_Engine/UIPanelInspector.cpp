@@ -207,6 +207,14 @@ void UIPanelInspector::DrawUIComponent(ComponentUI* compDraw)
 			ImGui::TreePop();
 		}
 		break;
+	case UI_CHECKBOX:
+		if (ImGui::TreeNode("UI Checkbox"))
+		{
+			ComponentCheckBoxUI* comp = (ComponentCheckBoxUI*)compDraw;
+			comp->DrawInspector();
+			ImGui::TreePop();
+		}
+		break;
 	case TRANSFORMRECT:
 		if (ImGui::TreeNode("TransformRect"))
 		{
