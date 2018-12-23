@@ -43,6 +43,11 @@ void ComponentCanvas::DrawInspector()
 
 void ComponentCanvas::SetResolution(float2 _resolution)
 {
+	lastResolution = resolution;
 	resolution = _resolution;
+	if (lastResolution.x == 0.f && lastResolution.y == 0.f)
+	{
+		lastResolution = resolution;
+	}
 	setWidthHeight = false;
 }
