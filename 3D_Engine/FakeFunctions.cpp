@@ -1,6 +1,7 @@
 #include "FakeFunctions.h"
 #include "Application.h"
 #include "ModuleRenderer3D.h"
+#include "GameObject.h"
 
 FakeFunctions::FakeFunctions()
 {
@@ -32,6 +33,9 @@ void FakeFunctions::ExecuteFunction(Functions function)
 
 void FakeFunctions::DoStart()
 {
+	GameObject* canv = App->scene->GetFirstGameObjectCanvas();
+	canv->DoFadeAndDelete();
+	canv = nullptr;
 }
 
 void FakeFunctions::DoOpenGameMenu()

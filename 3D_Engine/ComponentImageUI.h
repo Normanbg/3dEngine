@@ -32,6 +32,8 @@ public:
 
 	void SetResource(uuid resource)override;
 	const uint GetTexID() const;
+	void FadeIn()override;
+	void FadeOut()override;
 	Resource* GetResource() const override { return (Resource*)resourceTexture; }
 
 private:

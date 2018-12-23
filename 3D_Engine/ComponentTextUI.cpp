@@ -51,7 +51,33 @@ bool ComponentTextUI::Start()
 
 bool ComponentTextUI::Update()
 {
+	if (fadingOut) {
+		FadeOut();
+	}
+	if (fadingIn) {
+		FadeIn();
+	}
 	return true;
+}
+
+
+
+void ComponentTextUI::FadeIn()
+{
+	alpha += DELTA_ALPHA;
+	if (alpha >= 1.0f) {
+		fadingIn = false;
+		alpha = 1.0f;
+	}
+}
+
+void ComponentTextUI::FadeOut()
+{
+	alpha -= DELTA_ALPHA;
+	if (alpha <= 0.0f) {
+		fadingOut = false;
+		alpha = 0.0f;
+	}
 }
 
 void ComponentTextUI::CleanUp()
@@ -368,7 +394,7 @@ void ComponentTextUI::DrawUI()
 		incrementMatrix.SetTranslatePart(cursor); // set cursor mat
 
 		if ((*it)->textureID != -1) {
-			glColor3f(label.color.x, label.color.y, label.color.z);
+			glColor4f(label.color.x, label.color.y, label.color.z, alpha);
 			glMatrixMode(GL_MODELVIEW);
 			glLoadMatrixf((GLfloat*)(((globalMatrix * incrementMatrix).Transposed() * viewMatrix).v)); // multiplies all mat
 
@@ -378,7 +404,6 @@ void ComponentTextUI::DrawUI()
 			glBindTexture(GL_TEXTURE_2D, 0);
 
 			glLineWidth(4.0f);
-
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 

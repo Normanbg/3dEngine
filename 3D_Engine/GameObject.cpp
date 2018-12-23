@@ -66,23 +66,24 @@ bool GameObject::Update(){
 	return ret;
 }
 
-bool GameObject::PostUpdate(){
+bool GameObject::PostUpdate() {
 	bool ret = true;
-	/*
-	for (int i = 0; i < componentsUI.size(); i++) {
 
-		ret &= componentsUI[i]->PostUpdate();
-	}
-	for (int i = 0; i < components.size(); i++) {
-
-		ret &= components[i]->PostUpdate();
-	}*/
 	for (int i = 0; i < childrens.size(); i++) {
 
 		ret &= childrens[i]->PostUpdate();
 	}
-	
-
+	if (fadeDelete) {
+		ComponentImageUI* ima = GetComponentImageUI();
+			if (ima) {
+				if (ima->alpha < 0.5f)
+				{
+					fadeDelete = false;
+					App->scene->clear = true;
+				}
+			}
+		ima = nullptr;
+	}
 	return ret;
 }
 
@@ -346,6 +347,17 @@ void GameObject::SetParent(GameObject * _parent)
 	}
 	parent = _parent;
 	parent->AddChildren(this);
+}
+
+void GameObject::DoFadeAndDelete()
+{
+	for (int i = 0; i < componentsUI.size(); i++) {
+		componentsUI[i]->fadingOut = true;
+	}
+	for (int i = 0; i < childrens.size(); i++) {
+		childrens[i]->DoFadeAndDelete();
+	}
+	fadeDelete = true;
 }
 
 void GameObject::AddChildren(GameObject * child)

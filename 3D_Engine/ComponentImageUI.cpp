@@ -184,3 +184,22 @@ const uint ComponentImageUI::GetTexID() const
 	}
 	return -1;
 }
+
+
+void ComponentImageUI::FadeIn()
+{
+	alpha += DELTA_ALPHA;
+	if (alpha >= 1.0f) {
+		fadingIn = false;
+		alpha = 1.0f;
+	}
+}
+
+void ComponentImageUI::FadeOut()
+{
+	alpha -= DELTA_ALPHA;
+	if (alpha <= 0.0f) {
+		fadingOut = false;
+		alpha = 0.0f;
+	}
+}

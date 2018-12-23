@@ -55,6 +55,7 @@ public:
 	void GetComponentsUITypeIgnore( std::vector<ComponentUI*>& comp, ComponentTypeUI ignoreType = NOTYPE, bool recursive = true);
 	void GetComponentsUIType(std::vector<ComponentUI*>& comp, ComponentTypeUI type, bool recursive = true);
 	void SetParent(GameObject* parent);
+	void DoFadeAndDelete();
 	
 
 	//DO NOT USE CONST FOR COMPONENTS AS THEY HAVE TO INITIALIZE OTHER COMPONENTS, ONLY FOR THE FUNCTION
@@ -112,6 +113,7 @@ private:
 
 private:
 	bool inspectorSelected = false;
+	bool fadeDelete= false;
 };
 
 

@@ -37,6 +37,8 @@ public:
 
 	bool Start() override;
 	bool Update() override;
+	void FadeIn()override;
+	void FadeOut()override;
 	void CleanUp() override;	
 
 	inline void doStart() override { Start(); }

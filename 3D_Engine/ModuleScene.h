@@ -101,6 +101,7 @@ public:
 
 	//-------------------------------
 	FakeFunctions* functions;
+	bool clear = false;
 
 private:
 	void GetAllStaticGOs(GameObject* go);

@@ -58,6 +58,11 @@ update_status ModuleScene::PreUpdate(float dt)
 {
 	bool ret = true;
 	root->CalculateAllTransformGlobalMat();
+
+	if (clear) {
+		ClearScene();
+		clear = false;
+	}
 	
 	if (root->childrens.empty() == false) {
 		for (int i = 0; i < root->childrens.size(); i++) {

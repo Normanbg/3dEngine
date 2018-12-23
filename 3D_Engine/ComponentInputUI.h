@@ -36,6 +36,10 @@ public:
 
 	void ReceiveEvent(const Event &event) override;
 
+	void FadeIn()override;
+
+	void FadeOut()override;
+
 	bool readInput = false;
 	ComponentTextUI* cText = nullptr;
 	ComponentButtonUI* cButton = nullptr;
