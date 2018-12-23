@@ -5,6 +5,9 @@
 #include "ComponentUI.h"
 
 
+#define DEFAULT_IDLE_IN "UI_Frame_white"
+#define DEFAULT_PRESSED_IN "UI_Frame_black"
+
 class ComponentTextUI;
 class ComponentButtonUI;
 

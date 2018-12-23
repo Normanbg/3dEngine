@@ -25,6 +25,8 @@ bool ComponentCheckBoxUI::Start()
 	rectTransform = myGO->GetComponentRectTransform();
 	rectTransform->SetWidth(20);
 	rectTransform->SetHeight(20);
+	SetResource(App->resources->FindByName(DEFAULT_IDLE_CH, Resource::ResType::UI), 1);
+	SetResource(App->resources->FindByName(DEFAULT_PRESSED_CH, Resource::ResType::UI),0);
 	return true;
 }
 

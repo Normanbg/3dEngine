@@ -5,6 +5,8 @@
 #include "ComponentUI.h"
 #include "ResourceTexture.h"
 
+#define DEFAULT_WIN "UI_Panel"
+
 enum WindowState
 {
 	WINDOW_IDLE,

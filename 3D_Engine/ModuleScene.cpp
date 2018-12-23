@@ -222,6 +222,9 @@ void ModuleScene::ClearSceneCompletely()
 	for (int i = root->components.size() - 1; i >= 0; i--) {
 		root->RemoveComponent(root->components[i]);
 	}
+	for (int i = root->componentsUI.size() - 1; i >= 0; i--) {
+		root->RemoveComponentUI(root->componentsUI[i]);
+	}
 	
 	mainCamera = nullptr;
 	App->scene->DeselectAll();

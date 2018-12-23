@@ -5,7 +5,7 @@
 #include "FontManager.h"
 #include <string>
 
-#define MAX_CHARS 64
+#define MAX_CHARS 32
 
 class ComponentTextUI : public ComponentUI, public Component
 {

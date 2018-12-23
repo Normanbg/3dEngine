@@ -227,7 +227,7 @@ ComponentUI * GameObject::AddUIComponent(ComponentTypeUI type) {
 	}
 	case ComponentTypeUI::UI_INPUT: {
 		ret = new ComponentInputUI();
-		ComponentInputUI* cInput = (ComponentInputUI*)ret;
+		ComponentInputUI* cInput = (ComponentInputUI*)ret;		
 		cInput->myGO = this;
 		cInput = nullptr;
 		break;
@@ -236,7 +236,6 @@ ComponentUI * GameObject::AddUIComponent(ComponentTypeUI type) {
 		ret = new ComponentButtonUI();
 		ComponentButtonUI* cBut = (ComponentButtonUI*)ret;
 		cBut->myGO = this;
-		AddUIComponent(UI_IMAGE);
 		cBut = nullptr;
 		break;
 	}
@@ -251,7 +250,6 @@ ComponentUI * GameObject::AddUIComponent(ComponentTypeUI type) {
 		ret = new ComponentWindowUI();
 		ComponentWindowUI* cWin = (ComponentWindowUI*)ret;
 		cWin->myGO = this;
-		AddUIComponent(UI_IMAGE);
 		cWin = nullptr;
 		break;
 	}
@@ -259,7 +257,6 @@ ComponentUI * GameObject::AddUIComponent(ComponentTypeUI type) {
 		ret = new ComponentCheckBoxUI();
 		ComponentCheckBoxUI* cWin = (ComponentCheckBoxUI*)ret;
 		cWin->myGO = this;
-		AddUIComponent(UI_IMAGE);
 		cWin = nullptr;
 		break;
 	}
