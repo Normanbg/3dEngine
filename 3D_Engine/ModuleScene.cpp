@@ -9,6 +9,7 @@
 #include "ModuleInput.h"
 #include "ModuleGui.h"
 #include "UIPanelScene.h"
+#include "FakeFunctions.h"
 
 #include "mmgr/mmgr.h"
 
@@ -26,8 +27,9 @@ ModuleScene::ModuleScene(bool start_enabled) : Module(start_enabled){
 
 ModuleScene::~ModuleScene()
 {
-
+	RELEASE(functions);;
 }
+
 bool ModuleScene::Init(JSON_Object * obj)
 {
 	root = new GameObject("root");
@@ -39,6 +41,7 @@ bool ModuleScene::Init(JSON_Object * obj)
 	AABB rootAABB;
 	rootAABB.SetNegativeInfinity();
 	rootQuadTree = new Quadtree(rootAABB, 0);
+	functions = new FakeFunctions();
 
 	ImGuizmo::Enable(false);
 
@@ -593,10 +596,14 @@ void ModuleScene::Draw(bool editor) {
 				rootQuadTree->DebugDraw();
 		}
 	}
+	else
+	{
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	}
 
-	float3 corners[8];
+	/*float3 corners[8];
 	ui_render_box.GetCornerPoints(corners);
-	DebugDrawBox(corners, Red, 5.f);
+	DebugDrawBox(corners, Red, 5.f);*/
 
 
 	//--------UI
@@ -650,9 +657,9 @@ void ModuleScene::DrawInGameUI()
 		ui_render_box.maxPoint = max;
 		
 		glOrtho(left, right, bottom, top, zNear, zFar);
-		float3 corners[8];
+		/*float3 corners[8];
 		ui_render_box.GetCornerPoints(corners);
-		DebugDrawBox(corners, Red, 5.f);
+		DebugDrawBox(corners, Red, 5.f);*/
 
 		std::vector<ComponentUI*> componentsUI; // first draw UI components
 		root->GetComponentsUITypeIgnore(componentsUI, TRANSFORMRECT);

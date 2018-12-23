@@ -125,6 +125,10 @@ bool ComponentButtonUI::IsMouseOver() {
 		return false;
 }
 
+void ComponentButtonUI::PressedCallback()
+{
+}
+
 void ComponentButtonUI::ChangeGOImage()
 {
 	

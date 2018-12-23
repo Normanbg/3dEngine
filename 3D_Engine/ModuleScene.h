@@ -14,7 +14,7 @@ class vector;
 class GameObject;
 class Quadtree;
 class Resource;
-
+class FakeFunctions;
 
 
 class ModuleScene : public Module
@@ -95,10 +95,12 @@ public:
 
 	ImGuizmo::OPERATION guizmoOp = ImGuizmo::TRANSLATE;
 
-	//--------------------
 	std::list<GameObject*> staticObjsToDraw;
-
 	uint intersections = 0;
+
+	//-------------------------------
+	FakeFunctions* functions;
+
 private:
 	void GetAllStaticGOs(GameObject* go);
 	void GetAllDynamicGOs(GameObject* go);

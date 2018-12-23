@@ -7,7 +7,7 @@ Camera::Camera()
 	SetFOV(60);
 
 	frustum.nearPlaneDistance = 1.0f;
-	frustum.farPlaneDistance = 400.f;
+	frustum.farPlaneDistance = 2000.f;
 
 	frustum.type = FrustumType::PerspectiveFrustum;
 	frustum.SetWorldMatrix(float3x4::identity);
