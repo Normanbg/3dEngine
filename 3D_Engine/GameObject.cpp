@@ -513,7 +513,7 @@ ComponentCheckBoxUI * GameObject::GetComponentCheckBoxUI() const{
 	//WILL ONLY FIND THE FIRST COMPONENT EQUAL TO TYPE OF EACH G0
 	for (std::vector<ComponentUI*>::const_iterator it = componentsUI.begin(); it != componentsUI.end(); it++)
 	{
-		if ((*it)->typeUI == TRANSFORMRECT)
+		if ((*it)->typeUI == UI_CHECKBOX)
 			return (ComponentCheckBoxUI*)(*it);
 	}
 	return ret;

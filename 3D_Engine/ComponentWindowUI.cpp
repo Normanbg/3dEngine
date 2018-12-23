@@ -124,7 +124,10 @@ bool ComponentWindowUI::CheckChildsState()
 		if (it->GetComponentButtonUI() != nullptr && it->GetComponentButtonUI()->state != ButtonState::IDLE) {
 			return false;
 		}
-		//....missing to check checkboxes and input
+		if (it->GetComponentCheckBoxUI() != nullptr && it->GetComponentCheckBoxUI()->IsMouseOver()) {
+			return false;
+		}
+		//....missing to check input
 	}
 	return true;
 }

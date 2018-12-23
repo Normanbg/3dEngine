@@ -188,6 +188,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	
 
 	//DrawMeshes();
+	SetDepthTest(true);
 	sceneFboTex->BindFBO();
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -223,6 +224,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	CreateGameTexture();
 	App->scene->Draw(editor);
 	App->scene->ToggleEditorCam();
+	SetDepthTest(false);
 	App->scene->DrawInGameUI();
 	for (uint i = 0; i < MAX_LIGHTS; ++i)
 		lights[i].Render();
