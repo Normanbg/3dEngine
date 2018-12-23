@@ -245,6 +245,9 @@ bool ModuleRenderer3D::CleanUp()
 		
 	sceneFboTex->UnBindFBO();
 	gameFboTex->UnBindFBO();
+	sceneFboTex->DeleteFBO();
+	gameFboTex->DeleteFBO();
+
 	RELEASE(sceneFboTex);
 	RELEASE(gameFboTex);
 

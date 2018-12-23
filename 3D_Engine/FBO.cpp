@@ -43,9 +43,6 @@ void FBO::Create(int width, int height){
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 		OWN_LOG("ERROR::FRAMEBUFFER:: Framebuffer is not complete!");
 
-	/*glDeleteFramebuffers(1, &framebuffer);
-	glDeleteTextures(1, &texture);
-	glDeleteRenderbuffers(1, &rbo);*/
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
@@ -58,4 +55,10 @@ void FBO::UnBindFBO(){
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glBindRenderbuffer(GL_RENDERBUFFER, 0);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void FBO::DeleteFBO() {
+	glDeleteFramebuffers(1, &framebuffer);
+	glDeleteTextures(1, &texture);
+	glDeleteRenderbuffers(1, &rbo);
 }

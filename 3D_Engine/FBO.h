@@ -17,6 +17,8 @@ public:
 	void BindFBO();
 	void UnBindFBO();
 
+	void DeleteFBO();
+
 public:
 	uint texture;
 	uint framebuffer;

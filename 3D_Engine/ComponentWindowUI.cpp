@@ -49,8 +49,8 @@ bool ComponentWindowUI::Update()
 void ComponentWindowUI::CleanUp()
 {
 	image = nullptr;
-	if(windImage)
-	windImage->CleanUp();
+	if (windImage)
+		windImage->CleanUp();
 }
 
 void ComponentWindowUI::DraggWindow()
