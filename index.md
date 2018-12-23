@@ -52,6 +52,11 @@ For this delivery we are able to render directly the scene on a window, using a 
 
 Also, we have our fyle system that uses the library physfs.
 
+
+## Video
+
+<iframe width="560" height="315" src="https://www.youtube.com/watch?v=2DGAjaIH5W8&feature=youtu.be" frameborder="0" allowfullscreen></iframe>
+
 ### Members work:
 Game Objects->Both
 
@@ -91,6 +96,13 @@ Scene-> Norman
 
 Scene Info-> Both
 
+UI Draw -> Both
+
+Button, Checkbox, Window -> Norman
+
+Image, Text, InputText -> Carles
+
+Scene preparation -> Both
 
 ### License:
 MIT License
