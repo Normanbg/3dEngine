@@ -456,6 +456,10 @@
     <ClInclude Include="ComponentWindowUI.h">
       <Filter>Sources\Objects &amp; Components\Components\ComponentsUI</Filter>
     </ClInclude>
+    <ClInclude Include="ResourceUI.h">
+      <Filter>Sources\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentCheckBoxUI.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleInput.cpp">
@@ -737,6 +741,10 @@
     <ClCompile Include="ComponentWindowUI.cpp">
       <Filter>Sources\Objects &amp; Components\Components\ComponentsUI</Filter>
     </ClCompile>
+    <ClCompile Include="ResourceUI.cpp">
+      <Filter>Sources\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentCheckBoxUI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="MathGeoLib\Geometry\KDTree.inl">

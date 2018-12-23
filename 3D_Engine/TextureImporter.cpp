@@ -91,16 +91,16 @@ GLuint TextureImporter::LoadTexture(const char * path,uint &texWidth,uint &texHe
 	}
 }
 
-bool TextureImporter::ImportTexture(const char* tex, std::vector<std::string>* written)
+bool TextureImporter::ImportTexture(const char* tex, std::vector<std::string>* written, bool UI)
 {
 	bool ret = false;
 
 	std::string extension;
 	App->fileSys->GetNameFromPath(tex, nullptr, nullptr, nullptr, &extension);
 	if (extension != DDS_FORMAT)
-		ret = App->texImporter->ImportToDDS(tex, nullptr, written);
+		ret = App->texImporter->ImportToDDS(tex, nullptr, written, UI);
 	else
-		ret = App->fileSys->CopyDDStoLib(tex, written);
+		ret = App->fileSys->CopyDDStoLib(tex, written, UI);
 
 	return ret;
 }
@@ -116,7 +116,7 @@ void TextureImporter::ReceiveEvent(const Event & event)
 }
 
 
-bool TextureImporter::ImportToDDS( const char* texPath, const char* texName, std::vector<std::string>* written ) {
+bool TextureImporter::ImportToDDS( const char* texPath, const char* texName, std::vector<std::string>* written, bool UI ) {
 
 	OWN_LOG("Importing texture from %s", texPath);
 	ILuint imageID;
@@ -155,8 +155,9 @@ bool TextureImporter::ImportToDDS( const char* texPath, const char* texName, std
 				OWN_LOG("Imported succsfully into DDS");
 				
 				std::string uuid;
-				
-				std::string libPath =   LIB_TEXTURES_PATH + uuid + textureName + DDS_FORMAT;
+				std::string libPath;
+				UI ? libPath = LIB_UI_PATH : LIB_TEXTURES_PATH;
+				libPath += uuid + textureName + DDS_FORMAT;
 				if (written) { (*written).push_back(libPath); }
 				App->fileSys ->writeFile(libPath.c_str(), data, size);
 				ret = true;

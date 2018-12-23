@@ -23,7 +23,7 @@ ModuleFileSystem::ModuleFileSystem(bool start_enabled) : Module(start_enabled)
 
 	//Create main files if they do not exist and add them to the search path
 	const char* mainPaths[] = {
-		MODELS_PATH, TEXTURES_PATH, AUDIO_PATH, FONTS_PATH, LIB_MODELS_PATH, LIB_TEXTURES_PATH,LIB_FONTS_PATH,LIB_AUDIO_PATH, SETTINGS_PATH, SCENES_PATH
+		MODELS_PATH, TEXTURES_PATH, AUDIO_PATH, FONTS_PATH, LIB_MODELS_PATH, LIB_UI_PATH, LIB_TEXTURES_PATH,LIB_FONTS_PATH,LIB_AUDIO_PATH, SETTINGS_PATH, SCENES_PATH
 	};
 	for (uint i = 0; i < NUM_PATHS; ++i)
 	{
@@ -112,18 +112,19 @@ void ModuleFileSystem::RemoveFile(const char * path)
 	remove(path);
 }
 
-bool ModuleFileSystem::CopyDDStoLib(const char * path, std::vector<std::string>* written)
+bool ModuleFileSystem::CopyDDStoLib(const char * path, std::vector<std::string>* written, bool UI )
 {
 	bool ret = false;
 	std::string ddsName;
 	GetNameFromPath(path, nullptr, &ddsName, nullptr, nullptr);
+	std::string libPath;
+	UI ? libPath = LIB_UI_PATH : libPath = LIB_TEXTURES_PATH;
+	libPath +=  ddsName + DDS_FORMAT;
 
-	std::string libpath = LIB_TEXTURES_PATH +  ddsName + DDS_FORMAT;
-
-	if (written) { (*written).push_back(libpath); }
-	if (ExistsFile(libpath.c_str())) {
+	if (written) { (*written).push_back(libPath); }
+	if (ExistsFile(libPath.c_str())) {
 		return true; }
-	ret = Copy(path, libpath.c_str());
+	ret = Copy(path, libPath.c_str());
 	return ret;
 }
 

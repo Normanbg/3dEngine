@@ -13,12 +13,12 @@ public:
 	~TextureImporter();
 
 	void Init();
-	bool ImportToDDS(const char * texPath, const char* texName = nullptr, std::vector<std::string>* written = nullptr);
+	bool ImportToDDS(const char * texPath, const char* texName = nullptr, std::vector<std::string>* written = nullptr, bool UI = false);
 
 	
 	GLuint LoadTexture(const char* path,  uint &texWidth, uint &texHeight);
 
-	bool ImportTexture(const char * tex, std::vector<std::string>* written);
+	bool ImportTexture(const char * tex, std::vector<std::string>* written, bool UI = false);
 
 	void ReceiveEvent(const Event &event);
 

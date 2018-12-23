@@ -3,8 +3,6 @@
 #include "Globals.h"
 #include "ModuleScene.h"
 #include "ModuleRenderer3D.h"
-
-
 #include "Component.h"
 #include "ComponentTransformation.h"
 #include "ComponentCanvas.h"
@@ -17,6 +15,7 @@
 #include "ComponentButtonUI.h"
 #include "ComponentInputUI.h"
 #include "ComponentWindowUI.h"
+#include "ComponentCheckBoxUI.h"
 
 class string;
 class vector;
@@ -73,6 +72,7 @@ public:
 	ComponentInputUI * GetComponentInputUI() const;
 	ComponentButtonUI * GetComponentButtonUI() const;
 	ComponentWindowUI * GetComponentWindowUI() const;
+	ComponentCheckBoxUI * GetComponentCheckBoxUI() const;
 
 	const bool GetSelected() const;
 

@@ -59,7 +59,7 @@ void ComponentImageUI::Load(Config * data)
 	std::string matName = data->GetString("UITexName", "NoName");
 
 	if (matName != "NoName") {
-		resourceTexture = (ResourceTexture*)App->resources->Get(App->resources->FindByName(matName.c_str(), Resource::ResType::Texture));
+		resourceTexture = (ResourceUI*)App->resources->Get(App->resources->FindByName(matName.c_str(), Resource::ResType::UI));
 		resourceTexture->LoadInMemory();
 	}
 }
@@ -88,7 +88,7 @@ void ComponentImageUI::DrawInspector()
 	ImGui::SliderFloat("Alpha", &alpha, 0.0f, 1.0f);
 	if (ImGui::BeginCombo("Material", currentMaterial))
 	{
-		std::vector<Resource*> mat = App->resources->GetResourcesListType(Resource::ResType::Texture);
+		std::vector<Resource*> mat = App->resources->GetResourcesListType(Resource::ResType::UI);
 
 		for (int i = 0; i < mat.size(); i++)
 		{
@@ -99,7 +99,7 @@ void ComponentImageUI::DrawInspector()
 			}
 			if (ImGui::Selectable(mat[i]->GetName(), is_selected)) {
 				currentMaterial = mat[i]->GetName();
-				SetResource(App->resources->FindByName(mat[i]->GetName(), Resource::ResType::Texture));
+				SetResource(App->resources->FindByName(mat[i]->GetName(), Resource::ResType::UI));
 
 				if (is_selected) {
 					ImGui::SetItemDefaultFocus();
@@ -165,7 +165,7 @@ const bool ComponentImageUI::HasTexture() const
 
 void ComponentImageUI::SetResource(uuid resource)
 {
-	resourceTexture = (ResourceTexture*)App->resources->Get(resource);
+	resourceTexture = (ResourceUI*)App->resources->Get(resource);
 	resourceTexture->LoadInMemory();
 	resourceUUID = resource;
 }

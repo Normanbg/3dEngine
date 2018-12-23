@@ -15,8 +15,8 @@ public:
 		Texture,
 		Mesh,
 		Scene,
-		Audio
-		
+		Audio, 
+		UI		
 	};
 
 public:

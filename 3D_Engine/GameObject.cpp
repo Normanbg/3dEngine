@@ -255,6 +255,14 @@ ComponentUI * GameObject::AddUIComponent(ComponentTypeUI type) {
 		cWin = nullptr;
 		break;
 	}
+	case ComponentTypeUI::UI_CHECKBOX: {
+		ret = new ComponentCheckBoxUI();
+		ComponentCheckBoxUI* cWin = (ComponentCheckBoxUI*)ret;
+		cWin->myGO = this;
+		AddUIComponent(UI_IMAGE);
+		cWin = nullptr;
+		break;
+	}
 	case ComponentTypeUI::NOTYPE:
 		return nullptr;
 	}
@@ -495,6 +503,18 @@ ComponentWindowUI * GameObject::GetComponentWindowUI() const
 	{
 		if ((*it)->typeUI == UI_WINDOW)
 			return (ComponentWindowUI*)(*it);
+	}
+	return ret;
+}
+
+ComponentCheckBoxUI * GameObject::GetComponentCheckBoxUI() const{
+
+	ComponentCheckBoxUI* ret = nullptr;
+	//WILL ONLY FIND THE FIRST COMPONENT EQUAL TO TYPE OF EACH G0
+	for (std::vector<ComponentUI*>::const_iterator it = componentsUI.begin(); it != componentsUI.end(); it++)
+	{
+		if ((*it)->typeUI == TRANSFORMRECT)
+			return (ComponentCheckBoxUI*)(*it);
 	}
 	return ret;
 }
