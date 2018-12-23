@@ -45,6 +45,7 @@ public:
 
 private: 
 	void CheckState();
+	bool IsMouseOver();
 	bool CheckChildsState();
 	void SetResource(uuid resource);
 

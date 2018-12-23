@@ -34,10 +34,10 @@ bool ComponentWindowUI::Update()
 		hasSetToMid = true;
 	}
 
-	if (draggable) {
+	if (draggable && App->gui->isMouseOnGame()) {
 		CheckState();
 	}
-	if (state = WindowState::DRAGGING) {
+	if (state == WindowState::DRAGGING) {
 		DraggWindow();
 	}
 	return true;
@@ -59,16 +59,13 @@ void ComponentWindowUI::DraggWindow()
 }
 
 void ComponentWindowUI::CheckState() {
-	float2 mousePos = float2(App->gui->panelGame->GetMouseRelativeToGame().x, App->gui->panelGame->GetMouseRelativeToGame().y);
-	ComponentRectTransform* rectTrans = myGO->GetComponentRectTransform();
-	if (rectTrans->GetGlobalPos().x <= mousePos.x && mousePos.x <= rectTrans->GetGlobalPos().x + rectTrans->GetWidth() &&
-		rectTrans->GetGlobalPos().y <= mousePos.y && mousePos.y <= rectTrans->GetGlobalPos().y + rectTrans->GetHeight()) {
+	if (IsMouseOver()){
 		if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_IDLE) {
 			state = WindowState::WIN_MOUSEOVER;
 		}
 		else if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN && CheckChildsState()) {
 			state = WindowState::DRAGGING;
-			initMousePos = mousePos;
+			//initMousePos = mousePos;
 		}
 		/*else if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT && state == DRAGGING) {
 
@@ -80,6 +77,16 @@ void ComponentWindowUI::CheckState() {
 	else if (state == WIN_MOUSEOVER) {
 		state = WindowState::WINDOW_IDLE;
 	}
+}
+
+bool ComponentWindowUI::IsMouseOver() {
+	float2 mousePos = float2(App->gui->panelGame->GetMouseRelativeToGame().x, App->gui->panelGame->GetMouseRelativeToGame().y);
+	if (rectTransform->GetGlobalPos().x <= mousePos.x && mousePos.x <= rectTransform->GetGlobalPos().x + rectTransform->GetWidth() &&
+		rectTransform->GetGlobalPos().y <= mousePos.y && mousePos.y <= rectTransform->GetGlobalPos().y + rectTransform->GetHeight()) {
+		return true;
+	}
+	else
+		return false;
 }
 
 bool ComponentWindowUI::CheckChildsState()

@@ -68,11 +68,8 @@ void ComponentButtonUI::CleanUp()
 	myGO = nullptr;
 }
 
-void ComponentButtonUI::CheckState() {
-	float2 mousePos = float2(App->gui->panelGame->GetMouseRelativeToGame().x, App->gui->panelGame->GetMouseRelativeToGame().y);
-	
-	if (rectTransform->GetGlobalPos().x <= mousePos.x && mousePos.x <= rectTransform->GetGlobalPos().x + rectTransform->GetWidth() &&
-		rectTransform->GetGlobalPos().y <= mousePos.y && mousePos.y <= rectTransform->GetGlobalPos().y + rectTransform->GetHeight()) {
+void ComponentButtonUI::CheckState() {	
+	if (isMouseOver()){
 		if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN && state == PRESSED) {
 			state = MOUSEOVER;
 			if (hoverImg != nullptr)
@@ -94,6 +91,16 @@ void ComponentButtonUI::CheckState() {
 		if (idleImg != nullptr)
 			ChangeGOImage();
 	}
+}
+
+bool ComponentButtonUI::isMouseOver() {
+	float2 mousePos = float2(App->gui->panelGame->GetMouseRelativeToGame().x, App->gui->panelGame->GetMouseRelativeToGame().y);
+	if (rectTransform->GetGlobalPos().x <= mousePos.x && mousePos.x <= rectTransform->GetGlobalPos().x + rectTransform->GetWidth() &&
+		rectTransform->GetGlobalPos().y <= mousePos.y && mousePos.y <= rectTransform->GetGlobalPos().y + rectTransform->GetHeight()) {
+		return true;
+	}
+	else
+		return false;
 }
 
 void ComponentButtonUI::ChangeGOImage()
