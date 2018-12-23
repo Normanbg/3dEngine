@@ -83,10 +83,12 @@ bool ModuleRenderer3D::Init(JSON_Object* obj)
 			ret = false;
 		}
 
-		fboTex = new FBO();
+		sceneFboTex = new FBO();
+		gameFboTex = new FBO();
 		int w, h;
 		App->window->GetSize(w, h);
-		fboTex->Create(w , h);
+		sceneFboTex->Create(w , h);
+		gameFboTex->Create(w, h);
 
 		//Initialize Modelview Matrix
 		glMatrixMode(GL_MODELVIEW);
@@ -155,38 +157,27 @@ bool ModuleRenderer3D::Start() {
 update_status ModuleRenderer3D::PreUpdate(float dt)
 {
 	BROFILER_CATEGORY("Renderer3D_PreUpdate", Profiler::Color::HotPink);
-	fboTex->BindFBO();
+	
+	
+
+	return UPDATE_CONTINUE;
+}
+
+void ModuleRenderer3D::CreateGameTexture() {
+	gameFboTex->BindFBO();
+	if (App->scene->mainCamera == nullptr) { return; }
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	if (App->scene->inGame) {
-		ComponentCamera* mainCam = App->scene->mainCamera->GetComponentCamera();
-		glLoadMatrixf(mainCam->GetProjectionMatrix());
-	}
-	else
-		glLoadMatrixf(App->camera->cameraComp->GetProjectionMatrix());
+	
+	ComponentCamera* mainCam = App->scene->mainCamera->GetComponentCamera();
+	glLoadMatrixf(mainCam->GetProjectionMatrix());
 
 	glMatrixMode(GL_MODELVIEW);
-	if (App->scene->inGame) {
-		ComponentCamera* mainCam = App->scene->mainCamera->GetComponentCamera();
-		glLoadMatrixf(mainCam->GetViewMatrix());
-	}
-	else
-		glLoadMatrixf(App->camera->cameraComp->GetViewMatrix());
+	glLoadMatrixf(mainCam->GetViewMatrix());
 
-	// light 0 on cam pos
-	lights[0].SetPos(App->camera->cameraComp->GetPos().x, App->camera->cameraComp->GetPos().y, App->camera->cameraComp->GetPos().z);
-
-	for(uint i = 0; i < MAX_LIGHTS; ++i)
-		lights[i].Render();
-
-	if (_axis) { ShowAxis(); }
-	if (_grid) { ShowGrid(); }
-	
-
-	return UPDATE_CONTINUE;
 }
 
 // PostUpdate present buffer to screen
@@ -197,9 +188,47 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	
 
 	//DrawMeshes();
-	App->scene->Draw();
-	fboTex->UnBindFBO();
+	sceneFboTex->BindFBO();
+
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glLoadIdentity();
+
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+
+	//-
+	glLoadMatrixf(App->camera->cameraComp->GetProjectionMatrix());
+
+	glMatrixMode(GL_MODELVIEW);
+	//-
+
+	glLoadMatrixf(App->camera->cameraComp->GetViewMatrix());
+
+	//PreUpdateGame();
+	// light 0 on cam pos
+	lights[0].SetPos(App->camera->cameraComp->GetPos().x, App->camera->cameraComp->GetPos().y, App->camera->cameraComp->GetPos().z);
+
+	for (uint i = 0; i < MAX_LIGHTS; ++i)
+		lights[i].Render();
+
+	if (_axis) { ShowAxis(); }
+	if (_grid) { ShowGrid(); }
+	bool editor = true;
+	App->scene->ToggleEditorCam();
+	App->scene->Draw(editor);
+	sceneFboTex->UnBindFBO();
+
+	editor = false;
+	gameFboTex->BindFBO();
+	CreateGameTexture();
+	App->scene->Draw(editor);
+	App->scene->ToggleEditorCam();
+	App->scene->DrawInGameUI();
+	for (uint i = 0; i < MAX_LIGHTS; ++i)
+		lights[i].Render();
+	gameFboTex->UnBindFBO();
+
+	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	App->gui->Draw();	
 
@@ -214,21 +243,31 @@ bool ModuleRenderer3D::CleanUp()
 	OWN_LOG("Destroying 3D Renderer");
 
 		
-	fboTex->UnBindFBO();
-	RELEASE(fboTex);
+	sceneFboTex->UnBindFBO();
+	gameFboTex->UnBindFBO();
+	sceneFboTex->DeleteFBO();
+	gameFboTex->DeleteFBO();
+
+	RELEASE(sceneFboTex);
+	RELEASE(gameFboTex);
 
 	SDL_GL_DeleteContext(context); 
 	return true;
 }
 
-void ModuleRenderer3D::OnResize(const int width, const int height)
+void ModuleRenderer3D::OnResize(const int width, const int height, bool scene)
 {
-	if (App->scene->inGame) {
+	if (scene) {
+		App->camera->cameraComp->SetAspectRatio((float)width / (float)height);
+	}
+	else {
 		ComponentCamera* mainCam = App->scene->mainCamera->GetComponentCamera();
 		mainCam->SetAspectRatio((float)width / (float)height);
+		GameObject* canvasGO = App->scene->GetFirstGameObjectCanvas();
+		if (canvasGO) {
+			canvasGO->GetComponentCanvas()->SetResolution(float2(width, height));
+		}
 	}
-	else
-		App->camera->cameraComp->SetAspectRatio((float)width / (float)height);
 }
 
 char* ModuleRenderer3D::GetGraphicsModel() const
@@ -283,15 +322,19 @@ void ModuleRenderer3D::SetBoundingBox(bool active){
 	App->scene->SetBoundingBox(active);
 }
 
-void ModuleRenderer3D::ManageDroppedFBX(char * droppedFileDir){
+void ModuleRenderer3D::ManageDroppedFBX(const char * droppedFileDir){
 	App->importer->LoadFBXScene(droppedFileDir);	
 }
 
-const uint ModuleRenderer3D::GetFBOTexture()
+const uint ModuleRenderer3D::GetSceneFBOTexture()
 {
-	return fboTex->texture;
+	return sceneFboTex->texture;
 }
 
+const uint ModuleRenderer3D::GetGameFBOTexture()
+{
+	return gameFboTex->texture;
+}
 
 void ModuleRenderer3D::ShowAxis() {
 
@@ -346,6 +389,16 @@ void ModuleRenderer3D::ShowGrid() {
 	glEnd();
 
 	SetTexture2D(recordedTex);
+}
+
+void ModuleRenderer3D::ReceiveEvent(const Event & event)
+{
+	switch (event.type) {
+	case Event::EventType::scene_file_dropped: {
+		ManageDroppedFBX(event.string);
+		break;
+	}
+	}
 }
 /*
 

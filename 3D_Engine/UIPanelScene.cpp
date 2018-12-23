@@ -32,10 +32,10 @@ void UIPanelScene::Draw() {
 		lastSize.x = size.x; lastSize.y = size.y;
 		width = size.x; height = size.y;
 
-		App->renderer3D->OnResize(size.x, size.y);
+		App->renderer3D->OnResize(size.x, size.y, true);
 	}
 
-	img = (ImTextureID)App->renderer3D->GetFBOTexture();
+	img = (ImTextureID)App->renderer3D->GetSceneFBOTexture();
 	ImGui::Image(img, ImVec2(size.x, size.y), ImVec2(0, 1), ImVec2(1, 0));
 	App->gui->MouseOnScene(ImGui::IsMouseHoveringWindow());
 

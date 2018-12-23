@@ -56,6 +56,8 @@ private:
 	bool ManageResourceWithMeta(const char* resource, const char* meta);
 	void GenerateMetaFile(const char* assetFile, uuid ResourceUUID, std::vector<uuid> exportedUUIDs);
 	void CheckMetaFiles();
+
+	//ResourceMesh* UIrect;
 };
 
 #endif // !__MODULE_RESOURCES_H__

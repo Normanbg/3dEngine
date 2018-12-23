@@ -26,13 +26,14 @@ public:
 	
 	bool Start();
 	update_status PreUpdate(float dt);
+	void CreateGameTexture();
 	update_status PostUpdate(float dt);
 	bool CleanUp();
 
 	bool LoadSettings(Config* data)override;
 	bool SaveSettings(Config* data) const override;
 
-	void OnResize(const int width, const int height);
+	void OnResize(const int width, const int height, bool isScene);
 	char* GetGraphicsModel() const;
 	char* GetGraphicsVendor() const;
 
@@ -51,7 +52,6 @@ public:
 	void SetBoundingBox(bool active);
 
 
-	void ManageDroppedFBX(char* droppedFileDir);
 	//void ManageDroppedPEI(char* droppedFileDir);
 
 	inline const bool GetDepthTest() const { return _depthTest; }
@@ -67,7 +67,8 @@ public:
 	inline const bool GetQuadTree() const { return _quadtree; }
 	inline const bool GetRay() const { return _ray; }
 	
-	const uint GetFBOTexture();
+	const uint GetSceneFBOTexture();
+	const uint GetGameFBOTexture();
 
 public:
 
@@ -89,6 +90,12 @@ private:
 	void ShowGrid();
 	void SetDataFromJson(JSON_Object* data);
 
+	void ManageDroppedFBX(const char* droppedFileDir);
+
+protected:
+
+	 void ReceiveEvent(const Event &event) override;
+
 private:
 	
 	bool _vSync;
@@ -106,7 +113,8 @@ private:
 	bool _quadtree = false;
 	bool _ray = false;
 
-	FBO* fboTex = nullptr;
+	FBO* sceneFboTex = nullptr;
+	FBO* gameFboTex = nullptr;
 
 };
 

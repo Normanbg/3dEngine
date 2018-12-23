@@ -46,7 +46,7 @@ void ComponentMaterial::DrawInspector()
 		{
 			bool is_selected = false;
 			if (currentMaterial != nullptr) {
-				bool is_selected = (strcmp(currentMaterial, mat[i]->GetName()) == 0);
+				is_selected = (strcmp(currentMaterial, mat[i]->GetName()) == 0);
 			}
 			if (ImGui::Selectable(mat[i]->GetName(), is_selected)) {
 				currentMaterial = mat[i]->GetName();
@@ -57,7 +57,6 @@ void ComponentMaterial::DrawInspector()
 				}
 
 			}
-
 
 		}
 		ImGui::EndCombo();
@@ -70,9 +69,11 @@ void ComponentMaterial::DrawInspector()
 
 		ImGui::Text("Texture size:\nWidth: %dpx \nHeight: %dpx ", resourceTexture->width, resourceTexture->height);
 		float windowSize = ImGui::GetWindowContentRegionWidth();
-		ImGui::Image((void*)(resourceTexture->gpuID), ImVec2(windowSize, windowSize));
+		ImGui::Image((void*)(resourceTexture->gpuID), ImVec2(windowSize, windowSize), ImVec2(0, 1), ImVec2(1, 0));
+		ImGui::SliderFloat("Alpha", &alphaTest, 0, 1.0f);
+		ImGui::Checkbox("Blend Color", &doBlendTest);
 	}
-
+	ImGui::Spacing();
 	ImGui::Text("Color:"); ImGui::SameLine();
 	ImGui::TextDisabled("(?)");
 	if (ImGui::IsItemHovered())	{//ImguiTip
@@ -120,6 +121,8 @@ void ComponentMaterial::Save(Config & data) const
 {
 	data.AddUInt("UUID", UUID);
 	if (resourceTexture) {
+		data.AddFloat("Alpha", alphaTest);
+		data.AddBool("BlendColor", doBlendTest);
 		data.AddString("TexName", resourceTexture->GetName());
 	}
 	if (!colors.IsZero()) {
@@ -134,6 +137,8 @@ void ComponentMaterial::Load(Config * data)
 	std::string matName = data->GetString("TexName", "NoName");
 	
 	if (matName != "NoName") {
+		alphaTest = data->GetFloat("Alpha", 1.0f);
+		doBlendTest = data->GetBool("BlendColor", false);
 		resourceTexture =(ResourceTexture*) App->resources->Get(App->resources->FindByName(matName.c_str(), Resource::ResType::Texture));
 		resourceTexture->LoadInMemory();
 	}

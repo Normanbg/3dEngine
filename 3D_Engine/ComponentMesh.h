@@ -32,7 +32,7 @@ public:
 	
 	void SetMaterial(ComponentMaterial* texture);
 	
-	update_status PreUpdate(float dt);	
+	bool PreUpdate(float dt)override;	
 	bool Update() override;
 	void CleanUp() override;
 	void DrawInspector() override;

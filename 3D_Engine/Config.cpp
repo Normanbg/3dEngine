@@ -126,6 +126,13 @@ Config Config::GetArray(const char * field, int index) const
 	return Config((JSON_Object*) nullptr);
 }
 
+float2 Config::GetFloat2(const char * field, const float2 & default)
+{
+	return float2(
+		GetFloat(field, default.x, 0),
+		GetFloat(field, default.y, 1));
+}
+
 float3 Config::GetFloat3(const char * field, const float3 & default)
 {
 	return float3(
@@ -199,6 +206,11 @@ bool Config::AddArrayFloat(const char * field, const float * values, int size)
 		return true;
 	}
 	return false;
+}
+
+bool Config::AddFloat2(const char * field, const float2 & value)
+{
+	return AddArrayFloat(field, &value.x, 2);
 }
 
 bool Config::AddFloat3(const char * field, const float3 & value)

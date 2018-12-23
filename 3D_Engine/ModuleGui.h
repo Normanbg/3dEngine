@@ -24,6 +24,7 @@ class UIPanelMaterials;
 class UIPanelSceneInfo;
 class UIPanelAssets;
 class UIPanelOptimization;
+class UIPanelGame;
 
 class ModuleGui : public Module
 {
@@ -45,6 +46,8 @@ public:
 	void ImplGuiInputs(SDL_Event* e)const;
 	bool isMouseOnScene() const;
 	void MouseOnScene(bool mouseScene);
+	bool isMouseOnGame() const;
+	void MouseOnGame(bool mouseGame);
 
 public:
 	bool demoShowcase = false;
@@ -61,6 +64,7 @@ public:
 	UIPanelSceneInfo*	panelSceneInfo  = nullptr;
 	UIPanelAssets*		panelAssets		= nullptr;
 	UIPanelOptimization*panelOptim		= nullptr;
+	UIPanelGame*		panelGame		= nullptr;
 
 	std::vector<std::string> logsBuffer;
 	uint ilVersion = 0;
@@ -79,7 +83,7 @@ private:
 	void SetWinDockInv();
 private:
 	bool mouseOnScene = false;
-
+	bool mouseOnGame = false;
 };
 
 #endif 

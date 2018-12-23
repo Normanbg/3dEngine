@@ -56,3 +56,9 @@ void FBO::UnBindFBO(){
 	glBindRenderbuffer(GL_RENDERBUFFER, 0);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
+
+void FBO::DeleteFBO() {
+	glDeleteFramebuffers(1, &framebuffer);
+	glDeleteTextures(1, &texture);
+	glDeleteRenderbuffers(1, &rbo);
+}

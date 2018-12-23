@@ -13,6 +13,7 @@
 #include "ModuleGui.h"
 #include "SceneImporter.h"
 #include "TextureImporter.h"
+#include "FontManager.h"
 #include "Brofiler/Brofiler.h"
 
 #include "mmgr/mmgr.h"
@@ -42,9 +43,9 @@ Application::Application()
 	// They will CleanUp() in reverse order
 
 	// Main Modules
+	AddModule(input);
 	AddModule(window);
 	AddModule(camera);
-	AddModule(input);
 	AddModule(fileSys);
 	AddModule(audio);
 	AddModule(resources);
@@ -66,6 +67,7 @@ Application::~Application(){
 		delete (*item);
 	}
 	list_modules.clear();
+	RELEASE(fontManager);
 	RELEASE(importer);
 	RELEASE(texImporter);
 }
@@ -78,6 +80,7 @@ bool Application::Init(){
 
 	importer = new SceneImporter();
 	texImporter = new TextureImporter();
+	fontManager = new FontManager();
 
 	importer->Init();
 	texImporter->Init();
@@ -100,7 +103,7 @@ bool Application::Init(){
 		ret = (*item)->Start();
 		item++;
 	}
-
+	fontManager->LoadAllFolderFonts();
 	
 
 
@@ -221,6 +224,7 @@ bool Application::CleanUp()
 		item++;
 	}
 
+	fontManager->CleanUp();
 
 	importer->CleanUp();
 
@@ -416,3 +420,9 @@ void Application::SetOrganization(const char* newName)
 	 return ret;
  }
 
+ void Application::BroadcastEvent(const Event& event)
+ {
+	 for (std::list<Module*>::iterator it = list_modules.begin(); it != list_modules.end(); ++it)
+		 (*it)->ReceiveEvent(event);
+	 texImporter->ReceiveEvent(event);
+ }

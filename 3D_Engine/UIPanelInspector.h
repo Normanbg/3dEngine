@@ -5,6 +5,7 @@
 
 class GameObject;
 class Component;
+class ComponentUI;
 
 class UIPanelInspector : public UIPanel
 {
@@ -15,5 +16,6 @@ public:
 	void Draw();
 
 	void DrawComponent(Component* compDraw);
+	void DrawUIComponent(ComponentUI * compDraw);
 };
 #endif // !__PANELINSPECTOR_H__

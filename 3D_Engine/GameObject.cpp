@@ -1,6 +1,7 @@
 #include "GameObject.h"
 #include "Config.h"
 #include "ResourceMesh.h"
+#include "ModuleGui.h"
 
 #include <array>
 #include <vector>
@@ -10,11 +11,7 @@
 
 GameObject::GameObject()
 {
-	transformComp = new ComponentTransformation();
-	transformComp->type = TRANSFORM;
-	transformComp->myGO = this;
-	components.push_back(transformComp);
-
+	
 	localAABB.SetNegativeInfinity();
 	globalAABB.SetNegativeInfinity();
 
@@ -24,11 +21,6 @@ GameObject::GameObject()
 GameObject::GameObject(const char * Name)
 {
 	name = Name;
-	transformComp = new ComponentTransformation();
-	transformComp->type = TRANSFORM;
-	transformComp->myGO = this;
-	components.push_back(transformComp);
-
 	localAABB.SetNegativeInfinity();
 	globalAABB.SetNegativeInfinity();
 
@@ -42,7 +34,11 @@ GameObject::~GameObject()
 
 bool GameObject::PreUpdate(){
 	bool ret = true;
+	/*
+	for (int i = 0; i < componentsUI.size(); i++) {
 
+		ret &= componentsUI[i]->PreUpdate();
+	}*/
 	for (int i = 0; i < components.size(); i++) {
 
 		ret &= components[i]->PreUpdate();
@@ -58,7 +54,9 @@ bool GameObject::PreUpdate(){
 bool GameObject::Update(){
 	bool ret = true;
 
-
+	for (int i = 0; i < componentsUI.size(); i++) {
+		componentsUI[i]->doUpdate();
+	}
 	for (int i = 0; i < components.size() ; i++) {
 		ret &= components[i]->Update();
 	}
@@ -70,20 +68,27 @@ bool GameObject::Update(){
 
 bool GameObject::PostUpdate(){
 	bool ret = true;
+	/*
+	for (int i = 0; i < componentsUI.size(); i++) {
 
+		ret &= componentsUI[i]->PostUpdate();
+	}
 	for (int i = 0; i < components.size(); i++) {
 
 		ret &= components[i]->PostUpdate();
-	}
+	}*/
 	for (int i = 0; i < childrens.size(); i++) {
 
 		ret &= childrens[i]->PostUpdate();
 	}
+	
 
 	return ret;
 }
 
 void GameObject::CleanUp(){
+
+	
 
 	if (components.empty() == false) {
 		for (int i = components.size() - 1; i >= 0; i--) {
@@ -92,6 +97,14 @@ void GameObject::CleanUp(){
 		}
 	}
 	components.clear();
+
+	if (componentsUI.empty() == false) {
+		for (int i = componentsUI.size() - 1; i >= 0; i--) {
+			componentsUI[i]->doCleanUp();
+			RELEASE(componentsUI[i]);
+		}
+	}
+	componentsUI.clear();
 
 	if (childrens.empty() == false) {
 		for (int i = childrens.size() - 1; i >= 0; i--) {
@@ -104,29 +117,55 @@ void GameObject::CleanUp(){
 	if (parent) {
 		parent = nullptr;
 	}
-	transformComp = nullptr;
+	
 }
 
-void GameObject::CalculateAllGlobalMatrix(){
-	if (parent == nullptr)
-	{
-		transformComp->globalMatrix = transformComp->localMatrix;
+void GameObject::CalculateAllTransformGlobalMat(){
+	if (GetComponentTransform() != nullptr) {
+		if (parent == nullptr)
+		{
+			GetComponentTransform()->globalMatrix = GetComponentTransform()->localMatrix;
+		}
+		else {
+			
+			GetComponentTransform()->globalMatrix = parent->GetComponentTransform()->globalMatrix * GetComponentTransform()->localMatrix;
+		}
+
+		OBB newobb = localAABB;
+		newobb.Transform(GetComponentTransform()->globalMatrix);
+
+		obb = newobb;
+		globalAABB.SetNegativeInfinity();
+		globalAABB.Enclose(obb);
 	}
-	else
-		transformComp->globalMatrix = parent->transformComp->globalMatrix * transformComp->localMatrix;
-
-	OBB newobb = localAABB;
-	newobb.Transform(transformComp->globalMatrix);
-
-	obb = newobb;
-	globalAABB.SetNegativeInfinity();
-	globalAABB.Enclose(obb);
-
 	if (!childrens.empty())
 	{
 		for (std::vector<GameObject*>::iterator it = childrens.begin(); it != childrens.end(); it++)
 		{
-			(*it)->CalculateAllGlobalMatrix();
+			(*it)->CalculateAllTransformGlobalMat();
+		}
+	}
+}
+
+void GameObject::CalculateAllRectGlobalMat() {
+	if (GetComponentRectTransform() != nullptr) {
+		GameObject* canvas = App->scene->GetFirstGameObjectCanvas();
+		if (this == canvas)
+		{
+			float2 tr = GetComponentRectTransform()->GetLocalPos();
+			GetComponentRectTransform()->SetGlobalPos(GetComponentRectTransform()->GetLocalPos());
+		}
+		else {
+			float2 parentTrans = parent->GetComponentRectTransform()->GetGlobalPos();
+			float2 globalTr = parentTrans + GetComponentRectTransform()->GetLocalPos();
+			GetComponentRectTransform()->SetGlobalPos(globalTr);
+		}
+	}
+	if (!childrens.empty())
+	{
+		for (auto it : childrens)
+		{
+			it->CalculateAllRectGlobalMat();
 		}
 	}
 }
@@ -137,32 +176,99 @@ Component * GameObject::AddComponent(ComponentType type) {
 	switch (type) {
 	case ComponentType::MESH:
 		ret = new ComponentMesh();
-		ret->type = MESH;
 
 		break;
 
 	case ComponentType::MATERIAL:
 		ret = new ComponentMaterial();
-		ret->type = MATERIAL;
 
 		break;
 
 	case ComponentType::TRANSFORM:
 		ret = new ComponentTransformation();
-
-		ret->type = TRANSFORM;
 		break;
 	
 	case ComponentType::CAMERA:
 		ret = new ComponentCamera();
-		ret->type = CAMERA;
+		break;
+
+	case ComponentType::CANVAS:
+		ret = new ComponentCanvas();
 		break;
 
 	case ComponentType::NO_TYPE:
 		return nullptr;
 	}
+
 	ret->myGO = this;
 	components.push_back(ret);
+	ret->Start();
+	return ret;
+}
+
+ComponentUI * GameObject::AddUIComponent(ComponentTypeUI type) {
+	ComponentUI* ret;
+
+	switch (type) {
+	
+	case ComponentTypeUI::UI_IMAGE: {
+		ret = new ComponentImageUI();
+		ComponentImageUI* cImatge = (ComponentImageUI*)ret;
+		cImatge->myGO = this;
+		cImatge = nullptr;
+		break;
+	}
+	case ComponentTypeUI::UI_TEXT: {
+		ret = new ComponentTextUI();
+		ComponentTextUI* cTetx = (ComponentTextUI*)ret;
+		cTetx->myGO = this;
+		cTetx = nullptr;
+		break;
+	}
+	case ComponentTypeUI::UI_INPUT: {
+		ret = new ComponentInputUI();
+		ComponentInputUI* cInput = (ComponentInputUI*)ret;
+		cInput->myGO = this;
+		cInput = nullptr;
+		break;
+	}
+	case ComponentTypeUI::UI_BUTTON: {
+		ret = new ComponentButtonUI();
+		ComponentButtonUI* cBut = (ComponentButtonUI*)ret;
+		cBut->myGO = this;
+		AddUIComponent(UI_IMAGE);
+		cBut = nullptr;
+		break;
+	}
+	case ComponentTypeUI::TRANSFORMRECT:{
+		ret = new ComponentRectTransform();
+		ComponentRectTransform* cRect = (ComponentRectTransform*)ret;
+		cRect->myGO = this;
+		cRect = nullptr;
+		break;
+	}
+	case ComponentTypeUI::UI_WINDOW: {
+		ret = new ComponentWindowUI();
+		ComponentWindowUI* cWin = (ComponentWindowUI*)ret;
+		cWin->myGO = this;
+		AddUIComponent(UI_IMAGE);
+		cWin = nullptr;
+		break;
+	}
+	case ComponentTypeUI::UI_CHECKBOX: {
+		ret = new ComponentCheckBoxUI();
+		ComponentCheckBoxUI* cWin = (ComponentCheckBoxUI*)ret;
+		cWin->myGO = this;
+		AddUIComponent(UI_IMAGE);
+		cWin = nullptr;
+		break;
+	}
+	case ComponentTypeUI::NOTYPE:
+		return nullptr;
+	}
+
+	componentsUI.push_back(ret);
+	ret->doStart();
 	return ret;
 }
 
@@ -173,27 +279,61 @@ void GameObject::AddComponent(Component * component, ComponentType type)
 	components.push_back(component);
 }
 
-
 void GameObject::GetComponents(ComponentType type, std::vector<Component*>& comp) {
-	Component* iterator;
-	for (int i = 0; i < components.size(); i++) {
-		iterator = components[i];
-		if (iterator->type == type) {
-			comp.push_back(iterator);
+	
+	for (int i = 0; i < components.size(); i++) {		
+		if (components[i]->type == type) {
+			comp.push_back(components[i]);
 		}
 	}
-	GameObject* gameObject;
-	for(int i = 0; i < childrens.size(); i++) {
-		gameObject = childrens[i];
-		gameObject->GetComponents(type, comp);
+	
+	for(int i = 0; i < childrens.size(); i++) {		
+		childrens[i]->GetComponents(type, comp);
 	}
-	iterator = nullptr;
+	
 }
 
+void GameObject::GetAllComponentsUI(std::vector<ComponentUI*>& comp) {
 
+	for (int i = 0; i < componentsUI.size(); i++) {
+		comp.push_back(componentsUI[i]);
+	}
+	for (int i = 0; i < childrens.size(); i++) {
+		childrens[i]->GetComponentsUITypeIgnore(comp);
+	}
 
+}
 
-void GameObject::SetParent(GameObject * _parent)//TO CHECK!!!----------------------------------------------------------
+void GameObject::GetComponentsUITypeIgnore( std::vector<ComponentUI*>& comp, ComponentTypeUI ignoreType, bool recursive ) {
+
+	for (int i = 0; i < componentsUI.size(); i++) {
+		if (componentsUI[i]->typeUI != ignoreType) {
+			comp.push_back(componentsUI[i]);
+		}
+	}
+	if (recursive) {
+		for (int i = 0; i < childrens.size(); i++) {
+			childrens[i]->GetComponentsUITypeIgnore(comp, ignoreType);
+		}
+	}
+}
+
+void GameObject::GetComponentsUIType(std::vector<ComponentUI*>& comp, ComponentTypeUI type, bool recursive) {
+
+	for (int i = 0; i < componentsUI.size(); i++) {
+		if (componentsUI[i]->typeUI == type) {
+			comp.push_back(componentsUI[i]);
+		}
+	}
+	if (recursive) {
+		for (int i = 0; i < childrens.size(); i++) {
+			childrens[i]->GetComponentsUIType(comp, type);
+		}
+	}
+
+}
+
+void GameObject::SetParent(GameObject * _parent)
 {
 		
 	if (parent != nullptr ) {
@@ -242,8 +382,22 @@ void GameObject::RemoveComponent(Component * comp)
 			return;
 		}
 	}
+
+
+
 }
 
+
+void GameObject::RemoveComponentUI(ComponentUI * comp)
+{
+	for (int i = 0; i < componentsUI.size(); i++) {
+		if (componentsUI[i] == comp) {
+			componentsUI[i]->doCleanUp();
+			componentsUI.erase(componentsUI.begin() + i);
+			return;
+		}
+	}
+}
 
 ComponentTransformation * GameObject::GetComponentTransform() const
 {
@@ -281,7 +435,103 @@ ComponentMesh * GameObject::GetComponentMesh() const
 	return ret;
 }
 
-ComponentMaterial * GameObject::GetComponentMaterial(const uuid UUID)
+ComponentCanvas * GameObject::GetComponentCanvas() const
+{
+	ComponentCanvas* ret = nullptr;
+	//WILL ONLY FIND THE FIRST COMPONENT EQUAL TO TYPE OF EACH G0
+	for (std::vector<Component*>::const_iterator it = components.begin(); it != components.end(); it++)
+	{
+		if ((*it)->type == CANVAS)
+			return (ComponentCanvas*)(*it);
+	}
+	return ret;
+}
+
+ComponentImageUI * GameObject::GetComponentImageUI() const
+{
+	ComponentImageUI* ret = nullptr;
+	//WILL ONLY FIND THE FIRST COMPONENT EQUAL TO TYPE OF EACH G0
+	for (std::vector<ComponentUI*>::const_iterator it = componentsUI.begin(); it != componentsUI.end(); it++)
+	{
+		if ((*it)->typeUI == UI_IMAGE)
+			return (ComponentImageUI*)(*it);
+	}
+	return ret;
+}
+
+ComponentTextUI * GameObject::GetComponentTextUI() const
+{
+	ComponentTextUI* ret = nullptr;
+	//WILL ONLY FIND THE FIRST COMPONENT EQUAL TO TYPE OF EACH G0
+	for (std::vector<ComponentUI*>::const_iterator it = componentsUI.begin(); it != componentsUI.end(); it++)
+	{
+		if ((*it)->typeUI == UI_TEXT)
+			return (ComponentTextUI*)(*it);
+	}
+	return ret;
+}
+
+ComponentInputUI * GameObject::GetComponentInputUI() const
+{
+	ComponentInputUI* ret = nullptr;
+	//WILL ONLY FIND THE FIRST COMPONENT EQUAL TO TYPE OF EACH G0
+	for (std::vector<ComponentUI*>::const_iterator it = componentsUI.begin(); it != componentsUI.end(); it++)
+	{
+		if ((*it)->typeUI == UI_INPUT)
+			return (ComponentInputUI*)(*it);
+	}
+	return ret;
+}
+
+ComponentButtonUI * GameObject::GetComponentButtonUI() const
+{
+	ComponentButtonUI* ret = nullptr;
+	//WILL ONLY FIND THE FIRST COMPONENT EQUAL TO TYPE OF EACH G0
+	for (std::vector<ComponentUI*>::const_iterator it = componentsUI.begin(); it != componentsUI.end(); it++)
+	{
+		if ((*it)->typeUI == UI_BUTTON)
+			return (ComponentButtonUI*)(*it);
+	}
+	return ret;
+}
+
+ComponentWindowUI * GameObject::GetComponentWindowUI() const
+{
+	ComponentWindowUI* ret = nullptr;
+	//WILL ONLY FIND THE FIRST COMPONENT EQUAL TO TYPE OF EACH G0
+	for (std::vector<ComponentUI*>::const_iterator it = componentsUI.begin(); it != componentsUI.end(); it++)
+	{
+		if ((*it)->typeUI == UI_WINDOW)
+			return (ComponentWindowUI*)(*it);
+	}
+	return ret;
+}
+
+ComponentCheckBoxUI * GameObject::GetComponentCheckBoxUI() const{
+
+	ComponentCheckBoxUI* ret = nullptr;
+	//WILL ONLY FIND THE FIRST COMPONENT EQUAL TO TYPE OF EACH G0
+	for (std::vector<ComponentUI*>::const_iterator it = componentsUI.begin(); it != componentsUI.end(); it++)
+	{
+		if ((*it)->typeUI == TRANSFORMRECT)
+			return (ComponentCheckBoxUI*)(*it);
+	}
+	return ret;
+}
+
+ComponentRectTransform * GameObject::GetComponentRectTransform() const
+{
+	ComponentRectTransform* ret = nullptr;
+	//WILL ONLY FIND THE FIRST COMPONENT EQUAL TO TYPE OF EACH G0
+	for (std::vector<ComponentUI*>::const_iterator it = componentsUI.begin(); it != componentsUI.end(); it++)
+	{
+		if ((*it)->typeUI == TRANSFORMRECT)
+			return (ComponentRectTransform*)(*it);
+	}
+	return ret;
+}
+
+ComponentMaterial * GameObject::GetComponentMaterial( uuid UUID)
 {
 	std::vector<Component*> materials;
 
@@ -314,20 +564,19 @@ ComponentMaterial * GameObject::GetComponentMaterial() const
 	return ret;
 }
 
-//
-//bool GameObject::isActive()
-//{
-//	return active;
-//}
-//
-//bool GameObject::isStatic()
-//{
-//	return staticGO;
-//}
-
 void GameObject::SetName(char * _name)
 {
 	name = _name;
+}
+
+void GameObject::ReceiveEvent(const Event & event)
+{
+	for (int i = 0; i < componentsUI.size(); i++) {
+		componentsUI[i]->ReceiveEvent(event);
+	}
+	for (int i = 0; i < childrens.size(); i++) {
+		childrens[i]->ReceiveEvent(event);
+	}
 }
 
 void GameObject::SetChildsStatic(bool active)
@@ -369,14 +618,13 @@ void GameObject::RayHits(const LineSegment & segment, bool & hit, float & dist){
 					return;
 				//Segment for the mesh
 				LineSegment localRay(segment);
-				localRay.Transform(transformComp->getGlobalMatrix().Inverted());
+				localRay.Transform(GetComponentTransform()->GetGlobalMatrix().Inverted());
 
 				uint* indices = mesh->GetResourceMesh()->index;
 				float3* vertices = mesh->GetResourceMesh()->vertex;
 				Triangle triangle;
 
 				for (int i = 0; i < mesh->GetResourceMesh()->num_index;) {
-					//TO CHEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEECK!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 					triangle.a = vertices[indices[i]]; ++i;
 					triangle.b = vertices[indices[i]]; ++i;
 					triangle.c = vertices[indices[i]]; ++i;
@@ -413,9 +661,7 @@ void GameObject::Save(Config& data) const
 		conf.AddUInt("Parent_UUID", parent->UUID);
 	}
 	conf.AddString("Name", name.c_str());
-	conf.AddFloat3("Translation", transformComp->getPos());
-	conf.AddFloat3("Scale", transformComp->getScale());
-	conf.AddFloat3("Rotation", transformComp->getEulerRot()); //save rotation as eulerangle(float3) to save memory.
+	
 	conf.AddBool("Static", staticGO);
 	conf.AddArray("Components");	
 
@@ -425,6 +671,13 @@ void GameObject::Save(Config& data) const
 		components[i]->Save(comp);
 		conf.AddArrayChild(comp);
 	}	
+	conf.AddArray("ComponentsUI");
+	for (int i = 0; i < componentsUI.size(); i++) { //iterate all over the componentsUI to save
+		Config comp;
+		comp.AddInt("TypeUI", componentsUI[i]->typeUI);
+		componentsUI[i]->doSave(comp);
+		conf.AddArrayChild(comp);
+	}
 
 	data.AddArrayChild(conf);
 
@@ -451,26 +704,37 @@ void GameObject::Load(Config* data)
 	if (strcmp(name.c_str(), "Main Camera") == 0) {
 		App->scene->SetMainCamera(this);
 	}
-	transformComp->setPos(data->GetFloat3("Translation", {0,0,0}));
-	transformComp->setRotEuler(data->GetFloat3("Rotation", { 0,0,0 }));
-	transformComp->setScale(data->GetFloat3("Scale", { 0,0,0 }));
+	
 	staticGO = data->GetBool("Static", false);
 
 	int num = data->GetNumElemsArray("Components");
-	for (int i = 0; i < num; i++) {//iterate all over the childs to save (ecept transform comp)
+	for (int i = 0; i < num; i++) {//iterate all over the childs to save (except transform comp)
 		Config elem = data->GetArray("Components", i);
 		ComponentType type = (ComponentType) elem.GetInt("Type", ComponentType::NO_TYPE);
 		if (type != ComponentType::NO_TYPE ) {
-			if (type != ComponentType::TRANSFORM) {
+			
 				Component* comp = AddComponent(type);
 				comp->Load(&elem);
-			}
+			
 		}
 		else {
 			OWN_LOG("Cannot load components correctly. Component type: NOTYPE ")
 		}
 	}
+	int numUI = data->GetNumElemsArray("ComponentsUI");
+	for (int i = 0; i < numUI; i++) {
+		Config elem = data->GetArray("ComponentsUI", i);
+		ComponentTypeUI type = (ComponentTypeUI)elem.GetInt("TypeUI", ComponentTypeUI::NOTYPE);
+		if (type != ComponentTypeUI::NOTYPE) {
 
+			ComponentUI* comp = AddUIComponent(type);
+			comp->doLoad(&elem);
+
+		}
+		else {
+			OWN_LOG("Cannot load UI_Components correctly. Component type: NOTYPE ")
+		}
+	}
 	
 }
 

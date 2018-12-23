@@ -33,7 +33,7 @@ void UIPanelConfig::Draw() {
 
 	if (ImGui::CollapsingHeader("Application")) {
 
-		const int maxSize = 64;
+		static const int maxSize = 64;
 
 		std::string aux = App->window->GetWindowTitle();
 		if (ImGui::InputText("App Name", (char*)aux.c_str(), maxSize)) {

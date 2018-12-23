@@ -6,6 +6,7 @@
 #include "ModuleRenderer3D.h"
 #include "GameObject.h"
 #include "Component.h"
+#include "ComponentUI.h"
 #include "ModuleScene.h"
 
 #include "mmgr/mmgr.h"
@@ -49,38 +50,44 @@ void UIPanelInspector::Draw() {
 		for (std::vector<Component*>::iterator itComponents = componentsRecover.begin(); itComponents != componentsRecover.end(); itComponents++) {
 			DrawComponent((*itComponents));
 		}
-		if (ImGui::CollapsingHeader("Add Component")) {
-		
-			if (!go->GetComponentCamera()) {
-				if (ImGui::Button("Camera")) {
-					go->AddComponent(CAMERA);
-				}
-			}
-			
-			if (!go->GetComponentMaterial()) {
-				if (ImGui::Button("Material")) {
-					ComponentMaterial* mat =(ComponentMaterial*) go->AddComponent(MATERIAL);
-					ComponentMesh* m =go->GetComponentMesh();
-					if (m) {
-						m->SetMaterial(mat);
+		std::vector<ComponentUI*> componentsUIRecover = go->componentsUI;
+		for (std::vector<ComponentUI*>::iterator itComponents = componentsUIRecover.begin(); itComponents != componentsUIRecover.end(); itComponents++) {
+			DrawUIComponent((*itComponents));
+		}
+		if (go->GetComponentRectTransform() == nullptr)
+		{
+			if (ImGui::CollapsingHeader("Add Component")) {
+
+				if (!go->GetComponentCamera()) {
+					if (ImGui::Button("Camera")) {
+						go->AddComponent(CAMERA);
 					}
-					mat = nullptr;
-					m = nullptr;
 				}
-			}
-			if (!go->GetComponentMesh()) {
-				if (ImGui::Button("Mesh")) {
-					ComponentMesh* m =(ComponentMesh*) go->AddComponent(MESH);
-					ComponentMaterial* mat = go->GetComponentMaterial();
-					if (mat) {
-						m->SetMaterial(mat);
+
+				if (!go->GetComponentMaterial()) {
+					if (ImGui::Button("Material")) {
+						ComponentMaterial* mat = (ComponentMaterial*)go->AddComponent(MATERIAL);
+						ComponentMesh* m = go->GetComponentMesh();
+						if (m) {
+							m->SetMaterial(mat);
+						}
+						mat = nullptr;
+						m = nullptr;
 					}
-					mat = nullptr;
-					m = nullptr;
+				}
+				if (!go->GetComponentMesh()) {
+					if (ImGui::Button("Mesh")) {
+						ComponentMesh* m = (ComponentMesh*)go->AddComponent(MESH);
+						ComponentMaterial* mat = go->GetComponentMaterial();
+						if (mat) {
+							m->SetMaterial(mat);
+						}
+						mat = nullptr;
+						m = nullptr;
+					}
 				}
 			}
 		}
-
 
 
 	}
@@ -96,7 +103,7 @@ void UIPanelInspector::Draw() {
 		ImGui::Text("ID: %i", mat->gpuID);
 		float windowSize = ImGui::GetWindowContentRegionWidth();
 		ImVec2 size = ImGui::GetContentRegionAvail();
-		ImGui::Image((void*)(mat->gpuID), size);
+		ImGui::Image((void*)(mat->gpuID), size, ImVec2(0, 1), ImVec2(1, 0));
 		ImGui::Separator();
 
 	}
@@ -126,6 +133,15 @@ void UIPanelInspector::DrawComponent(Component* compDraw)
 			ImGui::TreePop();
 		}
 		break;
+	
+	case CANVAS:
+		if (ImGui::TreeNode("Canvas"))
+		{
+			compDraw->myGO->GetComponentCanvas()->DrawInspector();
+			ImGui::TreePop();
+		}
+		break;
+	
 	case MESH:
 		if (ImGui::TreeNode("Mesh"))
 		{
@@ -152,3 +168,60 @@ void UIPanelInspector::DrawComponent(Component* compDraw)
 	}
 }
 
+void UIPanelInspector::DrawUIComponent(ComponentUI* compDraw)
+{
+	ComponentTypeUI cType = compDraw->typeUI;
+	switch (cType)
+	{
+	case NOTYPE:
+		break;
+	case UI_IMAGE:
+		if (ImGui::TreeNode("UI Image"))
+		{
+			ComponentImageUI* comp =(ComponentImageUI*) compDraw;
+			comp->DrawInspector();
+			ImGui::TreePop();
+		}
+		break;
+	case UI_TEXT:
+		if (ImGui::TreeNode("UI Text"))
+		{
+			ComponentTextUI* comp = (ComponentTextUI*)compDraw;
+			comp->DrawInspector();
+			ImGui::TreePop();
+		}
+		break;
+	case UI_BUTTON:
+		if (ImGui::TreeNode("UI Button"))
+		{
+			ComponentButtonUI* comp = (ComponentButtonUI*)compDraw;
+			comp->DrawInspector();
+			ImGui::TreePop();
+		}
+		break;
+	case UI_INPUT:
+		if (ImGui::TreeNode("UI Input"))
+		{
+			ComponentInputUI* comp = (ComponentInputUI*)compDraw;
+			comp->DrawInspector();
+			ImGui::TreePop();
+		}
+		break;
+	case TRANSFORMRECT:
+		if (ImGui::TreeNode("TransformRect"))
+		{
+			ComponentRectTransform* comp = (ComponentRectTransform*)compDraw;
+			comp->DrawInspector();
+			ImGui::TreePop();
+		}
+		break;
+	case UI_WINDOW:
+		if (ImGui::TreeNode("UI Window"))
+		{
+			ComponentWindowUI* comp = (ComponentWindowUI*)compDraw;
+			comp->DrawInspector();
+			ImGui::TreePop();
+		}
+		break;
+	}
+}

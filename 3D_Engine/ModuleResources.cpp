@@ -3,6 +3,7 @@
 #include "ResourceAudio.h"
 #include "ResourceMesh.h"
 #include "ResourceTexture.h"
+#include "ResourceUI.h"
 #include "ModuleScene.h"
 #include "Timer.h"
 #include "ModuleFileSystem.h"
@@ -30,6 +31,9 @@ bool ModuleResources::Init(JSON_Object * obj)
 
 bool ModuleResources::Start()
 {
+	//UIrect = CreateNewResource(Resource::ResType::Mesh); delete all UIRect
+
+
 	CheckMetaFiles();
 	return true;
 }
@@ -58,6 +62,7 @@ bool ModuleResources::CleanUp()
 		
 	}
 	resources.clear();
+	//UIrect = nullptr;
 	return true;
 }
 
@@ -167,6 +172,7 @@ bool ModuleResources::ImportFileAndGenerateMeta(const char * newFileInAssets)
 	Resource::ResType type = GetResourceTypeFromExtension(newFileInAssets);
 	uuid resourceUUID = App->scene->GetRandomUUID();
 	switch (type) {
+	case Resource::ResType::UI:{import_ok = App->texImporter->ImportTexture(newFileInAssets, &exportedFiles, true); break; }
 	case Resource::ResType::Texture: {import_ok = App->texImporter->ImportTexture(newFileInAssets, &exportedFiles); break; }
 	case Resource::ResType::Scene: {import_ok = App->importer->ImportScene(newFileInAssets, &exportedFiles, resourceUUID); break; }
 	case Resource::ResType::Mesh: {import_ok = App->fileSys->CopyPEItoLib(newFileInAssets, &exportedFiles, resourceUUID); break; }
@@ -275,6 +281,7 @@ Resource * ModuleResources::CreateNewResource(Resource::ResType type, uuid force
 	}
 
 	switch (type) {
+	case Resource::ResType::UI: {res = (Resource*) new ResourceUI(uuid); break; }
 	case Resource::ResType::Texture: {	res = (Resource*) new ResourceTexture(uuid); break;	}
 	case Resource::ResType::Mesh: {	res = (Resource*) new ResourceMesh(uuid); break;	}
 	case Resource::ResType::Audio: {res = (Resource*) new ResourceAudio(uuid); break;	}
@@ -363,7 +370,11 @@ void ModuleResources::GenerateMetaFile(const char* assetFile,  uuid resourceUUID
 const Resource::ResType ModuleResources::GetResourceTypeFromExtension(const char * path) const
 {	
 	std::string extension;
-	App->fileSys->GetNameFromPath(path, nullptr, nullptr, nullptr, &extension);
+	std::string name;
+	App->fileSys->GetNameFromPath(path, nullptr,nullptr, nullptr, &extension);
+	App->fileSys->GetNameFromPath(path, nullptr, &name, nullptr,nullptr);
+	if (name[0] == 'U' && name[1] == 'I' && name[2] == '_') {
+		return Resource::ResType::UI; }
 	if (extension == OWN_FILE_FORMAT || extension == OWN_FILE_FORMAT_CAP)  return Resource::ResType::Mesh;
 	if (extension == FBX_FORMAT || extension == FBX_FORMAT_CAP)  return Resource::ResType::Scene;
 	if (extension == DDS_FORMAT || extension == DDS_FORMAT_CAP)  return Resource::ResType::Texture;

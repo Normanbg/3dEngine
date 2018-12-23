@@ -1,6 +1,8 @@
 #include "PerfTimer.h"
 #include "./SDL/include/SDL_timer.h"
 
+#include "mmgr/mmgr.h"
+
 double PerfTimer::frequency = 0;
 
 PerfTimer::PerfTimer()

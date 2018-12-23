@@ -27,12 +27,20 @@ public:
 	Resource* GetResource() const override { return (Resource*)resourceTexture; }
 	const uint GetTexID() const;
 	const char* GetTextureName() const;
+	const float GetAlphaTest() const { return alphaTest; }
 	const bool HasTexture() const;
+
 
 	void Save(Config& data) const;
 	void Load(Config* data);
+
+	bool doBlendTest = false;
+
 private:
 	ResourceTexture* resourceTexture = nullptr;
+	float alphaTest = 1.0f;
+	
+
 };
 
 #endif // !__COMPONENTMATERIAL_H__

@@ -9,11 +9,12 @@ class GameObject;
 
 enum ComponentType {
 	NO_TYPE = 0,
-
 	TRANSFORM,
 	CAMERA,
 	MESH,
-	MATERIAL
+	MATERIAL,
+	CANVAS, 
+	UI
 };
 
 class Component {
@@ -23,11 +24,11 @@ public:
 	}
 	~Component() {	}
 
-	virtual void Enable() { active = true; }
-	virtual bool PreUpdate() { return true; }
+	virtual bool Start() { return true; }
+	virtual bool PreUpdate(float dt=0) { return true; }
 	virtual bool Update() { return true; }
-	virtual bool PostUpdate() { return true; }
 	virtual void CleanUp() {return; }
+	virtual void Enable() { active = true; }
 	virtual void Disable() { active = false; }
 	
 	virtual void DrawInspector() { return; };

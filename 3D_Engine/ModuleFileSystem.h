@@ -19,7 +19,7 @@ public:
 
 	void RemoveFile(const char* path);
 	
-	bool CopyDDStoLib(const char* path, std::vector<std::string>* written);
+	bool CopyDDStoLib(const char* path, std::vector<std::string>* written, bool UI = false);
 	bool CopyPEItoLib(const char* path, std::vector<std::string>* written = nullptr, uuid forceUUID = 0);
 	bool CopyAudioToLib(const char * path, std::vector<std::string>* written = nullptr);
 

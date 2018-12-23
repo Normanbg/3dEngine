@@ -22,20 +22,20 @@ public:
 	void CleanUp() override;
 	void DrawInspector() override;
 
-	void setGlobalMatrix(const float4x4 newGlobalMat);
-	void setLocalMatrix(const float4x4 newLocalMat);
-	void setPos(const float3 _newpos);
-	void setRotQuat(const Quat qNewRot);
-	void setRotEuler(const float3 _newrot);
+	void setGlobalMatrix(float4x4 newGlobalMat);
+	void setLocalMatrix(float4x4 newLocalMat);
+	void SetPos( float3 _newpos);
+	void SetRotQuat( Quat qNewRot);
+	void SetRotEuler( float3 _newrot);
 
-	void setScale(float3 _newscale);
+	void SetScale(float3 _newscale);
 
-	const float3 getPos() const;
-	const float3 getScale() const;
-	const float3 getEulerRot() const;
-	const Quat getQuatRot() const;
-	const float4x4 getGlobalMatrix() const;
-	const float4x4 getLocalMatrix() const;
+	const float3 GetPos() const;
+	const float3 GetScale() const;
+	const float3 GetEulerRot() const;
+	const Quat GetQuatRot() const;
+	const float4x4 GetGlobalMatrix() const;
+	const float4x4 GetLocalMatrix() const;
 
 	void UpdateLocalMatrix();
 	void Save(Config& data) const;

@@ -13,9 +13,33 @@
 #include "./JSON/parson.h"
 #include "./Glew/include/glew.h"
 #include "SDL/include/SDL_opengl.h"
-#include <gl/GL.h>
-#include <gl/GLU.h>
+//#include <gl/GL.h> delete?
+//#include <gl/GLU.h>
 
+struct Event
+{
+	enum EventType
+	{
+		scene_file_dropped,
+		texture_file_dropped,
+		input,
+		invalid
+	} type;
+
+	union
+	{	
+		
+		const char* string;		
+		struct{
+			int x, y;
+		} point2d;
+		
+	};
+
+	Event(EventType type) : type(type)
+	{}
+	Event() {};
+};
 
 #define MAX_FPS_LOG 50
 #define MAX_MS_LOG 50
@@ -34,6 +58,7 @@ class ModuleTime;
 class ModuleResources;
 class SceneImporter;
 class TextureImporter;
+class FontManager;
 
 class Application
 {
@@ -49,7 +74,7 @@ public:
 	ModuleTime* time;
 	ModuleResources* resources;
 
-
+	FontManager* fontManager;
 	SceneImporter* importer;
 	TextureImporter* texImporter;
 
@@ -141,15 +166,16 @@ public:
 	void SetOrganization(const char* newName);
 	const std::string GetOrganization() const;
 
+	void Application::BroadcastEvent(const Event& event);
+
+
 private:
 
 	std::string _organization;
 
 	void AddModule(Module* mod);
 	void PrepareUpdate();
-	void FinishUpdate();
-
-	
+	void FinishUpdate();	
 
 };
 

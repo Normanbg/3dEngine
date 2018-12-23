@@ -31,6 +31,7 @@ ModuleScene::~ModuleScene()
 bool ModuleScene::Init(JSON_Object * obj)
 {
 	root = new GameObject("root");
+	root->AddComponent(TRANSFORM);
 	mainCamera = AddGameObject("Main Camera");
 	mainCamera->AddComponent(CAMERA);
 	mainCamera->GetComponentCamera()->SetFarPlaneDistance(85.f);
@@ -47,18 +48,13 @@ bool ModuleScene::Init(JSON_Object * obj)
 update_status ModuleScene::PreUpdate(float dt)
 {
 	bool ret = true;
-	root->CalculateAllGlobalMatrix();
-
+	root->CalculateAllTransformGlobalMat();
+	
 	if (root->childrens.empty() == false) {
 		for (int i = 0; i < root->childrens.size(); i++) {
 			ret &= root->childrens[i]->PreUpdate();
 		}
 	}
-	/*if (rootQuadTree->quadTreeBox.IsFinite()) {
-		QTContainsAaBox(rootQuadTree);
-		SetStaticsCulled();
-	}
-*/
 	if (gObjSelected)
 		UpdateGuizmoOp();
 
@@ -82,6 +78,14 @@ update_status ModuleScene::Update(float dt) {
 			ret &= root->childrens[i]->Update();
 		}
 	}
+	GetAllDynamicGOs(root);
+	for (auto it : dynamicOBjs) {
+		ComponentMesh* mesh = it->GetComponentMesh();
+		if (mesh) {
+			mesh->frustumContained = ContainsAaBox(mesh->bbox);
+		}
+	}
+	dynamicOBjs.clear();
 
 	if (rootQuadTree->quadTreeBox.IsFinite()) {
 		std::list<uuid> uuidList;
@@ -101,7 +105,7 @@ update_status ModuleScene::Update(float dt) {
 			}
 		}
 	}
-
+	
 	update_status retUS;
 	ret ? retUS = UPDATE_CONTINUE : retUS = UPDATE_ERROR;
 	return retUS;
@@ -120,6 +124,14 @@ update_status ModuleScene::PostUpdate(float dt) {
 		objectMoved = false;
 	}
 
+	GameObject* canvas = GetFirstGameObjectCanvas();
+	
+	if (canvas) {
+		ComponentRectTransform* rect = canvas->GetComponentRectTransform();
+		if (rect != nullptr)
+			canvas->CalculateAllRectGlobalMat();
+	}
+
 	update_status retUS;
 	ret ? retUS = UPDATE_CONTINUE : retUS = UPDATE_ERROR;
 	return retUS;
@@ -128,13 +140,18 @@ update_status ModuleScene::PostUpdate(float dt) {
 bool ModuleScene::CleanUp()
 {
 	
-	ClearSceneCompletely();
+	ClearSceneCompletely();	
 	root->CleanUp();
 	RELEASE(root);
 	rootQuadTree->Clear();
 	RELEASE(rootQuadTree);
 
 	return true;
+}
+
+void ModuleScene::ReceiveEvent(const Event &event)
+{
+	root->ReceiveEvent(event);
 }
 
 GameObject * ModuleScene::GetGameObjectByUUID(uuid UUID) const
@@ -157,6 +174,15 @@ GameObject * ModuleScene::GetGameObjectUUIDRecursive(uuid UUID, GameObject * go)
 		if (ret) {
 			return ret;
 		}
+	}
+	return nullptr;
+}
+
+GameObject * ModuleScene::GetFirstGameObjectCanvas() const
+{
+	for (int i = 0; i < root->childrens.size(); i++) {
+		if (root->childrens[i]->GetComponentCanvas() != nullptr)
+			return root->childrens[i];
 	}
 	return nullptr;
 }
@@ -196,6 +222,7 @@ void ModuleScene::ClearSceneCompletely()
 	for (int i = root->components.size() - 1; i >= 0; i--) {
 		root->RemoveComponent(root->components[i]);
 	}
+	
 	mainCamera = nullptr;
 	App->scene->DeselectAll();
 	rootQuadTree->Clear();
@@ -281,12 +308,12 @@ void ModuleScene::MousePicking()
 			else
 				ray = App->camera->cameraComp->GetFrustum().UnProjectLineSegment(normalized.x, normalized.y);
 
-			GetDynamicGOs(root);
+			GetAllGOs(root);
 			float distance = 9 * 10 ^ 10;
 			GameObject* closest = nullptr;
 			drawRay = true;
 			line = ray;
-			for (auto it : dynamicOBjs)
+			for (auto it : allGameObjects)
 			{
 				bool hit;
 				float dist;
@@ -327,14 +354,14 @@ void ModuleScene::DrawGuizmo(ImGuizmo::OPERATION operation)
 		glGetFloatv(GL_MODELVIEW_MATRIX, (float*)viewMatrix.v);
 		glGetFloatv(GL_PROJECTION_MATRIX, (float*)projectionMatrix.v);
 
-		transMatr = transform->getGlobalMatrix().Transposed();
+		transMatr = transform->GetGlobalMatrix().Transposed();
 
 		ImGuizmo::Manipulate((float*)viewMatrix.v, (float*)projectionMatrix.v, operation, mode, transMatr.ptr());
 		transMatr.Transpose();
 
 		if (ImGuizmo::IsUsing()) {
 			transform->setGlobalMatrix(transMatr);
-			root->CalculateAllGlobalMatrix();
+			root->CalculateAllTransformGlobalMat();
 			objectMoved = true;
 		}
 	}
@@ -381,75 +408,15 @@ FrustumContained ModuleScene::ContainsAaBox(const AABB& refBox) const
 	// we must be partly in then otherwise
 	return(INTERSECT);
 }
-//
-//void ModuleScene::QTContainsAaBox(Quadtree* qt)
-//{
-//	float3 vCorner[8];
-//	int iTotalIn = 0;
-//	qt->quadTreeBox.GetCornerPoints(vCorner); // get the corners of the box into the vCorner array
-//
-//	if (qt == rootQuadTree)
-//		staticObjsToDraw.clear();
-//
-//	// test all 8 corners against the 6 sides
-//	// if all points are behind 1 specific plane, we are out
-//	// if we are in with all points, then we are fully in
-//	for (int p = 0; p < 6; ++p) {
-//		int iInCount = 8;
-//		int iPtIn = 1;
-//		for (int i = 0; i < 8; ++i) {
-//			// test this point against the planes
-//			if (inGame) {
-//				if (mainCamera->GetComponentCamera()->GetFrustum().GetPlane(p).IsOnPositiveSide(vCorner[i]))
-//				{
-//					iPtIn = 0;
-//					--iInCount;
-//				}
-//			}
-//			else {
-//				if (App->camera->cameraComp->GetFrustum().GetPlane(p).IsOnPositiveSide(vCorner[i]))
-//				{
-//					iPtIn = 0;
-//					--iInCount;
-//				}
-//			}
-//		}
-//		// were all the points outside of plane p?
-//		if (iInCount == 0) {
-//			for (auto it : qt->gameobjs) {
-//				it->GetComponentMesh()->staticCulled = true;
-//				break;
-//			}
-//		}
-//		// check if they were all on the right side of the plane
-//		iTotalIn += iPtIn;
-//	}
-//	if (!qt->quTrChilds.empty()) {
-//		for (int i = 0; i < 4; i++) {
-//			Quadtree* childQT = qt->quTrChilds[i];
-//			QTContainsAaBox(childQT);
-//		}
-//
-//	}
-//	else {
-//		for (auto it : qt->gameobjs) {
-//			staticObjsToDraw.push_back(it);
-//		}
-//	}
-//
-//}
 
-//void ModuleScene::SetStaticsCulled()
-//{
-//	staticObjsToDraw.sort();
-//	staticObjsToDraw.unique();
-//	for (auto it : staticObjsToDraw) {
-//		if (it->GetComponentMesh())
-//		{
-//			it->GetComponentMesh()->staticCulled = false;
-//		}
-//	}
-//}
+void ModuleScene::ToggleEditorCam()
+{
+	GameObject* canvasGO = GetFirstGameObjectCanvas();
+	if (canvasGO != nullptr) {
+		ComponentCanvas* canvas = canvasGO->GetComponentCanvas();
+		canvas->editor = !canvas->editor;
+	}
+}
 
 void ModuleScene::GetAllStaticGOs(GameObject* go)
 {
@@ -460,26 +427,23 @@ void ModuleScene::GetAllStaticGOs(GameObject* go)
 	}
 }
 
-//void ModuleScene::GetStaticObjsCulled(int& stCulled)
-//{
-//	staticOBjs.clear();
-//	GetAllStaticGOs(root);
-//	int i = 0;
-//	for (auto it : staticOBjs) {
-//		if (it->GetComponentMesh() && it->GetComponentMesh()->staticCulled)
-//			i++;
-//	}
-//	stCulled = i;
-//}
-
-void ModuleScene::GetDynamicGOs(GameObject * go)
+void ModuleScene::GetAllDynamicGOs(GameObject* go)
 {
 	if (go != root && !go->staticGO)
 		dynamicOBjs.push_back(go);
-	else if (go == root)
-		dynamicOBjs.clear();
 	for (auto it : go->childrens) {
-		GetDynamicGOs(it);
+		GetAllDynamicGOs(it);
+	}
+}
+
+void ModuleScene::GetAllGOs(GameObject * go)
+{
+	if (go != root)
+		allGameObjects.push_back(go);
+	else if (go == root)
+		allGameObjects.clear();
+	for (auto it : go->childrens) {
+		GetAllGOs(it);
 	}
 }
 
@@ -585,24 +549,21 @@ void ModuleScene::SetWireframe(bool active)
 	}
 }
 
-void ModuleScene::Draw() {
-	GameObject* iterator;
+void ModuleScene::Draw(bool editor) {
 
+	
 	std::vector<Component*> components;
+	root->GetComponents(MESH, components);
+	
 
-	for (int i = 0; i < root->childrens.size(); i++) {
-		iterator = root->childrens[i];
-		iterator->GetComponents(MESH, components);
-	}
-
-	ComponentMesh* mesh;
+	ComponentMesh* mesh = nullptr;
 	for (int i = 0; i < components.size(); i++) {
 		mesh = (ComponentMesh *)components[i];
 
 		//Frustum Culling 
 		if (App->camera->GetFrustumCulling())
 		{
-			if (!iterator->staticGO) {
+			if (components[i]->myGO->staticGO) {
 				mesh->frustumContained = ContainsAaBox(mesh->myGO->globalAABB);
 				if (mesh->frustumContained != IS_OUT) {
 					if (mesh->HasMesh()) { mesh->Draw(); }
@@ -629,17 +590,84 @@ void ModuleScene::Draw() {
 				rootQuadTree->DebugDraw();
 		}
 	}
-	iterator = nullptr;
+
+	float3 corners[8];
+	ui_render_box.GetCornerPoints(corners);
+	DebugDrawBox(corners, Red, 5.f);
+
+
+	//--------UI
+	if (editor)
+	{
+		std::vector<ComponentUI*> componentsUI; // first draw UI components
+		root->GetComponentsUITypeIgnore(componentsUI, TRANSFORMRECT);
+		for (int i = 0; i < componentsUI.size(); i++) {
+			if (componentsUI[i]->draw)
+				componentsUI[i]->DrawUI();
+		}
+		componentsUI.clear();
+
+		root->GetComponentsUIType(componentsUI, TRANSFORMRECT); // then draw rectTransforms
+
+		ComponentRectTransform* recTrans = nullptr;
+		for (int i = 0; i < componentsUI.size(); i++) {
+			recTrans = (ComponentRectTransform *)componentsUI[i];
+			if (recTrans->draw)
+				recTrans->DrawUI();
+		}
+		componentsUI.clear();
+		//--------UI
+		recTrans = nullptr;
+	}
 	mesh = nullptr;
 }
 
+void ModuleScene::DrawInGameUI()
+{
+	GameObject* canvas = GetFirstGameObjectCanvas();
+	if (canvas) {
+		ComponentRectTransform* rectTransform = canvas->GetComponentRectTransform();
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
 
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+
+		float left = rectTransform->GetGlobalPos().x;
+		float right = rectTransform->GetGlobalPos().x + rectTransform->GetWidth();
+		float top = rectTransform->GetGlobalPos().y + rectTransform->GetHeight();
+		float bottom = rectTransform->GetGlobalPos().y;
+		float zNear = -10.f;
+		float zFar = 10.f;
+
+		float3 min = { left, bottom, zNear };
+		float3 max = { right, top, zFar };
+
+		ui_render_box.minPoint = min;
+		ui_render_box.maxPoint = max;
+		
+		glOrtho(left, right, bottom, top, zNear, zFar);
+		float3 corners[8];
+		ui_render_box.GetCornerPoints(corners);
+		DebugDrawBox(corners, Red, 5.f);
+
+		std::vector<ComponentUI*> componentsUI; // first draw UI components
+		root->GetComponentsUITypeIgnore(componentsUI, TRANSFORMRECT);
+		for (int i = 0; i < componentsUI.size(); i++) {
+			if (componentsUI[i]->draw)
+				componentsUI[i]->DrawUI();
+		}
+		componentsUI.clear();
+
+	}
+}
 
 GameObject * ModuleScene::AddGameObject()
 {
 	GameObject* ret = new GameObject();
 	ret->parent = root;
 	root->childrens.push_back(ret);
+	ret->AddComponent(TRANSFORM);
 	return ret;
 }
 
@@ -648,7 +676,7 @@ GameObject* ModuleScene::AddGameObject(const char* name) {
 	GameObject* ret = new GameObject(name);
 	ret->parent = root;
 	root->childrens.push_back(ret);
-
+	ret->AddComponent(TRANSFORM);
 	return ret;
 }
 
@@ -657,9 +685,17 @@ GameObject * ModuleScene::AddGameObject(const char * name, GameObject * parent)
 	GameObject* ret = new GameObject(name);
 	ret->parent = parent;
 	parent->childrens.push_back(ret);
-
+	ret->AddComponent(TRANSFORM);
 	return ret;
 }
 
-
+GameObject * ModuleScene::AddUIGameObject(const char * name, GameObject * parent)
+{
+	GameObject* ret = new GameObject(name);
+	ret->parent = parent;
+	parent->childrens.push_back(ret);
+	ret->AddUIComponent(TRANSFORMRECT);
+	uiGameObjects.push_back(ret);
+	return ret;
+}
 

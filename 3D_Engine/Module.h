@@ -6,7 +6,7 @@
 #include <string>
 
 class Application;
-
+class Event;
 
 class Module
 {
@@ -62,6 +62,7 @@ public:
 	{
 		return true;
 	}
+	virtual void ReceiveEvent(const Event &event) {}
 };
 
 #endif // !__MODULE_H__

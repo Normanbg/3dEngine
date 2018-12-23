@@ -23,6 +23,7 @@ public:
 	const char * GetString(const char * field, const char * default= nullptr, int index = -1) const;
 	uint GetNumElemsArray(const char * field) const;
 	Config GetArray(const char * field, int index ) const;
+	float2 GetFloat2(const char * field, const float2 & default);
 	float3 GetFloat3(const char * field, const float3 & default);
 	float4 GetFloat4(const char * field, const float4 & default);
 
@@ -35,6 +36,7 @@ public:
 	bool AddArray(const char * array_name);
 	bool AddArrayChild(const Config & config);
 	bool AddArrayFloat(const char * field, const float * values, int size);
+	bool AddFloat2(const char * field, const float2 & value);
 	bool AddFloat3(const char * field, const float3 & value);
 	bool AddFloat4(const char * field, const float4 & value);
 

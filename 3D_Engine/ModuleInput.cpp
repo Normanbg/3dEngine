@@ -102,6 +102,13 @@ update_status ModuleInput::PreUpdate(float dt)
 	while(SDL_PollEvent(&e))
 	{
 		App->gui->ImplGuiInputs(&e);
+		
+		if (e.type == SDL_TEXTINPUT)  {
+			Event event;
+			event.type = event.input;
+			event.string = e.text.text;
+			App->BroadcastEvent(event);
+		}
 		switch(e.type)
 		{
 			case SDL_MOUSEWHEEL:
@@ -132,30 +139,36 @@ update_status ModuleInput::PreUpdate(float dt)
 				dropped_filedir = e.drop.file;
 				std::string dropped_filedirStr(e.drop.file);
 				App->audio->PlayFx(App->gui->dropFX);
-				switch (FileType file = ObtainDroppedFileType(dropped_filedirStr))
+				FileType file = ObtainDroppedFileType(dropped_filedirStr);
+
+				Event ev(Event::EventType::invalid);
+				ev.string = dropped_filedir;
+				switch (file)
 				{
 				case CANT_LOAD:
 					OWN_LOG("File not supported, try FBX, PNG, JPG, TGA or DDS")
 					break;
 				case FBX:
 					OWN_LOG("Dropped .fbx file");
-					App->renderer3D->ManageDroppedFBX(dropped_filedir);
-					
+					ev.type = Event::EventType::scene_file_dropped;
+					App->BroadcastEvent(ev);					
 					break;
 				case PNG:
 					OWN_LOG("Dropped .png file");
-					App->texImporter->ManageDroppedTexture(dropped_filedir);
+					ev.type = Event::EventType::texture_file_dropped;
+					App->BroadcastEvent(ev);
 					
 					break;
 				case JPG:
 					OWN_LOG("Dropped .jpg file");
-					App->texImporter->ManageDroppedTexture(dropped_filedir);
+					ev.type = Event::EventType::texture_file_dropped;
+					App->BroadcastEvent(ev);
 
 					break;
 				case DDS:
 					OWN_LOG("Dropped .dds file");
-					
-					App->texImporter->ManageDroppedTexture(dropped_filedir);
+					ev.type = Event::EventType::texture_file_dropped;
+					App->BroadcastEvent(ev);
 					break;
 				case PEI:
 					OWN_LOG("Dropped .pei file");
@@ -164,8 +177,8 @@ update_status ModuleInput::PreUpdate(float dt)
 					break;
 				case TGA:
 					OWN_LOG("Dropped .tga file");
-
-					App->texImporter->ManageDroppedTexture(dropped_filedir);
+					ev.type = Event::EventType::texture_file_dropped;
+					App->BroadcastEvent(ev);
 					break;			
 				}
 			break;
@@ -175,8 +188,10 @@ update_status ModuleInput::PreUpdate(float dt)
 	if (quit == true || keyboard[SDL_SCANCODE_ESCAPE] == KEY_UP)
 		return UPDATE_STOP;		
 
+	
 	return UPDATE_CONTINUE;
 }
+
 
 
 // Called before quitting

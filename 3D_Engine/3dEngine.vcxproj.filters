@@ -55,6 +55,12 @@
     <Filter Include="Sources\Tools\ImGuizmo">
       <UniqueIdentifier>{19af97b0-e4f1-4188-b804-93d7810b1ef2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Objects &amp; Components\Components\ComponentsUI">
+      <UniqueIdentifier>{d0678a25-06b4-4000-a2d1-df7df56d7502}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Tools\FreeType">
+      <UniqueIdentifier>{2702723f-e9b2-4ce5-9934-522644f73109}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -411,6 +417,51 @@
     <ClInclude Include="UIPanelOptimization.h">
       <Filter>Sources\Modules\GuiPanels</Filter>
     </ClInclude>
+    <ClInclude Include="ComponentTextUI.h">
+      <Filter>Sources\Objects &amp; Components\Components\ComponentsUI</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentUI.h">
+      <Filter>Sources\Objects &amp; Components\Components\ComponentsUI</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentImageUI.h">
+      <Filter>Sources\Objects &amp; Components\Components\ComponentsUI</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentRectTransform.h">
+      <Filter>Sources\Objects &amp; Components\Components\ComponentsUI</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentCanvas.h">
+      <Filter>Sources\Objects &amp; Components\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="UIPanelGame.h">
+      <Filter>Sources\Modules\GuiPanels</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentButtonUI.h">
+      <Filter>Sources\Objects &amp; Components\Components\ComponentsUI</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentInputUI.h">
+      <Filter>Sources\Objects &amp; Components\Components\ComponentsUI</Filter>
+    </ClInclude>
+    <ClInclude Include="FontManager.h">
+      <Filter>Sources\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="FreeType\include\ft2build.h">
+      <Filter>Sources\Tools\FreeType</Filter>
+    </ClInclude>
+    <ClInclude Include="FreeType\include\freetype\config\ftheader.h">
+      <Filter>Sources\Tools\FreeType</Filter>
+    </ClInclude>
+    <ClInclude Include="FreeType\include\freetype\freetype.h">
+      <Filter>Sources\Tools\FreeType</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentWindowUI.h">
+      <Filter>Sources\Objects &amp; Components\Components\ComponentsUI</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceUI.h">
+      <Filter>Sources\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentCheckBoxUI.h">
+      <Filter>Sources\Objects &amp; Components\Components\ComponentsUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleInput.cpp">
@@ -664,6 +715,39 @@
     </ClCompile>
     <ClCompile Include="UIPanelOptimization.cpp">
       <Filter>Sources\Modules\GuiPanels</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentImageUI.cpp">
+      <Filter>Sources\Objects &amp; Components\Components\ComponentsUI</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentTextUI.cpp">
+      <Filter>Sources\Objects &amp; Components\Components\ComponentsUI</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentRectTransform.cpp">
+      <Filter>Sources\Objects &amp; Components\Components\ComponentsUI</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentCanvas.cpp">
+      <Filter>Sources\Objects &amp; Components\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="UIPanelGame.cpp">
+      <Filter>Sources\Modules\GuiPanels</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentButtonUI.cpp">
+      <Filter>Sources\Objects &amp; Components\Components\ComponentsUI</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentInputUI.cpp">
+      <Filter>Sources\Objects &amp; Components\Components\ComponentsUI</Filter>
+    </ClCompile>
+    <ClCompile Include="FontManager.cpp">
+      <Filter>Sources\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentWindowUI.cpp">
+      <Filter>Sources\Objects &amp; Components\Components\ComponentsUI</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceUI.cpp">
+      <Filter>Sources\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentCheckBoxUI.cpp">
+      <Filter>Sources\Objects &amp; Components\Components\ComponentsUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
