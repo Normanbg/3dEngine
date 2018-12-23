@@ -27,6 +27,7 @@ public:
 
 
 	bool Init(JSON_Object* obj) override;
+	bool Start()override;
 	update_status PreUpdate(float dt) override;
 	update_status Update(float dt) override;
 	update_status PostUpdate(float dt) override;

@@ -44,8 +44,13 @@ bool ModuleScene::Init(JSON_Object * obj)
 	functions = new FakeFunctions();
 
 	ImGuizmo::Enable(false);
-	LoadScene("Scenes/Intro.JSON");
 
+	return true;
+}
+
+bool ModuleScene::Start()
+{
+	
 	return true;
 }
 
