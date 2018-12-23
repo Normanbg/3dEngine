@@ -129,10 +129,17 @@ void ComponentCheckBoxUI::SetResource(uuid resource, int numRes)
 
 void ComponentCheckBoxUI::Load(Config * data)
 {
+	hasSetToMid = true;
+	SetResource(App->resources->FindByName(data->GetString("Idle", ""), Resource::ResType::UI), 0);
+	SetResource(App->resources->FindByName(data->GetString("Press", ""), Resource::ResType::UI), 1);
 }
 
 void ComponentCheckBoxUI::Save(Config & data) const
 {
+	if (unpressedImg)
+		data.AddString("Idle", unpressedImg->GetName());
+	if (pressedImg)
+		data.AddString("Press", pressedImg->GetName());
 }
 
 void ComponentCheckBoxUI::DrawInspector()

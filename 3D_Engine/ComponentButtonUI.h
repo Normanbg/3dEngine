@@ -6,6 +6,9 @@
 #include "ResourceTexture.h"
 
 #define DELTA_ALPHA 0.01f
+#define DEFAULT_IDLE_BT "UI_ButtonIdle"
+#define DEFAULT_HOVER_BT "UI_ButtonHover"
+#define DEFAULT_PRESSED_BT "UI_ButtonPressed"
 
 enum ButtonState
 {

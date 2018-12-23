@@ -32,6 +32,7 @@ bool ComponentImageUI::Start()
 	memcpy(texCoords, uvs, sizeof(float2) * 4);
 
 	rectTransform = myGO->GetComponentRectTransform();
+	
 	return true;
 }
 

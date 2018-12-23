@@ -25,7 +25,6 @@ void ComponentButtonUI::UpdateRectTransform()
 
 void ComponentButtonUI::DrawUI()
 {
-	
 }
 
 bool ComponentButtonUI::Start()
@@ -34,6 +33,9 @@ bool ComponentButtonUI::Start()
 	rectTransform = myGO->GetComponentRectTransform();
 	rectTransform->SetWidth(60);
 	rectTransform->SetHeight(20);
+	SetResource(App->resources->FindByName(DEFAULT_IDLE_BT, Resource::ResType::UI), 0);
+	SetResource(App->resources->FindByName(DEFAULT_HOVER_BT, Resource::ResType::UI), 1);
+	SetResource(App->resources->FindByName(DEFAULT_PRESSED_BT, Resource::ResType::UI), 2);
 	return true;
 }
 
@@ -202,6 +204,7 @@ void ComponentButtonUI::Load(Config * data)
 	SetResource(App->resources->FindByName(data->GetString("Idle", ""), Resource::ResType::UI),0);
 	SetResource(App->resources->FindByName(data->GetString("Hover", ""), Resource::ResType::UI), 1);
 	SetResource(App->resources->FindByName(data->GetString("Press", ""), Resource::ResType::UI), 2);
+	hasSetToMid = true;
 }
 
 void ComponentButtonUI::Save(Config & data) const

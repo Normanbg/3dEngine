@@ -52,7 +52,7 @@ public:
 	void SetText(const char* txt);
 	float GetLabelWidth() const { return labelFrame[3].x - labelFrame[0].x + initOffsetX; }
 	float GetLabelHeight() const { return labelFrame[1].y - labelFrame[0].y; }
-
+	void SetAsCheckBox();
 private: 
 	
 	void AddCharPanel(char character, bool first = false);
