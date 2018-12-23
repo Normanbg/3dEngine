@@ -66,12 +66,7 @@ private:
 	void FadeOut() override;
 
 
-public:
-	ComponentImageUI* image = nullptr;
-	ButtonState state = IDLE;
-	ResourceTexture* idleImg = nullptr;
-	ResourceTexture* hoverImg = nullptr;
-	ResourceTexture* pressedImg = nullptr;
+
 
 
 private:

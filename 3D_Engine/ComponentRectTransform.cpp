@@ -251,13 +251,6 @@ void ComponentRectTransform::UpdateUIComponents()
 }
 
 void ComponentRectTransform::SetGlobalMatrixToDraw(float4x4 &globalMatrix) {
-	ComponentCanvas* canvas = App->scene->GetFirstGameObjectCanvas()->GetComponentCanvas();
-	if (canvas->editor) {
-		float2 dividedPos = rect.globalPosition / 5;
-		float dividedHeight = rect.height / 5;
-		float dividedWidth = rect.width / 5;
-		globalMatrix = float4x4::FromTRS(float3(dividedPos.x, dividedPos.y, 0), Quat(0, 0, 0, 0), float3(dividedWidth, dividedHeight, 0));
-	}
-	else
-		globalMatrix = float4x4::FromTRS(float3(rect.globalPosition.x, rect.globalPosition.y, 0), Quat(0, 0, 0, 0), float3(rect.width, rect.height, 0));
+
+	globalMatrix = float4x4::FromTRS(float3(rect.globalPosition.x, rect.globalPosition.y, 0), Quat(0, 0, 0, 0), float3(rect.width, rect.height, 0));
 }

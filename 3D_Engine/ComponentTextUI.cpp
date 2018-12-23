@@ -344,7 +344,7 @@ void ComponentTextUI::DrawUI()
 		if (charNum == charPlanes.size() - 1)
 			lineDistance += currChar->size.x / 1.5f;
 
-		if (lineDistance > rectTransform->GetWidth())
+		if ((lineDistance -10) > rectTransform->GetWidth())
 		{
 			if (ShiftNewLine(cursor, line, charNum)) {
 				return;
