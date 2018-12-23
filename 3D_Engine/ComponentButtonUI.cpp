@@ -6,6 +6,8 @@
 #include "ModuleResources.h"
 #include "ComponentImageUI.h"
 
+#include "mmgr/mmgr.h"
+
 ComponentButtonUI::ComponentButtonUI()
 {
 	typeUI = UI_BUTTON;
@@ -66,6 +68,7 @@ void ComponentButtonUI::CleanUp()
 	hoverImg = nullptr;
 	pressedImg = nullptr;
 	myGO = nullptr;
+	image = nullptr;
 }
 
 void ComponentButtonUI::CheckState() {	
@@ -142,21 +145,23 @@ void ComponentButtonUI::FadeOut()
 
 void ComponentButtonUI::SetResource(uuid resource, int numRes)
 {
-	switch (numRes)
-	{
-	case 0:
-		idleImg = (ResourceTexture*)App->resources->Get(resource);
-		idleImg->LoadInMemory();
-		ChangeGOImage();
-		break;
-	case 1:
-		hoverImg = (ResourceTexture*)App->resources->Get(resource);
-		hoverImg->LoadInMemory();
-		break;
-	case 2:
-		pressedImg = (ResourceTexture*)App->resources->Get(resource);
-		pressedImg->LoadInMemory();
-		break;
+	if (resource != 0) {
+		switch (numRes)
+		{
+		case 0:
+			idleImg = (ResourceTexture*)App->resources->Get(resource);
+			idleImg->LoadInMemory();
+			ChangeGOImage();
+			break;
+		case 1:
+			hoverImg = (ResourceTexture*)App->resources->Get(resource);
+			hoverImg->LoadInMemory();
+			break;
+		case 2:
+			pressedImg = (ResourceTexture*)App->resources->Get(resource);
+			pressedImg->LoadInMemory();
+			break;
+		}
 	}
 }
 
@@ -169,10 +174,23 @@ const bool ComponentButtonUI::HasTexture(ResourceTexture* res) const
 
 void ComponentButtonUI::Load(Config * data)
 {
+	UUID = data->GetUInt("UUID", 0);
+	alpha = data->GetFloat("Alpha", 1.0f);
+	SetResource(App->resources->FindByName(data->GetString("Idle", ""), Resource::ResType::Texture),0);
+	SetResource(App->resources->FindByName(data->GetString("Hover", ""), Resource::ResType::Texture), 1);
+	SetResource(App->resources->FindByName(data->GetString("Press", ""), Resource::ResType::Texture), 2);
 }
 
 void ComponentButtonUI::Save(Config & data) const
 {
+	data.AddUInt("UUID", UUID);
+	data.AddFloat("Alpha", alpha);
+	if(idleImg)
+	data.AddString("Idle",idleImg->GetName());
+	if (hoverImg)
+	data.AddString("Hover", hoverImg->GetName());
+	if (pressedImg)
+	data.AddString("Press", pressedImg->GetName());
 }
 
 void ComponentButtonUI::DrawInspector()

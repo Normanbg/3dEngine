@@ -6,6 +6,8 @@
 #include "ModuleInput.h"
 #include "ModuleGui.h"
 
+#include "mmgr/mmgr.h"
+
 ComponentInputUI::ComponentInputUI()
 {
 	typeUI = UI_INPUT;
@@ -69,10 +71,17 @@ void ComponentInputUI::CleanUp()
 
 void ComponentInputUI::Load(Config * data)
 {
+	UUID = data->GetUInt("UUID");
+	alpha = data->GetFloat("Alpha", 1.0f);
+	textInput = data->GetString("Txt", "");
+	cText->SetText(textInput.c_str());
 }
 
 void ComponentInputUI::Save(Config & data) const
 {
+	data.AddUInt("UUID", UUID);
+	data.AddFloat("Alpha", alpha);
+	data.AddString("Txt", textInput.c_str());
 }
 
 void ComponentInputUI::ReceiveEvent(const Event & event)
