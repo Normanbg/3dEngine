@@ -241,8 +241,7 @@ void ComponentTextUI::FillCharPlanes()
 
 void ComponentTextUI::UpdateRectTransform()
 {
-	
-	//LoadLabel(font.text.c_str(), font.scale, font.fontSrc.c_str());
+	EnframeLabel(labelFrame);
 }
 
 void ComponentTextUI::DrawInspector()
@@ -344,13 +343,18 @@ void ComponentTextUI::DrawUI()
 		if (charNum == charPlanes.size() - 1)
 			lineDistance += currChar->size.x / 1.5f;
 
-		if ((lineDistance -10) > rectTransform->GetWidth())
+		if ((lineDistance -10) > rectTransform->GetWidth()) //horizontal limit 
 		{
-			if (ShiftNewLine(cursor, line, charNum)) {
-				return;
-			}
+			line++;
+			cursor.x = label.textOrigin.x;
+			cursor.y = offsetPlanes[charNum].y + label.textOrigin.y - (line * lineSpacing);
 			lineDistance = 0;
 		}
+		if ((offsetPlanes[charNum].y + label.textOrigin.y)*(line+1) > rectTransform->GetHeight()) { //vertical limit 
+			return;
+
+		}
+
 		incrementMatrix.SetTranslatePart(cursor); // set cursor mat
 
 		if ((*it)->textureID != -1) {
@@ -456,17 +460,12 @@ void ComponentTextUI::CharPlane::GenBuffer(float2 size)
 	
 }
 
-bool ComponentTextUI::ShiftNewLine(float3& cursor,int& current_line, int i)
+void ComponentTextUI::ShiftNewLine(float3& cursor,int& current_line, int i)
 {	
 	current_line++;
 	cursor.x = label.textOrigin.x;
 	cursor.y = offsetPlanes[i].y + label.textOrigin.y -(current_line * lineSpacing);
-
-	if (cursor.y - LABEL_Y_LIMIT <= rectTransform->rect.vertex[0].y);
-		return false;
-
-	return true;
-
+	
 }
 
 void ComponentTextUI::SetFontScale(uint scale) {
