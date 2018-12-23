@@ -60,6 +60,7 @@ public:
 	void RemoveFont(const char * name);
 	FT_Library library;
 	std::vector<Font*> loadedFonts = std::vector<Font*>();
+	std::vector<std::string> singleFonts = std::vector<std::string>();
 };
 
 

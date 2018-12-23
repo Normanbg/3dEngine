@@ -23,10 +23,8 @@ ComponentWindowUI::~ComponentWindowUI()
 bool ComponentWindowUI::Start()
 {
 	rectTransform = myGO->GetComponentRectTransform();
-	rectTransform->SetWidth(100);
-	rectTransform->SetHeight(100);
 	image = myGO->GetComponentImageUI();
-	image->SetResource(App->resources->FindByName(DEFAULT_WIN, Resource::ResType::UI));
+	SetResource(App->resources->FindByName(DEFAULT_WIN, Resource::ResType::UI));
 
 	return true;
 }
@@ -195,10 +193,14 @@ void ComponentWindowUI::Load(Config * data)
 {
 	UUID = data->GetUInt("UUID");
 	alpha = data->GetFloat("Alpha", 1.0f);
+	SetResource(App->resources->FindByName(data->GetString("Idle", ""), Resource::ResType::UI));
+	hasSetToMid = true;
 }
 
 void ComponentWindowUI::Save(Config & data) const
 {
 	data.AddUInt("UUID", UUID);
 	data.AddFloat("Alpha", alpha);
+	if (windImage)
+		data.AddString("Idle", windImage->GetName());
 }

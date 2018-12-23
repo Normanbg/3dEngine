@@ -36,7 +36,11 @@ void UIPanelHierarchy::Draw()
 						canvas->AddComponent(CANVAS);
 					}
 					GameObject* image = App->scene->AddUIGameObject("UI_Image",canvas);
+					
 					image->AddUIComponent(UI_IMAGE);
+					image->GetComponentRectTransform()->SetHeight(50);
+					image->GetComponentRectTransform()->SetWidth(50);
+
 					image = nullptr;
 					canvas = nullptr;
 				}
@@ -103,6 +107,8 @@ void UIPanelHierarchy::Draw()
 					GameObject* window = App->scene->AddUIGameObject("UI_Window", canvas);
 					window->AddUIComponent(UI_IMAGE);
 					window->AddUIComponent(UI_WINDOW);
+					window->GetComponentRectTransform()->SetHeight(100);
+					window->GetComponentRectTransform()->SetWidth(100);
 					window = nullptr;
 					canvas = nullptr;
 				}

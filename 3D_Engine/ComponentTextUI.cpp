@@ -97,6 +97,9 @@ void ComponentTextUI::SetText(const char * txt)
 		}
 	
 }
+void ComponentTextUI::SetAsCheckBox()
+{
+}
 void ComponentTextUI::EnframeLabel(float3 * points) {
 
 	labelFrame[0] = GetCornerLabelPoint(0)+ GetCornerLabelPoint(3);//bottomleft;
@@ -264,19 +267,19 @@ void ComponentTextUI::DrawInspector()
 	std::string currentFont = label.font->fontSrc;
 	if (ImGui::BeginCombo("Fonts",currentFont.c_str() ))
 	{
-		std::vector<Font*> fonts = App->fontManager->loadedFonts;
+		std::vector<std::string> fonts = App->fontManager->singleFonts;
 
 		for (int i = 0; i < fonts.size(); i++)
 		{
 			bool isSelected = false;
 			
-			if (strcmp(currentFont.c_str(), fonts[i]->fontSrc.c_str()) == 0) {
+			if (strcmp(currentFont.c_str(), fonts[i].c_str()) == 0) {
 				isSelected = true;
 			}
 			
-			if (ImGui::Selectable(fonts[i]->fontSrc.c_str(), isSelected)) {
+			if (ImGui::Selectable(fonts[i].c_str(), isSelected)) {
 				std::string newFont = std::string();
-				App->fileSys->GetNameFromPath(fonts[i]->fontSrc.c_str(), nullptr, nullptr, &newFont, nullptr);
+				App->fileSys->GetNameFromPath(fonts[i].c_str(), nullptr, nullptr, &newFont, nullptr);
 				SetFont(newFont.c_str());
 
 				if (isSelected) {
