@@ -72,7 +72,7 @@ void ComponentButtonUI::CleanUp()
 }
 
 void ComponentButtonUI::CheckState() {	
-	if (isMouseOver()){
+	if (IsMouseOver()){
 		if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN && state == PRESSED) {
 			state = MOUSEOVER;
 			if (hoverImg != nullptr)
@@ -96,7 +96,7 @@ void ComponentButtonUI::CheckState() {
 	}
 }
 
-bool ComponentButtonUI::isMouseOver() {
+bool ComponentButtonUI::IsMouseOver() {
 	float2 mousePos = float2(App->gui->panelGame->GetMouseRelativeToGame().x, App->gui->panelGame->GetMouseRelativeToGame().y);
 	if (rectTransform->GetGlobalPos().x <= mousePos.x && mousePos.x <= rectTransform->GetGlobalPos().x + rectTransform->GetWidth() &&
 		rectTransform->GetGlobalPos().y <= mousePos.y && mousePos.y <= rectTransform->GetGlobalPos().y + rectTransform->GetHeight()) {

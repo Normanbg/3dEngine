@@ -49,16 +49,7 @@ public:
 
 	void SetResource(uuid resource, int numRes);
 	
-	bool isMouseOver();
-
-private:
-	void CheckState();
-	const bool HasTexture(ResourceTexture * res) const;
-	void ChangeGOImage();
-	void FadeIn();
-	void FadeOut();
-	bool fadingIn = false;
-	bool fadingOut = false;
+	bool IsMouseOver();
 
 public:
 	ComponentImageUI* image = nullptr;
@@ -66,6 +57,18 @@ public:
 	ResourceTexture* idleImg = nullptr;
 	ResourceTexture* hoverImg = nullptr;
 	ResourceTexture* pressedImg = nullptr;
+
+private:
+	void CheckState();
+	const bool HasTexture(ResourceTexture * res) const;
+	void ChangeGOImage();
+	void FadeIn();
+	void FadeOut();
+
+private:
+	bool fadingIn = false;
+	bool fadingOut = false;
+
 };
 
 
