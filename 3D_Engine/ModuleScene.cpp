@@ -607,8 +607,10 @@ void ModuleScene::Draw(bool editor) {
 
 
 	//--------UI
+	
 	if (editor)
 	{
+		
 		std::vector<ComponentUI*> componentsUI; // first draw UI components
 		root->GetComponentsUITypeIgnore(componentsUI, TRANSFORMRECT);
 		for (int i = 0; i < componentsUI.size(); i++) {
@@ -660,7 +662,11 @@ void ModuleScene::DrawInGameUI()
 		/*float3 corners[8];
 		ui_render_box.GetCornerPoints(corners);
 		DebugDrawBox(corners, Red, 5.f);*/
-
+		if (GetFirstGameObjectCanvas()) {
+			ComponentCanvas* canvas = GetFirstGameObjectCanvas()->GetComponentCanvas();
+			if (canvas) { canvas->DrawCrossHair(); }
+			canvas = nullptr;
+		}
 		std::vector<ComponentUI*> componentsUI; // first draw UI components
 		root->GetComponentsUITypeIgnore(componentsUI, TRANSFORMRECT);
 		for (int i = 0; i < componentsUI.size(); i++) {
