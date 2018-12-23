@@ -1,4 +1,6 @@
 #include "FakeFunctions.h"
+#include "Application.h"
+#include "ModuleRenderer3D.h"
 
 FakeFunctions::FakeFunctions()
 {
@@ -16,10 +18,7 @@ void FakeFunctions::ExecuteFunction(Functions function)
 		break;
 	case START:
 		DoStart();
-		break;
-	case OPEN_IN_GAME_MENU:
-		DoOpenGameMenu();
-		break;
+		break;	
 	case CLOSE_IN_GAME_MENU:
 		DoCloseGameMenu();
 		break;
@@ -45,4 +44,21 @@ void FakeFunctions::DoCloseGameMenu()
 
 void FakeFunctions::DoActivateVsync()
 {
+	App->renderer3D->SetVsync();
+}
+
+const char * FakeFunctions::FunctionToString(int i)
+{
+	switch (i)
+	{
+	case 0:
+		return "No Function";
+	case 1:
+		return "Start";	
+	case 2:
+		return "Close Game Menu";
+	case 3:
+		return "Activate VSync";
+	}
+	return nullptr;
 }

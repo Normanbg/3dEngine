@@ -264,11 +264,13 @@ void ModuleRenderer3D::OnResize(const int width, const int height, bool scene)
 		App->camera->cameraComp->SetAspectRatio((float)width / (float)height);
 	}
 	else {
-		ComponentCamera* mainCam = App->scene->mainCamera->GetComponentCamera();
-		mainCam->SetAspectRatio((float)width / (float)height);
-		GameObject* canvasGO = App->scene->GetFirstGameObjectCanvas();
-		if (canvasGO) {
-			canvasGO->GetComponentCanvas()->SetResolution(float2(width, height));
+		if (App->scene->mainCamera) {
+			ComponentCamera* mainCam = App->scene->mainCamera->GetComponentCamera();
+			mainCam->SetAspectRatio((float)width / (float)height);
+			GameObject* canvasGO = App->scene->GetFirstGameObjectCanvas();
+			if (canvasGO) {
+				canvasGO->GetComponentCanvas()->SetResolution(float2(width, height));
+			}
 		}
 	}
 }
@@ -397,12 +399,15 @@ void ModuleRenderer3D::ShowGrid() {
 void ModuleRenderer3D::ReceiveEvent(const Event & event)
 {
 	switch (event.type) {
+	
 	case Event::EventType::scene_file_dropped: {
 		ManageDroppedFBX(event.string);
 		break;
 	}
+	
 	}
 }
+
 /*
 
 

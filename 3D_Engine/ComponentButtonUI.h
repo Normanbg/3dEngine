@@ -4,6 +4,7 @@
 #include "Component.h"
 #include "ComponentUI.h"
 #include "ResourceTexture.h"
+#include "FakeFunctions.h"
 
 #define DELTA_ALPHA 0.01f
 #define DEFAULT_IDLE_BT "UI_ButtonIdle"
@@ -54,6 +55,8 @@ public:
 	ResourceTexture* idleImg = nullptr;
 	ResourceTexture* hoverImg = nullptr;
 	ResourceTexture* pressedImg = nullptr;
+
+	Functions function = NO_FUNCTION;
 
 private:
 	void CheckState();

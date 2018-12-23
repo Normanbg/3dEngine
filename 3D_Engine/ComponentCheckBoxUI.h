@@ -36,6 +36,9 @@ public:
 
 	bool IsMouseOver();
 
+
+	void PressedCallback();
+
 public:
 	ComponentImageUI* image = nullptr;
 	ButtonState state = IDLE;
@@ -46,6 +49,7 @@ private:
 	void ChangeGOImage();
 	const bool HasTexture(ResourceTexture * res) const;
 	void SetResource(uuid resource, int numRes);
+	Functions function = NO_FUNCTION;
 
 private:
 	bool hasSetToMid = false;

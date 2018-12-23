@@ -51,6 +51,7 @@ public:
 	void SetRay(bool active) { _ray = active; };
 	void SetBoundingBox(bool active);
 
+	inline void SetVsync() { _vSync != _vSync; }
 
 	//void ManageDroppedPEI(char* droppedFileDir);
 
@@ -89,7 +90,7 @@ private:
 	void ShowAxis();
 	void ShowGrid();
 	void SetDataFromJson(JSON_Object* data);
-
+	
 	void ManageDroppedFBX(const char* droppedFileDir);
 
 protected:

@@ -87,6 +87,11 @@ bool ComponentCheckBoxUI::IsMouseOver()
 		return false;
 }
 
+void ComponentCheckBoxUI::PressedCallback()
+{
+	App->scene->functions->ExecuteFunction(function);
+}
+
 void ComponentCheckBoxUI::ChangeGOImage()
 {
 	switch (state)
@@ -132,6 +137,7 @@ void ComponentCheckBoxUI::Load(Config * data)
 	hasSetToMid = true;
 	SetResource(App->resources->FindByName(data->GetString("Idle", ""), Resource::ResType::UI), 0);
 	SetResource(App->resources->FindByName(data->GetString("Press", ""), Resource::ResType::UI), 1);
+	function = (Functions)data->GetInt("Function", 0);
 }
 
 void ComponentCheckBoxUI::Save(Config & data) const
@@ -140,6 +146,7 @@ void ComponentCheckBoxUI::Save(Config & data) const
 		data.AddString("Idle", unpressedImg->GetName());
 	if (pressedImg)
 		data.AddString("Press", pressedImg->GetName());
+	data.AddInt("Function", function);
 }
 
 void ComponentCheckBoxUI::DrawInspector()
@@ -219,5 +226,28 @@ void ComponentCheckBoxUI::DrawInspector()
 			ImGui::Text("Size:\n Width: %dpx | Height: %dpx ", pressedImg->width, pressedImg->height);
 			pressedMaterial = nullptr;
 		}
+	}
+
+	const char* fun = App->scene->functions->FunctionToString(function);
+	if (ImGui::BeginCombo("OnClick", fun))//TO AVOID 
+	{
+
+		for (int i = 0; i < 4; i++)
+		{
+			bool is_selected = false;
+			if (fun != nullptr) {
+				const char* n = App->scene->functions->FunctionToString(i);
+				bool is_selected = (strcmp(fun, n) == 0);
+			}
+			if (ImGui::Selectable(App->scene->functions->FunctionToString(i), is_selected)) {
+				fun = App->scene->functions->FunctionToString(i);
+				function = (Functions)i;
+				if (is_selected) {
+					ImGui::SetItemDefaultFocus();
+				}
+
+			}
+		}
+		ImGui::EndCombo();
 	}
 }

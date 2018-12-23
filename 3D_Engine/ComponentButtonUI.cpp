@@ -96,6 +96,7 @@ void ComponentButtonUI::CheckState() {
 		}
 		else if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN && state != PRESSED) {
 			state = PRESSED;
+			PressedCallback();
 			if (pressedImg != nullptr)
 				ChangeGOImage();
 		}
@@ -114,6 +115,8 @@ void ComponentButtonUI::CheckState() {
 		state = IDLE;
 		if (idleImg != nullptr)
 			ChangeGOImage();
+		
+
 	}
 }
 
@@ -129,6 +132,7 @@ bool ComponentButtonUI::IsMouseOver() {
 
 void ComponentButtonUI::PressedCallback()
 {
+	App->scene->functions->ExecuteFunction(function);
 }
 
 void ComponentButtonUI::ChangeGOImage()
@@ -204,6 +208,7 @@ void ComponentButtonUI::Load(Config * data)
 	SetResource(App->resources->FindByName(data->GetString("Idle", ""), Resource::ResType::UI),0);
 	SetResource(App->resources->FindByName(data->GetString("Hover", ""), Resource::ResType::UI), 1);
 	SetResource(App->resources->FindByName(data->GetString("Press", ""), Resource::ResType::UI), 2);
+	function =(Functions) data->GetInt("Function", 0);
 	hasSetToMid = true;
 }
 
@@ -217,6 +222,7 @@ void ComponentButtonUI::Save(Config & data) const
 	data.AddString("Hover", hoverImg->GetName());
 	if (pressedImg)
 	data.AddString("Press", pressedImg->GetName());
+	data.AddInt("Function", function);
 }
 
 void ComponentButtonUI::DrawInspector()
@@ -338,5 +344,29 @@ void ComponentButtonUI::DrawInspector()
 			ImGui::Text("Size:\n Width: %dpx | Height: %dpx ", pressedImg->width, pressedImg->height);
 			pressedMaterial = nullptr;
 		}
+
+	}
+
+	const char* fun = App->scene->functions->FunctionToString(function);
+	if (ImGui::BeginCombo("OnClick", fun))//TO AVOID 
+	{
+
+		for (int i = 0; i < 4; i++)
+		{
+			bool is_selected = false;
+			if (fun != nullptr) {
+				const char* n = App->scene->functions->FunctionToString(i);
+				bool is_selected = (strcmp(fun, n) == 0);
+			}
+			if (ImGui::Selectable(App->scene->functions->FunctionToString(i), is_selected)) {
+				fun = App->scene->functions->FunctionToString(i);
+				function = (Functions)i;
+				if (is_selected) {
+					ImGui::SetItemDefaultFocus();
+				}
+
+			}
+		}
+		ImGui::EndCombo();
 	}
 }

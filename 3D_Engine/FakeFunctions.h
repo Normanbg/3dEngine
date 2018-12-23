@@ -6,7 +6,8 @@ enum Functions {
 	START,
 	OPEN_IN_GAME_MENU,
 	CLOSE_IN_GAME_MENU,
-	ACTIVATE_VSYNC
+	ACTIVATE_VSYNC,
+	MAX_FUNCTIONS
 };
 
 class FakeFunctions
@@ -16,6 +17,7 @@ public:
 	~FakeFunctions();
 
 	void ExecuteFunction(Functions function);
+	const char* FunctionToString(int i = 0);
 
 private:
 	void DoStart();
