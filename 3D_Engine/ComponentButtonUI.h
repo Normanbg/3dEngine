@@ -49,6 +49,7 @@ public:
 
 	void SetResource(uuid resource, int numRes);
 	
+	bool isMouseOver();
 
 private:
 	void CheckState();

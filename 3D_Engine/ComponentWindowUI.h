@@ -46,13 +46,13 @@ public:
 
 private: 
 	void CheckState();
+	bool IsMouseOver();
 	bool CheckChildsState();
 	void SetResource(uuid resource);
 
 private:
 	bool draggable = false;
 	bool hasSetToMid = false;
-	float2 initMousePos = float2::zero;
 	float2 lastPos = float2::zero;
 };
 

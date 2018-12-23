@@ -16,5 +16,9 @@ public:
 	void Draw();
 
 	void DrawChilds(std::vector<GameObject*> childs);
+
+public:
+	bool showPopUp = false;
+
 };
 #endif // !__PANELHIERARCHY_H__
