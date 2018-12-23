@@ -43,6 +43,9 @@ private:
 	void ChangeGOImage();
 	const bool HasTexture(ResourceTexture * res) const;
 	void SetResource(uuid resource, int numRes);
+
+private:
+	bool hasSetToMid = false;
 };
 
 

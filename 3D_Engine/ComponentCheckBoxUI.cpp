@@ -19,10 +19,6 @@ ComponentCheckBoxUI::~ComponentCheckBoxUI()
 {
 }
 
-void ComponentCheckBoxUI::DrawInspector()
-{
-}
-
 bool ComponentCheckBoxUI::Start()
 {
 	image = myGO->GetComponentImageUI();
@@ -34,6 +30,15 @@ bool ComponentCheckBoxUI::Start()
 
 bool ComponentCheckBoxUI::Update()
 {
+	if (!hasSetToMid) {
+		float2 mid = myGO->parent->GetComponentRectTransform()->GetMid();
+		rectTransform->SetLocalPos(mid);
+		hasSetToMid = true;
+	}
+
+	GameObject* canvasGO = App->scene->GetFirstGameObjectCanvas();
+	if (App->gui->isMouseOnGame() && myGO != canvasGO)
+		CheckState();
 	return true;
 }
 
@@ -85,10 +90,10 @@ void ComponentCheckBoxUI::ChangeGOImage()
 	switch (state)
 	{
 	case ButtonState::IDLE:
-		image->SetResource(App->resources->FindByName(unpressedImg->GetName(), Resource::ResType::Texture));
+		image->SetResource(App->resources->FindByName(unpressedImg->GetName(), Resource::ResType::UI));
 		break;
 	case ButtonState::PRESSED:
-		image->SetResource(App->resources->FindByName(pressedImg->GetName(), Resource::ResType::Texture));
+		image->SetResource(App->resources->FindByName(pressedImg->GetName(), Resource::ResType::UI));
 		break;
 	default:
 		break;
@@ -126,4 +131,84 @@ void ComponentCheckBoxUI::Load(Config * data)
 
 void ComponentCheckBoxUI::Save(Config & data) const
 {
+}
+
+void ComponentCheckBoxUI::DrawInspector()
+{
+	ImGui::Separator();
+	ImGui::TextColored(ImVec4(0.25f, 0.25f, 0.25f, 1), "UUID: %i", GetUUID());
+
+	float windowSize = ImGui::GetWindowContentRegionWidth();
+
+	if (ImGui::CollapsingHeader("Unpressed Image")) {
+		const char* idleMaterial = NULL;
+		if (unpressedImg != nullptr) {
+			idleMaterial = unpressedImg->GetName();
+		}
+		if (ImGui::BeginCombo("   ", idleMaterial))
+		{
+			std::vector<Resource*> mat = App->resources->GetResourcesListType(Resource::ResType::UI);
+
+			for (int i = 0; i < mat.size(); i++)
+			{
+				bool is_selected = false;
+				if (idleMaterial != nullptr) {
+					const char* n = mat[i]->GetName();
+					bool is_selected = (strcmp(idleMaterial, n) == 0);
+				}
+				if (ImGui::Selectable(mat[i]->GetName(), is_selected)) {
+					idleMaterial = mat[i]->GetName();
+					SetResource(App->resources->FindByName(mat[i]->GetName(), Resource::ResType::UI), 0);
+
+					if (is_selected) {
+						ImGui::SetItemDefaultFocus();
+					}
+
+				}
+
+			}
+			ImGui::EndCombo();
+		}
+		if (unpressedImg != nullptr) {
+			ImGui::Image((void*)(unpressedImg->gpuID), ImVec2(windowSize / 2, windowSize / 2), ImVec2(0, 1), ImVec2(1, 0));
+			ImGui::Text("Size:\n Width: %dpx | Height: %dpx ", unpressedImg->width, unpressedImg->height);
+			idleMaterial = nullptr;
+		}
+	}
+
+	if (ImGui::CollapsingHeader("Pressed Image")) {
+		const char* pressedMaterial = NULL;
+		if (pressedImg != nullptr) {
+			pressedMaterial = pressedImg->GetName();
+		}
+		if (ImGui::BeginCombo("  ", pressedMaterial))//TO AVOID 
+		{
+			std::vector<Resource*> mat = App->resources->GetResourcesListType(Resource::ResType::UI);
+
+			for (int i = 0; i < mat.size(); i++)
+			{
+				bool is_selected = false;
+				if (pressedMaterial != nullptr) {
+					const char* n = mat[i]->GetName();
+					bool is_selected = (strcmp(pressedMaterial, n) == 0);
+				}
+				if (ImGui::Selectable(mat[i]->GetName(), is_selected)) {
+					pressedMaterial = mat[i]->GetName();
+					SetResource(App->resources->FindByName(mat[i]->GetName(), Resource::ResType::UI), 1);
+
+					if (is_selected) {
+						ImGui::SetItemDefaultFocus();
+					}
+
+				}
+			}
+			ImGui::EndCombo();
+		}
+		if (pressedImg != nullptr) {
+			float windowSize = ImGui::GetWindowContentRegionWidth();
+			ImGui::Image((void*)(pressedImg->gpuID), ImVec2(windowSize / 2, windowSize / 2), ImVec2(0, 1), ImVec2(1, 0));
+			ImGui::Text("Size:\n Width: %dpx | Height: %dpx ", pressedImg->width, pressedImg->height);
+			pressedMaterial = nullptr;
+		}
+	}
 }
