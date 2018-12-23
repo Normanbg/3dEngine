@@ -50,6 +50,8 @@ private:
 	bool CheckChildsState();
 	void SetResource(uuid resource);
 
+	void CheckLimits(float2& newPos);
+
 private:
 	bool draggable = false;
 	bool hasSetToMid = false;

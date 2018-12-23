@@ -41,7 +41,11 @@ bool ComponentWindowUI::Update()
 		CheckState();
 	}
 	if (state == WindowState::DRAGGING) {
-		DraggWindow();
+		if (App->gui->isMouseOnGame())
+			DraggWindow();
+		else {
+			state = WindowState::WINDOW_IDLE;
+		}
 	}
 	return true;
 }
@@ -59,8 +63,29 @@ void ComponentWindowUI::DraggWindow()
 	if (lastPos.x != mousePos.x || mousePos.y != mousePos.y)
 	{
 		float2 winPos =	(rectTransform->GetGlobalPos())  - (lastPos - mousePos);
+		CheckLimits(winPos);
 		lastPos = mousePos;
 		rectTransform->SetLocalPos(winPos);
+	}
+}
+
+void ComponentWindowUI::CheckLimits(float2& newPos) {
+	if (newPos.x < 0.f)
+	{
+		newPos.x = 0.f;
+	}
+	if (newPos.y < 0.f)
+	{
+		newPos.y = 0.f;
+	}
+	ComponentRectTransform* parentRect = myGO->parent->GetComponentRectTransform();
+	if (newPos.x > parentRect->GetWidth())
+	{
+		newPos.x = parentRect->GetWidth();
+	}
+	if (newPos.y > parentRect->GetHeight())
+	{
+		newPos.y = parentRect->GetHeight();
 	}
 }
 
