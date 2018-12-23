@@ -85,15 +85,17 @@ void ComponentTextUI::Save(Config & data) const
 
 void ComponentTextUI::SetText(const char * txt)
 {
-	label.text = txt;
-	CleanCharPlanes();
+	
+		label.text = txt;
+		CleanCharPlanes();
 
-	FillCharPlanes();
+		FillCharPlanes();
 
-	if (label.text.size() != 0) {//Adjust the container plane to the new text size 
-		label.textOrigin.x = initOffsetX;
-		EnframeLabel(labelFrame);
-	}
+		if (label.text.size() != 0) {//Adjust the container plane to the new text size 
+			label.textOrigin.x = initOffsetX;
+			EnframeLabel(labelFrame);
+		}
+	
 }
 void ComponentTextUI::EnframeLabel(float3 * points) {
 
@@ -184,6 +186,7 @@ float3 ComponentTextUI::GetCornerLabelPoint(int corner) {
 void ComponentTextUI::AddCharPanel(char character, bool first)
 {
 	FT_Load_Char(label.font->face, (GLchar)character, FT_LOAD_RENDER);
+	if (label.font->face->glyph == nullptr) { return; }
 	float2 size = { (float)label.font->face->glyph->bitmap.width, (float)label.font->face->glyph->bitmap.rows };
 	CharPlane* nwCharPlane = new CharPlane();	
 	nwCharPlane->GenBuffer(size);
@@ -241,7 +244,8 @@ void ComponentTextUI::FillCharPlanes()
 
 void ComponentTextUI::UpdateRectTransform()
 {
-	EnframeLabel(labelFrame);
+	if(!charPlanes.empty())
+		EnframeLabel(labelFrame);
 }
 
 void ComponentTextUI::DrawInspector()
@@ -301,7 +305,10 @@ void ComponentTextUI::DrawUI()
 	Character* firstChar = label.font->GetCharacter((GLchar)label.text[0]);
 	
 	float3 cursor = float3(label.textOrigin.x , label.textOrigin.y, 0);
-
+	if (charPlanes.empty()) { 
+		FillCharPlanes(); } 
+	if (charPlanes.empty() || label.font->charsList.empty()) {
+		return; }
 	for (std::vector<CharPlane*>::iterator it = charPlanes.begin(); it != charPlanes.end(); it++, charNum++)
 	{
 		lettersDrawn++;
@@ -324,7 +331,7 @@ void ComponentTextUI::DrawUI()
 			currChar = label.font->GetCharacter(' ');//if not avaliable glyph, put a space (like "í")
 		}
 
-		if (charNum < label.text.size() - 1)
+		if (charNum < label.text.size() - 1 && label.text.size()>0)
 			nextChar = label.font->GetCharacter((GLchar)label.text[charNum + 1]);
 		else
 			nextChar = label.font->GetCharacter((GLchar)"");
@@ -470,7 +477,7 @@ void ComponentTextUI::ShiftNewLine(float3& cursor,int& current_line, int i)
 
 void ComponentTextUI::SetFontScale(uint scale) {
 	std::string name = label.font->fontSrc;
-	App->fontManager->RemoveFont(name.c_str());	
+	//App->fontManager->RemoveFont(name.c_str());	
 	label.font = App->fontManager->LoadFont(name.c_str(), scale);
 	SetText(label.text.c_str());
 	

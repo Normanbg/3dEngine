@@ -26,6 +26,8 @@ bool ComponentWindowUI::Start()
 	rectTransform->SetWidth(100);
 	rectTransform->SetHeight(100);
 	image = myGO->GetComponentImageUI();
+	image->SetResource(App->resources->FindByName(DEFAULT_WIN, Resource::ResType::UI));
+
 	return true;
 }
 

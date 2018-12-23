@@ -5,6 +5,7 @@
 #include "GameObject.h"
 #include "ModuleInput.h"
 #include "ModuleGui.h"
+#include "ModuleResources.h"
 
 #include "mmgr/mmgr.h"
 
@@ -42,6 +43,9 @@ bool ComponentInputUI::Start()
 	cText->SetText("Insert Text Here");
 	rectTransform->SetWidth(cText->GetLabelWidth());
 	rectTransform->SetHeight(cText->GetLabelHeight());
+	cButton->SetResource(App->resources->FindByName(DEFAULT_IDLE_IN, Resource::ResType::UI), 0);
+	cButton->SetResource(App->resources->FindByName(DEFAULT_IDLE_IN, Resource::ResType::UI), 1);
+	cButton->SetResource(App->resources->FindByName(DEFAULT_PRESSED_IN, Resource::ResType::UI), 2);
 
 		return true;
 }

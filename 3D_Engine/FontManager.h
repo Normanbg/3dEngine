@@ -15,7 +15,7 @@
 
 
 #define DEFAULT_FONT "Crimson-Roman.ttf"
-#define DEFAULT_SCALE 30
+#define DEFAULT_SCALE 24
 
 struct Character {
 
