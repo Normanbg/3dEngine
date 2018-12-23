@@ -1,37 +1,117 @@
-## Welcome to GitHub Pages
+﻿
+# 3dEngine
+This 3D engine is created for the subject "3D Engines" of [Bachelor’s Degree in Video Games by UPC at CITM](https://www.citm.upc.edu/ing/estudis/graus-videojocs/) by [Norman Benet](https://github.com/Normanbg) & [Carles Margelí](https://github.com/Margeli).
 
-You can use the [editor on GitHub](https://github.com/Normanbg/try/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
+## Installation:
+Decompress the .zip file in any directory and execute the executable inside the decompressed folder.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+### Camera Controls on Scene:
 
-### Markdown
+**Mouse Wheel** to zoom in and out.
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+**Mouse Right click** for free look around.
 
-```markdown
-Syntax highlighted code block
+**Mouse Right click + A or D** to move around the X-axis.
 
-# Header 1
-## Header 2
-### Header 3
+**Mouse Right click + R or T** to move around the Y-axis.
 
-- Bulleted
-- List
+**Mouse Right click + W or S** to move around the Z-axis.
 
-1. Numbered
-2. List
+**Holding SHIFT** duplicates movement speed.
 
-**Bold** and _Italic_ and `Code` text
+**Alt + Mouse Right click** to orbit an object.
 
-[Link](url) and ![Image](src)
-```
+**F** focus the camera around the geometry.
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+## Controls Guizmo:
+**W** to translate.
 
-### Jekyll Themes
+**E** to rotate.
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/Normanbg/try/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+**R** to scale.
 
-### Support or Contact
+### Controls on panels:
 
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+**Mouse Left click** for selecting.
+
+**Double Mouse Left Click** inside hierarchy or materials to deselect a game object.
+
+**Mouse Drag** for changing components like Transform.
+
+### Load Objects:
+On assets panel there are all the files to load, click on one and select "Load file". Also it is possible to drag & drop files.
+
+### Link to the repository:
+[https://github.com/Normanbg/3dEngine](https://github.com/Normanbg/3dEngine)
+
+### Latest release:
+[https://github.com/Normanbg/3dEngine/releases](https://github.com/Normanbg/3dEngine/releases)
+
+### Innovation:
+For this delivery we are able to render directly the scene on a window, using a Frame Buffer Object to get the texture and let ImGui Image to render it.
+
+Also, we have our fyle system that uses the library physfs.
+
+### Members work:
+Game Objects->Both
+
+Bounding box-> Both
+
+Components-> Both
+
+QuadTree-> Norman
+
+Frustum Culling-> Norman
+
+Import files-> Carles
+
+Own file format-> Carles
+
+Mouse picking-> Norman
+
+Time manager-> Carles
+
+Resources & Fyle System-> Carles
+
+.meta-> Carles
+
+Guizmos-> Norman
+
+**Panels:**
+
+Assets-> Carles
+
+Hierarchy-> Both
+
+Inspector-> Both
+
+Optimization-> Norman
+
+Scene-> Norman
+
+Scene Info-> Both
+
+
+### License:
+MIT License
+
+Copyright (c) 2018 Normanbg
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
