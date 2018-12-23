@@ -9,6 +9,8 @@ public:
 	ResourceUI(uuid UUID);
 	~ResourceUI();
 
+	void Save(Config& config) const override;
+	void Load(const Config& config) override;
 
 };
 
