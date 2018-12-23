@@ -23,8 +23,8 @@ ComponentWindowUI::~ComponentWindowUI()
 bool ComponentWindowUI::Start()
 {
 	rectTransform = myGO->GetComponentRectTransform();
-	rectTransform->SetWidth(100, false);
-	rectTransform->SetHeight(100, false);
+	rectTransform->SetWidth(100);
+	rectTransform->SetHeight(100);
 	image = myGO->GetComponentImageUI();
 	return true;
 }

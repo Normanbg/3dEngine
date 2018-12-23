@@ -32,11 +32,19 @@ bool ComponentButtonUI::Start()
 {
 	image = myGO->GetComponentImageUI();
 	rectTransform = myGO->GetComponentRectTransform();
+	rectTransform->SetWidth(60);
+	rectTransform->SetHeight(20);
 	return true;
 }
 
 bool ComponentButtonUI::Update()
 {
+	if (!hasSetToMid) {
+		float2 mid = myGO->parent->GetComponentRectTransform()->GetMid();
+		rectTransform->SetLocalPos(mid);
+		hasSetToMid = true;
+	}
+
 	GameObject* canvasGO = App->scene->GetFirstGameObjectCanvas();
 	if (App->gui->isMouseOnGame() && myGO != canvasGO)
 		CheckState();

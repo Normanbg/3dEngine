@@ -78,6 +78,18 @@ void UIPanelHierarchy::Draw()
 					but = nullptr;
 					canvas = nullptr;
 				}
+				if (ImGui::MenuItem("Checkbox")) {
+					//check if canvas created
+					GameObject* canvas = App->scene->GetFirstGameObjectCanvas();
+					if (canvas == nullptr) {
+						canvas = App->scene->AddUIGameObject("Canvas", App->scene->root);
+						canvas->AddComponent(CANVAS);
+					}
+					GameObject* checkbox = App->scene->AddUIGameObject("UI_Checkbox", canvas);
+					checkbox->AddUIComponent(UI_CHECKBOX);
+					checkbox = nullptr;
+					canvas = nullptr;
+				}
 				if (ImGui::MenuItem("Window")) {
 					//check if canvas created
 					GameObject* canvas = App->scene->GetFirstGameObjectCanvas();

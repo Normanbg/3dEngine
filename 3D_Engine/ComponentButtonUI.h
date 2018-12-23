@@ -68,7 +68,7 @@ private:
 private:
 	bool fadingIn = false;
 	bool fadingOut = false;
-
+	bool hasSetToMid = false;
 };
 
 
