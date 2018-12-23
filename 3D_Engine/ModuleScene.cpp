@@ -593,6 +593,10 @@ void ModuleScene::Draw(bool editor) {
 				rootQuadTree->DebugDraw();
 		}
 	}
+	else
+	{
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	}
 
 	/*float3 corners[8];
 	ui_render_box.GetCornerPoints(corners);

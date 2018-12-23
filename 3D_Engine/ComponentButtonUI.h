@@ -42,6 +42,8 @@ public:
 	void SetResource(uuid resource, int numRes);
 	
 	bool IsMouseOver();
+	
+	void PressedCallback();
 
 public:
 	ComponentImageUI* image = nullptr;

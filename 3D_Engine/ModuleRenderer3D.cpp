@@ -189,6 +189,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 
 	//DrawMeshes();
 	SetDepthTest(true);
+	SetLighting(true);
 	sceneFboTex->BindFBO();
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -225,6 +226,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	App->scene->Draw(editor);
 	App->scene->ToggleEditorCam();
 	SetDepthTest(false);
+	SetLighting(false);
 	App->scene->DrawInGameUI();
 	for (uint i = 0; i < MAX_LIGHTS; ++i)
 		lights[i].Render();
@@ -243,7 +245,6 @@ bool ModuleRenderer3D::CleanUp()
 {
 	BROFILER_CATEGORY("Renderer3D_CleanUp", Profiler::Color::HotPink);
 	OWN_LOG("Destroying 3D Renderer");
-
 		
 	sceneFboTex->UnBindFBO();
 	gameFboTex->UnBindFBO();

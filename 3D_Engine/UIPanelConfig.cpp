@@ -199,10 +199,10 @@ void UIPanelConfig::Draw() {
 		if (ImGui::Checkbox("Cull Face ", &cullFace)) {
 			App->renderer3D->SetCullFace(cullFace);
 		}
-		bool light = App->renderer3D->GetLighting();
+		/*bool light = App->renderer3D->GetLighting();
 		if (ImGui::Checkbox("Lightning ", &light)) {
 			App->renderer3D->SetLighting(light);
-		}
+		}*/
 		ImGui::SameLine();
 		bool colormat = App->renderer3D->GetColorMaterial();
 		if (ImGui::Checkbox("Color Material", &colormat)) {
