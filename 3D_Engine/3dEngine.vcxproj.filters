@@ -61,6 +61,9 @@
     <Filter Include="Sources\Tools\FreeType">
       <UniqueIdentifier>{2702723f-e9b2-4ce5-9934-522644f73109}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Objects &amp; Components\Components\ComponentsUI\Functions">
+      <UniqueIdentifier>{63cdbf11-06be-4ad2-a92a-37517ae35f82}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -462,6 +465,9 @@
     <ClInclude Include="ComponentCheckBoxUI.h">
       <Filter>Sources\Objects &amp; Components\Components\ComponentsUI</Filter>
     </ClInclude>
+    <ClInclude Include="FakeFunctions.h">
+      <Filter>Sources\Objects &amp; Components\Components\ComponentsUI\Functions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleInput.cpp">
@@ -748,6 +754,9 @@
     </ClCompile>
     <ClCompile Include="ComponentCheckBoxUI.cpp">
       <Filter>Sources\Objects &amp; Components\Components\ComponentsUI</Filter>
+    </ClCompile>
+    <ClCompile Include="FakeFunctions.cpp">
+      <Filter>Sources\Objects &amp; Components\Components\ComponentsUI\Functions</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

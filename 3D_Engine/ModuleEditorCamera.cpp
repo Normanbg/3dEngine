@@ -67,7 +67,7 @@ update_status ModuleEditorCamera::Update(float dt)
 			float3 _pos(0, 0, 0);
 			float speed = CAMERA_SPEED * dt;
 			if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT)
-				speed *= 5.0f;
+				speed *= 10.0f;
 			if (App->input->GetKey(SDL_SCANCODE_R) == KEY_REPEAT) _pos.y += speed;
 			if (App->input->GetKey(SDL_SCANCODE_T) == KEY_REPEAT) _pos.y -= speed;
 			if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) _pos += cameraComp->GetFrustum().front * speed;

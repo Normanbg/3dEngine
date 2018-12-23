@@ -22,14 +22,6 @@ public:
 	ComponentButtonUI();
 	~ComponentButtonUI();
 
-	enum Function {
-		NO_FUNCTION,
-		START,
-		OPEN_IN_GAME_MENU,
-		ACTIVATE_VSYNC
-	};
-
-
 	void UpdateRectTransform() override;
 	void DrawInspector() override;
 	void DrawUI() override;
