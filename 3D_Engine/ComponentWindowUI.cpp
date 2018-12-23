@@ -58,7 +58,7 @@ void ComponentWindowUI::DraggWindow()
 	float2 mousePos = float2(App->gui->panelGame->GetMouseRelativeToGame().x, App->gui->panelGame->GetMouseRelativeToGame().y);
 	if (lastPos.x != mousePos.x || mousePos.y != mousePos.y)
 	{
-		float2 winPos = lastPos - mousePos;
+		float2 winPos =	(rectTransform->GetGlobalPos())  - (lastPos - mousePos);
 		lastPos = mousePos;
 		rectTransform->SetLocalPos(winPos);
 	}
@@ -71,11 +71,8 @@ void ComponentWindowUI::CheckState() {
 		}
 		else if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN && CheckChildsState()) {
 			state = WindowState::DRAGGING;
-			//initMousePos = mousePos;
+			lastPos = float2(App->gui->panelGame->GetMouseRelativeToGame().x, App->gui->panelGame->GetMouseRelativeToGame().y);
 		}
-		/*else if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT && state == DRAGGING) {
-
-		}*/
 		else if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_UP && state == WindowState::DRAGGING) {
 			state = WindowState::WIN_MOUSEOVER;
 		}
