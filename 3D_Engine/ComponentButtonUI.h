@@ -55,10 +55,9 @@ private:
 	void CheckState();
 	const bool HasTexture(ResourceTexture * res) const;
 	void ChangeGOImage();
-	void FadeIn();
-	void FadeOut();
-	bool fadingIn = false;
-	bool fadingOut = false;
+	void FadeIn() override;
+	void FadeOut() override;
+
 
 public:
 	ComponentImageUI* image = nullptr;

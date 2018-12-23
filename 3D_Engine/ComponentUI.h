@@ -35,7 +35,12 @@ public:
 	virtual void doLoad(Config* data){};
 
 	virtual void UpdateRectTransform() {};
-	
+
+
+	virtual void FadeIn() {};
+	virtual void FadeOut() {};
+	bool fadingIn = false;
+	bool fadingOut = false;
 
 	void SetAlpha(float _alpha) { alpha = _alpha; }
 	float alpha=1.0f;

@@ -37,6 +37,12 @@ bool ComponentImageUI::Start()
 
 bool ComponentImageUI::Update()
 {
+	if (fadingOut) {
+		FadeOut();
+	}
+	if (fadingIn) {
+		FadeIn();
+	}
 	return true;
 }
 
