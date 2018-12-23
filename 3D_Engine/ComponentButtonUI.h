@@ -49,7 +49,14 @@ public:
 
 	void SetResource(uuid resource, int numRes);
 	
-	bool isMouseOver();
+	bool IsMouseOver();
+
+public:
+	ComponentImageUI* image = nullptr;
+	ButtonState state = IDLE;
+	ResourceTexture* idleImg = nullptr;
+	ResourceTexture* hoverImg = nullptr;
+	ResourceTexture* pressedImg = nullptr;
 
 private:
 	void CheckState();
@@ -65,6 +72,10 @@ public:
 	ResourceTexture* idleImg = nullptr;
 	ResourceTexture* hoverImg = nullptr;
 	ResourceTexture* pressedImg = nullptr;
+
+
+private:
+	bool hasSetToMid = false;
 };
 
 

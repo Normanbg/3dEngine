@@ -52,7 +52,7 @@ bool ComponentInputUI::Update()
 		
 		readInput = true;		
 	}
-	if (cButton->state == ButtonState::PRESSED && !cButton->isMouseOver()) {// to fix
+	if (cButton->state == ButtonState::PRESSED && !cButton->IsMouseOver()) {// to fix
 		readInput = false;
 	}
 	if (App->input->GetKey(SDL_SCANCODE_BACKSPACE) == KEY_DOWN) {
