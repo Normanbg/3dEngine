@@ -48,7 +48,7 @@
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>false</ExceptionHandling>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <AdditionalIncludeDirectories>C:\Users\marge\Documents\GitHub\3dEngine\3D_Engine\FreeType\include;SDK Path\Include;C:\Users\carlesma\Documents\GitHub\3dEngine\3D_Engine\Brofiler;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\FreeType\include;SDK Path\Include;$(ProjectDir)\Brofiler;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -67,6 +67,7 @@
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>false</ExceptionHandling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <AdditionalIncludeDirectories>$(ProjectDir)\FreeType\include;SDK Path\Include;$(ProjectDir)\Brofiler;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -74,6 +75,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <SubSystem>Windows</SubSystem>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+      <AdditionalLibraryDirectories>"SDK Path\Lib";%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -98,6 +100,7 @@
     <ClInclude Include="Config.h" />
     <ClInclude Include="DeviceId\DeviceId.h" />
     <ClInclude Include="DeviceId\dxgi1_4.h" />
+    <ClInclude Include="FakeFunctions.h" />
     <ClInclude Include="FBO.h" />
     <ClInclude Include="FontManager.h" />
     <ClInclude Include="FreeType\include\freetype\config\ftheader.h" />
@@ -230,6 +233,7 @@
     <ClCompile Include="ComponentWithResource.cpp" />
     <ClCompile Include="Config.cpp" />
     <ClCompile Include="DeviceId\DeviceId.cpp" />
+    <ClCompile Include="FakeFunctions.cpp" />
     <ClCompile Include="FBO.cpp" />
     <ClCompile Include="FontManager.cpp" />
     <ClCompile Include="ImGuizmo\ImGuizmo.cpp" />

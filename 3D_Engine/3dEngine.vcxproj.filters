@@ -466,7 +466,7 @@
       <Filter>Sources\Objects &amp; Components\Components\ComponentsUI</Filter>
     </ClInclude>
     <ClInclude Include="FakeFunctions.h">
-      <Filter>Sources\Objects &amp; Components\Components\ComponentsUI\Functions</Filter>
+      <Filter>Sources\Tools</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -756,7 +756,7 @@
       <Filter>Sources\Objects &amp; Components\Components\ComponentsUI</Filter>
     </ClCompile>
     <ClCompile Include="FakeFunctions.cpp">
-      <Filter>Sources\Objects &amp; Components\Components\ComponentsUI\Functions</Filter>
+      <Filter>Sources\Tools</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

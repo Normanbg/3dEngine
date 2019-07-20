@@ -156,7 +156,7 @@ bool TextureImporter::ImportToDDS( const char* texPath, const char* texName, std
 				
 				std::string uuid;
 				std::string libPath;
-				UI ? libPath = LIB_UI_PATH : LIB_TEXTURES_PATH;
+				UI ? libPath = LIB_UI_PATH : libPath = LIB_TEXTURES_PATH;
 				libPath += uuid + textureName + DDS_FORMAT;
 				if (written) { (*written).push_back(libPath); }
 				App->fileSys ->writeFile(libPath.c_str(), data, size);
