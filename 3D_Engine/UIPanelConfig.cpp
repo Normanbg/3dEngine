@@ -194,7 +194,7 @@ void UIPanelConfig::Draw() {
 		if (ImGui::Checkbox("Depth Test ", &depthTest)) {			
 			App->renderer3D->SetDepthTest(depthTest);
 		}*/
-		ImGui::SameLine();
+		
 		bool cullFace = App->renderer3D->GetCullFace();
 		if (ImGui::Checkbox("Cull Face ", &cullFace)) {
 			App->renderer3D->SetCullFace(cullFace);

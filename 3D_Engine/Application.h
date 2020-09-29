@@ -1,8 +1,7 @@
 #ifndef __APPLICATION_H__
 #define __APPLICATION_H__
 
-#include <list>
-#include <vector>
+
 
 #include "ImGui/imgui.h"
 #include "ImGuizmo/ImGuizmo.h"
@@ -15,6 +14,10 @@
 #include "SDL/include/SDL_opengl.h"
 //#include <gl/GL.h> delete?
 //#include <gl/GLU.h>
+
+#include <string>
+#include <list>
+#include <vector>
 
 struct Event
 {
